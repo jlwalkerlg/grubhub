@@ -1,6 +1,7 @@
-import Head from 'next/head'
+import Head from "next/head";
+import React, { FC } from "react";
 
-export default function Home() {
+export const Home: FC = () => {
   return (
     <div className="container">
       <Head>
@@ -54,7 +55,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
         </a>
       </footer>
@@ -205,5 +206,7 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
+
+export default Home;
