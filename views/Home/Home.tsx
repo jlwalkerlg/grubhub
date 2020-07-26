@@ -1,17 +1,11 @@
 import Head from "next/head";
 import React, { FC } from "react";
+import Layout from "~/components/Layout/Layout";
 
 export const Home: FC = () => {
   return (
-    <div>
-      <Head>
-        <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet"
-        />
-        <title>Home</title>
-      </Head>
+    <Layout title="Home">
       <h1 className="text-center uppercase">Home</h1>
-    </div>
+    </Layout>
   );
 };
