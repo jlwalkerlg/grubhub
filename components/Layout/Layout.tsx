@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import Head from "next/head";
+import Nav from "~/components/Nav/Nav";
 
 interface Props {
   title: string;
@@ -16,6 +17,7 @@ const Layout: FC<Props> = ({ title, children }) => {
         />
         <title>{title}</title>
       </Head>
+      <Nav />
       {children}
     </>
   );
