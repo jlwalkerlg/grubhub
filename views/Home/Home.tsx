@@ -17,12 +17,12 @@ export const Home: FC = () => {
             food straight to your door!
           </p>
           <div className="bg-primary rounded-sm py-4 px-4 mt-8 text-center">
-            <div className="relative rounded-sm border bg-white flex items-center">
+            <div className="relative rounded-sm border bg-white text-gray-600">
+              <span className="absolute left-0 top-0 pt-2 px-2">
+                <span className="material-icons">location_on</span>
+              </span>
               <input
-                style={{
-                  background: `url("/img/icons/location-marker.png") no-repeat left 0.5rem center`,
-                }}
-                className="shadow bg-transparent appearance-none w-full py-2 pl-10 pr-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                className="relative shadow bg-transparent appearance-none w-full py-2 pl-10 pr-3 text-gray-700 focus:outline-none focus:shadow-outline"
                 id="postcode"
                 type="text"
                 placeholder="Enter your postcode"
