@@ -20,12 +20,24 @@ const Nav: FC = () => {
         </Link>
 
         <button
-          className="md:hidden ml-auto rounded w-10 h-8 bg-primary px-2"
+          className="md:hidden ml-auto rounded w-8 h-8 bg-primary p-1"
           onClick={toggleNav}
         >
-          <div className="bg-white my-1" style={{ height: 3 }}></div>
-          <div className="bg-white my-1" style={{ height: 3 }}></div>
-          <div className="bg-white my-1" style={{ height: 3 }}></div>
+          <svg
+            className="text-white"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            {isOpen ? (
+              <path d="M6 18L18 6M6 6l12 12"></path>
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            )}
+          </svg>
         </button>
 
         <div
