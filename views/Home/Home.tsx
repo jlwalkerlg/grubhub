@@ -1,11 +1,39 @@
-import Head from "next/head";
 import React, { FC } from "react";
 import Layout from "~/components/Layout/Layout";
 
 export const Home: FC = () => {
   return (
     <Layout title="Home">
-      <h1 className="text-center uppercase">Home</h1>
+      <main className="bg-gray-100 pb-64">
+        <header className="container mx-auto px-2 text-center">
+          <p className="uppercase font-semibold pt-16 text-4xl tracking-widest">
+            Hungry?
+          </p>
+          <p className="uppercase font-semibold text-2xl">
+            What would you like to eat?
+          </p>
+          <p className="mt-4 text-lg">
+            Enter your postcode to find nearby restaurants ready to serve fresh
+            food straight to your door!
+          </p>
+          <div className="bg-primary rounded-sm py-4 px-4 mt-8 text-center">
+            <div className="relative rounded-sm border bg-white flex items-center">
+              <input
+                style={{
+                  background: `url("/img/icons/location-marker.png") no-repeat left 0.5rem center`,
+                }}
+                className="shadow bg-transparent appearance-none w-full py-2 pl-10 pr-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                id="postcode"
+                type="text"
+                placeholder="Enter your postcode"
+              />
+            </div>
+            <button className="block rounded-sm mt-3 w-full bg-green-500 text-white py-2 px-4 uppercase font-semibold tracking-wide text-lg hover:bg-green-700">
+              Search
+            </button>
+          </div>
+        </header>
+      </main>
     </Layout>
   );
 };
