@@ -4,7 +4,7 @@ import Layout from "~/components/Layout/Layout";
 export const Home: FC = () => {
   return (
     <Layout title="Home">
-      <main className="bg-gray-100 pb-64">
+      <main>
         <header className="container mx-auto px-2 text-center">
           <p className="uppercase font-semibold pt-16 text-4xl tracking-widest">
             Hungry?
