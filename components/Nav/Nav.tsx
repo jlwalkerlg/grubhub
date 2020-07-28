@@ -10,7 +10,7 @@ const Nav: FC = () => {
 
   return (
     <nav className="bg-white shadow-md">
-      <div className="container mx-auto flex items-center h-16 py-3">
+      <div className="container px-2 mx-auto flex items-center h-16 py-3">
         <Link href="/">
           <a className="font-medium">
             <span className="material-icons align-middle">restaurant_menu</span>
@@ -43,7 +43,7 @@ const Nav: FC = () => {
         <div
           className={`md:hidden ${
             isOpen ? "" : "hidden"
-          } fixed bottom-0 w-full h-full left-0 bg-gray-100`}
+          } fixed bottom-0 w-full h-full left-0 px-2 bg-gray-100`}
           style={{ top: "4rem" }}
         >
           <ul className="container mx-auto mt-5">
