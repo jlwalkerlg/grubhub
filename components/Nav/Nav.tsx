@@ -20,7 +20,7 @@ const Nav: FC = () => {
         </Link>
 
         <button
-          className="md:hidden ml-auto rounded w-8 h-8 bg-primary p-1"
+          className="md:hidden ml-auto rounded-sm w-8 h-8 bg-primary p-1"
           onClick={toggleNav}
         >
           <svg
@@ -68,9 +68,7 @@ const Nav: FC = () => {
             <li>
               <div className="mt-5 pt-1 border-solid border-gray-400 border-t-2">
                 <Link href="/register">
-                  <a className="mt-6 inline-block bg-primary px-4 py-2 rounded text-white uppercase hover:bg-primary-darker">
-                    Register Restaurant
-                  </a>
+                  <a className="btn btn-primary mt-6">Register Restaurant</a>
                 </Link>
               </div>
             </li>
@@ -88,7 +86,7 @@ const Nav: FC = () => {
           </a>
         </Link>
         <Link href="/register-restaurant">
-          <a className="hidden md:block bg-primary px-4 py-2 ml-4 rounded text-white uppercase font-medium hover:bg-primary-darker">
+          <a className="btn btn-primary hidden md:block ml-4">
             Register Restaurant
           </a>
         </Link>

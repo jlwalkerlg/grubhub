@@ -28,7 +28,7 @@ export const Home: FC = () => {
                 placeholder="Enter your postcode"
               />
             </div>
-            <button className="block rounded-sm mt-3 w-full bg-green-500 text-white py-2 px-4 uppercase font-semibold tracking-wide text-lg hover:bg-green-700">
+            <button className="btn btn-secondary text-lg w-full mt-3">
               Search
             </button>
           </div>
