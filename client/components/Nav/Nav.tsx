@@ -13,7 +13,7 @@ const Nav: FC = () => {
       <div className="shadow-md relative z-10">
         <div className="container px-2 mx-auto flex items-center h-16 py-3">
           <Link href="/">
-            <a className="font-medium">
+            <a className="font-semibold">
               <span className="material-icons align-middle">
                 restaurant_menu
               </span>
