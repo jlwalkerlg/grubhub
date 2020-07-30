@@ -17,7 +17,7 @@ const Layout: FC<Props> = ({ title, children }) => {
         />
         <title>{title}</title>
       </Head>
-      <div className="pt-16 bg-gray-100 pb-64">
+      <div className="mt-16 pb-64">
         <Nav />
         {children}
       </div>
