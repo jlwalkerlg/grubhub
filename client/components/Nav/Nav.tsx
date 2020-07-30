@@ -53,7 +53,7 @@ const Nav: FC = () => {
               Register
             </a>
           </Link>
-          <Link href="/register-restaurant">
+          <Link href="/restaurants/register">
             <a className="btn btn-primary hidden md:block ml-4">
               Register Restaurant
             </a>
@@ -85,7 +85,7 @@ const Nav: FC = () => {
           </li>
           <li>
             <div className="mt-5 pt-1 border-solid border-gray-400 border-t-2">
-              <Link href="/register">
+              <Link href="/restaurants/register">
                 <a className="btn btn-primary mt-6">Register Restaurant</a>
               </Link>
             </div>
