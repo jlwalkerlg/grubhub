@@ -5,7 +5,7 @@ export const RegisterRestaurant: FC = () => {
   return (
     <Layout title="Register Restaurant">
       <main>
-        <div className="container px-2 mx-auto mt-8">
+        <div className="container mt-8">
           <div className="bg-white p-8 shadow-sm border-t-2 border-solid border-gray-300">
             <h2 className="text-2xl font-semibold text-gray-800 tracking-wider">
               Register Your Restaurant

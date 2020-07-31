@@ -11,7 +11,7 @@ const Nav: FC = () => {
   return (
     <nav className="fixed w-full z-40 top-0 bg-white">
       <div className="shadow-md relative z-10">
-        <div className="container px-2 mx-auto flex items-center h-16 py-3">
+        <div className="container flex items-center h-16 py-3">
           <Link href="/">
             <a className="font-semibold">
               <span className="material-icons align-middle">
@@ -64,9 +64,9 @@ const Nav: FC = () => {
       <div
         className={`md:hidden ${
           isOpen ? "" : "hidden"
-        } fixed bottom-0 w-full h-full top-0 mt-16 left-0 px-2 bg-gray-100`}
+        } fixed bottom-0 w-full h-full top-0 mt-16 left-0 bg-gray-100`}
       >
-        <ul className="container mx-auto mt-5">
+        <ul className="container mt-5">
           <li>
             <Link href="/login">
               <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">

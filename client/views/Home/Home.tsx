@@ -5,7 +5,7 @@ export const Home: FC = () => {
   return (
     <Layout title="Home">
       <main>
-        <header className="container mx-auto px-2 text-center">
+        <header className="container text-center">
           <p className="uppercase font-semibold pt-16 text-4xl tracking-widest">
             Hungry?
           </p>

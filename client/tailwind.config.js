@@ -1,6 +1,10 @@
 module.exports = {
   purge: ["./views/**/*.tsx", "./components/**/*.tsx"],
   theme: {
+    container: (theme) => ({
+      center: true,
+      padding: theme("spacing.4"),
+    }),
     extend: {
       colors: {
         primary: {
