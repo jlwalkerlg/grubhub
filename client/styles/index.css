@@ -25,4 +25,12 @@ body {
   @apply bg-green-700;
 }
 
+.input {
+  @apply block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100;
+}
+
+.label {
+  @apply block text-sm text-gray-800 font-semibold;
+}
+
 @tailwind utilities;
