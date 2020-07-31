@@ -59,7 +59,7 @@ export const RegisterRestaurant: FC = () => {
                 className="block text-sm text-gray-800 font-semibold"
                 htmlFor="restaurantName"
               >
-                Restaurant Name <span className="text-primary">*</span>
+                Name <span className="text-primary">*</span>
               </label>
               <input
                 className="block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100"
@@ -74,28 +74,77 @@ export const RegisterRestaurant: FC = () => {
                 className="block text-sm text-gray-800 font-semibold"
                 htmlFor="restaurantPhone"
               >
-                Restaurant Phone <span className="text-primary">*</span>
+                Phone Number <span className="text-primary">*</span>
+              </label>
+              <input
+                className="block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100"
+                type="tel"
+                name="restaurantPhone"
+                id="restaurantPhone"
+              />
+            </div>
+
+            <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
+              Restaurant Address
+            </p>
+
+            <div className="mt-4">
+              <label
+                className="block text-sm text-gray-800 font-semibold"
+                htmlFor="addressLine1"
+              >
+                Address Line 1 <span className="text-primary">*</span>
               </label>
               <input
                 className="block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100"
                 type="text"
-                name="restaurantPhone"
-                id="restaurantPhone"
+                name="addressLine1"
+                id="addressLine1"
               />
             </div>
 
             <div className="mt-4">
               <label
                 className="block text-sm text-gray-800 font-semibold"
-                htmlFor="restaurantPostCode"
+                htmlFor="addressLine2"
               >
-                Restaurant Post Code <span className="text-primary">*</span>
+                Address Line 2
               </label>
               <input
                 className="block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100"
                 type="text"
-                name="restaurantPostCode"
-                id="restaurantPostCode"
+                name="addressLine2"
+                id="addressLine2"
+              />
+            </div>
+
+            <div className="mt-4">
+              <label
+                className="block text-sm text-gray-800 font-semibold"
+                htmlFor="city"
+              >
+                Town / City <span className="text-primary">*</span>
+              </label>
+              <input
+                className="block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100"
+                type="text"
+                name="city"
+                id="city"
+              />
+            </div>
+
+            <div className="mt-4">
+              <label
+                className="block text-sm text-gray-800 font-semibold"
+                htmlFor="postCode"
+              >
+                Post Code <span className="text-primary">*</span>
+              </label>
+              <input
+                className="block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100"
+                type="text"
+                name="postCode"
+                id="postCode"
               />
             </div>
 
