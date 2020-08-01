@@ -25,6 +25,7 @@ module.exports = {
           ...defaults.colors.red,
           default: defaults.colors.red["700"],
           darker: defaults.colors.red["800"],
+          disabled: "rgba(197,48,48,0.58)",
         },
         secondary: green,
         green: green,

@@ -20,7 +20,7 @@ body {
 }
 
 .btn-primary:disabled {
-  @apply bg-gray-200 text-gray-600 border border-gray-400 cursor-default;
+  @apply bg-primary-disabled cursor-default;
 }
 
 .btn-outline-primary {
