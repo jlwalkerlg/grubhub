@@ -5,6 +5,7 @@ import FormError from "~/components/FormError/FormError";
 export interface Props {
   managerName: FormComponent;
   managerEmail: FormComponent;
+  managerPassword: FormComponent;
   restaurantName: FormComponent;
   restaurantPhone: FormComponent;
   addressLine1: FormComponent;
@@ -21,6 +22,7 @@ export interface Props {
 const FirstStep: FC<Props> = ({
   managerName,
   managerEmail,
+  managerPassword,
   canAdvance,
   advanceStep,
 }) => {
@@ -56,6 +58,20 @@ const FirstStep: FC<Props> = ({
           id="managerEmail"
         />
         <FormError component={managerEmail} className="mt-1" />
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="managerPassword">
+          Manager Password <span className="text-primary">*</span>
+        </label>
+        <input
+          {...managerPassword.props}
+          className="input"
+          type="password"
+          name="managerPassword"
+          id="managerPassword"
+        />
+        <FormError component={managerPassword} className="mt-1" />
       </div>
 
       <div className="mt-8">

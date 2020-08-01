@@ -8,34 +8,51 @@ import React, {
 } from "react";
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
 import { useFormComponent } from "~/lib/Form/useFormComponent";
-import { RequiredRule, MinLengthRule } from "~/lib/Form/Rule";
+import {
+  RequiredRule,
+  PasswordRule,
+  EmailRule,
+  PhoneRule,
+  PostCodeRule,
+} from "~/lib/Form/Rule";
 import { CompositeForm, Form } from "~/lib/Form/Form";
 
 const RegisterRestaurantFormController: FC = () => {
-  const managerName = useFormComponent("", [
+  const managerName = useFormComponent("", [new RequiredRule()]);
+  const managerEmail = useFormComponent("", [
     new RequiredRule(),
-    new MinLengthRule(5),
+    new EmailRule(),
   ]);
-  const managerEmail = useFormComponent("");
+  const managerPassword = useFormComponent("", [
+    new RequiredRule(),
+    new PasswordRule(),
+  ]);
   const restaurantName = useFormComponent("", [new RequiredRule()]);
-  const restaurantPhone = useFormComponent("");
-  const addressLine1 = useFormComponent("");
-  const addressLine2 = useFormComponent("");
-  const city = useFormComponent("");
-  const postCode = useFormComponent("");
+  const restaurantPhone = useFormComponent("", [
+    new RequiredRule(),
+    new PhoneRule(),
+  ]);
+  const addressLine1 = useFormComponent("", [new RequiredRule()]);
+  const addressLine2 = useFormComponent("", [new RequiredRule()]);
+  const city = useFormComponent("", [new RequiredRule()]);
+  const postCode = useFormComponent("", [
+    new RequiredRule(),
+    new PostCodeRule(),
+  ]);
 
   const [step, setStep] = useState(1);
 
   const form = useMemo(
     () =>
       new CompositeForm([
-        new Form({ managerName, managerEmail }),
+        new Form({ managerName, managerEmail, managerPassword }),
         new Form({ restaurantName, restaurantPhone }),
         new Form({ addressLine1, addressLine2, city, postCode }),
       ]),
     [
       managerName,
       managerEmail,
+      managerPassword,
       restaurantName,
       restaurantPhone,
       addressLine1,
@@ -73,6 +90,7 @@ const RegisterRestaurantFormController: FC = () => {
     <RegisterRestaurantForm
       managerName={managerName}
       managerEmail={managerEmail}
+      managerPassword={managerPassword}
       restaurantName={restaurantName}
       restaurantPhone={restaurantPhone}
       addressLine1={addressLine1}
