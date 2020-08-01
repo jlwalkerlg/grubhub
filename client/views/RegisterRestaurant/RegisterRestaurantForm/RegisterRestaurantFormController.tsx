@@ -1,19 +1,8 @@
-import React, { FC, FormEvent, useState, MouseEvent } from "react";
+import React, { FC, FormEvent, useState, MouseEvent, useMemo } from "react";
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
-import { useFormComponent, FormComponent } from "~/lib/Form/useFormComponent";
+import { useFormComponent } from "~/lib/Form/useFormComponent";
 import { RequiredRule, MinLengthRule } from "~/lib/Form/Rule";
-
-class Form {
-  constructor(readonly components: FormComponent[]) {}
-
-  validate(): boolean {
-    for (const component of this.components) {
-      if (!component.validate()) return false;
-    }
-
-    return true;
-  }
-}
+import { CompositeForm, Form } from "~/lib/Form/Form";
 
 const RegisterRestaurantFormController: FC = () => {
   const managerName = useFormComponent("", [
@@ -30,16 +19,29 @@ const RegisterRestaurantFormController: FC = () => {
 
   const [step, setStep] = useState(1);
 
-  const forms = [
-    new Form([managerName, managerEmail]),
-    new Form([restaurantName, restaurantPhone]),
-    new Form([addressLine1, addressLine2, city, postCode]),
-  ];
+  const form = useMemo(
+    () =>
+      new CompositeForm([
+        new Form({ managerName, managerEmail }),
+        new Form({ restaurantName, restaurantPhone }),
+        new Form({ addressLine1, addressLine2, city, postCode }),
+      ]),
+    [
+      managerName,
+      managerEmail,
+      restaurantName,
+      restaurantPhone,
+      addressLine1,
+      addressLine2,
+      city,
+      postCode,
+    ]
+  );
 
   function advanceStep(e: MouseEvent) {
     e.preventDefault();
 
-    if (forms[step - 1].validate()) {
+    if (form.validateForm(step - 1)) {
       setStep(step + 1);
     }
   }
@@ -51,16 +53,7 @@ const RegisterRestaurantFormController: FC = () => {
   function onSubmit(e: FormEvent) {
     e.preventDefault();
 
-    console.log("values", {
-      managerName: managerName.value,
-      managerEmail: managerEmail.value,
-      restaurantName: restaurantName.value,
-      restaurantPhone: restaurantPhone.value,
-      addressLine1: addressLine1.value,
-      addressLine2: addressLine2.value,
-      city: city.value,
-      postCode: postCode.value,
-    });
+    console.log("values", form.values);
   }
 
   return (

@@ -1,5 +1,6 @@
 import React, { FC, FormEvent, MouseEvent } from "react";
 import { FormComponent } from "~/lib/Form/useFormComponent";
+import FormError from "~/components/FormError/FormError";
 
 export interface Props {
   managerName: FormComponent;
@@ -28,18 +29,13 @@ const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
           Manager Name <span className="text-primary">*</span>
         </label>
         <input
-          valid={true}
           {...managerName.props}
           className="input"
           type="text"
           name="managerName"
           id="managerName"
         />
-        {managerName.error && (
-          <p className="mt-1 text-xs text-primary font-medium">
-            {managerName.error}
-          </p>
-        )}
+        <FormError component={managerName} className="mt-1" />
       </div>
 
       <div className="mt-4">
@@ -53,6 +49,7 @@ const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
           name="managerEmail"
           id="managerEmail"
         />
+        <FormError component={managerEmail} className="mt-1" />
       </div>
 
       <div className="mt-8">
@@ -91,6 +88,7 @@ const SecondStep: FC<Props> = ({
           name="restaurantName"
           id="restaurantName"
         />
+        <FormError component={restaurantName} className="mt-1" />
       </div>
 
       <div className="mt-4">
@@ -104,6 +102,7 @@ const SecondStep: FC<Props> = ({
           name="restaurantPhone"
           id="restaurantPhone"
         />
+        <FormError component={restaurantPhone} className="mt-1" />
       </div>
 
       <div className="mt-8">
@@ -152,6 +151,7 @@ const LastStep: FC<Props> = ({
           name="addressLine1"
           id="addressLine1"
         />
+        <FormError component={addressLine1} className="mt-1" />
       </div>
 
       <div className="mt-4">
@@ -165,6 +165,7 @@ const LastStep: FC<Props> = ({
           name="addressLine2"
           id="addressLine2"
         />
+        <FormError component={addressLine2} className="mt-1" />
       </div>
 
       <div className="mt-4">
@@ -178,6 +179,7 @@ const LastStep: FC<Props> = ({
           name="city"
           id="city"
         />
+        <FormError component={city} className="mt-1" />
       </div>
 
       <div className="mt-4">
@@ -191,6 +193,7 @@ const LastStep: FC<Props> = ({
           name="postCode"
           id="postCode"
         />
+        <FormError component={postCode} className="mt-1" />
       </div>
 
       <div className="mt-8">

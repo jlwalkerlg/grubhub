@@ -38,12 +38,12 @@ body {
   @apply block w-full mt-2 py-2 px-4 border rounded-sm bg-gray-100;
 }
 
-.input[valid="true"] {
-  @apply border-green-600;
-}
-
 .input[valid="false"] {
   @apply border-red-700;
+}
+
+.form-error {
+  @apply text-xs text-primary font-medium;
 }
 
 .label {
