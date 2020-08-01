@@ -33,7 +33,7 @@ const RegisterRestaurantFormController: FC = () => {
     new PhoneRule(),
   ]);
   const addressLine1 = useFormComponent("", [new RequiredRule()]);
-  const addressLine2 = useFormComponent("", [new RequiredRule()]);
+  const addressLine2 = useFormComponent("");
   const city = useFormComponent("", [new RequiredRule()]);
   const postCode = useFormComponent("", [
     new RequiredRule(),
