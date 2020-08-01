@@ -7,7 +7,7 @@ interface Props {
 }
 
 const FormError: FC<Props> = ({ component, className }) => {
-  if (component.error === null) return null;
+  if (!component.touched || component.valid === null) return null;
 
   return <p className={`form-error ${className || ""}`}>{component.error}</p>;
 };

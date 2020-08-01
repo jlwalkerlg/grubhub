@@ -1,4 +1,11 @@
-import React, { FC, FormEvent, useState, MouseEvent, useMemo } from "react";
+import React, {
+  FC,
+  FormEvent,
+  useState,
+  useMemo,
+  SyntheticEvent,
+  useEffect,
+} from "react";
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
 import { useFormComponent } from "~/lib/Form/useFormComponent";
 import { RequiredRule, MinLengthRule } from "~/lib/Form/Rule";
@@ -10,7 +17,7 @@ const RegisterRestaurantFormController: FC = () => {
     new MinLengthRule(5),
   ]);
   const managerEmail = useFormComponent("");
-  const restaurantName = useFormComponent("");
+  const restaurantName = useFormComponent("", [new RequiredRule()]);
   const restaurantPhone = useFormComponent("");
   const addressLine1 = useFormComponent("");
   const addressLine2 = useFormComponent("");
@@ -38,10 +45,16 @@ const RegisterRestaurantFormController: FC = () => {
     ]
   );
 
-  function advanceStep(e: MouseEvent) {
+  const [canAdvance, setCanAdvance] = useState(() => form.validateForm(0));
+
+  useEffect(() => {
+    setCanAdvance(form.validateForm(step - 1));
+  }, [form]);
+
+  function advanceStep(e: SyntheticEvent) {
     e.preventDefault();
 
-    if (form.validateForm(step - 1)) {
+    if (canAdvance) {
       setStep(step + 1);
     }
   }
@@ -67,6 +80,7 @@ const RegisterRestaurantFormController: FC = () => {
       city={city}
       postCode={postCode}
       step={step}
+      canAdvance={canAdvance}
       advanceStep={advanceStep}
       backStep={backStep}
       onSubmit={onSubmit}

@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, MouseEvent } from "react";
+import React, { FC, FormEvent, SyntheticEvent } from "react";
 import { FormComponent } from "~/lib/Form/useFormComponent";
 import FormError from "~/components/FormError/FormError";
 
@@ -12,12 +12,18 @@ export interface Props {
   city: FormComponent;
   postCode: FormComponent;
   step: number;
-  advanceStep(e: MouseEvent): void;
+  canAdvance: boolean;
+  advanceStep(e: SyntheticEvent): void;
   backStep(): void;
   onSubmit(e: FormEvent): void;
 }
 
-const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
+const FirstStep: FC<Props> = ({
+  managerName,
+  managerEmail,
+  canAdvance,
+  advanceStep,
+}) => {
   return (
     <div>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
@@ -57,6 +63,7 @@ const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
           className="btn btn-primary font-semibold w-full"
           onClick={advanceStep}
           role="button"
+          disabled={!canAdvance}
         >
           Continue
         </button>
@@ -68,6 +75,7 @@ const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
 const SecondStep: FC<Props> = ({
   restaurantName,
   restaurantPhone,
+  canAdvance,
   advanceStep,
   backStep,
 }) => {
@@ -118,6 +126,7 @@ const SecondStep: FC<Props> = ({
         <button
           className="btn btn-primary font-semibold w-full"
           onClick={advanceStep}
+          disabled={!canAdvance}
         >
           Continue
         </button>
@@ -131,6 +140,7 @@ const LastStep: FC<Props> = ({
   addressLine2,
   city,
   postCode,
+  canAdvance,
   backStep,
   onSubmit,
 }) => {
@@ -209,6 +219,7 @@ const LastStep: FC<Props> = ({
         <button
           className="btn btn-primary font-semibold w-full"
           onClick={onSubmit}
+          disabled={!canAdvance}
         >
           Register
         </button>
@@ -218,19 +229,7 @@ const LastStep: FC<Props> = ({
 };
 
 const RegisterRestaurantForm: FC<Props> = (props: Props) => {
-  const {
-    managerName,
-    managerEmail,
-    restaurantName,
-    restaurantPhone,
-    addressLine1,
-    addressLine2,
-    city,
-    postCode,
-    step,
-    advanceStep,
-    onSubmit,
-  } = props;
+  const { step, onSubmit } = props;
 
   return (
     <form action="/restaurants/register" method="POST" onSubmit={onSubmit}>
