@@ -8,6 +8,7 @@ body {
 
 .btn {
   @apply rounded-sm inline-block py-2 px-4 uppercase font-medium;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .btn-primary {
@@ -16,6 +17,14 @@ body {
 
 .btn-primary:hover {
   @apply bg-primary-darker;
+}
+
+.btn-outline-primary {
+  @apply bg-white border border-primary text-red-900;
+}
+
+.btn-outline-primary:hover {
+  @apply bg-red-100;
 }
 
 .btn-secondary {

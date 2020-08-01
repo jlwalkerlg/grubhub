@@ -1,4 +1,4 @@
-import React, { FC, FormEvent } from "react";
+import React, { FC, FormEvent, useState } from "react";
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
 import { useFormComponent } from "~/lib/Form/useFormComponent";
 
@@ -11,6 +11,16 @@ const RegisterRestaurantFormController: FC = () => {
   const addressLine2 = useFormComponent("");
   const city = useFormComponent("");
   const postCode = useFormComponent("");
+
+  const [step, setStep] = useState(1);
+
+  function advanceStep() {
+    setStep(step + 1);
+  }
+
+  function backStep() {
+    setStep(step - 1);
+  }
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -37,6 +47,9 @@ const RegisterRestaurantFormController: FC = () => {
       addressLine2={addressLine2}
       city={city}
       postCode={postCode}
+      step={step}
+      advanceStep={advanceStep}
+      backStep={backStep}
       onSubmit={onSubmit}
     />
   );

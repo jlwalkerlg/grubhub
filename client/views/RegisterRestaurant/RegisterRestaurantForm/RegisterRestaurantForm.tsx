@@ -10,22 +10,15 @@ export interface Props {
   addressLine2: FormComponent;
   city: FormComponent;
   postCode: FormComponent;
+  step: number;
+  advanceStep(): void;
+  backStep(): void;
   onSubmit(e: FormEvent): void;
 }
 
-const RegisterRestaurantForm: FC<Props> = ({
-  managerName,
-  managerEmail,
-  restaurantName,
-  restaurantPhone,
-  addressLine1,
-  addressLine2,
-  city,
-  postCode,
-  onSubmit,
-}) => {
+const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
   return (
-    <form action="/restaurants/register" method="POST" onSubmit={onSubmit}>
+    <div>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
         Manager Details
       </p>
@@ -56,6 +49,26 @@ const RegisterRestaurantForm: FC<Props> = ({
         />
       </div>
 
+      <div className="mt-8">
+        <button
+          className="btn btn-primary font-semibold w-full"
+          onClick={advanceStep}
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const SecondStep: FC<Props> = ({
+  restaurantName,
+  restaurantPhone,
+  advanceStep,
+  backStep,
+}) => {
+  return (
+    <div>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
         Restaurant Details
       </p>
@@ -86,6 +99,37 @@ const RegisterRestaurantForm: FC<Props> = ({
         />
       </div>
 
+      <div className="mt-8">
+        <button
+          className="btn btn-outline-primary font-semibold w-full"
+          onClick={backStep}
+        >
+          Back
+        </button>
+      </div>
+
+      <div className="mt-3">
+        <button
+          className="btn btn-primary font-semibold w-full"
+          onClick={advanceStep}
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const LastStep: FC<Props> = ({
+  addressLine1,
+  addressLine2,
+  city,
+  postCode,
+  backStep,
+  onSubmit,
+}) => {
+  return (
+    <div>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
         Restaurant Address
       </p>
@@ -144,12 +188,45 @@ const RegisterRestaurantForm: FC<Props> = ({
 
       <div className="mt-8">
         <button
+          className="btn btn-outline-primary font-semibold w-full"
+          onClick={backStep}
+        >
+          Back
+        </button>
+      </div>
+
+      <div className="mt-3">
+        <button
           className="btn btn-primary font-semibold w-full"
           onClick={onSubmit}
         >
           Register
         </button>
       </div>
+    </div>
+  );
+};
+
+const RegisterRestaurantForm: FC<Props> = (props: Props) => {
+  const {
+    managerName,
+    managerEmail,
+    restaurantName,
+    restaurantPhone,
+    addressLine1,
+    addressLine2,
+    city,
+    postCode,
+    step,
+    advanceStep,
+    onSubmit,
+  } = props;
+
+  return (
+    <form action="/restaurants/register" method="POST" onSubmit={onSubmit}>
+      {step === 1 && <FirstStep {...props} />}
+      {step === 2 && <SecondStep {...props} />}
+      {step === 3 && <LastStep {...props} />}
     </form>
   );
 };
