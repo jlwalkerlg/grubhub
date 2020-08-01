@@ -1,4 +1,4 @@
-import React, { FC, FormEvent } from "react";
+import React, { FC, FormEvent, MouseEvent } from "react";
 import { FormComponent } from "~/lib/Form/useFormComponent";
 
 export interface Props {
@@ -11,7 +11,7 @@ export interface Props {
   city: FormComponent;
   postCode: FormComponent;
   step: number;
-  advanceStep(): void;
+  advanceStep(e: MouseEvent): void;
   backStep(): void;
   onSubmit(e: FormEvent): void;
 }
@@ -28,12 +28,18 @@ const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
           Manager Name <span className="text-primary">*</span>
         </label>
         <input
+          valid={true}
           {...managerName.props}
           className="input"
           type="text"
           name="managerName"
           id="managerName"
         />
+        {managerName.error && (
+          <p className="mt-1 text-xs text-primary font-medium">
+            {managerName.error}
+          </p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -53,6 +59,7 @@ const FirstStep: FC<Props> = ({ managerName, managerEmail, advanceStep }) => {
         <button
           className="btn btn-primary font-semibold w-full"
           onClick={advanceStep}
+          role="button"
         >
           Continue
         </button>
