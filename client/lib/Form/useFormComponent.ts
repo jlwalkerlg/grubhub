@@ -25,9 +25,7 @@ export function useFormComponent(
   rules: Rule[] = [],
   options: UseFormComponentOptions = {}
 ): FormComponent {
-  const required = useRef(
-    rules.filter((x) => x instanceof RequiredRule).length > 0
-  ).current;
+  const required = useRef(rules.some((x) => x instanceof RequiredRule)).current;
 
   const [value, setValue] = useState(initialValue);
   const [touched, setTouched] = useState(false);

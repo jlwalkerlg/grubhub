@@ -20,6 +20,9 @@ module.exports = {
       padding: defaults.spacing["4"],
     },
     extend: {
+      inset: {
+        "100": "100%",
+      },
       colors: {
         primary: {
           ...defaults.colors.red,

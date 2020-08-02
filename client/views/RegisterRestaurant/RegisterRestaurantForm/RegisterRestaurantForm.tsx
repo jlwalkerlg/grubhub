@@ -56,6 +56,7 @@ const FirstStep: FC<Props> = ({
           type="email"
           name="managerEmail"
           id="managerEmail"
+          placeholder="e.g. email@email.com"
         />
         <FormError component={managerEmail} className="mt-1" />
       </div>
@@ -125,6 +126,7 @@ const SecondStep: FC<Props> = ({
           type="tel"
           name="restaurantPhone"
           id="restaurantPhone"
+          placeholder="e.g. 07123 456789"
         />
         <FormError component={restaurantPhone} className="mt-1" />
       </div>
@@ -176,6 +178,7 @@ const LastStep: FC<Props> = ({
           type="text"
           name="addressLine1"
           id="addressLine1"
+          placeholder="e.g. 123 High Street"
         />
         <FormError component={addressLine1} className="mt-1" />
       </div>
@@ -204,6 +207,7 @@ const LastStep: FC<Props> = ({
           type="text"
           name="city"
           id="city"
+          placeholder="e.g. Manchester"
         />
         <FormError component={city} className="mt-1" />
       </div>
@@ -218,6 +222,7 @@ const LastStep: FC<Props> = ({
           type="text"
           name="postCode"
           id="postCode"
+          placeholder="e.g. AB12 3CD"
         />
         <FormError component={postCode} className="mt-1" />
       </div>
