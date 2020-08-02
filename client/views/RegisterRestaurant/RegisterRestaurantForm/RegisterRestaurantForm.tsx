@@ -126,7 +126,7 @@ const SecondStep: FC<Props> = ({
           type="tel"
           name="restaurantPhone"
           id="restaurantPhone"
-          placeholder="e.g. 07123 456789"
+          placeholder="e.g. 01234 567890"
         />
         <FormError component={restaurantPhone} className="mt-1" />
       </div>
