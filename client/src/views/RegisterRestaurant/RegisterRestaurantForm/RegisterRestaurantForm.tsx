@@ -1,7 +1,8 @@
-import React, { FC, FormEvent, SyntheticEvent, Ref, MouseEvent } from "react";
+import React, { FC, FormEvent, SyntheticEvent, MouseEvent } from "react";
+
 import { FormComponent } from "~/lib/Form/useFormComponent";
-import FormError from "~/components/FormError/FormError";
 import { AddressSearchResult } from "~/lib/AddressSearch/AddressSearcher";
+import FormError from "~/components/FormError/FormError";
 
 export interface Props {
   addressSearchResults: AddressSearchResult[];

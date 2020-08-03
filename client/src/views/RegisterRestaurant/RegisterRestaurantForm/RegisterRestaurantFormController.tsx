@@ -8,7 +8,6 @@ import React, {
   MouseEvent,
 } from "react";
 
-import { useFormComponent } from "~/lib/Form/useFormComponent";
 import {
   RequiredRule,
   PasswordRule,
@@ -17,8 +16,10 @@ import {
   PostCodeRule,
 } from "~/lib/Form/Rule";
 import { CompositeForm, Form } from "~/lib/Form/Form";
-import RegisterRestaurantForm from "./RegisterRestaurantForm";
+import { useFormComponent } from "~/lib/Form/useFormComponent";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
+
+import RegisterRestaurantForm from "./RegisterRestaurantForm";
 
 const RegisterRestaurantFormController: FC = () => {
   const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);

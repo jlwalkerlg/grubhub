@@ -1,5 +1,7 @@
 import React, { FC } from "react";
+
 import Layout from "~/components/Layout/Layout";
+
 import RegisterRestaurantFormController from "./RegisterRestaurantForm/RegisterRestaurantFormController";
 
 export const RegisterRestaurant: FC = () => {

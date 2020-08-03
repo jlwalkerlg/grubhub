@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import Head from "next/head";
+
 import Nav from "~/components/Nav/Nav";
 
 interface Props {
