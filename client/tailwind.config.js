@@ -13,7 +13,7 @@ const green = {
 };
 
 module.exports = {
-  purge: ["./views/**/*.tsx", "./components/**/*.tsx"],
+  purge: ["./src/views/**/*.tsx", "./src/components/**/*.tsx"],
   theme: {
     container: {
       center: true,
