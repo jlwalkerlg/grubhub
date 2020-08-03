@@ -1,6 +1,12 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 
+import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
+import LoginIcon from "~/components/Icons/LoginIcons";
+import RegisterIcon from "~/components/Icons/RegisterIcon";
+import CloseIcon from "~/components/Icons/CloseIcon";
+import MenuIcon from "~/components/Icons/MenuIcon";
+
 const Nav: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,33 +20,21 @@ const Nav: FC = () => {
         <div className="container flex items-center h-16 py-3">
           <Link href="/">
             <a className="font-semibold">
-              <span className="material-icons align-middle">
-                restaurant_menu
-              </span>
+              <RestaurantMenuIcon className="w-6 h-6 fill-current inline" />
               <span className="align-middle ml-1">FOOD</span>
               <span className="text-primary align-middle ml-1">SNAP</span>
             </a>
           </Link>
 
           <button
-            className="md:hidden ml-auto rounded-sm w-8 h-8 bg-primary p-1"
+            className="md:hidden ml-auto rounded-sm w-8 h-8 bg-primary p-1 text-white"
             onClick={toggleNav}
           >
-            <svg
-              className="text-white"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {isOpen ? (
-                <path d="M6 18L18 6M6 6l12 12"></path>
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16"></path>
-              )}
-            </svg>
+            {isOpen ? (
+              <CloseIcon className="fill-current w-6 h-6" />
+            ) : (
+              <MenuIcon className="fill-current w-6 h-6" />
+            )}
           </button>
 
           <Link href="/login">
@@ -70,7 +64,7 @@ const Nav: FC = () => {
           <li>
             <Link href="/login">
               <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                <span className="material-icons align-middle">login</span>
+                <LoginIcon className="w-6 h-6 fill-current inline" />
                 <span className="ml-2 align-middle">Login</span>
               </a>
             </Link>
@@ -78,7 +72,7 @@ const Nav: FC = () => {
           <li>
             <Link href="/register">
               <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                <span className="material-icons align-middle">how_to_reg</span>
+                <RegisterIcon className="w-6 h-6 fill-current inline" />
                 <span className="ml-2 align-middle">Register</span>
               </a>
             </Link>

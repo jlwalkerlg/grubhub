@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import Layout from "~/components/Layout/Layout";
+import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
 
 export const Home: FC = () => {
   return (
@@ -19,7 +20,7 @@ export const Home: FC = () => {
           <div className="bg-primary rounded-sm py-4 px-4 mt-8 text-center">
             <div className="relative rounded-sm border bg-white text-gray-600">
               <span className="absolute left-0 top-0 pt-2 px-2">
-                <span className="material-icons">location_on</span>
+                <LocationMarkerIcon className="w-6 h-6 text-gray-500 fill-current" />
               </span>
               <input
                 className="relative shadow bg-transparent appearance-none w-full py-2 pl-10 pr-3 text-gray-700 focus:outline-none focus:shadow-outline"
