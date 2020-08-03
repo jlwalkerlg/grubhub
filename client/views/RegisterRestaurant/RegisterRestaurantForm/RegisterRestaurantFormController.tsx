@@ -6,9 +6,7 @@ import React, {
   SyntheticEvent,
   useEffect,
   MouseEvent,
-  useRef,
 } from "react";
-import debounce from "lodash/debounce";
 
 import { useFormComponent } from "~/lib/Form/useFormComponent";
 import {
@@ -19,10 +17,8 @@ import {
   PostCodeRule,
 } from "~/lib/Form/Rule";
 import { CompositeForm, Form } from "~/lib/Form/Form";
-import addressSearcher, {
-  AddressSearchResult,
-} from "~/services/AddressSearch/AddressSearcher";
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
+import useAddressSearch from "~/services/AddressSearch/useAddressSearch";
 
 const RegisterRestaurantFormController: FC = () => {
   const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
@@ -49,19 +45,17 @@ const RegisterRestaurantFormController: FC = () => {
 
   const [manual, setManual] = useState(false);
 
-  const [addressSearchResults, setAddressSearchResults] = useState<
-    AddressSearchResult[]
-  >([]);
-
-  const searchAddress = useRef(
-    debounce((query: string) => {
-      addressSearcher.search(query).then(setAddressSearchResults);
-    }, 500)
-  );
+  const {
+    results: addressSearchResults,
+    address,
+    search,
+    getAddress,
+    reset,
+  } = useAddressSearch();
 
   useEffect(() => {
     if (addressLine1.value === "") {
-      setAddressSearchResults([]);
+      reset();
       return;
     }
 
@@ -70,23 +64,25 @@ const RegisterRestaurantFormController: FC = () => {
       return;
     }
 
-    searchAddress.current(addressLine1.value);
+    search(addressLine1.value);
   }, [addressLine1.value]);
+
+  useEffect(() => {
+    if (address !== null) {
+      addressLine1.setValue(address.addressLine1);
+      addressLine2.setValue(address.addressLine2);
+      city.setValue(address.city);
+      postCode.setValue(address.postCode);
+    }
+  }, [address]);
 
   function onSelectAddress(e: MouseEvent<HTMLButtonElement>): void {
     e.preventDefault();
 
     setManual(true);
-    setAddressSearchResults([]);
+    reset();
 
-    const placeId = e.currentTarget.dataset.id;
-
-    addressSearcher.getAddress(placeId).then((address) => {
-      addressLine1.setValue(address.addressLine1);
-      addressLine2.setValue(address.addressLine2);
-      city.setValue(address.city);
-      postCode.setValue(address.postCode);
-    });
+    getAddress(e.currentTarget.dataset.id);
   }
 
   const [step, setStep] = useState(3);
