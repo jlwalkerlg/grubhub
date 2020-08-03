@@ -18,7 +18,7 @@ import {
 } from "~/lib/Form/Rule";
 import { CompositeForm, Form } from "~/lib/Form/Form";
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
-import useAddressSearch from "~/services/AddressSearch/useAddressSearch";
+import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 
 const RegisterRestaurantFormController: FC = () => {
   const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
