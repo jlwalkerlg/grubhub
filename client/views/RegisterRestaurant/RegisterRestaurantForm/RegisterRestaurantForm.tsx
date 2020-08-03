@@ -1,14 +1,10 @@
 import React, { FC, FormEvent, SyntheticEvent, Ref, MouseEvent } from "react";
 import { FormComponent } from "~/lib/Form/useFormComponent";
 import FormError from "~/components/FormError/FormError";
-
-export interface AutocompleteResult {
-  id: string;
-  description: string;
-}
+import { AddressSearchResult } from "~/services/AddressSearch/AddressSearcher";
 
 export interface Props {
-  autocompleteResults: AutocompleteResult[];
+  addressSearchResults: AddressSearchResult[];
   onSelectAddress(e: MouseEvent<HTMLButtonElement>): void;
   managerName: FormComponent;
   managerEmail: FormComponent;
@@ -161,7 +157,7 @@ const SecondStep: FC<Props> = ({
 };
 
 const LastStep: FC<Props> = ({
-  autocompleteResults,
+  addressSearchResults,
   onSelectAddress,
   addressLine1,
   addressLine2,
@@ -190,9 +186,9 @@ const LastStep: FC<Props> = ({
             id="addressLine1"
             placeholder="e.g. 123 High Street"
           />
-          {autocompleteResults.length > 0 && (
+          {addressSearchResults.length > 0 && (
             <ul className="absolute top-100 w-full rounded-lg shadow">
-              {autocompleteResults.map((x) => {
+              {addressSearchResults.map((x) => {
                 return (
                   <li key={x.id} className="w-full">
                     <button
