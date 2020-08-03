@@ -1,8 +1,15 @@
-import React, { FC, FormEvent, SyntheticEvent } from "react";
+import React, { FC, FormEvent, SyntheticEvent, Ref, MouseEvent } from "react";
 import { FormComponent } from "~/lib/Form/useFormComponent";
 import FormError from "~/components/FormError/FormError";
 
+export interface AutocompleteResult {
+  id: string;
+  description: string;
+}
+
 export interface Props {
+  autocompleteResults: AutocompleteResult[];
+  onSelectAddress(e: MouseEvent<HTMLButtonElement>): void;
   managerName: FormComponent;
   managerEmail: FormComponent;
   managerPassword: FormComponent;
@@ -154,6 +161,8 @@ const SecondStep: FC<Props> = ({
 };
 
 const LastStep: FC<Props> = ({
+  autocompleteResults,
+  onSelectAddress,
   addressLine1,
   addressLine2,
   city,
@@ -172,14 +181,34 @@ const LastStep: FC<Props> = ({
         <label className="label" htmlFor="addressLine1">
           Address Line 1 <span className="text-primary">*</span>
         </label>
-        <input
-          {...addressLine1.props}
-          className="input"
-          type="text"
-          name="addressLine1"
-          id="addressLine1"
-          placeholder="e.g. 123 High Street"
-        />
+        <div className="relative">
+          <input
+            {...addressLine1.props}
+            className="input"
+            type="text"
+            name="addressLine1"
+            id="addressLine1"
+            placeholder="e.g. 123 High Street"
+          />
+          {autocompleteResults.length > 0 && (
+            <ul className="absolute top-100 w-full rounded-lg shadow">
+              {autocompleteResults.map((x) => {
+                return (
+                  <li key={x.id} className="w-full">
+                    <button
+                      data-id={x.id}
+                      onClick={onSelectAddress}
+                      className="py-2 px-4 w-full text-left bg-white hover:bg-gray-100 border-t border-gray-300 cursor-pointer"
+                      role="button"
+                    >
+                      {x.description}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
         <FormError component={addressLine1} className="mt-1" />
       </div>
 

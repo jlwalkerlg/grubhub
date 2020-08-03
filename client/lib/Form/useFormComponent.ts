@@ -8,6 +8,7 @@ export interface FormComponent {
   valid: boolean;
   error: string;
   validate(): boolean;
+  setValue(val: string): void;
   props: {
     value: string;
     valid: "true" | "false" | undefined;
@@ -54,10 +55,14 @@ export function useFormComponent(
     validate(e.currentTarget.value);
   }
 
-  function onChange(e: SyntheticEvent<HTMLInputElement>): void {
+  function update(val: string) {
     setDirty(true);
-    setValue(e.currentTarget.value);
-    validate(e.currentTarget.value);
+    setValue(val);
+    validate(val);
+  }
+
+  function onChange(e: SyntheticEvent<HTMLInputElement>): void {
+    update(e.currentTarget.value);
   }
 
   return {
@@ -67,6 +72,7 @@ export function useFormComponent(
     valid,
     error,
     validate,
+    setValue: update,
     props: {
       value,
       valid: valid ? "true" : "false",

@@ -9,19 +9,13 @@ interface Props {
 
 const Layout: FC<Props> = ({ title, children }) => {
   return (
-    <>
+    <div className="pt-16 pb-64">
       <Head>
-        <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet"
-        />
         <title>{title}</title>
       </Head>
-      <div className="pt-16 pb-64">
-        <Nav />
-        {children}
-      </div>
-    </>
+      <Nav />
+      {children}
+    </div>
   );
 };
 

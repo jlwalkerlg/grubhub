@@ -8,11 +8,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.158",
+    "lodash": "^4.17.19",
     "next": "9.4.4",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
   "devDependencies": {
+    "@types/googlemaps": "^3.39.11",
     "@types/node": "^14.0.24",
     "@types/react": "^16.9.43",
     "postcss-preset-env": "^6.7.0",

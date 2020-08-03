@@ -5,8 +5,13 @@ import React, {
   useMemo,
   SyntheticEvent,
   useEffect,
+  useRef,
+  MouseEvent,
 } from "react";
-import RegisterRestaurantForm from "./RegisterRestaurantForm";
+import debounce from "lodash/debounce";
+import RegisterRestaurantForm, {
+  AutocompleteResult,
+} from "./RegisterRestaurantForm";
 import { useFormComponent } from "~/lib/Form/useFormComponent";
 import {
   RequiredRule,
@@ -17,18 +22,50 @@ import {
 } from "~/lib/Form/Rule";
 import { CompositeForm, Form } from "~/lib/Form/Form";
 
+const getPredictions = (
+  client: google.maps.places.AutocompleteService,
+  query: string
+) => {
+  const request: google.maps.places.AutocompletionRequest = {
+    input: query,
+    componentRestrictions: {
+      country: "uk",
+    },
+    types: ["address"],
+  };
+
+  return new Promise((resolve: (predictions: AutocompleteResult[]) => void) => {
+    client.getPlacePredictions(
+      request,
+      (predictions: google.maps.places.AutocompletePrediction[]) => {
+        if (predictions === null) {
+          resolve([]);
+          return;
+        }
+
+        resolve(
+          predictions.map((x) => ({
+            id: x.place_id,
+            description: x.description,
+          }))
+        );
+      }
+    );
+  });
+};
+
 const RegisterRestaurantFormController: FC = () => {
-  const managerName = useFormComponent("", [new RequiredRule()]);
-  const managerEmail = useFormComponent("", [
+  const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
+  const managerEmail = useFormComponent("jordan@walker.com", [
     new RequiredRule(),
     new EmailRule(),
   ]);
-  const managerPassword = useFormComponent("", [
+  const managerPassword = useFormComponent("password123", [
     new RequiredRule(),
     new PasswordRule(),
   ]);
-  const restaurantName = useFormComponent("", [new RequiredRule()]);
-  const restaurantPhone = useFormComponent("", [
+  const restaurantName = useFormComponent("Chow Main", [new RequiredRule()]);
+  const restaurantPhone = useFormComponent("01274 788944", [
     new RequiredRule(),
     new PhoneRule(),
   ]);
@@ -40,7 +77,67 @@ const RegisterRestaurantFormController: FC = () => {
     new PostCodeRule(),
   ]);
 
-  const [step, setStep] = useState(1);
+  const [manual, setManual] = useState(false);
+
+  const client = useRef<google.maps.places.AutocompleteService>(null);
+  useEffect(() => {
+    client.current = new window.google.maps.places.AutocompleteService();
+  }, []);
+
+  const [autocompleteResults, setAutocompleteResults] = useState<
+    AutocompleteResult[]
+  >([]);
+
+  useEffect(() => {
+    if (addressLine1.value === "") {
+      setAutocompleteResults([]);
+      return;
+    }
+
+    if (manual) {
+      setManual(false);
+      return;
+    }
+
+    const fetchPredictions = debounce(() => {
+      getPredictions(client.current, addressLine1.value).then((predictions) => {
+        setAutocompleteResults(predictions);
+      });
+    }, 500);
+
+    fetchPredictions();
+  }, [addressLine1.value]);
+
+  function onSelectAddress(e: MouseEvent<HTMLButtonElement>): void {
+    e.preventDefault();
+
+    setManual(true);
+    setAutocompleteResults([]);
+
+    const placeId = e.currentTarget.dataset.id;
+
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+      {
+        placeId,
+      },
+      (results) => {
+        const { address_components } = results[0];
+
+        const streetNumber = address_components[0].long_name;
+        const street = address_components[1].long_name;
+        const town = address_components[2].long_name;
+        const postalCode = address_components[6].long_name;
+
+        addressLine1.setValue(`${streetNumber} ${street}`);
+        addressLine2.setValue("");
+        city.setValue(town);
+        postCode.setValue(postalCode);
+      }
+    );
+  }
+
+  const [step, setStep] = useState(3);
 
   const form = useMemo(
     () =>
@@ -88,6 +185,8 @@ const RegisterRestaurantFormController: FC = () => {
 
   return (
     <RegisterRestaurantForm
+      autocompleteResults={autocompleteResults}
+      onSelectAddress={onSelectAddress}
       managerName={managerName}
       managerEmail={managerEmail}
       managerPassword={managerPassword}
