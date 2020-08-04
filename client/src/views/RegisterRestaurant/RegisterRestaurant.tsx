@@ -7,6 +7,8 @@ import RegisterRestaurantFormController from "./RegisterRestaurantForm/RegisterR
 
 const browser = typeof window !== "undefined";
 
+const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+
 export const RegisterRestaurant: FC = () => {
   return (
     <Layout title="Register Restaurant">
@@ -14,7 +16,7 @@ export const RegisterRestaurant: FC = () => {
         {!browser && (
           <script
             type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xEW_Qy_ILGDOuMxwBftuzze0QDGdLSQ&libraries=places"
+            src={`https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`}
             async
           ></script>
         )}
