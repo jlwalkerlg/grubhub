@@ -5,7 +5,6 @@ import React, {
   useMemo,
   SyntheticEvent,
   useEffect,
-  MouseEvent,
 } from "react";
 
 import {
@@ -44,29 +43,11 @@ const RegisterRestaurantFormController: FC = () => {
     new PostCodeRule(),
   ]);
 
-  const [manual, setManual] = useState(false);
-
   const {
     results: addressSearchResults,
     address,
-    search,
-    getAddress,
-    reset,
-  } = useAddressSearch();
-
-  useEffect(() => {
-    if (addressLine1.value === "") {
-      reset();
-      return;
-    }
-
-    if (manual) {
-      setManual(false);
-      return;
-    }
-
-    search(addressLine1.value);
-  }, [addressLine1.value]);
+    onSelectAddress,
+  } = useAddressSearch(addressLine1.value);
 
   useEffect(() => {
     if (address !== null) {
@@ -76,15 +57,6 @@ const RegisterRestaurantFormController: FC = () => {
       postCode.setValue(address.postCode);
     }
   }, [address]);
-
-  function onSelectAddress(e: MouseEvent<HTMLButtonElement>): void {
-    e.preventDefault();
-
-    setManual(true);
-    reset();
-
-    getAddress(e.currentTarget.dataset.id);
-  }
 
   const [step, setStep] = useState(3);
 

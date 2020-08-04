@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, MouseEvent } from "react";
 import debounce from "lodash/debounce";
 
 import addressSearcher, {
@@ -6,7 +6,8 @@ import addressSearcher, {
   Address,
 } from "./AddressSearcher";
 
-export default function useAddressSearch() {
+export default function useAddressSearch(query: string) {
+  const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState<AddressSearchResult[]>([]);
   const [address, setAddress] = useState<Address>(null);
 
@@ -14,21 +15,35 @@ export default function useAddressSearch() {
     debounce((query: string) => {
       addressSearcher.search(query).then(setResults);
     }, 500)
-  );
+  ).current;
 
-  const getAddress = (id: string) => {
-    addressSearcher.getAddress(id).then(setAddress);
-  };
+  const onSelectAddress = useRef((e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
-  const reset = () => {
-    setResults([]);
-  };
+    const id = e.currentTarget.dataset.id;
+    addressSearcher.getAddress(id).then((address) => {
+      setIsOpen(false);
+      setResults([]);
+      setAddress(address);
+    });
+  }).current;
+
+  useEffect(() => {
+    if (query === "") {
+      setIsOpen(false);
+      setResults([]);
+    } else {
+      if (isOpen) {
+        search(query);
+      } else {
+        setIsOpen(true);
+      }
+    }
+  }, [query]);
 
   return {
     results,
     address,
-    search: search.current,
-    getAddress,
-    reset,
+    onSelectAddress,
   };
 }
