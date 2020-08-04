@@ -13,11 +13,14 @@ export interface Address {
 class AddressSearcher {
   private client: google.maps.places.AutocompleteService;
   private geocoder: google.maps.Geocoder;
+  private sessionToken: google.maps.places.AutocompleteSessionToken;
 
   constructor() {
     if (typeof window !== "undefined") {
       this.client = new window.google.maps.places.AutocompleteService();
       this.geocoder = new window.google.maps.Geocoder();
+
+      this.sessionToken = new google.maps.places.AutocompleteSessionToken();
     }
   }
 
@@ -28,6 +31,7 @@ class AddressSearcher {
         country: "uk",
       },
       types: ["address"],
+      sessionToken: this.sessionToken,
     };
 
     return new Promise(
@@ -53,29 +57,28 @@ class AddressSearcher {
   }
 
   getAddress(id: string): Promise<Address> {
+    const request: google.maps.GeocoderRequest = {
+      placeId: id,
+    };
+
     return new Promise((resolve: (address: Address) => void) => {
-      this.geocoder.geocode(
-        {
-          placeId: id,
-        },
-        (results) => {
-          const { address_components } = results[0];
+      this.geocoder.geocode(request, (results) => {
+        const { address_components } = results[0];
 
-          const streetNumber = address_components[0].long_name;
-          const street = address_components[1].long_name;
-          const town = address_components[2].long_name;
-          const postalCode = address_components[6].long_name;
+        const streetNumber = address_components[0].long_name;
+        const street = address_components[1].long_name;
+        const town = address_components[2].long_name;
+        const postalCode = address_components[6].long_name;
 
-          const address: Address = {
-            addressLine1: `${streetNumber} ${street}`,
-            addressLine2: "",
-            city: town,
-            postCode: postalCode,
-          };
+        const address: Address = {
+          addressLine1: `${streetNumber} ${street}`,
+          addressLine2: "",
+          city: town,
+          postCode: postalCode,
+        };
 
-          resolve(address);
-        }
-      );
+        resolve(address);
+      });
     });
   }
 }
