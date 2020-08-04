@@ -1,3 +1,5 @@
+import scriptLoader from "../ScriptLoader/ScriptLoader";
+
 export interface AddressSearchResult {
   id: string;
   description: string;
@@ -10,6 +12,8 @@ export interface Address {
   postCode: string;
 }
 
+const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+
 class AddressSearcher {
   private client: google.maps.places.AutocompleteService;
   private geocoder: google.maps.Geocoder;
@@ -17,11 +21,23 @@ class AddressSearcher {
 
   constructor() {
     if (typeof window !== "undefined") {
-      this.client = new window.google.maps.places.AutocompleteService();
-      this.geocoder = new window.google.maps.Geocoder();
-
-      this.sessionToken = new google.maps.places.AutocompleteSessionToken();
+      if (!window.google) {
+        scriptLoader
+          .load(
+            `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`
+          )
+          .then(this.init.bind(this));
+      } else {
+        this.init();
+      }
     }
+  }
+
+  private init(): void {
+    this.client = new window.google.maps.places.AutocompleteService();
+    this.geocoder = new window.google.maps.Geocoder();
+
+    this.sessionToken = new google.maps.places.AutocompleteSessionToken();
   }
 
   search(query: string): Promise<AddressSearchResult[]> {
