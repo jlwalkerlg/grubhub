@@ -1,12 +1,24 @@
 import React, { FC } from "react";
+import Head from "next/head";
 
 import Layout from "~/components/Layout/Layout";
 
 import RegisterRestaurantFormController from "./RegisterRestaurantForm/RegisterRestaurantFormController";
 
+const browser = typeof window !== "undefined";
+
 export const RegisterRestaurant: FC = () => {
   return (
     <Layout title="Register Restaurant">
+      <Head>
+        {!browser && (
+          <script
+            type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xEW_Qy_ILGDOuMxwBftuzze0QDGdLSQ&libraries=places"
+            async
+          ></script>
+        )}
+      </Head>
       <main>
         <div className="container mt-8">
           <div className="bg-white p-8 shadow-sm border-t-2 border-solid border-gray-300">
