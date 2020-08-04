@@ -19,7 +19,7 @@ export interface Props {
   step: number;
   canAdvance: boolean;
   advanceStep(e: SyntheticEvent): void;
-  backStep(): void;
+  backStep(e: SyntheticEvent): void;
   onSubmit(e: FormEvent): void;
 }
 

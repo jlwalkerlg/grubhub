@@ -2,7 +2,6 @@ import React, {
   FC,
   FormEvent,
   useState,
-  useMemo,
   SyntheticEvent,
   useEffect,
 } from "react";
@@ -14,11 +13,12 @@ import {
   PhoneRule,
   PostCodeRule,
 } from "~/lib/Form/Rule";
-import { CompositeForm, Form } from "~/lib/Form/Form";
 import { useFormComponent } from "~/lib/Form/useFormComponent";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
+import useForm from "~/lib/Form/useForm";
+import useCompositeForm from "~/lib/Form/useCompositeForm";
 
 const RegisterRestaurantFormController: FC = () => {
   const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
@@ -60,41 +60,22 @@ const RegisterRestaurantFormController: FC = () => {
 
   const [step, setStep] = useState(3);
 
-  const form = useMemo(
-    () =>
-      new CompositeForm([
-        new Form({ managerName, managerEmail, managerPassword }),
-        new Form({ restaurantName, restaurantPhone }),
-        new Form({ addressLine1, addressLine2, city, postCode }),
-      ]),
-    [
-      managerName,
-      managerEmail,
-      managerPassword,
-      restaurantName,
-      restaurantPhone,
-      addressLine1,
-      addressLine2,
-      city,
-      postCode,
-    ]
-  );
-
-  const [canAdvance, setCanAdvance] = useState(() => form.validateForm(0));
-
-  useEffect(() => {
-    setCanAdvance(form.validateForm(step - 1));
-  }, [form]);
+  const step1 = useForm({ managerName, managerEmail, managerPassword });
+  const step2 = useForm({ restaurantName, restaurantPhone });
+  const step3 = useForm({ addressLine1, addressLine2, city, postCode });
+  const form = useCompositeForm([step1, step2, step3]);
 
   function advanceStep(e: SyntheticEvent) {
     e.preventDefault();
 
-    if (canAdvance) {
+    if (form.isValid) {
       setStep(step + 1);
     }
   }
 
-  function backStep() {
+  function backStep(e: SyntheticEvent) {
+    e.preventDefault();
+
     setStep(step - 1);
   }
 
@@ -118,7 +99,7 @@ const RegisterRestaurantFormController: FC = () => {
       city={city}
       postCode={postCode}
       step={step}
-      canAdvance={canAdvance}
+      canAdvance={form.isValid}
       advanceStep={advanceStep}
       backStep={backStep}
       onSubmit={onSubmit}
