@@ -2,8 +2,8 @@ import React, {
   FC,
   FormEvent,
   SyntheticEvent,
-  MouseEvent,
   KeyboardEvent,
+  MutableRefObject,
 } from "react";
 
 import { FormComponent } from "~/lib/Form/useFormComponent";
@@ -16,6 +16,7 @@ export interface Props {
   onSelectAddress(id: string): void;
   clearAddressSearchResults(): void;
   onKeydownAddressLine1(e: KeyboardEvent): void;
+  addressLine1Ref: MutableRefObject<HTMLInputElement>;
   managerName: FormComponent;
   managerEmail: FormComponent;
   managerPassword: FormComponent;
@@ -171,6 +172,7 @@ const LastStep: FC<Props> = ({
   onSelectAddress,
   clearAddressSearchResults,
   onKeydownAddressLine1,
+  addressLine1Ref,
   addressLine1,
   addressLine2,
   city,
@@ -193,6 +195,7 @@ const LastStep: FC<Props> = ({
           <input
             {...addressLine1.props}
             onKeyDown={onKeydownAddressLine1}
+            ref={addressLine1Ref}
             className="input"
             type="text"
             name="addressLine1"

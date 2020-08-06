@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, MouseEvent, KeyboardEvent, useRef } from "react";
+import React, { FC, ReactNode, MouseEvent, useRef, useEffect } from "react";
 
 interface Props {
   predictions: Array<{ id: string; description: ReactNode }>;
@@ -13,7 +13,7 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, clear }) => {
     onSelect(e.currentTarget.dataset.id);
   }).current;
 
-  const onButtonKeydown = (e: KeyboardEvent<HTMLButtonElement>) => {
+  const onButtonKeydown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (
       e.key === "Tab" &&
       !e.shiftKey &&
@@ -22,6 +22,20 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, clear }) => {
       clear();
     }
   };
+
+  const onDocumentKeydown = useRef((e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      clear();
+    }
+  }).current;
+
+  useEffect(() => {
+    document.addEventListener("keydown", onDocumentKeydown);
+
+    return () => {
+      document.removeEventListener("keydown", onDocumentKeydown);
+    };
+  }, []);
 
   return (
     <ul className="absolute top-100 w-full rounded-lg shadow">
