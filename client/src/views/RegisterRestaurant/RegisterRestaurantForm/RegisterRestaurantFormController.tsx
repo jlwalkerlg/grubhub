@@ -17,7 +17,6 @@ import { useFormComponent } from "~/lib/Form/useFormComponent";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
-import useForm from "~/lib/Form/useForm";
 import useCompositeForm from "~/lib/Form/useCompositeForm";
 
 const RegisterRestaurantFormController: FC = () => {
@@ -58,17 +57,21 @@ const RegisterRestaurantFormController: FC = () => {
     }
   }, [address]);
 
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
 
-  const step1 = useForm({ managerName, managerEmail, managerPassword });
-  const step2 = useForm({ restaurantName, restaurantPhone });
-  const step3 = useForm({ addressLine1, addressLine2, city, postCode });
-  const form = useCompositeForm([step1, step2, step3]);
+  const form = useCompositeForm(
+    [
+      { managerName, managerEmail, managerPassword },
+      { restaurantName, restaurantPhone },
+      { addressLine1, addressLine2, city, postCode },
+    ],
+    step
+  );
 
   function advanceStep(e: SyntheticEvent) {
     e.preventDefault();
 
-    if (form.isValid) {
+    if (form.isStepValid) {
       setStep(step + 1);
     }
   }
@@ -99,7 +102,7 @@ const RegisterRestaurantFormController: FC = () => {
       city={city}
       postCode={postCode}
       step={step}
-      canAdvance={form.isValid}
+      canAdvance={form.isStepValid}
       advanceStep={advanceStep}
       backStep={backStep}
       onSubmit={onSubmit}
