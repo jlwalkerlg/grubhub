@@ -17,10 +17,7 @@ export default function useAddressSearch(query: string) {
     }, 500)
   ).current;
 
-  const onSelectAddress = useRef((e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    const id = e.currentTarget.dataset.id;
+  const onSelectAddress = useRef((id: string) => {
     addressSearcher.getAddress(id).then((address) => {
       setIsOpen(false);
       setResults([]);
@@ -41,9 +38,14 @@ export default function useAddressSearch(query: string) {
     }
   }, [query]);
 
+  const clear = () => {
+    setResults([]);
+  };
+
   return {
     results,
     address,
     onSelectAddress,
+    clear,
   };
 }

@@ -1,12 +1,21 @@
-import React, { FC, FormEvent, SyntheticEvent, MouseEvent } from "react";
+import React, {
+  FC,
+  FormEvent,
+  SyntheticEvent,
+  MouseEvent,
+  KeyboardEvent,
+} from "react";
 
 import { FormComponent } from "~/lib/Form/useFormComponent";
 import { AddressSearchResult } from "~/lib/AddressSearch/AddressSearcher";
 import FormError from "~/components/FormError/FormError";
+import Autocomplete from "~/components/Autocomplete/Autocomplete";
 
 export interface Props {
   addressSearchResults: AddressSearchResult[];
-  onSelectAddress(e: MouseEvent<HTMLButtonElement>): void;
+  onSelectAddress(id: string): void;
+  clearAddressSearchResults(): void;
+  onKeydownAddressLine1(e: KeyboardEvent): void;
   managerName: FormComponent;
   managerEmail: FormComponent;
   managerPassword: FormComponent;
@@ -160,6 +169,8 @@ const SecondStep: FC<Props> = ({
 const LastStep: FC<Props> = ({
   addressSearchResults,
   onSelectAddress,
+  clearAddressSearchResults,
+  onKeydownAddressLine1,
   addressLine1,
   addressLine2,
   city,
@@ -181,30 +192,18 @@ const LastStep: FC<Props> = ({
         <div className="relative">
           <input
             {...addressLine1.props}
+            onKeyDown={onKeydownAddressLine1}
             className="input"
             type="text"
             name="addressLine1"
             id="addressLine1"
             placeholder="e.g. 123 High Street"
           />
-          {addressSearchResults.length > 0 && (
-            <ul className="absolute top-100 w-full rounded-lg shadow">
-              {addressSearchResults.map((x) => {
-                return (
-                  <li key={x.id} className="w-full">
-                    <button
-                      data-id={x.id}
-                      onClick={onSelectAddress}
-                      className="py-2 px-4 w-full text-left bg-white hover:bg-gray-100 border-t border-gray-300 cursor-pointer"
-                      role="button"
-                    >
-                      {x.description}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          <Autocomplete
+            predictions={addressSearchResults}
+            onSelect={onSelectAddress}
+            clear={clearAddressSearchResults}
+          />
         </div>
         <FormError component={addressLine1} className="mt-1" />
       </div>

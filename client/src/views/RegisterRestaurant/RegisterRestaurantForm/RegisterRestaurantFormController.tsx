@@ -4,6 +4,7 @@ import React, {
   useState,
   SyntheticEvent,
   useEffect,
+  KeyboardEvent,
 } from "react";
 
 import {
@@ -46,6 +47,7 @@ const RegisterRestaurantFormController: FC = () => {
     results: addressSearchResults,
     address,
     onSelectAddress,
+    clear: clearAddressSearchResults,
   } = useAddressSearch(addressLine1.value);
 
   useEffect(() => {
@@ -88,10 +90,20 @@ const RegisterRestaurantFormController: FC = () => {
     console.log("values", form.values);
   }
 
+  const onKeydownAddressLine1 = (e: KeyboardEvent) => {
+    console.log("hello");
+
+    if (e.key === "Tab" && e.shiftKey) {
+      clearAddressSearchResults();
+    }
+  };
+
   return (
     <RegisterRestaurantForm
       addressSearchResults={addressSearchResults}
       onSelectAddress={onSelectAddress}
+      clearAddressSearchResults={clearAddressSearchResults}
+      onKeydownAddressLine1={onKeydownAddressLine1}
       managerName={managerName}
       managerEmail={managerEmail}
       managerPassword={managerPassword}
