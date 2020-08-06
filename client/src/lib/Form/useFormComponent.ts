@@ -1,4 +1,5 @@
 import { useState, SyntheticEvent, useRef } from "react";
+
 import { Rule, RequiredRule } from "./Rule";
 
 export interface FormComponent {
@@ -7,7 +8,6 @@ export interface FormComponent {
   dirty: boolean;
   valid: boolean;
   error: string;
-  validate(): boolean;
   setValue(val: string): void;
   props: {
     value: string;
@@ -29,21 +29,17 @@ export function useFormComponent(
   const [touched, setTouched] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [error, setError] = useState<string>(null);
-  const [valid, setValid] = useState(() => isValid(value));
-
-  function isValid(value: string): boolean {
+  const [valid, setValid] = useState(() => {
     if (!required && value === "") return true;
 
     for (const rule of rules) {
-      const error = rule.validate(value);
-
-      if (error !== null) {
+      if (rule.validate(value) !== null) {
         return false;
       }
     }
 
     return true;
-  }
+  });
 
   function validate(v: string = value): boolean {
     if (!required && v === "") return true;
@@ -84,7 +80,6 @@ export function useFormComponent(
     dirty,
     valid,
     error,
-    validate,
     setValue: update,
     props: {
       value,

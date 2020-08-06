@@ -14,10 +14,10 @@ import {
   PostCodeRule,
 } from "~/lib/Form/Rule";
 import { useFormComponent } from "~/lib/Form/useFormComponent";
+import useCompositeForm from "~/lib/Form/useCompositeForm";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
-import useCompositeForm from "~/lib/Form/useCompositeForm";
 
 const RegisterRestaurantFormController: FC = () => {
   const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
