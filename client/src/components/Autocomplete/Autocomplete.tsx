@@ -45,19 +45,15 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
   const onInputKeydownArrow = React.useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "ArrowUp") {
-        console.log("up", selectedIndex, predictions.length);
         if (selectedIndex === 0) {
           setSelectedIndex(predictions.length - 1);
         } else {
           setSelectedIndex(selectedIndex - 1);
         }
       } else if (e.key === "ArrowDown") {
-        console.log("down", selectedIndex, predictions.length);
         if (selectedIndex === predictions.length - 1) {
-          console.log("top");
           setSelectedIndex(0);
         } else {
-          console.log("next");
           setSelectedIndex(selectedIndex + 1);
         }
       }
