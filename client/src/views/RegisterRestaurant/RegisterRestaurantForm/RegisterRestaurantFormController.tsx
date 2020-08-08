@@ -20,17 +20,17 @@ import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
 
 const RegisterRestaurantFormController: FC = () => {
-  const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
-  const managerEmail = useFormComponent("jordan@walker.com", [
+  const managerName = useFormComponent("", [new RequiredRule()]);
+  const managerEmail = useFormComponent("", [
     new RequiredRule(),
     new EmailRule(),
   ]);
-  const managerPassword = useFormComponent("password123", [
+  const managerPassword = useFormComponent("", [
     new RequiredRule(),
     new PasswordRule(),
   ]);
-  const restaurantName = useFormComponent("Chow Main", [new RequiredRule()]);
-  const restaurantPhone = useFormComponent("01274 788944", [
+  const restaurantName = useFormComponent("", [new RequiredRule()]);
+  const restaurantPhone = useFormComponent("", [
     new RequiredRule(),
     new PhoneRule(),
   ]);
