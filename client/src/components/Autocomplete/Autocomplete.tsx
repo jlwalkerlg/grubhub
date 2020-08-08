@@ -1,13 +1,20 @@
-import React, { FC, ReactNode, MouseEvent, useRef, useEffect } from "react";
+import React, { FC, useRef, useEffect, useState } from "react";
+
+import useClickAwayListener from "~/lib/ClickAwayListener/useClickAwayListener";
 
 interface Props {
-  predictions: Array<{ id: string; description: ReactNode }>;
+  predictions: Array<{ id: string; description: string }>;
   onSelect(id: string): void;
-  clear(): void;
+  children: HTMLInputElement;
 }
 
-const Autocomplete: FC<Props> = ({ predictions, onSelect, clear }) => {
-  const onClick = useRef((e: MouseEvent<HTMLButtonElement>) => {
+const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
+  const [isOpen, setIsOpen] = useState(predictions.length > 0);
+  useEffect(() => {
+    setIsOpen(predictions.length > 0);
+  }, [predictions]);
+
+  const onButtonClick = useRef((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     onSelect(e.currentTarget.dataset.id);
@@ -19,13 +26,13 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, clear }) => {
       !e.shiftKey &&
       e.currentTarget.dataset.id === predictions[predictions.length - 1].id
     ) {
-      clear();
+      setIsOpen(false);
     }
   };
 
   const onDocumentKeydown = useRef((e: KeyboardEvent) => {
     if (e.key === "Escape") {
-      clear();
+      setIsOpen(false);
     }
   }).current;
 
@@ -37,24 +44,66 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, clear }) => {
     };
   }, []);
 
+  const onInputKeydown = React.useRef((e: KeyboardEvent) => {
+    if (e.key === "Tab" && e.shiftKey) {
+      setIsOpen(false);
+    }
+  }).current;
+
+  const onInputFocus = React.useCallback(
+    (e: KeyboardEvent) => {
+      setIsOpen(predictions.length > 0);
+    },
+    [predictions.length]
+  );
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current.addEventListener("keydown", onInputKeydown);
+    inputRef.current.addEventListener("focus", onInputFocus);
+
+    return () => {
+      inputRef.current.removeEventListener("keydown", onInputKeydown);
+      inputRef.current.removeEventListener("focus", onInputFocus);
+    };
+  }, []);
+
+  useEffect(() => {
+    inputRef.current.addEventListener("focus", onInputFocus);
+
+    return () => {
+      inputRef.current.removeEventListener("focus", onInputFocus);
+    };
+  }, [onInputFocus]);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useClickAwayListener(wrapperRef, () => setIsOpen(false));
+
   return (
-    <ul className="absolute top-100 w-full rounded-lg shadow">
-      {predictions.map((x) => {
-        return (
-          <li key={x.id} className="w-full">
-            <button
-              onKeyDown={onButtonKeydown}
-              data-id={x.id}
-              onClick={onClick}
-              className="py-2 px-4 w-full text-left bg-white hover:bg-gray-100 border-t border-gray-300 cursor-pointer"
-              role="button"
-            >
-              {x.description}
-            </button>
-          </li>
-        );
-      })}
-    </ul>
+    <div ref={wrapperRef} className="relative">
+      {/* @ts-ignore */}
+      {React.cloneElement(children, { ref: inputRef })}
+      {isOpen && (
+        <ul className="absolute top-100 w-full rounded-lg shadow">
+          {predictions.map((x) => {
+            return (
+              <li key={x.id} className="w-full">
+                <button
+                  data-id={x.id}
+                  onKeyDown={onButtonKeydown}
+                  onClick={onButtonClick}
+                  className="py-2 px-4 w-full text-left bg-white hover:bg-gray-100 border-t border-gray-300 cursor-pointer"
+                  role="button"
+                >
+                  {x.description}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 };
 

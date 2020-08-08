@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  FormEvent,
-  SyntheticEvent,
-  KeyboardEvent,
-  MutableRefObject,
-} from "react";
+import React, { FC, FormEvent, SyntheticEvent } from "react";
 
 import { FormComponent } from "~/lib/Form/useFormComponent";
 import { AddressSearchResult } from "~/lib/AddressSearch/AddressSearcher";
@@ -14,9 +8,6 @@ import Autocomplete from "~/components/Autocomplete/Autocomplete";
 export interface Props {
   addressSearchResults: AddressSearchResult[];
   onSelectAddress(id: string): void;
-  clearAddressSearchResults(): void;
-  onKeydownAddressLine1(e: KeyboardEvent): void;
-  addressLine1Ref: MutableRefObject<HTMLInputElement>;
   managerName: FormComponent;
   managerEmail: FormComponent;
   managerPassword: FormComponent;
@@ -170,9 +161,6 @@ const SecondStep: FC<Props> = ({
 const LastStep: FC<Props> = ({
   addressSearchResults,
   onSelectAddress,
-  clearAddressSearchResults,
-  onKeydownAddressLine1,
-  addressLine1Ref,
   addressLine1,
   addressLine2,
   city,
@@ -191,23 +179,22 @@ const LastStep: FC<Props> = ({
         <label className="label" htmlFor="addressLine1">
           Address Line 1 <span className="text-primary">*</span>
         </label>
-        <div className="relative">
+        {/* @ts-ignore */}
+        <Autocomplete
+          predictions={addressSearchResults}
+          onSelect={onSelectAddress}
+        >
+          {/* @ts-ignore */}
           <input
             {...addressLine1.props}
-            onKeyDown={onKeydownAddressLine1}
-            ref={addressLine1Ref}
             className="input"
             type="text"
             name="addressLine1"
             id="addressLine1"
             placeholder="e.g. 123 High Street"
+            autoComplete="new-password"
           />
-          <Autocomplete
-            predictions={addressSearchResults}
-            onSelect={onSelectAddress}
-            clear={clearAddressSearchResults}
-          />
-        </div>
+        </Autocomplete>
         <FormError component={addressLine1} className="mt-1" />
       </div>
 

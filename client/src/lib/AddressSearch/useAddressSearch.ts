@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, MouseEvent } from "react";
+import { useState, useRef, useEffect } from "react";
 import debounce from "lodash/debounce";
 
 import addressSearcher, {
@@ -38,14 +38,9 @@ export default function useAddressSearch(query: string) {
     }
   }, [query]);
 
-  const clear = () => {
-    setResults([]);
-  };
-
   return {
     results,
     address,
     onSelectAddress,
-    clear,
   };
 }

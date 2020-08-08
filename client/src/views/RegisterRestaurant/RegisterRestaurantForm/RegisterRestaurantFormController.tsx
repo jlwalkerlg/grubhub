@@ -4,8 +4,6 @@ import React, {
   useState,
   SyntheticEvent,
   useEffect,
-  KeyboardEvent,
-  useRef,
 } from "react";
 
 import {
@@ -18,7 +16,6 @@ import {
 import { useFormComponent } from "~/lib/Form/useFormComponent";
 import useCompositeForm from "~/lib/Form/useCompositeForm";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
-import useClickAwayListener from "~/lib/ClickAwayListener/useClickAwayListener";
 
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
 
@@ -49,7 +46,6 @@ const RegisterRestaurantFormController: FC = () => {
     results: addressSearchResults,
     address,
     onSelectAddress,
-    clear: clearAddressSearchResults,
   } = useAddressSearch(addressLine1.value);
 
   useEffect(() => {
@@ -92,22 +88,10 @@ const RegisterRestaurantFormController: FC = () => {
     console.log("values", form.values);
   }
 
-  const onKeydownAddressLine1 = (e: KeyboardEvent) => {
-    if (e.key === "Tab" && e.shiftKey) {
-      clearAddressSearchResults();
-    }
-  };
-
-  const addressLine1Ref = useRef<HTMLInputElement>(null);
-  useClickAwayListener(addressLine1Ref, clearAddressSearchResults);
-
   return (
     <RegisterRestaurantForm
       addressSearchResults={addressSearchResults}
       onSelectAddress={onSelectAddress}
-      clearAddressSearchResults={clearAddressSearchResults}
-      onKeydownAddressLine1={onKeydownAddressLine1}
-      addressLine1Ref={addressLine1Ref}
       managerName={managerName}
       managerEmail={managerEmail}
       managerPassword={managerPassword}
