@@ -4,8 +4,10 @@ import { FormComponent } from "~/lib/Form/useFormComponent";
 import { AddressSearchResult } from "~/lib/AddressSearch/AddressSearcher";
 import FormError from "~/components/FormError/FormError";
 import Autocomplete from "~/components/Autocomplete/Autocomplete";
+import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 
 export interface Props {
+  isSubmitting: boolean;
   addressSearchResults: AddressSearchResult[];
   onSelectAddress(id: string): void;
   managerName: FormComponent;
@@ -159,6 +161,7 @@ const SecondStep: FC<Props> = ({
 };
 
 const LastStep: FC<Props> = ({
+  isSubmitting,
   addressSearchResults,
   onSelectAddress,
   addressLine1,
@@ -257,7 +260,11 @@ const LastStep: FC<Props> = ({
           onClick={onSubmit}
           disabled={!canAdvance}
         >
-          Register
+          {isSubmitting ? (
+            <SpinnerIcon className="fill-current h-6 w-6 inline-block animate-spin" />
+          ) : (
+            <span>Register</span>
+          )}
         </button>
       </div>
     </div>

@@ -5,6 +5,9 @@ import React, {
   SyntheticEvent,
   useEffect,
 } from "react";
+import router from "next/router";
+
+import restaurantsApi from "~/api/RestaurantsApi";
 
 import {
   RequiredRule,
@@ -82,14 +85,32 @@ const RegisterRestaurantFormController: FC = () => {
     setStep(step - 1);
   }
 
-  function onSubmit(e: FormEvent) {
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
 
-    console.log("values", form.values);
+    if (!form.isValid) return;
+
+    setIsSubmitting(true);
+
+    await restaurantsApi.register({
+      managerName: managerName.value,
+      managerEmail: managerEmail.value,
+      managerPassword: managerPassword.value,
+      restaurantName: restaurantName.value,
+      restaurantPhone: restaurantPhone.value,
+      addressLine1: addressLine1.value,
+      addressLine2: addressLine2.value,
+      city: city.value,
+      postCode: postCode.value,
+    });
+
+    router.push("/restaurants/post-register");
   }
 
   return (
     <RegisterRestaurantForm
+      isSubmitting={isSubmitting}
       addressSearchResults={addressSearchResults}
       onSelectAddress={onSelectAddress}
       managerName={managerName}
@@ -102,7 +123,7 @@ const RegisterRestaurantFormController: FC = () => {
       city={city}
       postCode={postCode}
       step={step}
-      canAdvance={form.isStepValid}
+      canAdvance={!isSubmitting && form.isStepValid}
       advanceStep={advanceStep}
       backStep={backStep}
       onSubmit={onSubmit}
