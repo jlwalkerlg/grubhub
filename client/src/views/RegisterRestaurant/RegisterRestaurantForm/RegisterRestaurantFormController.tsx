@@ -6,6 +6,8 @@ import React, {
   useEffect,
 } from "react";
 import router from "next/router";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import restaurantsApi from "~/api/RestaurantsApi";
 
@@ -21,6 +23,8 @@ import useCompositeForm from "~/lib/Form/useCompositeForm";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
+
+const MySwal = withReactContent(Swal);
 
 const RegisterRestaurantFormController: FC = () => {
   const managerName = useFormComponent("", [new RequiredRule()]);
@@ -105,7 +109,18 @@ const RegisterRestaurantFormController: FC = () => {
       postCode: postCode.value,
     });
 
-    router.push("/restaurants/post-register");
+    await MySwal.fire({
+      title: <p>Thanks For Registering!</p>,
+      text:
+        "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
+      icon: "success",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      showConfirmButton: true,
+    });
+
+    router.push("/");
   }
 
   return (
