@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4DFAFCCE-633
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.Domain", "src\FoodSnap.Domain\FoodSnap.Domain.csproj", "{39A56BC3-9919-403C-9B91-E5651E7F2686}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C669181E-B7FF-4DA5-A79F-10D88BCE5D74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.DomainTests", "tests\FoodSnap.DomainTests\FoodSnap.DomainTests.csproj", "{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,8 +36,21 @@ Global
 		{39A56BC3-9919-403C-9B91-E5651E7F2686}.Release|x64.Build.0 = Release|Any CPU
 		{39A56BC3-9919-403C-9B91-E5651E7F2686}.Release|x86.ActiveCfg = Release|Any CPU
 		{39A56BC3-9919-403C-9B91-E5651E7F2686}.Release|x86.Build.0 = Release|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Debug|x64.Build.0 = Debug|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Release|x64.ActiveCfg = Release|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Release|x64.Build.0 = Release|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{39A56BC3-9919-403C-9B91-E5651E7F2686} = {4DFAFCCE-6338-4232-9C05-66E30D0EE9E9}
+		{7F5A3B09-79A1-4384-A2C6-FCA84164B2E8} = {C669181E-B7FF-4DA5-A79F-10D88BCE5D74}
 	EndGlobalSection
 EndGlobal
