@@ -1,11 +1,10 @@
 using System;
 using FoodSnap.Domain;
-using FoodSnap.Domain.Restaurants;
 using Xunit;
 
-namespace FoodSnap.DomainTests.Restaurants
+namespace FoodSnap.DomainTests.Users
 {
-    public class RestaurantManagerTests
+    public class UserTests
     {
         [Theory]
         [InlineData(null)]
@@ -18,7 +17,7 @@ namespace FoodSnap.DomainTests.Restaurants
 
             Assert.Throws<ArgumentException>(() =>
             {
-                new RestaurantManager(name, email, password, Guid.NewGuid());
+                new DummyUser(name, email, password);
             });
         }
 
@@ -30,7 +29,7 @@ namespace FoodSnap.DomainTests.Restaurants
 
             Assert.Throws<ArgumentNullException>(() =>
             {
-                new RestaurantManager(name, null, password, Guid.NewGuid());
+                new DummyUser(name, null, password);
             });
         }
 
@@ -45,20 +44,7 @@ namespace FoodSnap.DomainTests.Restaurants
 
             Assert.Throws<ArgumentException>(() =>
             {
-                new RestaurantManager(name, email, password, Guid.NewGuid());
-            });
-        }
-
-        [Fact]
-        public void Disallows_Empty_Guids()
-        {
-            var name = "Chow Main";
-            var email = new Email("valid@test.com");
-            var password = "password123";
-
-            Assert.Throws<ArgumentException>(() =>
-            {
-                new RestaurantManager(name, email, password, Guid.Empty);
+                new DummyUser(name, email, password);
             });
         }
     }

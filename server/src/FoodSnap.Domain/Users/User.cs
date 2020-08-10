@@ -1,15 +1,16 @@
 using System;
 
-namespace FoodSnap.Domain.Restaurants
+namespace FoodSnap.Domain.Users
 {
-    public class RestaurantManager : Entity
+    public abstract class User : Entity
     {
         public string Name { get; }
         public Email Email { get; }
         public string Password { get; }
-        public Guid RestaurantId { get; }
 
-        public RestaurantManager(string name, Email email, string password, Guid restaurantId)
+        protected abstract UserRole Role { get; }
+
+        public User(string name, Email email, string password)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -26,15 +27,9 @@ namespace FoodSnap.Domain.Restaurants
                 throw new ArgumentException($"{nameof(password)} must not be empty.");
             }
 
-            if (restaurantId == Guid.Empty)
-            {
-                throw new ArgumentException($"{nameof(restaurantId)} must not be empty.");
-            }
-
             Name = name;
             Email = email;
             Password = password;
-            RestaurantId = restaurantId;
         }
     }
 }
