@@ -1,26 +1,51 @@
-using System.Linq;
-using System.Collections.Generic;
+using System;
+using System.Text.RegularExpressions;
 using FoodSnap.Application.Validation;
+using FluentValidation;
 
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
-    public class RegisterRestaurantValidator : IValidator<RegisterRestaurantCommand>
+    public class RegisterRestaurantValidator : FluentValidator<RegisterRestaurantCommand>
     {
-        public Result Validate(RegisterRestaurantCommand command)
+        private static Regex phoneNumberRegex = new Regex(
+            "^[0-9]{5} ?[0-9]{6}$",
+            RegexOptions.Compiled,
+            TimeSpan.FromMilliseconds(250));
+
+        private static Regex postcodeRegex = new Regex(
+            "^[A-Z]{2}[0-9]{1,2} ?[0-9][A-Z]{2}$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled,
+            TimeSpan.FromMilliseconds(250));
+
+        public RegisterRestaurantValidator()
         {
-            var errors = new Dictionary<string, IValidationFailure>();
+            RuleFor(x => x.ManagerName)
+                .NotEmpty().WithState(x => new RequiredFailure());
 
-            if (string.IsNullOrWhiteSpace(command.ManagerName))
-            {
-                errors.Add(nameof(command.ManagerName), new RequiredFailure());
-            }
+            RuleFor(x => x.ManagerEmail)
+                .NotEmpty().WithState(x => new RequiredFailure())
+                .EmailAddress().WithState(x => new InvaildEmailFailure());
 
-            if (errors.Any())
-            {
-                return Result.Fail(new ValidationError(errors));
-            }
+            RuleFor(x => x.ManagerPassword)
+                .NotEmpty().WithState(x => new RequiredFailure())
+                .MinimumLength(8).WithState(x => new MinLengthFailure(8));
 
-            return Result.Ok();
+            RuleFor(x => x.RestaurantName)
+                .NotEmpty().WithState(x => new RequiredFailure());
+
+            RuleFor(x => x.RestaurantPhoneNumber)
+                .NotEmpty().WithState(x => new RequiredFailure())
+                .Matches(phoneNumberRegex).WithState(x => new PhoneNumberFailure());
+
+            RuleFor(x => x.AddressLine1)
+                .NotEmpty().WithState(x => new RequiredFailure());
+
+            RuleFor(x => x.Town)
+                .NotEmpty().WithState(x => new RequiredFailure());
+
+            RuleFor(x => x.Postcode)
+                .NotEmpty().WithState(x => new RequiredFailure())
+                .Matches(postcodeRegex).WithState(x => new PostcodeFailure());
         }
     }
 }
