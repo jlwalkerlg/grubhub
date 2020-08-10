@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using FoodSnap.Application.Validation;
+using FoodSnap.Application.Validation.Failures;
 using FluentValidation;
 
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
@@ -24,7 +25,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
             RuleFor(x => x.ManagerEmail)
                 .NotEmpty().WithState(x => new RequiredFailure())
-                .EmailAddress().WithState(x => new InvaildEmailFailure());
+                .EmailAddress().WithState(x => new EmailFailure());
 
             RuleFor(x => x.ManagerPassword)
                 .NotEmpty().WithState(x => new RequiredFailure())

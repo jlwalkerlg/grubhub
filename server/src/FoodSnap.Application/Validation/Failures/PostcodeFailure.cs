@@ -1,4 +1,4 @@
-namespace FoodSnap.Application.Validation
+namespace FoodSnap.Application.Validation.Failures
 {
     public class PostcodeFailure : IValidationFailure
     {

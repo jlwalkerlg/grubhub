@@ -1,6 +1,7 @@
 using System;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Application.Validation;
+using FoodSnap.Application.Validation.Failures;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
@@ -38,7 +39,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [InlineData(null, typeof(RequiredFailure))]
         [InlineData("", typeof(RequiredFailure))]
         [InlineData(" ", typeof(RequiredFailure))]
-        [InlineData("blahblahblah", typeof(InvaildEmailFailure))]
+        [InlineData("blahblahblah", typeof(EmailFailure))]
         public void Disallows_Invalid_Manager_Emails(string email, Type failureType)
         {
             var command = new RegisterRestaurantCommandBuilder()
