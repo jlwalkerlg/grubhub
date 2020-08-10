@@ -1,5 +1,3 @@
-using System;
-using System.Text.RegularExpressions;
 using FoodSnap.Application.Validation;
 using FoodSnap.Application.Validation.Failures;
 using FluentValidation;
@@ -8,16 +6,6 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantValidator : FluentValidator<RegisterRestaurantCommand>
     {
-        private static Regex phoneNumberRegex = new Regex(
-            "^[0-9]{5} ?[0-9]{6}$",
-            RegexOptions.Compiled,
-            TimeSpan.FromMilliseconds(250));
-
-        private static Regex postcodeRegex = new Regex(
-            "^[A-Z]{2}[0-9]{1,2} ?[0-9][A-Z]{2}$",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled,
-            TimeSpan.FromMilliseconds(250));
-
         public RegisterRestaurantValidator()
         {
             RuleFor(x => x.ManagerName)
@@ -36,7 +24,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
             RuleFor(x => x.RestaurantPhoneNumber)
                 .NotEmpty().WithState(x => new RequiredFailure())
-                .Matches(phoneNumberRegex).WithState(x => new PhoneNumberFailure());
+                .PhoneNumber();
 
             RuleFor(x => x.AddressLine1)
                 .NotEmpty().WithState(x => new RequiredFailure());
@@ -46,7 +34,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
             RuleFor(x => x.Postcode)
                 .NotEmpty().WithState(x => new RequiredFailure())
-                .Matches(postcodeRegex).WithState(x => new PostcodeFailure());
+                .Postcode();
         }
     }
 }
