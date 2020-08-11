@@ -7,6 +7,7 @@ namespace FoodSnap.Application
     {
         IRestaurantRepository RestaurantRepository { get; }
         IRestaurantManagerRepository RestaurantManagerRepository { get; }
+        IEventRepository EventRepository { get; }
 
         Task Commit();
     }

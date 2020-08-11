@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using FoodSnap.Application.Restaurants;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using Xunit;
 
@@ -10,6 +11,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly RestaurantRepositorySpy restaurantRepositorySpy;
         private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
+        private readonly EventRepositorySpy eventRepositorySpy;
 
         private readonly RegisterRestaurantCommand command;
         private readonly RegisterRestaurantHandler handler;
@@ -19,6 +21,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             unitOfWorkSpy = new UnitOfWorkSpy();
             restaurantRepositorySpy = unitOfWorkSpy.RestaurantRepositorySpy;
             restaurantManagerRepositorySpy = unitOfWorkSpy.RestaurantManagerRepositorySpy;
+            eventRepositorySpy = unitOfWorkSpy.EventRepositorySpy;
 
             command = new RegisterRestaurantCommandBuilder().Build();
             handler = new RegisterRestaurantHandler(unitOfWorkSpy);
@@ -39,18 +42,25 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                         && x.Address.Town == command.Town
                         && x.Address.Postcode.Code == command.Postcode;
                 })
-                .Single();
+                .SingleOrDefault();
 
+            var manager = restaurantManagerRepositorySpy.Managers
+                .Where(x =>
+                {
+                    return x.Name == command.ManagerName
+                        && x.Email.Address == command.ManagerEmail
+                        && x.Password == command.ManagerPassword
+                        && x.RestaurantId == restaurant.Id;
+                })
+                .SingleOrDefault();
+
+            var restaurantRegisteredEvent = eventRepositorySpy.Events
+                .Where(x => x.GetType() == typeof(RestaurantRegisteredEvent))
+                .SingleOrDefault();
+
+            Assert.NotNull(manager);
             Assert.NotNull(restaurant);
-
-            Assert.Single(restaurantManagerRepositorySpy.Managers, x =>
-            {
-                return x.Name == command.ManagerName
-                    && x.Email.Address == command.ManagerEmail
-                    && x.Password == command.ManagerPassword
-                    && x.RestaurantId == restaurant.Id;
-            });
-
+            Assert.NotNull(restaurantRegisteredEvent);
             Assert.True(unitOfWorkSpy.Commited);
         }
     }

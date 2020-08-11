@@ -10,12 +10,14 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
         private readonly IUnitOfWork unitOfWork;
         private readonly IRestaurantRepository restaurantRepository;
         private readonly IRestaurantManagerRepository restaurantManagerRepository;
+        private readonly IEventRepository eventRepository;
 
         public RegisterRestaurantHandler(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
             restaurantRepository = unitOfWork.RestaurantRepository;
             restaurantManagerRepository = unitOfWork.RestaurantManagerRepository;
+            eventRepository = unitOfWork.EventRepository;
         }
 
         public async Task<Result> Handle(RegisterRestaurantCommand command)
@@ -31,6 +33,8 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 )
             );
 
+            await restaurantRepository.Add(restaurant);
+
             var manager = new RestaurantManager(
                 command.ManagerName,
                 new Email(command.ManagerEmail),
@@ -38,8 +42,12 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 restaurant.Id
             );
 
-            await restaurantRepository.Add(restaurant);
             await restaurantManagerRepository.Add(manager);
+
+            var ev = new RestaurantRegisteredEvent();
+
+            await eventRepository.Add(ev);
+
             await unitOfWork.Commit();
 
             return Result.Ok();
