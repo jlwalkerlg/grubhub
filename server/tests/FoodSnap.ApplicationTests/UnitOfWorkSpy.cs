@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FoodSnap.Application;
 using FoodSnap.Application.Restaurants;
@@ -17,6 +18,7 @@ namespace FoodSnap.ApplicationTests
         public EventRepositorySpy EventRepositorySpy { get; }
 
         public bool Commited { get; private set; } = false;
+        public Action OnCommit { get; set; }
 
         public UnitOfWorkSpy()
         {
@@ -28,6 +30,12 @@ namespace FoodSnap.ApplicationTests
         public Task Commit()
         {
             Commited = true;
+
+            if (OnCommit != null)
+            {
+                OnCommit();
+            }
+
             return Task.CompletedTask;
         }
     }

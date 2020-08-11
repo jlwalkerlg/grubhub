@@ -29,40 +29,43 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_A_New_Restaurant_And_Manager()
         {
+            unitOfWorkSpy.OnCommit = () =>
+            {
+                var restaurant = restaurantRepositorySpy.Restaurants
+                    .Where(x =>
+                    {
+                        return x.Name == command.RestaurantName
+                            && x.PhoneNumber.Number == command.RestaurantPhoneNumber
+                            && x.Address.Line1 == command.AddressLine1
+                            && x.Address.Line2 == command.AddressLine2
+                            && x.Address.Town == command.Town
+                            && x.Address.Postcode.Code == command.Postcode;
+                    })
+                    .SingleOrDefault();
+
+                var manager = restaurantManagerRepositorySpy.Managers
+                    .Where(x =>
+                    {
+                        return x.Name == command.ManagerName
+                            && x.Email.Address == command.ManagerEmail
+                            && x.Password == command.ManagerPassword
+                            && x.RestaurantId == restaurant.Id;
+                    })
+                    .SingleOrDefault();
+
+                var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy.Events
+                    .Where(x => x.GetType() == typeof(RestaurantRegisteredEvent))
+                    .SingleOrDefault();
+
+                Assert.NotNull(restaurant);
+                Assert.NotNull(manager);
+                Assert.NotNull(restaurantRegisteredEvent);
+
+                Assert.Equal(restaurant.Id, restaurantRegisteredEvent.RestaurantId);
+                Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);
+            };
+
             var result = await handler.Handle(command);
-
-            var restaurant = restaurantRepositorySpy.Restaurants
-                .Where(x =>
-                {
-                    return x.Name == command.RestaurantName
-                        && x.PhoneNumber.Number == command.RestaurantPhoneNumber
-                        && x.Address.Line1 == command.AddressLine1
-                        && x.Address.Line2 == command.AddressLine2
-                        && x.Address.Town == command.Town
-                        && x.Address.Postcode.Code == command.Postcode;
-                })
-                .SingleOrDefault();
-
-            var manager = restaurantManagerRepositorySpy.Managers
-                .Where(x =>
-                {
-                    return x.Name == command.ManagerName
-                        && x.Email.Address == command.ManagerEmail
-                        && x.Password == command.ManagerPassword
-                        && x.RestaurantId == restaurant.Id;
-                })
-                .SingleOrDefault();
-
-            var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy.Events
-                .Where(x => x.GetType() == typeof(RestaurantRegisteredEvent))
-                .SingleOrDefault();
-
-            Assert.NotNull(restaurant);
-            Assert.NotNull(manager);
-            Assert.NotNull(restaurantRegisteredEvent);
-
-            Assert.Equal(restaurant.Id, restaurantRegisteredEvent.RestaurantId);
-            Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);
 
             Assert.True(unitOfWorkSpy.Commited);
         }
