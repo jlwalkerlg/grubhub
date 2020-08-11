@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants;
+using FoodSnap.Application.Users;
 
 namespace FoodSnap.Application
 {

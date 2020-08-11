@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using FoodSnap.Application.Users;
 using FoodSnap.Application.Validation;
 using FoodSnap.Application.Validation.Failures;
 

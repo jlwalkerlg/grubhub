@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
+using FoodSnap.ApplicationTests.Users;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant

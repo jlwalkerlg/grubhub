@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Application.Validation;
 using FoodSnap.Application.Validation.Failures;
+using FoodSnap.ApplicationTests.Users;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
 using Xunit;

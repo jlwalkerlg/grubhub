@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FoodSnap.Application.Restaurants;
+using FoodSnap.Application.Users;
 using FoodSnap.Domain.Users;
 
-namespace FoodSnap.ApplicationTests.Restaurants
+namespace FoodSnap.ApplicationTests.Users
 {
     public class RestaurantManagerRepositorySpy : IRestaurantManagerRepository
     {

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using FoodSnap.Application.Users;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;

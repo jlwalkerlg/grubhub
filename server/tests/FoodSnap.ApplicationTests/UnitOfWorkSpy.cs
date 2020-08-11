@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using FoodSnap.Application;
 using FoodSnap.Application.Restaurants;
+using FoodSnap.Application.Users;
 using FoodSnap.ApplicationTests.Restaurants;
+using FoodSnap.ApplicationTests.Users;
 
 namespace FoodSnap.ApplicationTests
 {
