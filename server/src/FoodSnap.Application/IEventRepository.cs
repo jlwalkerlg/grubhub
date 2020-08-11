@@ -4,6 +4,6 @@ namespace FoodSnap.Application
 {
     public interface IEventRepository
     {
-        Task Add<TEvent>(TEvent ev) where TEvent : IEvent;
+        Task Add<TEvent>(TEvent ev) where TEvent : Event;
     }
 }

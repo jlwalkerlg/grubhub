@@ -44,7 +44,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
             await restaurantManagerRepository.Add(manager);
 
-            var ev = new RestaurantRegisteredEvent();
+            var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
 
             await eventRepository.Add(ev);
 

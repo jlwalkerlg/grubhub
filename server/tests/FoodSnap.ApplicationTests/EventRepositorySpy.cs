@@ -6,9 +6,9 @@ namespace FoodSnap.ApplicationTests
 {
     public class EventRepositorySpy : IEventRepository
     {
-        public List<IEvent> Events = new List<IEvent>();
+        public List<Event> Events = new List<Event>();
 
-        public Task Add<TEvent>(TEvent ev) where TEvent : IEvent
+        public Task Add<TEvent>(TEvent ev) where TEvent : Event
         {
             Events.Add(ev);
             return Task.CompletedTask;

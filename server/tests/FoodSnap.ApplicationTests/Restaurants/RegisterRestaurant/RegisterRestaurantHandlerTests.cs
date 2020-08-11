@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using FoodSnap.Application.Restaurants;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using Xunit;
 
@@ -54,13 +53,17 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                 })
                 .SingleOrDefault();
 
-            var restaurantRegisteredEvent = eventRepositorySpy.Events
+            var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy.Events
                 .Where(x => x.GetType() == typeof(RestaurantRegisteredEvent))
                 .SingleOrDefault();
 
-            Assert.NotNull(manager);
             Assert.NotNull(restaurant);
+            Assert.NotNull(manager);
             Assert.NotNull(restaurantRegisteredEvent);
+
+            Assert.Equal(restaurant.Id, restaurantRegisteredEvent.RestaurantId);
+            Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);
+
             Assert.True(unitOfWorkSpy.Commited);
         }
     }
