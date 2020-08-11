@@ -17,17 +17,38 @@ namespace FoodSnap.Application.Validation
             RegexOptions.IgnoreCase | RegexOptions.Compiled,
             TimeSpan.FromMilliseconds(250));
 
+        public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .WithState(x => new RequiredFailure());
+        }
+
+        public static IRuleBuilderOptions<T, string> MinLength<T>(this IRuleBuilder<T, string> ruleBuilder, int minLength)
+        {
+            return ruleBuilder
+                .MinimumLength(minLength)
+                .WithState(x => new MinLengthFailure(minLength));
+        }
+
+        public static IRuleBuilderOptions<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder
+                .EmailAddress()
+                .WithState(x => new EmailFailure());
+        }
+
         public static IRuleBuilderOptions<T, string> PhoneNumber<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .Must(x => phoneNumberRegex.IsMatch(x))
+                .Matches(phoneNumberRegex)
                 .WithState(x => new PhoneNumberFailure());
         }
 
         public static IRuleBuilderOptions<T, string> Postcode<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .Must(x => postcodeRegex.IsMatch(x))
+                .Matches(postcodeRegex)
                 .WithState(x => new PostcodeFailure());
         }
     }
