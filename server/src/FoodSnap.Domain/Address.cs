@@ -32,6 +32,9 @@ namespace FoodSnap.Domain
             Postcode = postcode;
         }
 
+        // EF Core
+        private Address() { }
+
         public override int GetHashCode()
         {
             var hashCode = Line1.GetHashCode();

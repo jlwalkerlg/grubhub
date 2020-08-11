@@ -1,4 +1,5 @@
 using System;
+
 namespace FoodSnap.Domain.Restaurants
 {
     public class Restaurant : Entity
@@ -28,5 +29,8 @@ namespace FoodSnap.Domain.Restaurants
             PhoneNumber = phoneNumber;
             Address = address;
         }
+
+        // EF Core
+        private Restaurant() { }
     }
 }
