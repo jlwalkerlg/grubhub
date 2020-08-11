@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants;
 using FoodSnap.Domain.Users;
@@ -13,6 +14,11 @@ namespace FoodSnap.ApplicationTests.Restaurants
         {
             Managers.Add(manager);
             return Task.CompletedTask;
+        }
+
+        public Task<bool> EmailExists(string email)
+        {
+            return Task.FromResult(Managers.Any(x => x.Email.Address == email));
         }
     }
 }

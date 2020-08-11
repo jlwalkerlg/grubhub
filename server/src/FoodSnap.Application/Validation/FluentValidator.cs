@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentValidation;
 
 namespace FoodSnap.Application.Validation
@@ -11,9 +12,9 @@ namespace FoodSnap.Application.Validation
             CascadeMode = CascadeMode.Stop;
         }
 
-        public new Result Validate(TRequest request)
+        public async new Task<Result> Validate(TRequest request)
         {
-            var result = base.Validate(request);
+            var result = await base.ValidateAsync(request);
 
             if (result.IsValid)
             {
