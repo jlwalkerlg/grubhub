@@ -249,6 +249,7 @@ const LastStep: FC<Props> = ({
         <button
           className="btn btn-outline-primary font-semibold w-full"
           onClick={backStep}
+          disabled={!canAdvance}
         >
           Back
         </button>

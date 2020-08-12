@@ -109,6 +109,8 @@ const RegisterRestaurantFormController: FC = () => {
       postCode: postCode.value,
     });
 
+    setIsSubmitting(false);
+
     await MySwal.fire({
       title: <p>Thanks For Registering!</p>,
       text:

@@ -11,23 +11,31 @@ body {
   transition: background-color 0.2s ease-in-out;
 }
 
+.btn:disabled {
+  @apply cursor-default;
+}
+
 .btn-primary {
   @apply bg-primary text-white;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   @apply bg-primary-darker;
 }
 
 .btn-primary:disabled {
-  @apply bg-primary-disabled cursor-default;
+  @apply bg-primary-disabled;
 }
 
 .btn-outline-primary {
   @apply bg-white border border-primary text-primary-900;
 }
 
-.btn-outline-primary:hover {
+.btn-outline-primary:hover:not(:disabled) {
+  @apply bg-primary-100;
+}
+
+.btn-outline-primary:disabled {
   @apply bg-primary-100;
 }
 
