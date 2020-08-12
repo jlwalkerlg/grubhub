@@ -13,7 +13,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
 
             builder.Property(x => x.EventType).IsRequired().HasColumnName("Type");
 
-            builder.Property(x => x.Data).IsRequired().HasColumnName("Data");
+            builder.Property(x => x.Event).IsRequired().HasColumnType("jsonb").HasColumnName("Data");
 
             builder.Property(x => x.CreatedAt).IsRequired().HasColumnName("CreatedAt");
         }
