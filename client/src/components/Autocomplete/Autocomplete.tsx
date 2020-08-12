@@ -1,4 +1,4 @@
-import React, { FC, useRef, useEffect, useState } from "react";
+import React from "react";
 
 import useClickAwayListener from "~/lib/ClickAwayListener/useClickAwayListener";
 
@@ -8,27 +8,28 @@ interface Props {
   children: HTMLInputElement;
 }
 
-const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
-  const [isOpen, setIsOpen] = useState(predictions.length > 0);
-  useEffect(() => {
+const Autocomplete: React.FC<Props> = ({ predictions, onSelect, children }) => {
+  const [isOpen, setIsOpen] = React.useState(predictions.length > 0);
+  React.useEffect(() => {
     setIsOpen(predictions.length > 0);
   }, [predictions]);
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
 
-  const onButtonClick = useRef((e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const onButtonClick = React.useRef(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      onSelect(e.currentTarget.dataset.id);
+    }
+  ).current;
 
-    onSelect(e.currentTarget.dataset.id);
-  }).current;
-
-  const onDocumentKeydown = useRef((e: KeyboardEvent) => {
+  const onDocumentKeydown = React.useRef((e: KeyboardEvent) => {
     if (e.key === "Escape") {
       setIsOpen(false);
     }
   }).current;
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.addEventListener("keydown", onDocumentKeydown);
 
     return () => {
@@ -61,7 +62,18 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
     [selectedIndex, predictions.length]
   );
 
-  useEffect(() => {
+  const onInputKeydownEnter = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+
+        onSelect(predictions[selectedIndex].id);
+      }
+    },
+    [selectedIndex, predictions]
+  );
+
+  React.useEffect(() => {
     if (!isOpen) {
       setSelectedIndex(0);
     }
@@ -76,7 +88,7 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     inputRef.current.addEventListener("keydown", onInputKeydownTab);
 
     return () => {
@@ -84,7 +96,19 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
     };
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    if (isOpen) {
+      inputRef.current.addEventListener("keydown", onInputKeydownEnter);
+    }
+
+    return () => {
+      if (isOpen) {
+        inputRef.current.removeEventListener("keydown", onInputKeydownEnter);
+      }
+    };
+  }, [onInputKeydownEnter, isOpen]);
+
+  React.useEffect(() => {
     if (isOpen) {
       inputRef.current.addEventListener("keydown", onInputKeydownArrow);
     }
@@ -96,7 +120,7 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
     };
   }, [selectedIndex, predictions.length, isOpen]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     inputRef.current.addEventListener("focus", onInputFocus);
 
     return () => {
@@ -104,7 +128,7 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
     };
   }, [onInputFocus]);
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
   useClickAwayListener(wrapperRef, () => setIsOpen(false));
 
   return (
@@ -117,13 +141,13 @@ const Autocomplete: FC<Props> = ({ predictions, onSelect, children }) => {
             return (
               <li key={x.id} className="w-full">
                 <button
+                  type="button"
                   tabIndex={-1}
                   data-id={x.id}
                   onClick={onButtonClick}
                   className={`py-2 px-4 w-full text-left bg-white hover:bg-gray-100 border-t border-gray-300 cursor-pointer ${
                     selectedIndex === index ? "bg-gray-100" : ""
                   }`}
-                  role="button"
                 >
                   {x.description}
                 </button>
