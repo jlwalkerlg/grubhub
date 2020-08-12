@@ -5,6 +5,7 @@ import { FormComponent } from "./useFormComponent";
 interface CompositeForm {
   isValid: boolean;
   isStepValid: boolean;
+  validateStep(): boolean;
   values: { [key: string]: string };
 }
 
@@ -25,7 +26,7 @@ export default function useCompositeForm(
     return true;
   };
 
-  const checkStepValid = () => {
+  const checkIsStepValid = () => {
     const form = forms[step - 1];
 
     for (const field in form) {
@@ -37,11 +38,23 @@ export default function useCompositeForm(
     return true;
   };
 
+  const validateStep = () => {
+    const form = forms[step - 1];
+
+    for (const field in form) {
+      if (Object.prototype.hasOwnProperty.call(form, field)) {
+        const component = form[field];
+        if (!component.validate()) return false;
+      }
+    }
+    return true;
+  };
+
   const [isValid, setIsValid] = useState(checkValid);
   useEffect(() => setIsValid(checkValid()), [forms]);
 
-  const [isStepValid, setIsStepValid] = useState(checkStepValid);
-  useEffect(() => setIsStepValid(checkStepValid()), [forms[step - 1]]);
+  const [isStepValid, setIsStepValid] = useState(checkIsStepValid);
+  useEffect(() => setIsStepValid(checkIsStepValid()), [forms[step - 1]]);
 
   const values = () => {
     let values = {};
@@ -56,6 +69,7 @@ export default function useCompositeForm(
   return {
     isValid,
     isStepValid,
+    validateStep,
     get values() {
       return values();
     },

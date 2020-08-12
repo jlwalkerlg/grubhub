@@ -4,6 +4,7 @@ import React, {
   useState,
   SyntheticEvent,
   useEffect,
+  KeyboardEvent,
 } from "react";
 import router from "next/router";
 import Swal from "sweetalert2";
@@ -75,24 +76,31 @@ const RegisterRestaurantFormController: FC = () => {
     step
   );
 
-  function advanceStep(e: SyntheticEvent) {
-    e.preventDefault();
-
-    if (form.isStepValid) {
+  const advanceStep = () => {
+    if (form.validateStep()) {
       setStep(step + 1);
     }
-  }
+  };
 
-  function backStep(e: SyntheticEvent) {
+  const backStep = () => {
+    setStep(step - 1);
+  };
+
+  const onAdvanceStep = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    setStep(step - 1);
-  }
+    advanceStep();
+  };
+
+  const onBackStep = (e: SyntheticEvent) => {
+    e.preventDefault();
+
+    backStep();
+  };
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
 
+  const submit = async () => {
     if (!form.isValid) return;
 
     setIsSubmitting(true);
@@ -123,7 +131,23 @@ const RegisterRestaurantFormController: FC = () => {
     });
 
     router.push("/");
-  }
+  };
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    submit();
+  };
+
+  const onFormKeydown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      if (step === 3) {
+        submit();
+      } else {
+        advanceStep();
+      }
+    }
+  };
 
   return (
     <RegisterRestaurantForm
@@ -141,9 +165,10 @@ const RegisterRestaurantFormController: FC = () => {
       postCode={postCode}
       step={step}
       canAdvance={!isSubmitting && form.isStepValid}
-      advanceStep={advanceStep}
-      backStep={backStep}
+      onAdvanceStep={onAdvanceStep}
+      onBackStep={onBackStep}
       onSubmit={onSubmit}
+      onFormKeydown={onFormKeydown}
     />
   );
 };

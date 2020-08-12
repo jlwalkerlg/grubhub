@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, SyntheticEvent } from "react";
+import React, { FC, FormEvent, SyntheticEvent, KeyboardEvent } from "react";
 
 import { FormComponent } from "~/lib/Form/useFormComponent";
 import { AddressSearchResult } from "~/lib/AddressSearch/AddressSearcher";
@@ -21,9 +21,10 @@ export interface Props {
   postCode: FormComponent;
   step: number;
   canAdvance: boolean;
-  advanceStep(e: SyntheticEvent): void;
-  backStep(e: SyntheticEvent): void;
+  onAdvanceStep(e: SyntheticEvent): void;
+  onBackStep(e: SyntheticEvent): void;
   onSubmit(e: FormEvent): void;
+  onFormKeydown(e: KeyboardEvent): void;
 }
 
 const FirstStep: FC<Props> = ({
@@ -31,7 +32,7 @@ const FirstStep: FC<Props> = ({
   managerEmail,
   managerPassword,
   canAdvance,
-  advanceStep,
+  onAdvanceStep,
 }) => {
   return (
     <div>
@@ -45,6 +46,7 @@ const FirstStep: FC<Props> = ({
         </label>
         <input
           {...managerName.props}
+          autoFocus
           className="input"
           type="text"
           name="managerName"
@@ -84,9 +86,9 @@ const FirstStep: FC<Props> = ({
 
       <div className="mt-8">
         <button
+          type="button"
           className="btn btn-primary font-semibold w-full"
-          onClick={advanceStep}
-          role="button"
+          onClick={onAdvanceStep}
           disabled={!canAdvance}
         >
           Continue
@@ -100,8 +102,8 @@ const SecondStep: FC<Props> = ({
   restaurantName,
   restaurantPhone,
   canAdvance,
-  advanceStep,
-  backStep,
+  onAdvanceStep,
+  onBackStep,
 }) => {
   return (
     <div>
@@ -115,6 +117,7 @@ const SecondStep: FC<Props> = ({
         </label>
         <input
           {...restaurantName.props}
+          autoFocus
           className="input"
           type="text"
           name="restaurantName"
@@ -140,8 +143,9 @@ const SecondStep: FC<Props> = ({
 
       <div className="mt-8">
         <button
+          type="button"
           className="btn btn-outline-primary font-semibold w-full"
-          onClick={backStep}
+          onClick={onBackStep}
         >
           Back
         </button>
@@ -149,8 +153,9 @@ const SecondStep: FC<Props> = ({
 
       <div className="mt-3">
         <button
+          type="button"
           className="btn btn-primary font-semibold w-full"
-          onClick={advanceStep}
+          onClick={onAdvanceStep}
           disabled={!canAdvance}
         >
           Continue
@@ -169,7 +174,7 @@ const LastStep: FC<Props> = ({
   city,
   postCode,
   canAdvance,
-  backStep,
+  onBackStep,
   onSubmit,
 }) => {
   return (
@@ -190,6 +195,7 @@ const LastStep: FC<Props> = ({
           {/* @ts-ignore */}
           <input
             {...addressLine1.props}
+            autoFocus
             className="input"
             type="text"
             name="addressLine1"
@@ -247,8 +253,9 @@ const LastStep: FC<Props> = ({
 
       <div className="mt-8">
         <button
+          type="button"
           className="btn btn-outline-primary font-semibold w-full"
-          onClick={backStep}
+          onClick={onBackStep}
           disabled={!canAdvance}
         >
           Back
@@ -257,6 +264,7 @@ const LastStep: FC<Props> = ({
 
       <div className="mt-3">
         <button
+          type="submit"
           className="btn btn-primary font-semibold w-full"
           onClick={onSubmit}
           disabled={!canAdvance}
@@ -273,10 +281,15 @@ const LastStep: FC<Props> = ({
 };
 
 const RegisterRestaurantForm: FC<Props> = (props: Props) => {
-  const { step, onSubmit } = props;
+  const { step, onSubmit, onFormKeydown } = props;
 
   return (
-    <form action="/restaurants/register" method="POST" onSubmit={onSubmit}>
+    <form
+      action="/restaurants/register"
+      method="POST"
+      onSubmit={onSubmit}
+      onKeyDown={onFormKeydown}
+    >
       {step === 1 && <FirstStep {...props} />}
       {step === 2 && <SecondStep {...props} />}
       {step === 3 && <LastStep {...props} />}

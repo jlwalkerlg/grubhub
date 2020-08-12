@@ -9,6 +9,7 @@ export interface FormComponent {
   valid: boolean;
   error: string;
   setValue(val: string): void;
+  validate(): boolean;
   props: {
     value: string;
     valid: "true" | "false" | undefined;
@@ -41,7 +42,9 @@ export function useFormComponent(
     return true;
   });
 
-  function validate(v: string = value): boolean {
+  const validate = (v: string = value): boolean => {
+    setTouched(true);
+
     if (!required && v === "") return true;
 
     for (const rule of rules) {
@@ -57,7 +60,7 @@ export function useFormComponent(
     setError(null);
     setValid(true);
     return true;
-  }
+  };
 
   function onBlur(e: SyntheticEvent<HTMLInputElement>): void {
     setTouched(true);
@@ -80,6 +83,7 @@ export function useFormComponent(
     dirty,
     valid,
     error,
+    validate: () => validate(),
     setValue: update,
     props: {
       value,
