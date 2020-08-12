@@ -65,7 +65,7 @@ const RegisterRestaurantFormController: FC = () => {
     }
   }, [address]);
 
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
 
   const form = useCompositeForm(
     [

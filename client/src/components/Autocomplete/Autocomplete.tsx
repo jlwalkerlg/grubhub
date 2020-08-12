@@ -66,6 +66,7 @@ const Autocomplete: React.FC<Props> = ({ predictions, onSelect, children }) => {
     (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         e.preventDefault();
+        e.stopPropagation();
 
         onSelect(predictions[selectedIndex].id);
       }
