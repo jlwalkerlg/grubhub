@@ -32,7 +32,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             );
 
             await repository.Add(restaurant);
-            context.SaveChanges();
+            FlushContext();
 
             Assert.Single(context.Restaurants);
 
