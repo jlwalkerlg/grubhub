@@ -30,6 +30,12 @@ namespace Bruno.Infrastructure.Persistence.EF.Configurations
                     y.Property(p => p.Code).IsRequired().HasColumnName("Postcode");
                 });
             });
+
+            builder.OwnsOne(x => x.Coordinates, x =>
+            {
+                x.Property(y => y.Latitude).IsRequired().HasColumnName("Latitude");
+                x.Property(y => y.Longitude).IsRequired().HasColumnName("Longitude");
+            });
         }
     }
 }

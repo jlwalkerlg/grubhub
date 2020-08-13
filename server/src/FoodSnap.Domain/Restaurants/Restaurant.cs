@@ -7,8 +7,9 @@ namespace FoodSnap.Domain.Restaurants
         public string Name { get; }
         public PhoneNumber PhoneNumber { get; }
         public Address Address { get; }
+        public Coordinates Coordinates { get; }
 
-        public Restaurant(string name, PhoneNumber phoneNumber, Address address)
+        public Restaurant(string name, PhoneNumber phoneNumber, Address address, Coordinates coordinates)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -25,9 +26,15 @@ namespace FoodSnap.Domain.Restaurants
                 throw new ArgumentNullException(nameof(address));
             }
 
+            if (coordinates is null)
+            {
+                throw new ArgumentNullException(nameof(coordinates));
+            }
+
             Name = name;
             PhoneNumber = phoneNumber;
             Address = address;
+            Coordinates = coordinates;
         }
 
         // EF Core

@@ -1,7 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
+using FoodSnap.ApplicationTests.Doubles.GeocoderSpy;
 using FoodSnap.ApplicationTests.Users;
+using FoodSnap.Domain.Restaurants;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
@@ -12,6 +14,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         private readonly RestaurantRepositorySpy restaurantRepositorySpy;
         private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
         private readonly EventRepositorySpy eventRepositorySpy;
+        private readonly GeocoderSpy geocoderSpy;
 
         private readonly RegisterRestaurantCommand command;
         private readonly RegisterRestaurantHandler handler;
@@ -22,14 +25,17 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             restaurantRepositorySpy = unitOfWorkSpy.RestaurantRepositorySpy;
             restaurantManagerRepositorySpy = unitOfWorkSpy.RestaurantManagerRepositorySpy;
             eventRepositorySpy = unitOfWorkSpy.EventRepositorySpy;
+            geocoderSpy = new GeocoderSpy();
 
             command = new RegisterRestaurantCommandBuilder().Build();
-            handler = new RegisterRestaurantHandler(unitOfWorkSpy);
+            handler = new RegisterRestaurantHandler(unitOfWorkSpy, geocoderSpy);
         }
 
         [Fact]
         public async Task It_Creates_A_New_Restaurant_And_Manager()
         {
+            geocoderSpy.Coordinates = new Coordinates(0, 0);
+
             unitOfWorkSpy.OnCommit = () =>
             {
                 var restaurant = restaurantRepositorySpy.Restaurants
@@ -40,7 +46,8 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                             && x.Address.Line1 == command.AddressLine1
                             && x.Address.Line2 == command.AddressLine2
                             && x.Address.Town == command.Town
-                            && x.Address.Postcode.Code == command.Postcode;
+                            && x.Address.Postcode.Code == command.Postcode
+                            && x.Coordinates == geocoderSpy.Coordinates;
                     })
                     .SingleOrDefault();
 

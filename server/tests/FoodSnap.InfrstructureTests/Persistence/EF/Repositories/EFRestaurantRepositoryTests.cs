@@ -27,7 +27,8 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
                     null,
                     "Manchester",
                     new Postcode("MN12 1NM")
-                )
+                ),
+                new Coordinates(0, 0)
             );
 
             await repository.Add(restaurant);
@@ -41,6 +42,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             Assert.Equal(restaurant.Name, found.Name);
             Assert.Equal(restaurant.PhoneNumber, found.PhoneNumber);
             Assert.Equal(restaurant.Address, found.Address);
+            Assert.Equal(restaurant.Coordinates, found.Coordinates);
         }
     }
 }
