@@ -25,5 +25,16 @@ namespace FoodSnap.DomainTests
         {
             new Postcode(postcode);
         }
+
+        [Fact]
+        public void Equal_When_Code_Is_The_Same()
+        {
+            var postcode1 = new Postcode("MN12 1NM");
+            var postcode2 = new Postcode(postcode1.Code);
+
+            Assert.Equal(postcode1, postcode2);
+            Assert.True(postcode1 == postcode2);
+            Assert.Equal(postcode1.GetHashCode(), postcode2.GetHashCode());
+        }
     }
 }

@@ -22,5 +22,16 @@ namespace FoodSnap.DomainTests
         {
             new Email(address);
         }
+
+        [Fact]
+        public void Equal_When_Address_Is_The_Same()
+        {
+            var email1 = new Email("test@email.com");
+            var email2 = new Email(email1.Address);
+
+            Assert.Equal(email1, email2);
+            Assert.True(email1 == email2);
+            Assert.Equal(email1.GetHashCode(), email2.GetHashCode());
+        }
     }
 }

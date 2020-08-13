@@ -23,5 +23,16 @@ namespace FoodSnap.DomainTests
         {
             new PhoneNumber(number);
         }
+
+        [Fact]
+        public void Equal_When_Number_Is_The_Same()
+        {
+            var phoneNumber1 = new PhoneNumber("01234567890");
+            var phoneNumber2 = new PhoneNumber(phoneNumber1.Number);
+
+            Assert.Equal(phoneNumber1, phoneNumber2);
+            Assert.True(phoneNumber1 == phoneNumber2);
+            Assert.Equal(phoneNumber1.GetHashCode(), phoneNumber2.GetHashCode());
+        }
     }
 }
