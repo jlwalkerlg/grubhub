@@ -21,14 +21,12 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             var ev = new DummyEvent("Chow Main");
 
             await repository.Add(ev);
-            context.SaveChanges();
+            FlushContext();
 
-            var foundDto = context.Events.First();
-            var found = (DummyEvent)foundDto.Event;
+            var found = context.Events.First().ToEvent<DummyEvent>();
 
             Assert.Equal(ev.Name, found.Name);
-            Assert.Equal(ev.CreatedAt, found.CreatedAt);
-            Assert.Equal(ev.CreatedAt, foundDto.CreatedAt);
+            Assert.True(ev.CreatedAt.Subtract(found.CreatedAt).Seconds < 1);
         }
     }
 }
