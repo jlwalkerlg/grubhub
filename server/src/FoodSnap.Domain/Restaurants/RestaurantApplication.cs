@@ -28,5 +28,8 @@ namespace FoodSnap.Domain.Restaurants
 
             Status = RestaurantApplicationStatus.Accepted;
         }
+
+        // EF Core
+        private RestaurantApplication() { }
     }
 }
