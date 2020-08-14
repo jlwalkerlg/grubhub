@@ -12,6 +12,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly RestaurantRepositorySpy restaurantRepositorySpy;
+        private readonly RestaurantApplicationRepositorySpy restaurantApplicationRepositorySpy;
         private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
         private readonly EventRepositorySpy eventRepositorySpy;
         private readonly GeocoderSpy geocoderSpy;
@@ -23,6 +24,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
             restaurantRepositorySpy = unitOfWorkSpy.RestaurantRepositorySpy;
+            restaurantApplicationRepositorySpy = unitOfWorkSpy.RestaurantApplicationRepositorySpy;
             restaurantManagerRepositorySpy = unitOfWorkSpy.RestaurantManagerRepositorySpy;
             eventRepositorySpy = unitOfWorkSpy.EventRepositorySpy;
             geocoderSpy = new GeocoderSpy();
@@ -32,7 +34,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         }
 
         [Fact]
-        public async Task It_Creates_A_New_Restaurant_And_Manager()
+        public async Task It_Creates_A_New_Restaurant()
         {
             geocoderSpy.Coordinates = new Coordinates(0, 0);
 
@@ -51,6 +53,10 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                     })
                     .SingleOrDefault();
 
+                var application = restaurantApplicationRepositorySpy.Applications
+                    .Where(x => x.RestaurantId == restaurant.Id)
+                    .SingleOrDefault();
+
                 var manager = restaurantManagerRepositorySpy.Managers
                     .Where(x =>
                     {
@@ -66,6 +72,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                     .SingleOrDefault();
 
                 Assert.NotNull(restaurant);
+                Assert.NotNull(application);
                 Assert.NotNull(manager);
                 Assert.NotNull(restaurantRegisteredEvent);
 

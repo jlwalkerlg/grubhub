@@ -10,6 +10,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
     public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand, Result>
     {
         private readonly IRestaurantRepository restaurantRepository;
+        private readonly IRestaurantApplicationRepository restaurantApplicationRepository;
         private readonly IRestaurantManagerRepository restaurantManagerRepository;
         private readonly IEventRepository eventRepository;
         private readonly IUnitOfWork unitOfWork;
@@ -19,6 +20,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
         public RegisterRestaurantHandler(IUnitOfWork unitOfWork, IGeocoder geocoder)
         {
             restaurantRepository = unitOfWork.RestaurantRepository;
+            restaurantApplicationRepository = unitOfWork.RestaurantApplicationRepository;
             restaurantManagerRepository = unitOfWork.RestaurantManagerRepository;
             eventRepository = unitOfWork.EventRepository;
             this.unitOfWork = unitOfWork;
@@ -44,6 +46,10 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
             );
 
             await restaurantRepository.Add(restaurant);
+
+            var application = new RestaurantApplication(restaurant.Id);
+
+            await restaurantApplicationRepository.Add(application);
 
             var manager = new RestaurantManager(
                 command.ManagerName,
