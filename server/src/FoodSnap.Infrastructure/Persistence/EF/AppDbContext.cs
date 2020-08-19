@@ -1,5 +1,6 @@
 using System.Reflection;
 using FoodSnap.Domain.Restaurants;
+using FoodSnap.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodSnap.Infrastructure.Persistence.EF
@@ -13,6 +14,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF
         public DbSet<Restaurant> Restaurants { get; protected set; }
         public DbSet<RestaurantApplication> RestaurantApplications { get; protected set; }
         public DbSet<EventDto> Events { get; protected set; }
+        public DbSet<RestaurantManager> RestaurantManagers { get; protected set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -21,5 +21,8 @@ namespace FoodSnap.Domain.Users
 
             RestaurantId = restaurantId;
         }
+
+        // EF Core
+        private RestaurantManager() { }
     }
 }

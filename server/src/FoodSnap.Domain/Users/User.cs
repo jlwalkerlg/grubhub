@@ -31,5 +31,8 @@ namespace FoodSnap.Domain.Users
             Email = email;
             Password = password;
         }
+
+        // EF Core
+        protected User() { }
     }
 }
