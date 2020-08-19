@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using FoodSnap.Application.Services;
+using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Application.Users;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Restaurants;
@@ -36,7 +36,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                     command.Town,
                     new Postcode(command.Postcode));
 
-            var coordinates = await geocoder.GetCoordinates(address);
+            var coordinates = await GetCoordinates(address);
 
             var restaurant = new Restaurant(
                 command.RestaurantName,
@@ -45,11 +45,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 coordinates
             );
 
-            await restaurantRepository.Add(restaurant);
-
             var application = new RestaurantApplication(restaurant.Id);
-
-            await restaurantApplicationRepository.Add(application);
 
             var manager = new RestaurantManager(
                 command.ManagerName,
@@ -58,15 +54,31 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 restaurant.Id
             );
 
-            await restaurantManagerRepository.Add(manager);
-
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
 
+            await restaurantRepository.Add(restaurant);
+            await restaurantApplicationRepository.Add(application);
+            await restaurantManagerRepository.Add(manager);
             await eventRepository.Add(ev);
 
             await unitOfWork.Commit();
 
             return Result.Ok();
+        }
+
+        private async Task<Coordinates> GetCoordinates(Address address)
+        {
+            var addressDto = new AddressDto
+            {
+                Line1 = address.Line1,
+                Line2 = address.Line2,
+                Town = address.Town,
+                Postcode = address.Postcode.Code
+            };
+
+            var coordinatesDto = await geocoder.GetCoordinates(addressDto);
+
+            return new Coordinates(coordinatesDto.Latitude, coordinatesDto.Longitude);
         }
     }
 }

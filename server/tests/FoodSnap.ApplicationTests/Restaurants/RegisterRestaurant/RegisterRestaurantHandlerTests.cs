@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
+using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.ApplicationTests.Doubles.GeocoderSpy;
 using FoodSnap.ApplicationTests.Users;
-using FoodSnap.Domain.Restaurants;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
@@ -36,7 +36,11 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_A_New_Restaurant()
         {
-            geocoderSpy.Coordinates = new Coordinates(0, 0);
+            geocoderSpy.CoordinatesDto = new CoordinatesDto
+            {
+                Latitude = 0,
+                Longitude = 0
+            };
 
             unitOfWorkSpy.OnCommit = () =>
             {
@@ -49,7 +53,8 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                             && x.Address.Line2 == command.AddressLine2
                             && x.Address.Town == command.Town
                             && x.Address.Postcode.Code == command.Postcode
-                            && x.Coordinates == geocoderSpy.Coordinates;
+                            && x.Coordinates.Latitude == geocoderSpy.CoordinatesDto.Latitude
+                            && x.Coordinates.Longitude == geocoderSpy.CoordinatesDto.Longitude;
                     })
                     .SingleOrDefault();
 
