@@ -1,4 +1,4 @@
-using FoodSnap.Application;
+using FoodSnap.Application.Events;
 
 namespace FoodSnap.InfrstructureTests.Persistence.EF.Repositories.DummyEvent
 {

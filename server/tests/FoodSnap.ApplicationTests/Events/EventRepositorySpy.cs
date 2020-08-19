@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FoodSnap.Application;
+using FoodSnap.Application.Events;
 
-namespace FoodSnap.ApplicationTests
+namespace FoodSnap.ApplicationTests.Events
 {
     public class EventRepositorySpy : IEventRepository
     {

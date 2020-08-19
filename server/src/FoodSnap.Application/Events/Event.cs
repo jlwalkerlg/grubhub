@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FoodSnap.Application
+namespace FoodSnap.Application.Events
 {
     public abstract class Event
     {

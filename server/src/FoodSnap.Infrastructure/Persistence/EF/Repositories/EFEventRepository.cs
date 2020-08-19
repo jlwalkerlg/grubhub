@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using FoodSnap.Application;
+using FoodSnap.Application.Events;
 
 namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
 {

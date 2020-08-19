@@ -1,4 +1,5 @@
 using System;
+using FoodSnap.Application.Events;
 
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {

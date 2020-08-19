@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Application;
+using FoodSnap.Application.Events;
 using FoodSnap.Application.Restaurants;
 using FoodSnap.Application.Users;
+using FoodSnap.ApplicationTests.Events;
 using FoodSnap.ApplicationTests.Restaurants;
 using FoodSnap.ApplicationTests.Users;
 

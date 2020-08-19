@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using FoodSnap.Application.Events;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Application.Users;
 using FoodSnap.Domain;

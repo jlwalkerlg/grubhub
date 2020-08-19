@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace FoodSnap.Application
+namespace FoodSnap.Application.Events
 {
     public interface IEventRepository
     {

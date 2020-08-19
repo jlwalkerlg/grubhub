@@ -1,5 +1,5 @@
 using System;
-using FoodSnap.Application;
+using FoodSnap.Application.Events;
 using Newtonsoft.Json;
 
 namespace FoodSnap.Infrastructure.Persistence.EF

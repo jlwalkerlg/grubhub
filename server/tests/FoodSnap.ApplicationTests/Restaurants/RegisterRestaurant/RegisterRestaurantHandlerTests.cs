@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.ApplicationTests.Doubles.GeocoderSpy;
+using FoodSnap.ApplicationTests.Events;
 using FoodSnap.ApplicationTests.Users;
 using Xunit;
 
