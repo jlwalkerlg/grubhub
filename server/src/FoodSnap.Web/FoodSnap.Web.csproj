@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\FoodSnap.Infrastructure\FoodSnap.Infrastructure.csproj" />
+    <ProjectReference Include="..\FoodSnap.Application\FoodSnap.Application.csproj" />
+    <ProjectReference Include="..\FoodSnap.Domain\FoodSnap.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.1.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+
+</Project>

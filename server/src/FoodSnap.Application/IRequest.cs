@@ -1,6 +1,6 @@
 namespace FoodSnap.Application
 {
-    public interface IRequest
+    public interface IRequest : MediatR.IRequest<Result>
     {
     }
 }
