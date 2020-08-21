@@ -10,9 +10,10 @@ namespace FoodSnap.Web.ServiceRegistration
     {
         public static void AddPresenters(this ContainerBuilder builder)
         {
+            // TODO: scan for all presenters
             builder.RegisterType<RegisterRestaurantPresenter>()
                 .As<IPresenter<RegisterRestaurantCommand, Result>>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
         }
     }
 }

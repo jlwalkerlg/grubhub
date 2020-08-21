@@ -9,7 +9,7 @@ namespace FoodSnap.Web.ServiceRegistration
         {
             builder.RegisterType<ErrorPresenterFactory>()
                 .As<IErrorPresenterFactory>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
         }
     }
 }

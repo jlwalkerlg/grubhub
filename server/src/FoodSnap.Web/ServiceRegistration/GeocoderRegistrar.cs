@@ -11,7 +11,7 @@ namespace FoodSnap.Web.ServiceRegistration
             // TODO: register actual implementation
             builder.RegisterType<GeocodingServiceStub>()
                 .As<IGeocoder>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
         }
     }
 
