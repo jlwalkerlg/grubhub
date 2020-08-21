@@ -1,3 +1,7 @@
+using Autofac;
+using FoodSnap.Application;
+using FoodSnap.Web.ServiceRegistration;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,13 +19,22 @@ namespace FoodSnap.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddEntityFramework();
+
+            services.AddMediatR(typeof(Result).Assembly);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.AddPresenters();
+            builder.AddErrorPresenters();
+            builder.AddGeocoder();
+        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

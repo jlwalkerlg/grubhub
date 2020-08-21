@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Events;
 using FoodSnap.Application.Services.Geocoding;
@@ -8,7 +9,7 @@ using FoodSnap.Domain.Users;
 
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
-    public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand, Result>
+    public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand>
     {
         private readonly IRestaurantRepository restaurantRepository;
         private readonly IRestaurantApplicationRepository restaurantApplicationRepository;
@@ -29,7 +30,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
             this.geocoder = geocoder;
         }
 
-        public async Task<Result> Handle(RegisterRestaurantCommand command)
+        public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
         {
             var address = new Address(
                     command.AddressLine1,

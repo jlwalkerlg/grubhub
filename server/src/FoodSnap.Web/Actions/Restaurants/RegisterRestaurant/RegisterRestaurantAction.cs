@@ -17,6 +17,7 @@ namespace FoodSnap.Web.Actions.Restaurants.RegisterRestaurant
             this.presenter = presenter;
         }
 
+        [HttpPost("/restaurants/register")]
         public async Task<IActionResult> Execute(RegisterRestaurantRequest request)
         {
             var command = new RegisterRestaurantCommand(

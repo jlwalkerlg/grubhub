@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Application.Services.Geocoding;
@@ -86,7 +87,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                 Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);
             };
 
-            var result = await handler.Handle(command);
+            var result = await handler.Handle(command, CancellationToken.None);
 
             Assert.True(unitOfWorkSpy.Commited);
         }
