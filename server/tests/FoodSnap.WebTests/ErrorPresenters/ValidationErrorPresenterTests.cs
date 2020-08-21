@@ -22,7 +22,12 @@ namespace FoodSnap.WebTests.ErrorPresenters
         {
             var failures = new Dictionary<string, IValidationFailure>
             {
-                { "Name", new RequiredFailure() },
+                { "RequiredFailure", new RequiredFailure() },
+                { "EmailFailure", new EmailFailure() },
+                { "MinLengthFailure", new MinLengthFailure(1) },
+                { "PhoneNumberFailure", new PhoneNumberFailure() },
+                { "PostcodeFailure", new PostcodeFailure() },
+                { "EmailTakenFailure", new EmailTakenFailure() },
             };
 
             var error = new ValidationError(failures);
@@ -34,7 +39,10 @@ namespace FoodSnap.WebTests.ErrorPresenters
             var envelope = result.Value as ValidationErrorEnvelope;
 
             Assert.NotNull(envelope.Errors);
-            Assert.NotEmpty(envelope.Errors["Name"]);
+            foreach (var item in failures)
+            {
+                Assert.NotEmpty(envelope.Errors[item.Key]);
+            }
         }
     }
 }
