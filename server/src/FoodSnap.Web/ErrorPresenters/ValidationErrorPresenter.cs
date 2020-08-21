@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FoodSnap.Application.Validation;
+using FoodSnap.Web.Envelopes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodSnap.Web.ErrorPresenters
@@ -15,7 +16,11 @@ namespace FoodSnap.Web.ErrorPresenters
                 errors.Add(item.Key, item.Value.ToString());
             }
 
-            var result = new ObjectResult(errors);
+            var envelope = new ValidationErrorEnvelope(
+                "Invalid request.",
+                errors);
+
+            var result = new ObjectResult(envelope);
             result.StatusCode = 422;
 
             return result;

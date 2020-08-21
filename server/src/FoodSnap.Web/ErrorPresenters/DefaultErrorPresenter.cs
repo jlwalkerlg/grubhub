@@ -1,4 +1,5 @@
 using FoodSnap.Application;
+using FoodSnap.Web.Envelopes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodSnap.Web.ErrorPresenters
@@ -7,7 +8,12 @@ namespace FoodSnap.Web.ErrorPresenters
     {
         protected override IActionResult PresentError(Error error)
         {
-            return new StatusCodeResult(500);
+            var envelope = new ErrorEnvelope("Unknown error.");
+
+            var result = new ObjectResult(envelope);
+            result.StatusCode = 500;
+
+            return result;
         }
     }
 }
