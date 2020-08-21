@@ -23,7 +23,7 @@ namespace FoodSnap.Web
         {
             services.AddControllers();
 
-            services.AddEntityFramework();
+            services.AddEntityFramework(Configuration);
 
             services.AddMediatR(typeof(Result).Assembly);
         }
