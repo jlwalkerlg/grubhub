@@ -1,0 +1,24 @@
+using System.Collections.Generic;
+using FoodSnap.Application.Validation;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodSnap.Web.ErrorPresenters
+{
+    public class ValidationErrorPresenter : ErrorPresenter<ValidationError>
+    {
+        protected override IActionResult PresentError(ValidationError error)
+        {
+            var errors = new Dictionary<string, string>();
+
+            foreach (var item in error.Errors)
+            {
+                errors.Add(item.Key, item.Value.ToString());
+            }
+
+            var result = new ObjectResult(errors);
+            result.StatusCode = 422;
+
+            return result;
+        }
+    }
+}

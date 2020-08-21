@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using FoodSnap.Application;
 using FoodSnap.Application.Validation;
 using FoodSnap.Application.Validation.Failures;
 using FoodSnap.Web.ErrorPresenters;
@@ -8,27 +7,17 @@ using Xunit;
 
 namespace FoodSnap.WebTests.ErrorPresenters
 {
-    public class ErrorPresenterTests
+    public class ValidationErrorPresenterTests
     {
-        private readonly ErrorPresenter presenter;
+        private readonly ValidationErrorPresenter presenter;
 
-        public ErrorPresenterTests()
+        public ValidationErrorPresenterTests()
         {
-            presenter = new ErrorPresenter();
+            presenter = new ValidationErrorPresenter();
         }
 
         [Fact]
-        public void It_Returns_500_For_Unknown_Errors()
-        {
-            var error = new Error();
-            var result = presenter.Present(error) as StatusCodeResult;
-
-            Assert.NotNull(result);
-            Assert.Equal(500, result.StatusCode);
-        }
-
-        [Fact]
-        public void It_Returns_422_For_Validation_Errors()
+        public void It_Returns_A_422_Response()
         {
             var failures = new Dictionary<string, IValidationFailure>
             {
