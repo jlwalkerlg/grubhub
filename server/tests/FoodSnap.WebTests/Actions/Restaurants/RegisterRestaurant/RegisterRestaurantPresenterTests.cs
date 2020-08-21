@@ -13,9 +13,10 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
 
         public RegisterRestaurantPresenterTests()
         {
-            errorPresenterSpy = new ErrorPresenterSpy();
+            var errorPresenterFactoryStub = new ErrorPresenterFactoryStub();
+            errorPresenterSpy = errorPresenterFactoryStub.ErrorPresenterSpy;
 
-            presenter = new RegisterRestaurantPresenter(errorPresenterSpy);
+            presenter = new RegisterRestaurantPresenter(errorPresenterFactoryStub);
         }
 
         [Fact]

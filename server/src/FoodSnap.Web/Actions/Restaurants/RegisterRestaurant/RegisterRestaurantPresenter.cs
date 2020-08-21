@@ -7,7 +7,7 @@ namespace FoodSnap.Web.Actions.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantPresenter : Presenter<RegisterRestaurantCommand, Result>
     {
-        public RegisterRestaurantPresenter(IErrorPresenter errorPresenter) : base(errorPresenter)
+        public RegisterRestaurantPresenter(IErrorPresenterFactory errorPresenterFactory) : base(errorPresenterFactory)
         {
         }
 

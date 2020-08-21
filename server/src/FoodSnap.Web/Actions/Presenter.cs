@@ -1,4 +1,3 @@
-using System;
 using FoodSnap.Application;
 using FoodSnap.Web.ErrorPresenters;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +7,11 @@ namespace FoodSnap.Web.Actions
     public abstract class Presenter<TRequest, TResponse> : IPresenter<TRequest, TResponse>
         where TResponse : Result
     {
-        private readonly IErrorPresenter errorPresenter;
+        private readonly IErrorPresenterFactory errorPresenterFactory;
 
-        public Presenter(IErrorPresenter errorPresenter)
+        public Presenter(IErrorPresenterFactory errorPresenter)
         {
-            this.errorPresenter = errorPresenter;
+            this.errorPresenterFactory = errorPresenter;
         }
 
         public IActionResult Present(TResponse response)
@@ -29,7 +28,9 @@ namespace FoodSnap.Web.Actions
 
         private IActionResult PresentError(TResponse response)
         {
-            return errorPresenter.Present(response.Error);
+            return errorPresenterFactory
+                .Make(response.Error)
+                .Present(response.Error);
         }
     }
 }
