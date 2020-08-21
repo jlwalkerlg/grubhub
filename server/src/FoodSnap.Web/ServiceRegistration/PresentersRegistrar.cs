@@ -1,8 +1,7 @@
+using System.Linq;
+using System.Reflection;
 using Autofac;
-using FoodSnap.Application;
-using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Web.Actions;
-using FoodSnap.Web.Actions.Restaurants.RegisterRestaurant;
 
 namespace FoodSnap.Web.ServiceRegistration
 {
@@ -10,9 +9,12 @@ namespace FoodSnap.Web.ServiceRegistration
     {
         public static void AddPresenters(this ContainerBuilder builder)
         {
-            // TODO: scan for all presenters
-            builder.RegisterType<RegisterRestaurantPresenter>()
-                .As<IPresenter<RegisterRestaurantCommand, Result>>()
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .Where(x =>
+                    x.GetInterfaces().Any(i =>
+                        i.IsGenericType
+                        && i.GetGenericTypeDefinition() == typeof(IPresenter<,>)))
+                .AsClosedTypesOf(typeof(IPresenter<,>))
                 .SingleInstance();
         }
     }
