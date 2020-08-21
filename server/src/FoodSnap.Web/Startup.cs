@@ -1,5 +1,6 @@
 using Autofac;
 using FoodSnap.Application;
+using FoodSnap.Infrastructure.Persistence.EF;
 using FoodSnap.Web.ServiceRegistration;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +41,12 @@ namespace FoodSnap.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                using (var scope = app.ApplicationServices.CreateScope())
+                using (var context = scope.ServiceProvider.GetService<AppDbContext>())
+                {
+                    context.Database.EnsureCreated();
+                }
             }
 
             app.UseHttpsRedirection();
