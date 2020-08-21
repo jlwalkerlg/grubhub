@@ -26,8 +26,8 @@ namespace FoodSnap.WebTests.ErrorPresenters
         [Fact]
         public void It_Returns_A_Validation_Error_Presenter()
         {
-            var errors = new Dictionary<string, IValidationFailure>();
-            var error = new ValidationError(errors);
+            var failures = new Dictionary<string, IValidationFailure>();
+            var error = new ValidationError(failures);
 
             Assert.IsType<ValidationErrorPresenter>(factory.Make(error));
         }

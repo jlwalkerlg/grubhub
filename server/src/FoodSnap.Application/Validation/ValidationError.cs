@@ -5,16 +5,16 @@ namespace FoodSnap.Application.Validation
 {
     public class ValidationError : IError
     {
-        public Dictionary<string, IValidationFailure> Errors { get; }
+        public Dictionary<string, IValidationFailure> Failures { get; }
 
-        public ValidationError(Dictionary<string, IValidationFailure> errors)
+        public ValidationError(Dictionary<string, IValidationFailure> failures)
         {
-            if (errors is null)
+            if (failures is null)
             {
-                throw new ArgumentNullException(nameof(errors));
+                throw new ArgumentNullException(nameof(failures));
             }
 
-            Errors = errors;
+            Failures = failures;
         }
     }
 }

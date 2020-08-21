@@ -37,9 +37,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.False(result.IsSuccess);
 
             var error = result.Error as ValidationError;
-            var errors = error.Errors;
+            var failures = error.Failures;
 
-            Assert.IsType(failureType, errors[nameof(command.ManagerName)]);
+            Assert.IsType(failureType, failures[nameof(command.ManagerName)]);
         }
 
         [Theory]
@@ -58,9 +58,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.False(result.IsSuccess);
 
             var error = result.Error as ValidationError;
-            var errors = error.Errors;
+            var failures = error.Failures;
 
-            Assert.IsType(failureType, errors[nameof(command.ManagerEmail)]);
+            Assert.IsType(failureType, failures[nameof(command.ManagerEmail)]);
         }
 
         [Fact]
@@ -83,9 +83,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.False(result.IsSuccess);
 
             var error = result.Error as ValidationError;
-            var errors = error.Errors;
+            var failures = error.Failures;
 
-            Assert.IsType<EmailTakenFailure>(errors[nameof(command.ManagerEmail)]);
+            Assert.IsType<EmailTakenFailure>(failures[nameof(command.ManagerEmail)]);
         }
 
         [Theory]
@@ -104,9 +104,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.False(result.IsSuccess);
 
             var error = result.Error as ValidationError;
-            var errors = error.Errors;
+            var failures = error.Failures;
 
-            Assert.IsType(failureType, errors[nameof(command.ManagerPassword)]);
+            Assert.IsType(failureType, failures[nameof(command.ManagerPassword)]);
         }
 
         [Theory]
@@ -124,9 +124,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.False(result.IsSuccess);
 
             var error = result.Error as ValidationError;
-            var errors = error.Errors;
+            var failures = error.Failures;
 
-            Assert.IsType(failureType, errors[nameof(command.RestaurantName)]);
+            Assert.IsType(failureType, failures[nameof(command.RestaurantName)]);
         }
 
         [Theory]
@@ -145,9 +145,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.False(result.IsSuccess);
 
             var error = result.Error as ValidationError;
-            var errors = error.Errors;
+            var failures = error.Failures;
 
-            Assert.IsType(failureType, errors[nameof(command.RestaurantPhoneNumber)]);
+            Assert.IsType(failureType, failures[nameof(command.RestaurantPhoneNumber)]);
         }
     }
 }

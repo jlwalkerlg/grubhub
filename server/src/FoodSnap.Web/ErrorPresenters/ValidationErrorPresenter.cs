@@ -12,7 +12,7 @@ namespace FoodSnap.Web.ErrorPresenters
         {
             var errors = new Dictionary<string, string>();
 
-            foreach (var item in error.Errors)
+            foreach (var item in error.Failures)
             {
                 var key = item.Key;
                 var message = GetErrorMessage(key, item.Value);
