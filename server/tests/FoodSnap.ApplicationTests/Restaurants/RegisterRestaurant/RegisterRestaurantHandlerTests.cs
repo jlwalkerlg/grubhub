@@ -75,7 +75,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                     .SingleOrDefault();
 
                 var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy.Events
-                    .Where(x => x.GetType() == typeof(RestaurantRegisteredEvent))
+                    .OfType<RestaurantRegisteredEvent>()
                     .SingleOrDefault();
 
                 Assert.NotNull(restaurant);
@@ -85,6 +85,11 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 
                 Assert.Equal(restaurant.Id, restaurantRegisteredEvent.RestaurantId);
                 Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);
+
+                Assert.Equal(restaurant.Address.Line1, geocoderSpy.Address.Line1);
+                Assert.Equal(restaurant.Address.Line2, geocoderSpy.Address.Line2);
+                Assert.Equal(restaurant.Address.Town, geocoderSpy.Address.Town);
+                Assert.Equal(restaurant.Address.Postcode.Code, geocoderSpy.Address.Postcode);
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
