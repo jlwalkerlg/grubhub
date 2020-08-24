@@ -27,7 +27,7 @@ namespace FoodSnap.Application.Services.Geocoding
 
             if (!result.IsSuccess)
             {
-                return Result<Coordinates>.Fail(new GeocodingError());
+                return Result<Coordinates>.Fail(new GeocodingError(result.Error.Message));
             }
 
             return Result.Ok(new Coordinates(
