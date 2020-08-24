@@ -26,10 +26,11 @@ namespace FoodSnap.InfrastructureTests.Geocoding
                 Postcode = "BD181LT"
             };
 
-            var coordinates = await geocoder.GetCoordinates(address);
+            var coordinatesResult = await geocoder.GetCoordinates(address);
 
-            Assert.NotEqual(default(float), coordinates.Latitude);
-            Assert.NotEqual(default(float), coordinates.Longitude);
+            Assert.True(coordinatesResult.IsSuccess);
+            Assert.NotEqual(default(float), coordinatesResult.Value.Latitude);
+            Assert.NotEqual(default(float), coordinatesResult.Value.Longitude);
         }
     }
 }

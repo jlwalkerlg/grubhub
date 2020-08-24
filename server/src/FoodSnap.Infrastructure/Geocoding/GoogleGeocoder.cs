@@ -6,6 +6,7 @@ using FoodSnap.Application.Services.Geocoding;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using FoodSnap.Application;
 
 namespace FoodSnap.Infrastructure.Geocoding
 {
@@ -18,7 +19,7 @@ namespace FoodSnap.Infrastructure.Geocoding
             this.key = key;
         }
 
-        public async Task<CoordinatesDto> GetCoordinates(AddressDto address)
+        public async Task<Result<CoordinatesDto>> GetCoordinates(AddressDto address)
         {
             var formattedAddress = FormatAddress(address);
             var response = await SendRequest(formattedAddress);
@@ -27,11 +28,11 @@ namespace FoodSnap.Infrastructure.Geocoding
             var jobj = (JObject)JsonConvert.DeserializeObject(json);
             var result = jobj["results"]?[0];
 
-            return new CoordinatesDto
+            return Result.Ok(new CoordinatesDto
             {
                 Latitude = (float)result["geometry"]["location"]["lat"],
                 Longitude = (float)result["geometry"]["location"]["lat"]
-            };
+            });
         }
 
         private string FormatAddress(AddressDto address)
@@ -66,7 +67,7 @@ namespace FoodSnap.Infrastructure.Geocoding
         {
             using (var stream = response.GetResponseStream())
             {
-                StreamReader reader = new StreamReader(stream);
+                var reader = new StreamReader(stream);
                 return reader.ReadToEnd();
             }
         }

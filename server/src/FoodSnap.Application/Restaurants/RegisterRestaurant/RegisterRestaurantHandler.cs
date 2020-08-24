@@ -38,14 +38,20 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                     command.Town,
                     new Postcode(command.Postcode));
 
-            var coordinates = await GetCoordinates(address);
+            var coordinatesResult = await GetCoordinates(address);
+
+            if (!coordinatesResult.IsSuccess)
+            {
+                return coordinatesResult;
+            }
+
+            var coordinates = coordinatesResult.Value;
 
             var restaurant = new Restaurant(
                 command.RestaurantName,
                 new PhoneNumber(command.RestaurantPhoneNumber),
                 address,
-                coordinates
-            );
+                coordinates);
 
             var application = new RestaurantApplication(restaurant.Id);
 
@@ -53,8 +59,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 command.ManagerName,
                 new Email(command.ManagerEmail),
                 command.ManagerPassword,
-                restaurant.Id
-            );
+                restaurant.Id);
 
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
 
@@ -68,7 +73,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
             return Result.Ok();
         }
 
-        private async Task<Coordinates> GetCoordinates(Address address)
+        private async Task<Result<Coordinates>> GetCoordinates(Address address)
         {
             var addressDto = new AddressDto
             {
@@ -78,9 +83,16 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 Postcode = address.Postcode.Code
             };
 
-            var coordinatesDto = await geocoder.GetCoordinates(addressDto);
+            var result = await geocoder.GetCoordinates(addressDto);
 
-            return new Coordinates(coordinatesDto.Latitude, coordinatesDto.Longitude);
+            if (!result.IsSuccess)
+            {
+                return Result<Coordinates>.Fail(new GeocodingError());
+            }
+
+            return Result.Ok(new Coordinates(
+                result.Value.Latitude,
+                result.Value.Longitude));
         }
     }
 }

@@ -1,29 +1,20 @@
 using Autofac;
 using FoodSnap.Application.Services.Geocoding;
-using System.Threading.Tasks;
+using FoodSnap.Infrastructure.Geocoding;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodSnap.Web.ServiceRegistration
 {
     public static class GeocoderRegistrar
     {
-        public static void AddGeocoder(this ContainerBuilder builder)
+        public static void AddGeocoder(this ContainerBuilder builder, IConfiguration configuration)
         {
-            // TODO: register actual implementation
-            builder.RegisterType<GeocodingServiceStub>()
+            builder.Register(ctx =>
+                {
+                    return new GoogleGeocoder(configuration["GoogleGeocodingApiKey"]);
+                })
                 .As<IGeocoder>()
                 .SingleInstance();
-        }
-    }
-
-    public class GeocodingServiceStub : IGeocoder
-    {
-        public Task<CoordinatesDto> GetCoordinates(AddressDto address)
-        {
-            return Task.FromResult(new CoordinatesDto
-            {
-                Latitude = 0,
-                Longitude = 0
-            });
         }
     }
 }

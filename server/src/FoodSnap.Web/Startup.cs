@@ -33,7 +33,7 @@ namespace FoodSnap.Web
         {
             builder.AddPresenters();
             builder.AddErrorPresenters();
-            builder.AddGeocoder();
+            builder.AddGeocoder(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

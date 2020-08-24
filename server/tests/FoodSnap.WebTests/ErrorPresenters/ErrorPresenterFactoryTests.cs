@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FoodSnap.Application;
+using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Application.Validation;
 using FoodSnap.Web.ErrorPresenters;
 using Xunit;
@@ -30,6 +31,14 @@ namespace FoodSnap.WebTests.ErrorPresenters
             var error = new ValidationError(failures);
 
             Assert.IsType<ValidationErrorPresenter>(factory.Make(error));
+        }
+
+        [Fact]
+        public void It_Returns_A_Geocoding_Error_Presenter()
+        {
+            var error = new GeocodingError();
+
+            Assert.IsType<GeocodingErrorPresenter>(factory.Make(error));
         }
     }
 }
