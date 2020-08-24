@@ -9,11 +9,16 @@ namespace FoodSnap.Web.ServiceRegistration
     {
         public static void AddGeocoder(this ContainerBuilder builder, IConfiguration configuration)
         {
-            builder.Register(ctx =>
+            builder
+                .Register(ctx =>
                 {
                     return new GoogleGeocoder(configuration["GoogleGeocodingApiKey"]);
                 })
                 .As<IGeocoder>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<GeocoderAdapter>()
                 .SingleInstance();
         }
     }
