@@ -26,7 +26,15 @@ namespace FoodSnap.Infrastructure.Geocoding
             var json = ConvertResponseToJson(response);
 
             var jobj = (JObject)JsonConvert.DeserializeObject(json);
-            var result = jobj["results"]?[0];
+
+            var status = (string)jobj["status"];
+
+            if (status != "OK")
+            {
+                Result.Fail(new Error(status));
+            }
+
+            var result = jobj["results"][0];
 
             return Result.Ok(new CoordinatesDto
             {
