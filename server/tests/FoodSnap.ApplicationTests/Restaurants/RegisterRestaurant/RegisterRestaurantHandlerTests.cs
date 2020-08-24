@@ -32,7 +32,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             geocoderSpy = new GeocoderSpy();
 
             command = new RegisterRestaurantCommandBuilder().Build();
-            handler = new RegisterRestaurantHandler(unitOfWorkSpy, new GeocoderAdapter(geocoderSpy));
+            handler = new RegisterRestaurantHandler(unitOfWorkSpy, geocoderSpy);
         }
 
         [Fact]

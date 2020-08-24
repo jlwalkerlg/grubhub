@@ -16,10 +16,6 @@ namespace FoodSnap.Web.ServiceRegistration
                 })
                 .As<IGeocoder>()
                 .SingleInstance();
-
-            builder
-                .RegisterType<GeocoderAdapter>()
-                .SingleInstance();
         }
     }
 }

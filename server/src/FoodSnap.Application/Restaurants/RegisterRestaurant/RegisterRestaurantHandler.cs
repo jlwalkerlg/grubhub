@@ -17,9 +17,9 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
         private readonly IEventRepository eventRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        private readonly GeocoderAdapter geocoder;
+        private readonly GeocoderAdapter geocoderAdapter;
 
-        public RegisterRestaurantHandler(IUnitOfWork unitOfWork, GeocoderAdapter geocoder)
+        public RegisterRestaurantHandler(IUnitOfWork unitOfWork, IGeocoder geocoder)
         {
             restaurantRepository = unitOfWork.RestaurantRepository;
             restaurantApplicationRepository = unitOfWork.RestaurantApplicationRepository;
@@ -27,7 +27,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
             eventRepository = unitOfWork.EventRepository;
             this.unitOfWork = unitOfWork;
 
-            this.geocoder = geocoder;
+            geocoderAdapter = new GeocoderAdapter(geocoder);
         }
 
         public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                     command.Town,
                     new Postcode(command.Postcode));
 
-            var coordinatesResult = await geocoder.GetCoordinates(address);
+            var coordinatesResult = await geocoderAdapter.GetCoordinates(address);
 
             if (!coordinatesResult.IsSuccess)
             {
