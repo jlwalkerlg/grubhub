@@ -52,7 +52,7 @@ namespace FoodSnap.Infrastructure.Geocoding
         private Task<WebResponse> SendRequest(string formattedAddress)
         {
             var url = string.Format(
-                "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}",
+                "https://maps.googleapis.com/maps/api/geocode/json?address={0}&components=country:GB&key={1}",
                 WebUtility.UrlEncode(formattedAddress),
                 key);
 
