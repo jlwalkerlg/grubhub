@@ -1,6 +1,5 @@
 using FoodSnap.Infrastructure.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace FoodSnap.InfrastructureTests.Persistence.EF
@@ -11,10 +10,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF
 
         static EFContextFixture()
         {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile("config.json")
-               .Build();
-
+            var config = ConfigurationFactory.Make();
             connectionString = config["TestDbConnectionString"];
         }
 

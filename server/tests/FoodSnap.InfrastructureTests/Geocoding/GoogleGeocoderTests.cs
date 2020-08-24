@@ -1,27 +1,18 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Infrastructure.Geocoding;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace FoodSnap.InfrastructureTests.Geocoding
 {
     public class GoogleGeocoderTests
     {
-        private static IConfigurationRoot configuration;
-
-        static GoogleGeocoderTests()
-        {
-            configuration = new ConfigurationBuilder()
-               .AddJsonFile("config.json")
-               .Build();
-        }
-
         private readonly GoogleGeocoder geocoder;
 
         public GoogleGeocoderTests()
         {
-            geocoder = new GoogleGeocoder(configuration["GoogleGeocodingApiKey"]);
+            var config = ConfigurationFactory.Make();
+            geocoder = new GoogleGeocoder(config["GoogleGeocodingApiKey"]);
         }
 
         [Fact]
