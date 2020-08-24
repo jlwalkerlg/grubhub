@@ -5,6 +5,6 @@ namespace FoodSnap.Web.ErrorPresenters
 {
     public interface IErrorPresenter
     {
-        IActionResult Present(IError error);
+        IActionResult Present(Error error);
     }
 }

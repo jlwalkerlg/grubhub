@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FoodSnap.Application.Validation
 {
-    public class ValidationError : IError
+    public class ValidationError : Error
     {
         public Dictionary<string, IValidationFailure> Failures { get; }
 

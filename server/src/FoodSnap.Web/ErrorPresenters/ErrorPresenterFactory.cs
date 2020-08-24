@@ -6,7 +6,7 @@ namespace FoodSnap.Web.ErrorPresenters
 {
     public class ErrorPresenterFactory : IErrorPresenterFactory
     {
-        public IErrorPresenter Make(IError error)
+        public IErrorPresenter Make(Error error)
         {
             if (error is ValidationError)
             {

@@ -4,6 +4,6 @@ namespace FoodSnap.Web.ErrorPresenters
 {
     public interface IErrorPresenterFactory
     {
-        IErrorPresenter Make(IError error);
+        IErrorPresenter Make(Error error);
     }
 }

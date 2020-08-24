@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodSnap.Web.ErrorPresenters
 {
     public abstract class ErrorPresenter<TError> : IErrorPresenter
-        where TError : IError
+        where TError : Error
     {
-        public IActionResult Present(IError error)
+        public IActionResult Present(Error error)
         {
             return PresentError((TError)error);
         }

@@ -8,7 +8,7 @@ namespace FoodSnap.WebTests.ErrorPresenters
     {
         public IActionResult Result { get; set; } = new StatusCodeResult(500);
 
-        public IActionResult Present(IError error)
+        public IActionResult Present(Error error)
         {
             return Result;
         }

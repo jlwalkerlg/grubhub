@@ -1,6 +1,6 @@
 namespace FoodSnap.Application
 {
-    public class Error : IError
+    public class Error
     {
         public Error()
         {

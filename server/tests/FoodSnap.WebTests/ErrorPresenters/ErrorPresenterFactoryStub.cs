@@ -7,7 +7,7 @@ namespace FoodSnap.WebTests.ErrorPresenters
     {
         public ErrorPresenterSpy ErrorPresenterSpy { get; } = new ErrorPresenterSpy();
 
-        public IErrorPresenter Make(IError error)
+        public IErrorPresenter Make(Error error)
         {
             return ErrorPresenterSpy;
         }

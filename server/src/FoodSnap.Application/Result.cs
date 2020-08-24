@@ -4,8 +4,8 @@ namespace FoodSnap.Application
     {
         public bool IsSuccess { get; private set; }
 
-        private IError error;
-        public virtual IError Error
+        private Error error;
+        public virtual Error Error
         {
             get
             {
@@ -23,7 +23,7 @@ namespace FoodSnap.Application
             IsSuccess = true;
         }
 
-        protected Result(IError error)
+        protected Result(Error error)
         {
             Error = error;
         }
@@ -38,7 +38,7 @@ namespace FoodSnap.Application
             return Result<T>.Ok(value);
         }
 
-        public static Result Fail(IError error)
+        public static Result Fail(Error error)
         {
             return new Result(error);
         }
@@ -57,11 +57,11 @@ namespace FoodSnap.Application
             Value = value;
         }
 
-        protected Result(IError error) : base(error)
+        protected Result(Error error) : base(error)
         {
         }
 
-        public override IError Error
+        public override Error Error
         {
             set
             {
@@ -75,7 +75,7 @@ namespace FoodSnap.Application
             return new Result<T>(value);
         }
 
-        public new static Result<T> Fail(IError error)
+        public new static Result<T> Fail(Error error)
         {
             return new Result<T>(error);
         }
