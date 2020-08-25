@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using System.IO;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using FoodSnap.Application;
 
@@ -25,7 +24,7 @@ namespace FoodSnap.Infrastructure.Geocoding
             var response = await SendRequest(formattedAddress);
             var json = ConvertResponseToJson(response);
 
-            var jobj = (JObject)JsonConvert.DeserializeObject(json);
+            var jobj = JObject.Parse(json);
 
             var status = (string)jobj["status"];
 
