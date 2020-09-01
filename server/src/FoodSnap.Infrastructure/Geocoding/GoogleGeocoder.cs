@@ -40,7 +40,7 @@ namespace FoodSnap.Infrastructure.Geocoding
             return Result.Ok(
                 new Coordinates(
                     (float)result["geometry"]["location"]["lat"],
-                    (float)result["geometry"]["location"]["lat"]));
+                    (float)result["geometry"]["location"]["lng"]));
         }
 
         private string FormatAddress(Address address)
