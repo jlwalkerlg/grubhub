@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Autofac;
 using FoodSnap.Application;
 using FoodSnap.Infrastructure.Persistence.EF;
@@ -22,7 +23,13 @@ namespace FoodSnap.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                });
 
             services.AddEntityFramework(Configuration);
 
