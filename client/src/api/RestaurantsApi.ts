@@ -7,10 +7,10 @@ interface RegisterValues {
   managerEmail: string;
   managerPassword: string;
   restaurantName: string;
-  restaurantPhone: string;
+  restaurantPhoneNumber: string;
   addressLine1: string;
   addressLine2: string;
-  city: string;
+  town: string;
   postCode: string;
 }
 
