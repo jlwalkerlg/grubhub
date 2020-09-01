@@ -14,10 +14,10 @@ export interface Props {
   managerEmail: FormComponent;
   managerPassword: FormComponent;
   restaurantName: FormComponent;
-  restaurantPhone: FormComponent;
+  restaurantPhoneNumber: FormComponent;
   addressLine1: FormComponent;
   addressLine2: FormComponent;
-  city: FormComponent;
+  town: FormComponent;
   postCode: FormComponent;
   step: number;
   canAdvance: boolean;
@@ -100,7 +100,7 @@ const FirstStep: FC<Props> = ({
 
 const SecondStep: FC<Props> = ({
   restaurantName,
-  restaurantPhone,
+  restaurantPhoneNumber,
   canAdvance,
   onAdvanceStep,
   onBackStep,
@@ -127,18 +127,18 @@ const SecondStep: FC<Props> = ({
       </div>
 
       <div className="mt-4">
-        <label className="label" htmlFor="restaurantPhone">
+        <label className="label" htmlFor="restaurantPhoneNumber">
           Phone Number <span className="text-primary">*</span>
         </label>
         <input
-          {...restaurantPhone.props}
+          {...restaurantPhoneNumber.props}
           className="input"
           type="tel"
-          name="restaurantPhone"
-          id="restaurantPhone"
+          name="restaurantPhoneNumber"
+          id="restaurantPhoneNumber"
           placeholder="e.g. 01234 567890"
         />
-        <FormError component={restaurantPhone} className="mt-1" />
+        <FormError component={restaurantPhoneNumber} className="mt-1" />
       </div>
 
       <div className="mt-8">
@@ -171,7 +171,7 @@ const LastStep: FC<Props> = ({
   onSelectAddress,
   addressLine1,
   addressLine2,
-  city,
+  town,
   postCode,
   canAdvance,
   onBackStep,
@@ -222,18 +222,18 @@ const LastStep: FC<Props> = ({
       </div>
 
       <div className="mt-4">
-        <label className="label" htmlFor="city">
+        <label className="label" htmlFor="town">
           Town / City <span className="text-primary">*</span>
         </label>
         <input
-          {...city.props}
+          {...town.props}
           className="input"
           type="text"
-          name="city"
-          id="city"
+          name="town"
+          id="town"
           placeholder="e.g. Manchester"
         />
-        <FormError component={city} className="mt-1" />
+        <FormError component={town} className="mt-1" />
       </div>
 
       <div className="mt-4">

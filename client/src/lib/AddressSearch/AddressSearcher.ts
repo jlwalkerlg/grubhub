@@ -8,7 +8,7 @@ export interface AddressSearchResult {
 export interface Address {
   addressLine1: string;
   addressLine2: string;
-  city: string;
+  town: string;
   postCode: string;
 }
 
@@ -89,7 +89,7 @@ class AddressSearcher {
         const address: Address = {
           addressLine1: `${streetNumber} ${street}`,
           addressLine2: "",
-          city: town,
+          town,
           postCode: postalCode,
         };
 

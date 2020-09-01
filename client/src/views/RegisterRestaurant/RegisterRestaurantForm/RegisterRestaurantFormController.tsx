@@ -28,24 +28,26 @@ import RegisterRestaurantForm from "./RegisterRestaurantForm";
 const MySwal = withReactContent(Swal);
 
 const RegisterRestaurantFormController: FC = () => {
-  const managerName = useFormComponent("", [new RequiredRule()]);
-  const managerEmail = useFormComponent("", [
+  const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
+  const managerEmail = useFormComponent("walker.jlg@gmail.com", [
     new RequiredRule(),
     new EmailRule(),
   ]);
-  const managerPassword = useFormComponent("", [
+  const managerPassword = useFormComponent("password123", [
     new RequiredRule(),
     new PasswordRule(),
   ]);
-  const restaurantName = useFormComponent("", [new RequiredRule()]);
-  const restaurantPhone = useFormComponent("", [
+  const restaurantName = useFormComponent("Chow Main", [new RequiredRule()]);
+  const restaurantPhoneNumber = useFormComponent("01234567890", [
     new RequiredRule(),
     new PhoneRule(),
   ]);
-  const addressLine1 = useFormComponent("", [new RequiredRule()]);
+  const addressLine1 = useFormComponent("19 Bodmin Avenue", [
+    new RequiredRule(),
+  ]);
   const addressLine2 = useFormComponent("");
-  const city = useFormComponent("", [new RequiredRule()]);
-  const postCode = useFormComponent("", [
+  const town = useFormComponent("Shipley", [new RequiredRule()]);
+  const postCode = useFormComponent("BD181LT", [
     new RequiredRule(),
     new PostCodeRule(),
   ]);
@@ -60,18 +62,18 @@ const RegisterRestaurantFormController: FC = () => {
     if (address !== null) {
       addressLine1.setValue(address.addressLine1);
       addressLine2.setValue(address.addressLine2);
-      city.setValue(address.city);
+      town.setValue(address.town);
       postCode.setValue(address.postCode);
     }
   }, [address]);
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
 
   const form = useCompositeForm(
     [
       { managerName, managerEmail, managerPassword },
-      { restaurantName, restaurantPhone },
-      { addressLine1, addressLine2, city, postCode },
+      { restaurantName, restaurantPhoneNumber },
+      { addressLine1, addressLine2, town, postCode },
     ],
     step
   );
@@ -110,10 +112,10 @@ const RegisterRestaurantFormController: FC = () => {
       managerEmail: managerEmail.value,
       managerPassword: managerPassword.value,
       restaurantName: restaurantName.value,
-      restaurantPhone: restaurantPhone.value,
+      restaurantPhoneNumber: restaurantPhoneNumber.value,
       addressLine1: addressLine1.value,
       addressLine2: addressLine2.value,
-      city: city.value,
+      town: town.value,
       postCode: postCode.value,
     });
 
@@ -158,10 +160,10 @@ const RegisterRestaurantFormController: FC = () => {
       managerEmail={managerEmail}
       managerPassword={managerPassword}
       restaurantName={restaurantName}
-      restaurantPhone={restaurantPhone}
+      restaurantPhoneNumber={restaurantPhoneNumber}
       addressLine1={addressLine1}
       addressLine2={addressLine2}
-      city={city}
+      town={town}
       postCode={postCode}
       step={step}
       canAdvance={!isSubmitting && form.isStepValid}

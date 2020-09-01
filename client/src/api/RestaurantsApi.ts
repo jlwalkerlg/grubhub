@@ -16,8 +16,7 @@ interface RegisterValues {
 
 class RestaurantsApi extends Api {
   async register(values: RegisterValues): Promise<null> {
-    // return axios.post(this.getUrl("/restaurants/register"), values);
-    return new Promise((resolve) => setTimeout(resolve, 1000));
+    return axios.post(this.getUrl("/restaurants/register"), values);
   }
 }
 
