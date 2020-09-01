@@ -7,11 +7,6 @@ namespace FoodSnap.Application.Validation
     public class FluentValidator<TRequest> : AbstractValidator<TRequest>, IValidator<TRequest>
         where TRequest : IRequest
     {
-        public FluentValidator()
-        {
-            CascadeMode = CascadeMode.Stop;
-        }
-
         public async new Task<Result> Validate(TRequest request)
         {
             var result = await base.ValidateAsync(request);

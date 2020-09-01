@@ -13,6 +13,8 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
         public RegisterRestaurantValidator(IRestaurantManagerRepository restaurantManagerRepository)
         {
+            this.restaurantManagerRepository = restaurantManagerRepository;
+
             RuleFor(x => x.ManagerName)
                 .Required();
 
@@ -41,13 +43,11 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
             RuleFor(x => x.Postcode)
                 .Required()
                 .Postcode();
-            this.restaurantManagerRepository = restaurantManagerRepository;
         }
 
         private async Task<bool> EmailIsUnique(string email, CancellationToken cancellationToken)
         {
-            var exists = await restaurantManagerRepository.EmailExists(email);
-            return !exists;
+            return !(await restaurantManagerRepository.EmailExists(email));
         }
     }
 }
