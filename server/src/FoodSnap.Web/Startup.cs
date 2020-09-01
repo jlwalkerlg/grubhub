@@ -31,6 +31,19 @@ namespace FoodSnap.Web
                     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                 });
 
+            services.AddCors(options =>
+            {
+                // TODO: take url from config
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
+
             services.AddEntityFramework(Configuration);
 
             services.AddMediatR(typeof(Result).Assembly);
@@ -57,7 +70,7 @@ namespace FoodSnap.Web
                 }
             }
 
-            app.UseHttpsRedirection();
+            app.UseCors();
 
             app.UseRouting();
 
