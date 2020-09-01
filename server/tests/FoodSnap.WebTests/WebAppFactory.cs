@@ -27,25 +27,26 @@ namespace FoodSnap.WebTests
         {
             builder.ConfigureServices((webHostBuilderContext, services) =>
             {
-                var config = webHostBuilderContext.Configuration;
-
                 // Suppress info log.
                 services.Configure<ConsoleLifetimeOptions>(options =>
                     options.SuppressStatusMessages = true);
 
-                // Remove the AppDbContext registration.
-                var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-
-                if (descriptor != null)
-                {
-                    services.Remove(descriptor);
-                }
-
-                // Register AppDbContext using the test database.
+                RemoveService<DbContextOptions<AppDbContext>>(services);
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseInMemoryDatabase("TestDB"));
             });
+        }
+
+        private void RemoveService<T>(IServiceCollection services)
+        {
+            var descriptor = services
+                .SingleOrDefault(
+                    d => d.ServiceType == typeof(T));
+
+            if (descriptor != null)
+            {
+                services.Remove(descriptor);
+            }
         }
     }
 
