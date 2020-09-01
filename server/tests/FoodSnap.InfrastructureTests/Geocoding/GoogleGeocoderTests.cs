@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using FoodSnap.Application.Services.Geocoding;
+using FoodSnap.Domain;
 using FoodSnap.Infrastructure.Geocoding;
 using Xunit;
 
@@ -18,13 +18,11 @@ namespace FoodSnap.InfrastructureTests.Geocoding
         [Fact]
         public async Task It_Converts_An_Address_Into_Coordinates()
         {
-            var address = new AddressDto
-            {
-                Line1 = "19 Bodmin Avenue",
-                Line2 = "Wrose",
-                Town = "Shipley",
-                Postcode = "BD181LT"
-            };
+            var address = new Address(
+                "19 Bodmin Avenue",
+                "Wrose",
+                "Shipley",
+                new Postcode("BD181LT"));
 
             var coordinatesResult = await geocoder.GetCoordinates(address);
 

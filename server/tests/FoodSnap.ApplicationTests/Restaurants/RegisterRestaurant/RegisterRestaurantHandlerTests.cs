@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
-using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.ApplicationTests.Doubles.GeocoderSpy;
 using FoodSnap.ApplicationTests.Events;
 using FoodSnap.ApplicationTests.Users;
+using FoodSnap.Domain.Restaurants;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
@@ -17,6 +17,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         private readonly RestaurantApplicationRepositorySpy restaurantApplicationRepositorySpy;
         private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
         private readonly EventRepositorySpy eventRepositorySpy;
+
         private readonly GeocoderSpy geocoderSpy;
 
         private readonly RegisterRestaurantCommand command;
@@ -29,6 +30,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             restaurantApplicationRepositorySpy = unitOfWorkSpy.RestaurantApplicationRepositorySpy;
             restaurantManagerRepositorySpy = unitOfWorkSpy.RestaurantManagerRepositorySpy;
             eventRepositorySpy = unitOfWorkSpy.EventRepositorySpy;
+
             geocoderSpy = new GeocoderSpy();
 
             command = new RegisterRestaurantCommandBuilder().Build();
@@ -38,11 +40,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_A_New_Restaurant()
         {
-            geocoderSpy.CoordinatesDto = new CoordinatesDto
-            {
-                Latitude = 0,
-                Longitude = 0
-            };
+            geocoderSpy.Coordinates = new Coordinates(0, 0);
 
             unitOfWorkSpy.OnCommit = () =>
             {
@@ -55,8 +53,8 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                             && x.Address.Line2 == command.AddressLine2
                             && x.Address.Town == command.Town
                             && x.Address.Postcode.Code == command.Postcode
-                            && x.Coordinates.Latitude == geocoderSpy.CoordinatesDto.Latitude
-                            && x.Coordinates.Longitude == geocoderSpy.CoordinatesDto.Longitude;
+                            && x.Coordinates.Latitude == geocoderSpy.Coordinates.Latitude
+                            && x.Coordinates.Longitude == geocoderSpy.Coordinates.Longitude;
                     })
                     .SingleOrDefault();
 
@@ -86,10 +84,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                 Assert.Equal(restaurant.Id, restaurantRegisteredEvent.RestaurantId);
                 Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);
 
-                Assert.Equal(restaurant.Address.Line1, geocoderSpy.Address.Line1);
-                Assert.Equal(restaurant.Address.Line2, geocoderSpy.Address.Line2);
-                Assert.Equal(restaurant.Address.Town, geocoderSpy.Address.Town);
-                Assert.Equal(restaurant.Address.Postcode.Code, geocoderSpy.Address.Postcode);
+                Assert.Equal(restaurant.Address, geocoderSpy.Address);
             };
 
             var result = await handler.Handle(command, CancellationToken.None);

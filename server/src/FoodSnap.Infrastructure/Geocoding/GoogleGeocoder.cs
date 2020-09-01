@@ -6,6 +6,8 @@ using FoodSnap.Application.Services.Geocoding;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using FoodSnap.Application;
+using FoodSnap.Domain;
+using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Infrastructure.Geocoding
 {
@@ -18,7 +20,7 @@ namespace FoodSnap.Infrastructure.Geocoding
             this.key = key;
         }
 
-        public async Task<Result<CoordinatesDto>> GetCoordinates(AddressDto address)
+        public async Task<Result<Coordinates>> GetCoordinates(Address address)
         {
             var formattedAddress = FormatAddress(address);
             var response = await SendRequest(formattedAddress);
@@ -35,21 +37,20 @@ namespace FoodSnap.Infrastructure.Geocoding
 
             var result = jobj["results"][0];
 
-            return Result.Ok(new CoordinatesDto
-            {
-                Latitude = (float)result["geometry"]["location"]["lat"],
-                Longitude = (float)result["geometry"]["location"]["lat"]
-            });
+            return Result.Ok(
+                new Coordinates(
+                    (float)result["geometry"]["location"]["lat"],
+                    (float)result["geometry"]["location"]["lat"]));
         }
 
-        private string FormatAddress(AddressDto address)
+        private string FormatAddress(Address address)
         {
             var components = new List<string>
             {
                 address.Line1,
                 address.Line2,
                 address.Town,
-                address.Postcode,
+                address.Postcode.Code,
             }
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToList();
