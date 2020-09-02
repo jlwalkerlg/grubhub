@@ -13,6 +13,10 @@
     "next": "9.4.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
     "sweetalert2": "^9.17.1",
     "sweetalert2-react-content": "^3.0.3"
   },
