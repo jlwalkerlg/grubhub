@@ -16,6 +16,7 @@ namespace FoodSnap.InfrastructureTests.Geocoding
         }
 
         [Fact]
+        [Trait("Category", "ExternalService")]
         public async Task It_Converts_An_Address_Into_Coordinates()
         {
             var address = new Address(
