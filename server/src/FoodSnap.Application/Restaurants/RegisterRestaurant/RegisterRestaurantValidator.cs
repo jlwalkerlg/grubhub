@@ -15,32 +15,32 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
         {
             this.restaurantManagerRepository = restaurantManagerRepository;
 
-            RuleFor(x => x.ManagerName)
+            CascadeRuleFor(x => x.ManagerName)
                 .Required();
 
-            RuleFor(x => x.ManagerEmail)
+            CascadeRuleFor(x => x.ManagerEmail)
                 .Required()
                 .Email()
                 .MustAsync(EmailIsUnique).WithState(x => new EmailTakenFailure());
 
-            RuleFor(x => x.ManagerPassword)
+            CascadeRuleFor(x => x.ManagerPassword)
                 .Required()
                 .MinLength(8);
 
-            RuleFor(x => x.RestaurantName)
+            CascadeRuleFor(x => x.RestaurantName)
                 .Required();
 
-            RuleFor(x => x.RestaurantPhoneNumber)
+            CascadeRuleFor(x => x.RestaurantPhoneNumber)
                 .Required()
                 .PhoneNumber();
 
-            RuleFor(x => x.AddressLine1)
+            CascadeRuleFor(x => x.AddressLine1)
                 .Required();
 
-            RuleFor(x => x.Town)
+            CascadeRuleFor(x => x.Town)
                 .Required();
 
-            RuleFor(x => x.Postcode)
+            CascadeRuleFor(x => x.Postcode)
                 .Required()
                 .Postcode();
         }
