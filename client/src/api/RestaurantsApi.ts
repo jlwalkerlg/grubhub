@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import Api from "./Api";
+import Api, { ApiResponse, AxiosApiResponse } from "./Api";
 
 interface RegisterValues {
   managerName: string;
@@ -15,8 +15,11 @@ interface RegisterValues {
 }
 
 class RestaurantsApi extends Api {
-  async register(values: RegisterValues): Promise<null> {
-    return axios.post(this.getUrl("/restaurants/register"), values);
+  async register(values: RegisterValues): Promise<ApiResponse> {
+    return axios
+      .post(this.getUrl("/restaurants/register"), values)
+      .then((response) => new AxiosApiResponse(response))
+      .catch((e) => new AxiosApiResponse(e.response));
   }
 }
 

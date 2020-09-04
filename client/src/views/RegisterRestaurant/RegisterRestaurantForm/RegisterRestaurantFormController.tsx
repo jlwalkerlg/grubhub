@@ -107,7 +107,7 @@ const RegisterRestaurantFormController: FC = () => {
 
     setIsSubmitting(true);
 
-    await restaurantsApi.register({
+    const response = await restaurantsApi.register({
       managerName: managerName.value,
       managerEmail: managerEmail.value,
       managerPassword: managerPassword.value,
@@ -119,7 +119,10 @@ const RegisterRestaurantFormController: FC = () => {
       postCode: postCode.value,
     });
 
-    setIsSubmitting(false);
+    if (!response.isSuccess) {
+      setIsSubmitting(false);
+      return;
+    }
 
     await MySwal.fire({
       title: <p>Thanks For Registering!</p>,
