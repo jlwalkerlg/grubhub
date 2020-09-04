@@ -21,7 +21,8 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
             CascadeRuleFor(x => x.ManagerEmail)
                 .Required()
                 .Email()
-                .MustAsync(EmailIsUnique).WithState(x => new EmailTakenFailure());
+                .MustAsync(EmailIsUnique)
+                .WithState(x => new EmailTakenFailure("Restaurant manager already registered."));
 
             CascadeRuleFor(x => x.ManagerPassword)
                 .Required()

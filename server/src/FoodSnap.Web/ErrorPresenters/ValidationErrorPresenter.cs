@@ -57,9 +57,9 @@ namespace FoodSnap.Web.ErrorPresenters
                 return "Must be a valid postcode.";
             }
 
-            if (failure is EmailTakenFailure)
+            if (failure is EmailTakenFailure emailTakenFailure)
             {
-                return "Must be a valid email.";
+                return emailTakenFailure.Message ?? "Email already taken.";
             }
 
             return "Invalid.";
