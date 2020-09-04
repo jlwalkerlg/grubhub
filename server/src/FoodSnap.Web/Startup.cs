@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text.Json;
 using Autofac;
 using FoodSnap.Application;
@@ -38,11 +39,16 @@ namespace FoodSnap.Web
 
             services.AddCors(options =>
             {
-                // TODO: take url from config
                 options.AddDefaultPolicy(builder =>
                 {
+                    var origins = Configuration
+                        .GetSection("CorsOrigins")
+                        .GetChildren()
+                        .Select(x => x.Value)
+                        .ToArray();
+
                     builder
-                        .WithOrigins("http://localhost:3000")
+                        .WithOrigins(origins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -63,7 +69,7 @@ namespace FoodSnap.Web
             builder.AddGeocoder(Configuration);
             builder.AddMiddleware();
 
-            builder.Register((ctx) => new DbConnectionFactory(Configuration["DbConnectionString"]))
+            builder.Register(ctx => new DbConnectionFactory(Configuration["DbConnectionString"]))
                 .As<IDbConnectionFactory>()
                 .SingleInstance();
 
