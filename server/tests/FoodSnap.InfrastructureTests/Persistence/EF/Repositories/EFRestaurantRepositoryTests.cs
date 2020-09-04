@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Restaurants;
+using FoodSnap.Domain.Users;
 using FoodSnap.Infrastructure.Persistence.EF.Repositories;
 using Xunit;
 
@@ -9,17 +10,25 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
 {
     public class EFRestaurantRepositoryTests : EFRepositoryTestBase
     {
-        private readonly EFRestaurantRepository repository;
+        private readonly EFRestaurantManagerRepository restaurantManagerRepository;
+        private readonly EFRestaurantRepository restaurantRepository;
 
         public EFRestaurantRepositoryTests(EFContextFixture fixture) : base(fixture)
         {
-            repository = new EFRestaurantRepository(context);
+            restaurantManagerRepository = new EFRestaurantManagerRepository(context);
+            restaurantRepository = new EFRestaurantRepository(context);
         }
 
         [Fact]
         public async Task It_Adds_A_Restaurant()
         {
+            var manager = new RestaurantManager(
+                "Mr Chow",
+                new Email("mr@chow.com"),
+                "wongkarwai");
+
             var restaurant = new Restaurant(
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234 567890"),
                 new Address(
@@ -31,7 +40,8 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
                 new Coordinates(0, 0)
             );
 
-            await repository.Add(restaurant);
+            await restaurantManagerRepository.Add(manager);
+            await restaurantRepository.Add(restaurant);
             FlushContext();
 
             Assert.Single(context.Restaurants);
@@ -39,6 +49,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             var found = context.Restaurants.First();
 
             Assert.Equal(restaurant.Id, found.Id);
+            Assert.Equal(restaurant.ManagerId, found.ManagerId);
             Assert.Equal(restaurant.Name, found.Name);
             Assert.Equal(restaurant.PhoneNumber, found.PhoneNumber);
             Assert.Equal(restaurant.Address, found.Address);

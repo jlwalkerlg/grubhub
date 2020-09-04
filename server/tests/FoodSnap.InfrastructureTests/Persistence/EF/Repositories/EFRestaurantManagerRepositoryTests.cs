@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
@@ -23,8 +22,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories.EFRestaurantM
             var manager = new RestaurantManager(
                 "Jordan Walker",
                 new Email("test@email.com"),
-                "password123",
-                Guid.NewGuid());
+                "password123");
 
             await repository.Add(manager);
             FlushContext();
@@ -35,7 +33,6 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories.EFRestaurantM
             Assert.Equal(manager.Name, found.Name);
             Assert.Equal(manager.Email, found.Email);
             Assert.Equal(manager.Password, found.Password);
-            Assert.Equal(manager.RestaurantId, found.RestaurantId);
         }
 
         [Fact]
@@ -46,8 +43,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories.EFRestaurantM
             var manager = new RestaurantManager(
                 "Jordan Walker",
                 new Email(emailAddress),
-                "password123",
-                Guid.NewGuid());
+                "password123");
 
             Assert.False(await repository.EmailExists(emailAddress));
 

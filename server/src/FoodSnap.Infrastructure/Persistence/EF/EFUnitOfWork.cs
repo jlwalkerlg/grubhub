@@ -14,7 +14,6 @@ namespace FoodSnap.Infrastructure.Persistence.EF
         public EFUnitOfWork(AppDbContext context)
         {
             RestaurantRepository = new EFRestaurantRepository(context);
-            RestaurantApplicationRepository = new EFRestaurantApplicationRepository(context);
             RestaurantManagerRepository = new EFRestaurantManagerRepository(context);
             EventRepository = new EFEventRepository(context);
 
@@ -22,7 +21,6 @@ namespace FoodSnap.Infrastructure.Persistence.EF
         }
 
         public IRestaurantRepository RestaurantRepository { get; }
-        public IRestaurantApplicationRepository RestaurantApplicationRepository { get; }
         public IRestaurantManagerRepository RestaurantManagerRepository { get; }
         public IEventRepository EventRepository { get; }
 

@@ -14,7 +14,6 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly RestaurantRepositorySpy restaurantRepositorySpy;
-        private readonly RestaurantApplicationRepositorySpy restaurantApplicationRepositorySpy;
         private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
         private readonly EventRepositorySpy eventRepositorySpy;
 
@@ -27,7 +26,6 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
             restaurantRepositorySpy = unitOfWorkSpy.RestaurantRepositorySpy;
-            restaurantApplicationRepositorySpy = unitOfWorkSpy.RestaurantApplicationRepositorySpy;
             restaurantManagerRepositorySpy = unitOfWorkSpy.RestaurantManagerRepositorySpy;
             eventRepositorySpy = unitOfWorkSpy.EventRepositorySpy;
 
@@ -45,41 +43,30 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             unitOfWorkSpy.OnCommit = () =>
             {
                 var restaurant = restaurantRepositorySpy.Restaurants
-                    .Where(x =>
-                    {
-                        return x.Name == command.RestaurantName
-                            && x.PhoneNumber.Number == command.RestaurantPhoneNumber
-                            && x.Address.Line1 == command.AddressLine1
-                            && x.Address.Line2 == command.AddressLine2
-                            && x.Address.Town == command.Town
-                            && x.Address.Postcode.Code == command.Postcode
-                            && x.Coordinates.Latitude == geocoderSpy.Coordinates.Latitude
-                            && x.Coordinates.Longitude == geocoderSpy.Coordinates.Longitude;
-                    })
-                    .SingleOrDefault();
-
-                var application = restaurantApplicationRepositorySpy.Applications
-                    .Where(x => x.RestaurantId == restaurant.Id)
-                    .SingleOrDefault();
+                    .Where(x => x.Name == command.RestaurantName)
+                    .Single();
 
                 var manager = restaurantManagerRepositorySpy.Managers
-                    .Where(x =>
-                    {
-                        return x.Name == command.ManagerName
-                            && x.Email.Address == command.ManagerEmail
-                            && x.Password == command.ManagerPassword
-                            && x.RestaurantId == restaurant.Id;
-                    })
-                    .SingleOrDefault();
+                    .Where(x => x.Name == command.ManagerName)
+                    .Single();
 
-                var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy.Events
+                var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy
+                    .Events
                     .OfType<RestaurantRegisteredEvent>()
-                    .SingleOrDefault();
+                    .Single();
 
-                Assert.NotNull(restaurant);
-                Assert.NotNull(application);
-                Assert.NotNull(manager);
-                Assert.NotNull(restaurantRegisteredEvent);
+                Assert.Equal(command.ManagerName, manager.Name);
+                Assert.Equal(command.ManagerEmail, manager.Email.Address);
+                Assert.Equal(command.ManagerPassword, manager.Password);
+
+                Assert.Equal(command.RestaurantName, restaurant.Name);
+                Assert.Equal(command.RestaurantPhoneNumber, restaurant.PhoneNumber.Number);
+                Assert.Equal(command.AddressLine1, restaurant.Address.Line1);
+                Assert.Equal(command.AddressLine2, restaurant.Address.Line2);
+                Assert.Equal(command.Town, restaurant.Address.Town);
+                Assert.Equal(command.Postcode, restaurant.Address.Postcode.Code);
+
+                Assert.Equal(manager.Id, restaurant.ManagerId);
 
                 Assert.Equal(restaurant.Id, restaurantRegisteredEvent.RestaurantId);
                 Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);

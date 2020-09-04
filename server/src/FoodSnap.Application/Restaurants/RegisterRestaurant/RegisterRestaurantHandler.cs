@@ -12,7 +12,6 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
     public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand>
     {
         private readonly IRestaurantRepository restaurantRepository;
-        private readonly IRestaurantApplicationRepository restaurantApplicationRepository;
         private readonly IRestaurantManagerRepository restaurantManagerRepository;
         private readonly IEventRepository eventRepository;
         private readonly IUnitOfWork unitOfWork;
@@ -22,7 +21,6 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
         public RegisterRestaurantHandler(IUnitOfWork unitOfWork, IGeocoder geocoder)
         {
             restaurantRepository = unitOfWork.RestaurantRepository;
-            restaurantApplicationRepository = unitOfWork.RestaurantApplicationRepository;
             restaurantManagerRepository = unitOfWork.RestaurantManagerRepository;
             eventRepository = unitOfWork.EventRepository;
             this.unitOfWork = unitOfWork;
@@ -47,26 +45,23 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
             var coordinates = coordinatesResult.Value;
 
+            // TODO: hash password
+            var manager = new RestaurantManager(
+                command.ManagerName,
+                new Email(command.ManagerEmail),
+                command.ManagerPassword);
+
             var restaurant = new Restaurant(
+                manager.Id,
                 command.RestaurantName,
                 new PhoneNumber(command.RestaurantPhoneNumber),
                 address,
                 coordinates);
 
-            var application = new RestaurantApplication(restaurant.Id);
-
-            // TODO: hash password
-            var manager = new RestaurantManager(
-                command.ManagerName,
-                new Email(command.ManagerEmail),
-                command.ManagerPassword,
-                restaurant.Id);
-
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
 
-            await restaurantRepository.Add(restaurant);
-            await restaurantApplicationRepository.Add(application);
             await restaurantManagerRepository.Add(manager);
+            await restaurantRepository.Add(restaurant);
             await eventRepository.Add(ev);
 
             await unitOfWork.Commit();

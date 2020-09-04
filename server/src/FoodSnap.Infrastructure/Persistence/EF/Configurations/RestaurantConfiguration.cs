@@ -1,4 +1,5 @@
 using FoodSnap.Domain.Restaurants;
+using FoodSnap.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,6 +13,10 @@ namespace Bruno.Infrastructure.Persistence.EF.Configurations
 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
+
+            builder.HasOne<RestaurantManager>()
+                .WithMany()
+                .HasForeignKey(x => x.ManagerId);
 
             builder.Property(x => x.Name).IsRequired();
 

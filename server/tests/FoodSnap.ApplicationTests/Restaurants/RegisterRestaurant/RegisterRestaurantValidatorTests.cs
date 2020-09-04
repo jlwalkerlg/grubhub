@@ -69,8 +69,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             var manager = new RestaurantManager(
                 "Mr Wong",
                 new Email("wong@test.com"),
-                "password123",
-                Guid.NewGuid());
+                "password123");
 
             await restaurantManagerRepositorySpy.Add(manager);
 

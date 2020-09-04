@@ -20,7 +20,6 @@ namespace FoodSnap.Web.ServiceRegistration
 
             services.AddScoped<IUnitOfWork, EFUnitOfWork>();
             services.AddScoped<IRestaurantManagerRepository, EFRestaurantManagerRepository>();
-            services.AddScoped<IRestaurantApplicationRepository, EFRestaurantApplicationRepository>();
             services.AddScoped<IRestaurantRepository, EFRestaurantRepository>();
             services.AddScoped<IEventRepository, EFEventRepository>();
         }

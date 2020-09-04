@@ -15,9 +15,6 @@ namespace FoodSnap.ApplicationTests
         public IRestaurantRepository RestaurantRepository => RestaurantRepositorySpy;
         public RestaurantRepositorySpy RestaurantRepositorySpy { get; }
 
-        public IRestaurantApplicationRepository RestaurantApplicationRepository => RestaurantApplicationRepositorySpy;
-        public RestaurantApplicationRepositorySpy RestaurantApplicationRepositorySpy { get; }
-
         public IRestaurantManagerRepository RestaurantManagerRepository => RestaurantManagerRepositorySpy;
         public RestaurantManagerRepositorySpy RestaurantManagerRepositorySpy { get; }
 
@@ -30,7 +27,6 @@ namespace FoodSnap.ApplicationTests
         public UnitOfWorkSpy()
         {
             RestaurantRepositorySpy = new RestaurantRepositorySpy();
-            RestaurantApplicationRepositorySpy = new RestaurantApplicationRepositorySpy();
             RestaurantManagerRepositorySpy = new RestaurantManagerRepositorySpy();
             EventRepositorySpy = new EventRepositorySpy();
         }
