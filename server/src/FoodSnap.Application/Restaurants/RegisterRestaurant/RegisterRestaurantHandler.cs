@@ -55,6 +55,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
             var application = new RestaurantApplication(restaurant.Id);
 
+            // TODO: hash password
             var manager = new RestaurantManager(
                 command.ManagerName,
                 new Email(command.ManagerEmail),

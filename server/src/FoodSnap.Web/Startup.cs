@@ -1,8 +1,13 @@
 using System.Text.Json;
 using Autofac;
 using FoodSnap.Application;
+using FoodSnap.Application.Services.Hashing;
+using FoodSnap.Infrastructure.Hashing;
+using FoodSnap.Infrastructure.Persistence;
 using FoodSnap.Infrastructure.Persistence.EF;
 using FoodSnap.Web.ServiceRegistration;
+using FoodSnap.Web.Services.Cookies;
+using FoodSnap.Web.Services.Tokenization;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,9 +49,11 @@ namespace FoodSnap.Web
                 });
             });
 
+            services.AddHttpContextAccessor();
+
             services.AddEntityFramework(Configuration);
 
-            services.AddMediatR(typeof(Result).Assembly);
+            services.AddMediatR(typeof(Result).Assembly, typeof(Startup).Assembly);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -55,6 +62,22 @@ namespace FoodSnap.Web
             builder.AddErrorPresenters();
             builder.AddGeocoder(Configuration);
             builder.AddMiddleware();
+
+            builder.Register((ctx) => new DbConnectionFactory(Configuration["DbConnectionString"]))
+                .As<IDbConnectionFactory>()
+                .SingleInstance();
+
+            builder.RegisterType<Hasher>()
+                .As<IHasher>()
+                .SingleInstance();
+
+            builder.Register(ctx => new JWTTokenizer(Configuration["JWTSecret"]))
+                .As<ITokenizer>()
+                .SingleInstance();
+
+            builder.RegisterType<CookieBag>()
+                .As<ICookieBag>()
+                .InstancePerLifetimeScope();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
