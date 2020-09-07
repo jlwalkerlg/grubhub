@@ -12,6 +12,8 @@ import {
   EmailRule,
   PasswordRule,
 } from "~/lib/Form/Rule";
+import { User } from "~/models/User";
+import { createLoginAction } from "~/store/auth/authActionCreators";
 
 interface FormValues {
   email: string;
@@ -31,13 +33,13 @@ const LoginForm: FC = () => {
     const response = await AuthApi.login(data);
 
     if (response.isSuccess) {
-      const user = response.data.data;
+      const userDto = response.data.data;
 
-      // TODO
-      dispatch({
-        type: "AUTH_LOGIN",
-        payload: { user },
-      });
+      dispatch(
+        createLoginAction(
+          new User(userDto.id, userDto.name, userDto.email, userDto.role)
+        )
+      );
 
       return;
     }

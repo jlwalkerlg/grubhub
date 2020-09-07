@@ -1,4 +1,7 @@
 import Axios from "axios";
+
+import { UserDto } from "~/dtos/UserDto";
+
 import Api, { AxiosApiResponse, ApiResponse } from "./Api";
 
 interface LoginData {
@@ -7,13 +10,7 @@ interface LoginData {
 }
 
 interface LoginResponse {
-  data: {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-  };
+  data: UserDto;
 }
 
 class AuthApi extends Api {
