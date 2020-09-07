@@ -1,7 +1,7 @@
 import { AppProps } from "next/app";
 
 import { Provider } from "react-redux";
-import { useStore } from "../store";
+import { useStore } from "../store/store";
 
 import "~/styles/index.css";
 

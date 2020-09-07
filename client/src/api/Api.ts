@@ -1,7 +1,7 @@
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 
 export default class Api {
-  // TODOO: pull api url from config
+  // TODO: pull api url from config
   private baseUrl: string = "http://localhost:5000";
 
   protected getUrl(path: string): string {
@@ -17,8 +17,8 @@ export interface ValidationErrors {
   [key: string]: string;
 }
 
-export interface ApiResponse {
-  data: any;
+export interface ApiResponse<TData = any> {
+  data: TData;
   statusCode: number;
   error: string;
   validationErrors: ValidationErrors;
@@ -26,7 +26,7 @@ export interface ApiResponse {
   isValidationError: boolean;
 }
 
-export class AxiosApiResponse implements ApiResponse {
+export class AxiosApiResponse<TData = any> implements ApiResponse<TData> {
   get isValidationError() {
     return this.statusCode === 422;
   }
@@ -36,14 +36,32 @@ export class AxiosApiResponse implements ApiResponse {
   }
 
   readonly statusCode: number;
-  readonly data: any;
+  readonly data: TData;
   readonly error: string;
   readonly validationErrors: ValidationErrors;
 
-  constructor(response: AxiosResponse) {
-    this.statusCode = response.status;
-    this.data = response.data;
-    this.error = response.data?.message;
-    this.validationErrors = response.data?.errors;
+  private constructor(response: AxiosResponse, error: AxiosError) {
+    if (response !== null) {
+      this.statusCode = response.status;
+      this.data = response.data;
+    }
+
+    if (error !== null) {
+      this.statusCode = error.response.status;
+      this.error = error.response.data?.message;
+      this.validationErrors = error.response.data?.errors;
+    }
+  }
+
+  public static fromSuccess<TData = any>(
+    response: AxiosResponse<TData>
+  ): AxiosApiResponse<TData> {
+    return new AxiosApiResponse<TData>(response, null);
+  }
+
+  public static fromError<TData = any>(
+    error: AxiosError<TData>
+  ): AxiosApiResponse<TData> {
+    return new AxiosApiResponse<TData>(null, error);
   }
 }

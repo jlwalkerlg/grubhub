@@ -3,6 +3,20 @@ export interface Rule {
   validate(value: string): string | null;
 }
 
+export const combineRules = (rules: Rule[]) => {
+  return (value: any) => {
+    for (const rule of rules) {
+      const error = rule.validate(value);
+
+      if (error !== null) {
+        return error;
+      }
+    }
+
+    return null;
+  };
+};
+
 export class RequiredRule implements Rule {
   constructor(readonly message: string = "Required.") {}
 
