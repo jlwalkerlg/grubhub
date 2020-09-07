@@ -1,10 +1,12 @@
 import React, { FC } from "react";
 
+import router from "next/router";
+
 import { useDispatch } from "react-redux";
 
 import { useForm } from "react-hook-form";
 
-import AuthApi from "~/api/AuthApi";
+import AuthApi from "~/api/authApi";
 
 import {
   combineRules,
@@ -12,8 +14,9 @@ import {
   EmailRule,
   PasswordRule,
 } from "~/lib/Form/Rule";
-import { User } from "~/models/User";
+import { User, UserRole } from "~/models/User";
 import { createLoginAction } from "~/store/auth/authActionCreators";
+import { ErrorAlert } from "~/components/Alert/Alert";
 
 interface FormValues {
   email: string;
@@ -29,17 +32,31 @@ const LoginForm: FC = () => {
     reValidateMode: "onChange",
   });
 
+  const [error, setError] = React.useState<string>(null);
+
   const onSubmit = form.handleSubmit(async (data) => {
+    if (form.formState.isSubmitting) return;
+
+    setError(null);
+
     const response = await AuthApi.login(data);
 
     if (response.isSuccess) {
       const userDto = response.data.data;
-
-      dispatch(
-        createLoginAction(
-          new User(userDto.id, userDto.name, userDto.email, userDto.role)
-        )
+      const user = new User(
+        userDto.id,
+        userDto.name,
+        userDto.email,
+        userDto.role
       );
+
+      dispatch(createLoginAction(user));
+
+      if (user.role === UserRole.RestaurantManager) {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
 
       return;
     }
@@ -47,8 +64,7 @@ const LoginForm: FC = () => {
     if (response.isValidationError) {
       form.errors = response.validationErrors;
     } else {
-      // TODO: toast
-      alert(response.error);
+      setError(response.error);
     }
   });
 
@@ -63,6 +79,12 @@ const LoginForm: FC = () => {
 
   return (
     <form onSubmit={onSubmit}>
+      {error && (
+        <div className="my-6">
+          <ErrorAlert message={error} />
+        </div>
+      )}
+
       <div className="mt-4">
         <label className="label" htmlFor="email">
           Email <span className="text-primary">*</span>
@@ -73,7 +95,7 @@ const LoginForm: FC = () => {
           type="text"
           name="email"
           id="email"
-          data-valid={form.errors.email}
+          data-invalid={!!form.errors.email}
         />
         {form.errors.email && (
           <p className="form-error mt-1">{form.errors.email.message}</p>
@@ -90,7 +112,7 @@ const LoginForm: FC = () => {
           type="password"
           name="password"
           id="password"
-          data-valid={form.errors.password}
+          data-invalid={!!form.errors.password}
         />
         {form.errors.password && (
           <p className="form-error mt-1">{form.errors.password.message}</p>
@@ -106,7 +128,11 @@ const LoginForm: FC = () => {
       </div>
 
       <div className="mt-4">
-        <button type="submit" className="btn btn-primary font-semibold w-full">
+        <button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="btn btn-primary font-semibold w-full"
+        >
           Login
         </button>
       </div>

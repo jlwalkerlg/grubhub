@@ -1,13 +1,20 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 
+import { useSelector } from "react-redux";
+import { State } from "~/store/store";
+
 import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
-import LoginIcon from "~/components/Icons/LoginIcons";
+import LoginIcon from "~/components/Icons/LoginIcon";
 import RegisterIcon from "~/components/Icons/RegisterIcon";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
 
 const Nav: FC = () => {
+  const isLoggedIn: boolean = useSelector<State, boolean>(
+    (state) => state.auth.isLoggedIn
+  );
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNav = () => {
@@ -37,21 +44,33 @@ const Nav: FC = () => {
             )}
           </button>
 
-          <Link href="/login">
-            <a className="hidden md:block ml-auto px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
-              Login
-            </a>
-          </Link>
-          <Link href="/register">
-            <a className="hidden md:block px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
-              Register
-            </a>
-          </Link>
-          <Link href="/restaurants/register">
-            <a className="btn btn-primary hidden md:block ml-4">
-              Register Restaurant
-            </a>
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link href="/logout">
+                <a className="hidden md:block ml-auto px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  Logout
+                </a>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <a className="hidden md:block ml-auto px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  Login
+                </a>
+              </Link>
+              <Link href="/register">
+                <a className="hidden md:block px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  Register
+                </a>
+              </Link>
+              <Link href="/restaurants/register">
+                <a className="btn btn-primary hidden md:block ml-4">
+                  Register Restaurant
+                </a>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -61,29 +80,44 @@ const Nav: FC = () => {
         } fixed bottom-0 w-full h-full top-0 mt-16 left-0 bg-gray-100`}
       >
         <ul className="container mt-5">
-          <li>
-            <Link href="/login">
-              <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                <LoginIcon className="w-6 h-6 fill-current inline" />
-                <span className="ml-2 align-middle">Login</span>
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/register">
-              <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                <RegisterIcon className="w-6 h-6 fill-current inline" />
-                <span className="ml-2 align-middle">Register</span>
-              </a>
-            </Link>
-          </li>
-          <li>
-            <div className="mt-5 pt-1 border-solid border-gray-400 border-t-2">
-              <Link href="/restaurants/register">
-                <a className="btn btn-primary mt-6">Register Restaurant</a>
-              </Link>
-            </div>
-          </li>
+          {isLoggedIn ? (
+            <>
+              <li>
+                <Link href="/logout">
+                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                    <LoginIcon className="w-6 h-6 fill-current inline" />
+                    <span className="ml-2 align-middle">Logout</span>
+                  </a>
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link href="/login">
+                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                    <LoginIcon className="w-6 h-6 fill-current inline" />
+                    <span className="ml-2 align-middle">Login</span>
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/register">
+                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                    <RegisterIcon className="w-6 h-6 fill-current inline" />
+                    <span className="ml-2 align-middle">Register</span>
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <div className="mt-5 pt-1 border-solid border-gray-400 border-t-2">
+                  <Link href="/restaurants/register">
+                    <a className="btn btn-primary mt-6">Register Restaurant</a>
+                  </Link>
+                </div>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </nav>

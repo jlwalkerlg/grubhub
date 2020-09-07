@@ -55,7 +55,8 @@ body {
   @apply text-gray-600;
 }
 
-.input[valid="false"][touched="true"] {
+.input[valid="false"][touched="true"],
+.input[data-invalid="true"] {
   @apply border-red-700;
 }
 

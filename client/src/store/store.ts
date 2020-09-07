@@ -2,9 +2,13 @@ import { useMemo } from "react";
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import authReducer from "./auth/authReducer";
+import authReducer, { AuthState } from "./auth/authReducer";
 
 let store;
+
+export interface State {
+  auth: AuthState;
+}
 
 function initStore(preloadedState = {}) {
   return createStore(

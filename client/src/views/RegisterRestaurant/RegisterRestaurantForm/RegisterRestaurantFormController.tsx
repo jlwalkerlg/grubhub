@@ -10,7 +10,7 @@ import router from "next/router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-import restaurantsApi from "~/api/RestaurantsApi";
+import restaurantsApi from "~/api/restaurantsApi";
 
 import {
   RequiredRule,

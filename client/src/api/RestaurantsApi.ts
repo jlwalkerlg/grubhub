@@ -18,8 +18,8 @@ class RestaurantsApi extends Api {
   async register(values: RegisterValues): Promise<ApiResponse> {
     return axios
       .post(this.getUrl("/restaurants/register"), values)
-      .then((response) => new AxiosApiResponse(response))
-      .catch((e) => new AxiosApiResponse(e.response));
+      .then((response) => AxiosApiResponse.fromSuccess(response))
+      .catch((e) => AxiosApiResponse.fromError(e));
   }
 }
 

@@ -16,20 +16,20 @@ export interface LogoutAction {
 
 type AuthAction = LoginAction | LogoutAction;
 
-interface State {
+export interface AuthState {
   isLoggedIn: boolean;
   user: User;
 }
 
 const initialState = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   user: null,
 };
 
 export default function (
-  state: State = initialState,
+  state: AuthState = initialState,
   action: AuthAction
-): State {
+): AuthState {
   if (action.type === LOGIN) {
     return {
       isLoggedIn: true,
