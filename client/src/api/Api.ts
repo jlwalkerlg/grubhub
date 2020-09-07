@@ -1,8 +1,7 @@
 import { AxiosResponse, AxiosError } from "axios";
 
 export default class Api {
-  // TODO: pull api url from config
-  private baseUrl: string = "http://localhost:5000";
+  private baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   protected getUrl(path: string): string {
     if (path.startsWith("/")) {
