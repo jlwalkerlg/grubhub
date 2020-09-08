@@ -1,4 +1,4 @@
-import { User } from "~/models/User";
+import { User } from "./User";
 
 export const LOGIN = "AUTH_LOGIN";
 export const LOGOUT = "AUTH_LOGOUT";
@@ -22,7 +22,7 @@ export interface AuthState {
 }
 
 const initialState = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   user: null,
 };
 

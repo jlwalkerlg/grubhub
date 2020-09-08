@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-import { UserDto } from "~/dtos/UserDto";
+import { UserDto } from "./dtos/UserDto";
 
 import Api, { AxiosApiResponse, ApiResponse } from "./Api";
 

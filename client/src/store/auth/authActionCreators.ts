@@ -1,4 +1,4 @@
-import { User } from "~/models/User";
+import { User } from "./User";
 import { LOGIN, LoginAction, LOGOUT, LogoutAction } from "./authReducer";
 
 export const createLoginAction = (user: User): LoginAction => ({

@@ -14,7 +14,7 @@ import {
   EmailRule,
   PasswordRule,
 } from "~/lib/Form/Rule";
-import { User, UserRole } from "~/models/User";
+import { User, UserRole } from "~/store/auth/User";
 import { createLoginAction } from "~/store/auth/authActionCreators";
 import { ErrorAlert } from "~/components/Alert/Alert";
 
