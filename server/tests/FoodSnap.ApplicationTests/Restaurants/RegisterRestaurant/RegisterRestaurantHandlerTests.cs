@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
+using FoodSnap.ApplicationTests.Doubles;
 using FoodSnap.ApplicationTests.Doubles.GeocoderSpy;
 using FoodSnap.ApplicationTests.Events;
 using FoodSnap.ApplicationTests.Users;
@@ -12,6 +13,8 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantHandlerTests
     {
+        private readonly HasherFake hasherFake;
+
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly RestaurantRepositorySpy restaurantRepositorySpy;
         private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
@@ -19,11 +22,12 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 
         private readonly GeocoderSpy geocoderSpy;
 
-        private readonly RegisterRestaurantCommand command;
         private readonly RegisterRestaurantHandler handler;
 
         public RegisterRestaurantHandlerTests()
         {
+            hasherFake = new HasherFake();
+
             unitOfWorkSpy = new UnitOfWorkSpy();
             restaurantRepositorySpy = unitOfWorkSpy.RestaurantRepositorySpy;
             restaurantManagerRepositorySpy = unitOfWorkSpy.RestaurantManagerRepositorySpy;
@@ -31,13 +35,14 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 
             geocoderSpy = new GeocoderSpy();
 
-            command = new RegisterRestaurantCommandBuilder().Build();
-            handler = new RegisterRestaurantHandler(unitOfWorkSpy, geocoderSpy);
+            handler = new RegisterRestaurantHandler(hasherFake, unitOfWorkSpy, geocoderSpy);
         }
 
         [Fact]
         public async Task It_Creates_A_New_Restaurant()
         {
+            var command = new RegisterRestaurantCommandBuilder().Build();
+
             geocoderSpy.Coordinates = new Coordinates(0, 0);
 
             unitOfWorkSpy.OnCommit = () =>
@@ -57,7 +62,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 
                 Assert.Equal(command.ManagerName, manager.Name);
                 Assert.Equal(command.ManagerEmail, manager.Email.Address);
-                Assert.Equal(command.ManagerPassword, manager.Password);
+                Assert.Equal(hasherFake.Hash(command.ManagerPassword), manager.Password);
 
                 Assert.Equal(command.RestaurantName, restaurant.Name);
                 Assert.Equal(command.RestaurantPhoneNumber, restaurant.PhoneNumber.Number);

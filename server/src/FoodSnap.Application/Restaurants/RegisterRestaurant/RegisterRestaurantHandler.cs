@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Events;
 using FoodSnap.Application.Services.Geocoding;
+using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Application.Users;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Restaurants;
@@ -11,6 +12,8 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand>
     {
+        private readonly IHasher hasher;
+
         private readonly IRestaurantRepository restaurantRepository;
         private readonly IRestaurantManagerRepository restaurantManagerRepository;
         private readonly IEventRepository eventRepository;
@@ -18,8 +21,10 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
         private readonly IGeocoder geocoder;
 
-        public RegisterRestaurantHandler(IUnitOfWork unitOfWork, IGeocoder geocoder)
+        public RegisterRestaurantHandler(IHasher hasher, IUnitOfWork unitOfWork, IGeocoder geocoder)
         {
+            this.hasher = hasher;
+
             restaurantRepository = unitOfWork.RestaurantRepository;
             restaurantManagerRepository = unitOfWork.RestaurantManagerRepository;
             eventRepository = unitOfWork.EventRepository;
@@ -45,11 +50,10 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
             var coordinates = coordinatesResult.Value;
 
-            // TODO: hash password
             var manager = new RestaurantManager(
                 command.ManagerName,
                 new Email(command.ManagerEmail),
-                command.ManagerPassword);
+                hasher.Hash(command.ManagerPassword));
 
             var restaurant = new Restaurant(
                 manager.Id,
