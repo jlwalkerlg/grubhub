@@ -20,7 +20,7 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
             this.authenticator = authenticator;
         }
 
-        [HttpGet("/user")]
+        [HttpGet("/auth/user")]
         public async Task<IActionResult> GetAuthUser()
         {
             var id = authenticator.GetUserId();
