@@ -28,26 +28,24 @@ import RegisterRestaurantForm from "./RegisterRestaurantForm";
 const MySwal = withReactContent(Swal);
 
 const RegisterRestaurantFormController: FC = () => {
-  const managerName = useFormComponent("Jordan Walker", [new RequiredRule()]);
-  const managerEmail = useFormComponent("walker.jlg@gmail.com", [
+  const managerName = useFormComponent("", [new RequiredRule()]);
+  const managerEmail = useFormComponent("", [
     new RequiredRule(),
     new EmailRule(),
   ]);
-  const managerPassword = useFormComponent("password123", [
+  const managerPassword = useFormComponent("", [
     new RequiredRule(),
     new PasswordRule(),
   ]);
-  const restaurantName = useFormComponent("Chow Main", [new RequiredRule()]);
-  const restaurantPhoneNumber = useFormComponent("01234567890", [
+  const restaurantName = useFormComponent("", [new RequiredRule()]);
+  const restaurantPhoneNumber = useFormComponent("", [
     new RequiredRule(),
     new PhoneRule(),
   ]);
-  const addressLine1 = useFormComponent("19 Bodmin Avenue", [
-    new RequiredRule(),
-  ]);
+  const addressLine1 = useFormComponent("", [new RequiredRule()]);
   const addressLine2 = useFormComponent("");
-  const town = useFormComponent("Shipley", [new RequiredRule()]);
-  const postCode = useFormComponent("BD181LT", [
+  const town = useFormComponent("", [new RequiredRule()]);
+  const postCode = useFormComponent("", [
     new RequiredRule(),
     new PostCodeRule(),
   ]);
@@ -67,7 +65,7 @@ const RegisterRestaurantFormController: FC = () => {
     }
   }, [address]);
 
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
 
   const form = useCompositeForm(
     [
@@ -135,7 +133,7 @@ const RegisterRestaurantFormController: FC = () => {
       showConfirmButton: true,
     });
 
-    router.push("/");
+    router.push("/dashboard");
   };
 
   const onSubmit = async (e: FormEvent) => {

@@ -41,6 +41,10 @@ namespace Bruno.Infrastructure.Persistence.EF.Configurations
                 x.Property(y => y.Latitude).IsRequired().HasColumnName("Latitude");
                 x.Property(y => y.Longitude).IsRequired().HasColumnName("Longitude");
             });
+
+            builder.Property(x => x.Status)
+                .HasConversion<string>()
+                .IsRequired();
         }
     }
 }

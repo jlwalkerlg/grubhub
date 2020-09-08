@@ -54,6 +54,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             Assert.Equal(restaurant.PhoneNumber, found.PhoneNumber);
             Assert.Equal(restaurant.Address, found.Address);
             Assert.Equal(restaurant.Coordinates, found.Coordinates);
+            Assert.Equal(restaurant.Status, found.Status);
         }
     }
 }
