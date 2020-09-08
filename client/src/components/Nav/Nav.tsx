@@ -1,19 +1,15 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 
-import { useSelector } from "react-redux";
-import { State } from "~/store/store";
-
 import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
 import LoginIcon from "~/components/Icons/LoginIcon";
 import RegisterIcon from "~/components/Icons/RegisterIcon";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
+import useAuth from "~/store/auth/useAuth";
 
 const Nav: FC = () => {
-  const isLoggedIn: boolean = useSelector<State, boolean>(
-    (state) => state.auth.isLoggedIn
-  );
+  const { isLoggedIn } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
 

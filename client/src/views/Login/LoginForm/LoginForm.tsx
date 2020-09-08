@@ -1,12 +1,6 @@
 import React, { FC } from "react";
-
 import router from "next/router";
-
-import { useDispatch } from "react-redux";
-
 import { useForm } from "react-hook-form";
-
-import AuthApi from "~/api/authApi";
 
 import {
   combineRules,
@@ -14,9 +8,9 @@ import {
   EmailRule,
   PasswordRule,
 } from "~/lib/Form/Rule";
-import { User, UserRole } from "~/store/auth/User";
-import { createLoginAction } from "~/store/auth/authActionCreators";
+import { UserRole } from "~/store/auth/User";
 import { ErrorAlert } from "~/components/Alert/Alert";
+import useAuth from "~/store/auth/useAuth";
 
 interface FormValues {
   email: string;
@@ -24,7 +18,7 @@ interface FormValues {
 }
 
 const LoginForm: FC = () => {
-  const dispatch = useDispatch();
+  const auth = useAuth();
 
   const form = useForm<FormValues>({
     defaultValues: { email: "", password: "" },
@@ -39,18 +33,10 @@ const LoginForm: FC = () => {
 
     setError(null);
 
-    const response = await AuthApi.login(data);
+    const result = await auth.login(data);
 
-    if (response.isSuccess) {
-      const userDto = response.data.data;
-      const user = new User(
-        userDto.id,
-        userDto.name,
-        userDto.email,
-        userDto.role
-      );
-
-      dispatch(createLoginAction(user));
+    if (result.isSuccess) {
+      const user = result.data;
 
       if (user.role === UserRole.RestaurantManager) {
         router.push("/dashboard");
@@ -61,10 +47,10 @@ const LoginForm: FC = () => {
       return;
     }
 
-    if (response.isValidationError) {
-      form.errors = response.validationErrors;
+    if (result.error.isValidationError) {
+      form.errors = result.error.validationErrors;
     } else {
-      setError(response.error);
+      setError(result.error.message);
     }
   });
 
