@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Application;
-using FoodSnap.Web.Actions.Users;
 using FoodSnap.Web.Actions.Users.GetAuthUser;
 using FoodSnap.Web.Envelopes;
 using FoodSnap.Web.Queries.GetUserById;
+using FoodSnap.Web.Queries.Users;
 using FoodSnap.WebTests.Doubles;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;

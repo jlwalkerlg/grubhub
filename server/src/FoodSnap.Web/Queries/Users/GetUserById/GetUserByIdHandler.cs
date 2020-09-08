@@ -3,20 +3,20 @@ using System.Threading.Tasks;
 using Dapper;
 using FoodSnap.Application;
 using FoodSnap.Infrastructure.Persistence;
-using FoodSnap.Web.Actions.Users;
+using FoodSnap.Web.Queries.Users;
 
-namespace FoodSnap.Web.Queries.GetUserByEmail
+namespace FoodSnap.Web.Queries.GetUserById
 {
-    public class GetUserByEmailHandler : IRequestHandler<GetUserByEmailQuery, UserDto>
+    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto>
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetUserByEmailHandler(IDbConnectionFactory dbConnectionFactory)
+        public GetUserByIdHandler(IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<Result<UserDto>> Handle(GetUserByEmailQuery query, CancellationToken cancellationToken)
+        public async Task<Result<UserDto>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
         {
             var sql = @"
                 SELECT
@@ -26,11 +26,13 @@ namespace FoodSnap.Web.Queries.GetUserByEmail
                     ""Password"",
                     ""UserType"" as ""Role""
                 FROM ""Users""
-                WHERE ""Email"" = @Email";
+                WHERE ""Id"" = @Id";
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
-                var user = await connection.QueryFirstOrDefaultAsync<UserDto>(sql, new { Email = "walker.jlg@gmail.com" });
+                var user = await connection.QueryFirstOrDefaultAsync<UserDto>(
+                    sql,
+                    new { Id = query.Id });
 
                 return Result.Ok(user);
             }

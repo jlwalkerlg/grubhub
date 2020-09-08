@@ -1,6 +1,6 @@
 using System;
 using FoodSnap.Application;
-using FoodSnap.Web.Actions.Users;
+using FoodSnap.Web.Queries.Users;
 
 namespace FoodSnap.Web.Queries.GetUserById
 {

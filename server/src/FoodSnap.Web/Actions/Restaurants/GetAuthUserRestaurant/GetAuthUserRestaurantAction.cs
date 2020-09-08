@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.GetRestaurantByManagerId;
+using FoodSnap.Web.Queries.Restaurants.GetRestaurantByManagerId;
 using FoodSnap.Web.Services.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

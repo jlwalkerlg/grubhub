@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.GetUserByEmail;
+using FoodSnap.Web.Queries.Users.GetUserByEmail;
 using FoodSnap.Web.Services.Cookies;
 using FoodSnap.Web.Services.Tokenization;
 using MediatR;

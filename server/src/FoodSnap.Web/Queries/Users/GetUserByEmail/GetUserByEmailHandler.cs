@@ -5,18 +5,18 @@ using FoodSnap.Application;
 using FoodSnap.Infrastructure.Persistence;
 using FoodSnap.Web.Actions.Users;
 
-namespace FoodSnap.Web.Queries.GetUserById
+namespace FoodSnap.Web.Queries.Users.GetUserByEmail
 {
-    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto>
+    public class GetUserByEmailHandler : IRequestHandler<GetUserByEmailQuery, UserDto>
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetUserByIdHandler(IDbConnectionFactory dbConnectionFactory)
+        public GetUserByEmailHandler(IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<Result<UserDto>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
+        public async Task<Result<UserDto>> Handle(GetUserByEmailQuery query, CancellationToken cancellationToken)
         {
             var sql = @"
                 SELECT
@@ -26,13 +26,11 @@ namespace FoodSnap.Web.Queries.GetUserById
                     ""Password"",
                     ""UserType"" as ""Role""
                 FROM ""Users""
-                WHERE ""Id"" = @Id";
+                WHERE ""Email"" = @Email";
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
-                var user = await connection.QueryFirstOrDefaultAsync<UserDto>(
-                    sql,
-                    new { Id = query.Id });
+                var user = await connection.QueryFirstOrDefaultAsync<UserDto>(sql, new { Email = "walker.jlg@gmail.com" });
 
                 return Result.Ok(user);
             }

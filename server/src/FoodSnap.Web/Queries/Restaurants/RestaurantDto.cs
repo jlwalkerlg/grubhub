@@ -1,6 +1,6 @@
 using System;
 
-namespace FoodSnap.Web.Queries.GetRestaurantByManagerId
+namespace FoodSnap.Web.Queries.Restaurants
 {
     public class RestaurantDto
     {

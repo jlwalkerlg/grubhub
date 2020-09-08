@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application;
 using FoodSnap.Web.Actions.Restaurants.GetAuthUserRestaurant;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.GetRestaurantByManagerId;
+using FoodSnap.Web.Queries.Restaurants;
 using FoodSnap.WebTests.Doubles;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
