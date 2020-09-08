@@ -13,9 +13,9 @@ export class ApiError extends Error {
   }
 
   public constructor(response: ApiResponse) {
-    super(response.data.error);
+    super(response.error);
 
     this.statusCode = response.statusCode;
-    this.validationErrors = response.data.errors;
+    this.validationErrors = response.data.errors || null;
   }
 }

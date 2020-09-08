@@ -41,9 +41,9 @@ export class ApiResponse<TData = any> {
   }
 
   public constructor(response: AxiosResponse) {
-    this.data = response.data;
+    this.data = response.data || null;
     this.statusCode = response.status;
-    this.error = response.data?.error;
-    this.validationErrors = response.data.errors;
+    this.error = response.data?.message || null;
+    this.validationErrors = response.data.errors || null;
   }
 }
