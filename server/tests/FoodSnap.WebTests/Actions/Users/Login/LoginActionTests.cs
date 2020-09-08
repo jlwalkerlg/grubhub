@@ -99,8 +99,8 @@ namespace FoodSnap.WebTests.Actions.Users.Login
             var envelope = result.Value as DataEnvelope;
             Assert.Same(user, envelope.Data);
 
-            Assert.Equal(user.Id, tokenizerSpy.Data);
-            Assert.Equal(tokenizerSpy.EncodedToken, cookieBagSpy.GetValue("auth_token"));
+            Assert.Equal(user.Id.ToString(), tokenizerSpy.Data);
+            Assert.Equal(tokenizerSpy.EncodedToken, cookieBagSpy.Get("auth_token"));
             Assert.True(cookieBagSpy.GetOptions("auth_token").HttpOnly);
         }
     }

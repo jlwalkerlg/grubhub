@@ -7,6 +7,7 @@ using FoodSnap.Infrastructure.Hashing;
 using FoodSnap.Infrastructure.Persistence;
 using FoodSnap.Infrastructure.Persistence.EF;
 using FoodSnap.Web.ServiceRegistration;
+using FoodSnap.Web.Services.Authentication;
 using FoodSnap.Web.Services.Cookies;
 using FoodSnap.Web.Services.Tokenization;
 using MediatR;
@@ -83,6 +84,10 @@ namespace FoodSnap.Web
 
             builder.RegisterType<CookieBag>()
                 .As<ICookieBag>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<Authenticator>()
+                .As<IAuthenticator>()
                 .InstancePerLifetimeScope();
         }
 

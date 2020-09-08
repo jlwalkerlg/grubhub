@@ -20,5 +20,20 @@ namespace FoodSnap.Web.Services.Cookies
         {
             httpContextAccessor.HttpContext.Response.Cookies.Append(name, value, options);
         }
+
+        public string Get(string name)
+        {
+            var cookies = httpContextAccessor
+                .HttpContext
+                .Request
+                .Cookies;
+
+            if (!cookies.ContainsKey(name))
+            {
+                return null;
+            }
+
+            return cookies[name];
+        }
     }
 }

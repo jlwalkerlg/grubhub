@@ -14,12 +14,20 @@ namespace FoodSnap.WebTests.Services.Tokenization
         }
 
         [Fact]
-        public void It_Tokenizes_Data()
+        public void It_Tokenizes_Strings()
         {
             var id = Guid.NewGuid().ToString();
 
             var token = tokenizer.Encode(id);
-            Assert.Equal(id, tokenizer.Decode(token));
+            Assert.Equal(id, tokenizer.Decode(token).Value);
+        }
+
+        [Fact]
+        public void It_Returns_An_Error_If_The_Token_Is_Invalid()
+        {
+            var token = "some random token";
+
+            Assert.False(tokenizer.Decode(token).IsSuccess);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace FoodSnap.Web.Actions.Users.Login
                 return BadRequest(new ErrorEnvelope("Invalid credentials."));
             }
 
-            var token = tokenizer.Encode(user.Id);
+            var token = tokenizer.Encode(user.Id.ToString());
             cookieBag.Add("auth_token", token, new CookieOptions
             {
                 HttpOnly = true,

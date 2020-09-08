@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using JWT.Algorithms;
 using JWT.Builder;
+using FoodSnap.Application;
 
 namespace FoodSnap.Web.Services.Tokenization
 {
@@ -14,16 +15,35 @@ namespace FoodSnap.Web.Services.Tokenization
             this.secret = secret;
         }
 
-        public string Decode(string token)
+        public Result<string> Decode(string token)
         {
-            return new JwtBuilder()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(secret)
-                .MustVerifySignature()
-                .Decode<Dictionary<string, string>>(token)["payload"];
+            try
+            {
+                return Result.Ok(new JwtBuilder()
+                    .WithAlgorithm(new HMACSHA256Algorithm())
+                    .WithSecret(secret)
+                    .MustVerifySignature()
+                    .Decode<Dictionary<string, string>>(token)["payload"]);
+            }
+            catch (JWT.Exceptions.TokenExpiredException)
+            {
+                return Result<string>.Fail(new Error("Token expired."));
+            }
+            catch (JWT.Exceptions.InvalidTokenPartsException)
+            {
+                return Result<string>.Fail(new Error("Invalid token."));
+            }
+            catch (JWT.Exceptions.SignatureVerificationException)
+            {
+                return Result<string>.Fail(new Error("Signature invalid."));
+            }
+            catch (System.Exception)
+            {
+                return Result<string>.Fail(new Error());
+            }
         }
 
-        public string Encode(object data)
+        public string Encode(string data)
         {
             return new JwtBuilder()
                 .WithAlgorithm(new HMACSHA256Algorithm())

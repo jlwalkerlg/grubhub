@@ -6,5 +6,6 @@ namespace FoodSnap.Web.Services.Cookies
     {
         void Add(string name, string value);
         void Add(string name, string value, CookieOptions options);
+        string Get(string name);
     }
 }

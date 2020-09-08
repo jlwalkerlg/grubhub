@@ -9,9 +9,14 @@ namespace FoodSnap.WebTests.Doubles
         private Dictionary<string, object[]> Cookies { get; }
             = new Dictionary<string, object[]>();
 
-        public string GetValue(string name)
+        public string Get(string name)
         {
-            return Cookies[name][0] as string;
+            if (!Cookies.ContainsKey(name))
+            {
+                return null;
+            }
+
+            return (string)Cookies[name][0];
         }
 
         public CookieOptions GetOptions(string name)
