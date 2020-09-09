@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Axios from "axios";
-import cookie from "cookie";
-import jwt from "jsonwebtoken";
 import { LoginResponse } from "~/api/AuthApi";
+import { getSignInCookies } from "~/helpers/auth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -11,27 +10,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       req.body
     );
 
-    const cookies: string[] = response.headers["set-cookie"];
-    const authCookie = cookies.find((x) => x.startsWith("auth_token="));
-
-    const authToken = authCookie.split(";")[0].split("=")[1];
-
-    const decoded = jwt.decode(authToken);
-    const expiry = decoded["exp"];
-
-    const user = response.data.data;
-    const authUserCacheToken = jwt.sign(user, process.env.JWT_SECRET);
-    const authUserCacheCookie = cookie.serialize(
-      "auth_jwt",
-      authUserCacheToken,
-      {
-        expires: new Date(expiry * 1000),
-        httpOnly: true,
-        path: "/",
-      }
-    );
-
-    res.setHeader("set-cookie", [authCookie, authUserCacheCookie]);
+    res.setHeader("set-cookie", getSignInCookies(response));
 
     return res.status(response.status).json(response.data);
   } catch (error) {
