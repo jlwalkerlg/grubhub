@@ -1,7 +1,11 @@
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
 import { UserDto } from "~/api/dtos/UserDto";
-import { NextPageContext } from "next";
+import {
+  NextPageContext,
+  GetServerSideProps,
+  GetServerSidePropsContext,
+} from "next";
 import { AxiosResponse } from "axios";
 import { LoginResponse } from "~/api/AuthApi";
 import { ServerResponse } from "http";
@@ -51,9 +55,53 @@ export const clearAuthCookies = (res: ServerResponse) => {
   res.setHeader("Set-Cookie", [
     cookie.serialize("auth_token", "", {
       expires: new Date(0),
+      httpOnly: true,
+      path: "/",
     }),
     cookie.serialize("auth_jwt", "", {
       expires: new Date(0),
+      httpOnly: true,
+      path: "/",
     }),
   ]);
+};
+
+export const isSignedIn = (context: GetServerSidePropsContext): boolean => {
+  var cookies = cookie.parse(context.req.headers.cookie || "");
+
+  if (!cookies["auth_jwt"] || !cookies["auth_token"]) {
+    return false;
+  }
+
+  return true;
+};
+
+export const ensureAuthenticated: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  if (!isSignedIn(context)) {
+    context.res.writeHead(307, {
+      Location: "/login",
+    });
+    context.res.end();
+  }
+
+  return {
+    props: {},
+  };
+};
+
+export const ensureUnauthenticated: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  if (isSignedIn(context)) {
+    context.res.writeHead(307, {
+      Location: "/",
+    });
+    context.res.end();
+  }
+
+  return {
+    props: {},
+  };
 };
