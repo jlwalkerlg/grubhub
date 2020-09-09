@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Web.Envelopes;
@@ -44,6 +45,7 @@ namespace FoodSnap.Web.Actions.Users.Login
             cookieBag.Add("auth_token", token, new CookieOptions
             {
                 HttpOnly = true,
+                Expires = DateTimeOffset.UtcNow.AddDays(14),
             });
 
             return Ok(new DataEnvelope(user));

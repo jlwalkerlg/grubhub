@@ -5,9 +5,8 @@ import { AppContextType } from "next/dist/next-server/lib/utils";
 import { Provider } from "react-redux";
 import { useStore } from "../store/store";
 
-import Axios from "axios";
 import cookie from "cookie";
-import { GetAuthUserResponse } from "~/api/AuthApi";
+import jwt from "jsonwebtoken";
 import { UserDto } from "~/api/dtos/UserDto";
 import { initializeStore, State } from "~/store/store";
 import { UserRole } from "~/store/auth/User";
@@ -25,28 +24,27 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 
 const getUser = async (context: NextPageContext): Promise<UserDto> => {
-  const token = cookie.parse(context.req.headers.cookie || "")["auth_token"];
-  if (!token) return null;
+  const authUserCacheToken = cookie.parse(context.req.headers.cookie || "")[
+    "auth_jwt"
+  ];
+  if (!authUserCacheToken) return null;
 
   try {
-    const response = await Axios.get<GetAuthUserResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/user`,
-      {
-        headers: {
-          Cookie: `auth_token=${token}`,
-        },
-        withCredentials: true,
-      }
-    );
+    const user: UserDto = jwt.verify(
+      authUserCacheToken,
+      process.env.JWT_SECRET
+    ) as UserDto;
 
-    return response.data.data;
+    return user;
   } catch (e) {
-    context.res.setHeader(
-      "Set-Cookie",
+    context.res.setHeader("Set-Cookie", [
       cookie.serialize("auth_token", "", {
         expires: new Date(0),
-      })
-    );
+      }),
+      cookie.serialize("auth_jwt", "", {
+        expires: new Date(0),
+      }),
+    ]);
 
     return null;
   }
