@@ -4,6 +4,7 @@ using FoodSnap.Application;
 using FoodSnap.Web.Actions.Restaurants.GetAuthUserRestaurant;
 using FoodSnap.Web.Envelopes;
 using FoodSnap.Web.Queries.Restaurants;
+using FoodSnap.Web.Queries.Users;
 using FoodSnap.WebTests.Doubles;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -27,12 +28,19 @@ namespace FoodSnap.WebTests.Actions.Restaurants.GetAuthUserRestaurant
         [Fact]
         public async Task It_Returns_A_200_With_The_Restaurant()
         {
-            var managerId = Guid.NewGuid();
+            var manager = new UserDto
+            {
+                Id = Guid.NewGuid(),
+                Name = "Jordan Walker",
+                Email = "walker.jlg@gmail.com",
+                Password = "password123",
+                Role = "RestaurantManager",
+            };
 
             var restaurant = new RestaurantDto
             {
                 Id = Guid.NewGuid(),
-                ManagerId = managerId,
+                ManagerId = manager.Id,
                 Name = "Chow Main",
                 PhoneNumber = "01234567890",
                 AddressLine1 = "01 Chinese Street",
@@ -45,7 +53,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.GetAuthUserRestaurant
             };
 
             mediatorSpy.Result = Result.Ok(restaurant);
-            authenticatorSpy.UserId = managerId;
+            authenticatorSpy.User = manager;
 
             var response = await action.Execute() as ObjectResult;
             var envelope = response.Value as DataEnvelope;
@@ -57,7 +65,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.GetAuthUserRestaurant
         [Fact]
         public async Task It_Returns_A_401_If_Unauthenticated()
         {
-            authenticatorSpy.UserId = null;
+            authenticatorSpy.User = null;
 
             var response = await action.Execute() as StatusCodeResult;
 

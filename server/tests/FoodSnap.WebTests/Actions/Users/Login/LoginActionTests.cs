@@ -15,22 +15,19 @@ namespace FoodSnap.WebTests.Actions.Users.Login
     {
         private readonly MediatorSpy mediatorSpy;
         private readonly Hasher hasher;
-        private readonly TokenizerSpy tokenizerSpy;
-        private readonly CookieBagSpy cookieBagSpy;
+        private readonly AuthenticatorSpy authenticatorSpy;
         private readonly LoginAction action;
 
         public LoginActionTests()
         {
             mediatorSpy = new MediatorSpy();
             hasher = new Hasher();
-            tokenizerSpy = new TokenizerSpy();
-            cookieBagSpy = new CookieBagSpy();
+            authenticatorSpy = new AuthenticatorSpy();
 
             action = new LoginAction(
                 mediatorSpy,
                 hasher,
-                tokenizerSpy,
-                cookieBagSpy);
+                authenticatorSpy);
         }
 
         [Fact]
@@ -98,10 +95,30 @@ namespace FoodSnap.WebTests.Actions.Users.Login
 
             var envelope = result.Value as DataEnvelope;
             Assert.Same(user, envelope.Data);
+        }
 
-            Assert.Equal(user.Id.ToString(), tokenizerSpy.Data);
-            Assert.Equal(tokenizerSpy.EncodedToken, cookieBagSpy.Get("auth_token"));
-            Assert.True(cookieBagSpy.GetOptions("auth_token").HttpOnly);
+        [Fact]
+        public async Task It_Signs_The_The_User_In_On_Success()
+        {
+            var user = new UserDto
+            {
+                Id = Guid.NewGuid(),
+                Name = "Jordan Walker",
+                Email = "walker.jlg@gmail.com",
+                Password = hasher.Hash("password123"),
+                Role = "Admin"
+            };
+            mediatorSpy.Result = Result<UserDto>.Ok(user);
+
+            var request = new LoginRequest
+            {
+                Email = "walker.jlg@gmail.com",
+                Password = "password123"
+            };
+
+            await action.Login(request);
+
+            Assert.Same(authenticatorSpy.User, user);
         }
     }
 }

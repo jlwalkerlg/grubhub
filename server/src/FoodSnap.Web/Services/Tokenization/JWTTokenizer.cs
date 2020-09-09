@@ -48,7 +48,16 @@ namespace FoodSnap.Web.Services.Tokenization
             return new JwtBuilder()
                 .WithAlgorithm(new HMACSHA256Algorithm())
                 .WithSecret(secret)
-                .AddClaim("exp", DateTimeOffset.UtcNow.AddDays(14).ToUnixTimeSeconds())
+                .AddClaim("payload", data)
+                .Encode();
+        }
+
+        public string Encode(string data, DateTimeOffset expiry)
+        {
+            return new JwtBuilder()
+                .WithAlgorithm(new HMACSHA256Algorithm())
+                .WithSecret(secret)
+                .AddClaim("exp", expiry.ToUnixTimeSeconds())
                 .AddClaim("payload", data)
                 .Encode();
         }

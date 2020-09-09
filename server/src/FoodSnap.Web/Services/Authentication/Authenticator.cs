@@ -1,6 +1,8 @@
 using System;
+using FoodSnap.Web.Queries.Users;
 using FoodSnap.Web.Services.Cookies;
 using FoodSnap.Web.Services.Tokenization;
+using Microsoft.AspNetCore.Http;
 
 namespace FoodSnap.Web.Services.Authentication
 {
@@ -36,6 +38,18 @@ namespace FoodSnap.Web.Services.Authentication
             }
 
             return id;
+        }
+
+        public void SignIn(UserDto user)
+        {
+            var expiresIn = DateTimeOffset.UtcNow.AddDays(14);
+
+            var token = tokenizer.Encode(user.Id.ToString());
+            cookieBag.Add("auth_token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = expiresIn,
+            });
         }
     }
 }

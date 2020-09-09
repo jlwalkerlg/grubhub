@@ -1,3 +1,4 @@
+using System;
 using FoodSnap.Application;
 using FoodSnap.Web.Services.Tokenization;
 
@@ -15,6 +16,11 @@ namespace FoodSnap.WebTests.Doubles
         {
             Data = data;
             return EncodedToken;
+        }
+
+        public string Encode(string data, DateTimeOffset expiry)
+        {
+            return Encode(data);
         }
 
         public Result<string> Decode(string token)

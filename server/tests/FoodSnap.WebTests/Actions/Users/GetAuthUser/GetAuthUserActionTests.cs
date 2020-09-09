@@ -37,7 +37,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthUser
                 Role = "RestaurantManager",
             };
 
-            authenticatorSpy.UserId = user.Id;
+            authenticatorSpy.User = user;
             mediatorSpy.Result = Result.Ok(user);
 
             await action.GetAuthUser();
@@ -50,7 +50,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthUser
         [Fact]
         public async Task It_Returns_403_If_Authenticator_Returns_Null_Id()
         {
-            authenticatorSpy.UserId = null;
+            authenticatorSpy.User = null;
 
             var response = await action.GetAuthUser() as StatusCodeResult;
 
@@ -69,7 +69,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthUser
                 Role = "RestaurantManager",
             };
 
-            authenticatorSpy.UserId = user.Id;
+            authenticatorSpy.User = user;
             mediatorSpy.Result = Result.Ok(user);
 
             var response = await action.GetAuthUser() as ObjectResult;
@@ -82,7 +82,16 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthUser
         [Fact]
         public async Task It_Returns_403_If_No_Such_User_Exists()
         {
-            authenticatorSpy.UserId = Guid.NewGuid();
+            var user = new UserDto
+            {
+                Id = Guid.NewGuid(),
+                Name = "Jordan Walker",
+                Email = "walker.jlg@gmail.com",
+                Password = "password123",
+                Role = "RestaurantManager",
+            };
+
+            authenticatorSpy.User = user;
             mediatorSpy.Result = Result.Ok<UserDto>(null);
 
             var response = await action.GetAuthUser() as StatusCodeResult;
