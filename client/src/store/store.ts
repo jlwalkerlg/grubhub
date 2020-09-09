@@ -1,48 +1,53 @@
 import { useMemo } from "react";
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import { createStore, applyMiddleware, combineReducers, Store } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 import authReducer, { AuthState } from "./auth/authReducer";
-
-let store;
 
 export interface State {
   auth: AuthState;
 }
 
-function initStore(preloadedState = {}) {
+let store: Store<State>;
+
+function initStore(initialState?: State) {
   return createStore(
     combineReducers({
       auth: authReducer,
     }),
-    preloadedState,
+    initialState,
     composeWithDevTools(applyMiddleware())
   );
 }
 
-export const initializeStore = (preloadedState) => {
-  let _store = store ?? initStore(preloadedState);
-
-  // After navigating to a page with an initial Redux state, merge that state
-  // with the current state in the store, and create a new store
-  if (preloadedState && store) {
-    _store = initStore({
-      ...store.getState(),
-      ...preloadedState,
-    });
-    // Reset the current store
-    store = undefined;
+// For direct use from the server only.
+export const initializeStore = (initialState?: State) => {
+  // On the server, always return a new store.
+  // It should only be initialised once on the server:
+  // in the page component.
+  if (typeof window === "undefined") {
+    return initStore(initialState);
   }
 
-  // For SSG and SSR always create a new store
-  if (typeof window === "undefined") return _store;
-  // Create the store once in the client
-  if (!store) store = _store;
+  // On the client, return a new store but also cache it
+  // in the `store` variable, so that it is carried over
+  // to the next page and can be merged with a new store.
+  let state: State;
 
-  return _store;
+  if (initialState !== undefined) {
+    state = { ...(state || {}), ...initialState };
+  }
+
+  if (store !== undefined) {
+    state = { ...(state || {}), ...store.getState() };
+  }
+
+  store = initStore(state);
+
+  return store;
 };
 
-export function useStore(initialState) {
-  const store = useMemo(() => initializeStore(initialState), [initialState]);
-  return store;
+// For direct use from the client only.
+export function useStore(initialState?: State) {
+  return useMemo(() => initializeStore(initialState), [initialState]);
 }
