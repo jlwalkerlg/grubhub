@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { State } from "~/store/store";
 import { AuthState } from "./authReducer";
 import authApi, { LoginRequest } from "~/api/authApi";
-import { User } from "./User";
+import { User, UserRole } from "./User";
 import { createLoginAction } from "./authActionCreators";
 import { ApiError } from "~/lib/Error";
 import { Result } from "~/lib/Result";
@@ -26,7 +26,7 @@ export default function useAuth() {
         userDto.id,
         userDto.name,
         userDto.email,
-        userDto.role
+        UserRole[userDto.role]
       );
 
       dispatch(createLoginAction(user));

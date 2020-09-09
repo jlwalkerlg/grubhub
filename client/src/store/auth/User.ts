@@ -8,10 +8,10 @@ export class User {
   readonly email: string;
   readonly role: UserRole;
 
-  constructor(id: string, name: string, email: string, role: string) {
+  constructor(id: string, name: string, email: string, role: UserRole) {
     this.id = id;
     this.name = name;
     this.email = email;
-    this.role = UserRole[role];
+    this.role = role;
   }
 }

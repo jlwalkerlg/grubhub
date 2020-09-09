@@ -11,9 +11,13 @@ export interface LoginResponse {
   data: UserDto;
 }
 
+export interface GetAuthUserResponse {
+  data: UserDto;
+}
+
 class AuthApi extends Api {
   public login(data: LoginRequest) {
-    return this.post<LoginResponse>("/login", data);
+    return this.post<LoginResponse>("/api/login", data);
   }
 }
 

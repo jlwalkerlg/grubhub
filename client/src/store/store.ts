@@ -8,20 +8,20 @@ export interface State {
   auth: AuthState;
 }
 
-let store: Store<State>;
+let store: Store<State> = null;
 
-function initStore(initialState?: State) {
+function initStore(initialState: State = null) {
   return createStore(
     combineReducers({
       auth: authReducer,
     }),
-    initialState,
+    initialState || undefined,
     composeWithDevTools(applyMiddleware())
   );
 }
 
 // For direct use from the server only.
-export const initializeStore = (initialState?: State) => {
+export const initializeStore = (initialState: State = null) => {
   // On the server, always return a new store.
   // It should only be initialised once on the server:
   // in the page component.
@@ -34,11 +34,11 @@ export const initializeStore = (initialState?: State) => {
   // to the next page and can be merged with a new store.
   let state: State;
 
-  if (initialState !== undefined) {
+  if (initialState !== null) {
     state = { ...(state || {}), ...initialState };
   }
 
-  if (store !== undefined) {
+  if (store !== null) {
     state = { ...(state || {}), ...store.getState() };
   }
 
@@ -48,6 +48,6 @@ export const initializeStore = (initialState?: State) => {
 };
 
 // For direct use from the client only.
-export function useStore(initialState?: State) {
+export function useStore(initialState: State = null) {
   return useMemo(() => initializeStore(initialState), [initialState]);
 }

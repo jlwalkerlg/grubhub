@@ -14,7 +14,7 @@ export interface RegisterRequest {
 
 class RestaurantsApi extends Api {
   public register(request: RegisterRequest) {
-    return this.post("/restaurants/register", request);
+    return this.post(this.getUrl("/restaurants/register"), request);
   }
 }
 

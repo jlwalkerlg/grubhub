@@ -17,7 +17,7 @@ export default class Api {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await Axios.post<T>(this.getUrl(url), data, config);
+      const response = await Axios.post<T>(url, data, config);
 
       return new ApiResponse<T>(response);
     } catch (e) {
