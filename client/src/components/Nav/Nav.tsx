@@ -7,14 +7,21 @@ import RegisterIcon from "~/components/Icons/RegisterIcon";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
 import useAuth from "~/store/auth/useAuth";
+import { useRouter } from "next/router";
 
 const Nav: FC = () => {
-  const { isLoggedIn } = useAuth();
+  const router = useRouter();
+  const { isLoggedIn, logout } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNav = () => {
     setIsOpen(!isOpen);
+  };
+
+  const onLogout = async () => {
+    await logout();
+    router.push("/");
   };
 
   return (
@@ -42,11 +49,13 @@ const Nav: FC = () => {
 
           {isLoggedIn ? (
             <>
-              <Link href="/logout">
-                <a className="hidden md:block ml-auto px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                  Logout
-                </a>
-              </Link>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="hidden md:block ml-auto px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary"
+              >
+                Logout
+              </button>
             </>
           ) : (
             <>
@@ -79,12 +88,14 @@ const Nav: FC = () => {
           {isLoggedIn ? (
             <>
               <li>
-                <Link href="/logout">
-                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                    <LoginIcon className="w-6 h-6 fill-current inline" />
-                    <span className="ml-2 align-middle">Logout</span>
-                  </a>
-                </Link>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="block py-2 uppercase font-medium text-gray-900 hover:text-primary"
+                >
+                  <LoginIcon className="w-6 h-6 fill-current inline" />
+                  <span className="ml-2 align-middle">Logout</span>
+                </button>
               </li>
             </>
           ) : (

@@ -38,11 +38,11 @@ const LoginForm: FC = () => {
     if (result.isSuccess) {
       const user = result.data;
 
-      // if (user.role === UserRole.RestaurantManager) {
-      //   router.push("/dashboard");
-      // } else {
-      //   router.push("/");
-      // }
+      if (user.role === UserRole.RestaurantManager) {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
 
       return;
     }

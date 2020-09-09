@@ -2,9 +2,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { State } from "~/store/store";
 import { AuthState } from "./authReducer";
-import authApi, { LoginRequest } from "~/api/authApi";
+import authApi, { LoginRequest } from "~/api/AuthApi";
 import { User, UserRole } from "./User";
-import { createLoginAction } from "./authActionCreators";
+import { createLoginAction, createLogoutAction } from "./authActionCreators";
 import { ApiError } from "~/lib/Error";
 import { Result } from "~/lib/Result";
 
@@ -37,5 +37,17 @@ export default function useAuth() {
     return Result.fail(new ApiError(response));
   };
 
-  return { isLoggedIn, user, login };
+  const logout = async (): Promise<Result<null, ApiError>> => {
+    const response = await authApi.logout();
+
+    if (response.isSuccess) {
+      dispatch(createLogoutAction());
+
+      return Result.ok<null, ApiError>(null);
+    }
+
+    return Result.fail(new ApiError(response));
+  };
+
+  return { isLoggedIn, user, login, logout };
 }

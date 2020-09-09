@@ -4,6 +4,7 @@ import { UserDto } from "~/api/dtos/UserDto";
 import { NextPageContext } from "next";
 import { AxiosResponse } from "axios";
 import { LoginResponse } from "~/api/AuthApi";
+import { ServerResponse } from "http";
 
 export const getUserFromContext = async (
   context: NextPageContext
@@ -21,15 +22,7 @@ export const getUserFromContext = async (
 
     return user;
   } catch (e) {
-    context.res.setHeader("Set-Cookie", [
-      cookie.serialize("auth_token", "", {
-        expires: new Date(0),
-      }),
-      cookie.serialize("auth_jwt", "", {
-        expires: new Date(0),
-      }),
-    ]);
-
+    clearAuthCookies(context.res);
     return null;
   }
 };
@@ -52,4 +45,15 @@ export const getSignInCookies = (response: AxiosResponse<LoginResponse>) => {
   });
 
   return [authCookie, authUserCacheCookie];
+};
+
+export const clearAuthCookies = (res: ServerResponse) => {
+  res.setHeader("Set-Cookie", [
+    cookie.serialize("auth_token", "", {
+      expires: new Date(0),
+    }),
+    cookie.serialize("auth_jwt", "", {
+      expires: new Date(0),
+    }),
+  ]);
 };

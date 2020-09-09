@@ -19,6 +19,10 @@ class AuthApi extends Api {
   public login(data: LoginRequest) {
     return this.post<LoginResponse>("/api/login", data);
   }
+
+  public logout() {
+    return this.post<null>("/api/logout");
+  }
 }
 
 export default new AuthApi();
