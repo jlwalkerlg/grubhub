@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Axios from "axios";
-import { LoginResponse } from "~/api/AuthApi";
+import { AuthData } from "~/api/AuthApi";
 import { getSignInCookies } from "~/helpers/auth";
+import { DataEnvelope } from "~/api/dtos/DataEnvelope";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const response = await Axios.post<LoginResponse>(
+    const response = await Axios.post<DataEnvelope<AuthData>>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
       req.body
     );

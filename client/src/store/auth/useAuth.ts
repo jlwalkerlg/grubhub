@@ -22,16 +22,16 @@ export default function useAuth() {
     const response = await authApi.login(request);
 
     if (response.isSuccess) {
-      const userDto = response.data.data;
+      const data = response.data.data;
 
       const user = new User(
-        userDto.id,
-        userDto.name,
-        userDto.email,
-        UserRole[userDto.role]
+        data.user.id,
+        data.user.name,
+        data.user.email,
+        UserRole[data.user.role]
       );
 
-      dispatch(createLoginAction(user));
+      dispatch(createLoginAction(user, data.restaurant));
 
       return Result.ok<User, ApiError>(user);
     }

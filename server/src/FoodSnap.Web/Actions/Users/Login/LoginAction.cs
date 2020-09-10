@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.Users.GetUserByEmail;
+using FoodSnap.Web.Queries.Auth.GetAuthData;
 using FoodSnap.Web.Services.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,8 +27,11 @@ namespace FoodSnap.Web.Actions.Users.Login
         [HttpPost("/login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var query = new GetUserByEmailQuery(request.Email);
-            var user = (await mediator.Send(query)).Value;
+            var data = (
+                await mediator.Send(new GetAuthDataQuery(request.Email)))
+                .Value;
+
+            var user = data?.User;
 
             if (user is null || !hasher.CheckMatch(request.Password, user.Password))
             {
@@ -37,7 +40,7 @@ namespace FoodSnap.Web.Actions.Users.Login
 
             authenticator.SignIn(user);
 
-            return Ok(new DataEnvelope(user));
+            return Ok(new DataEnvelope(data));
         }
     }
 }

@@ -1,23 +1,24 @@
 import { UserDto } from "./dtos/UserDto";
 
 import Api from "./Api";
+import { RestaurantDto } from "./dtos/RestaurantDto";
+import { DataEnvelope } from "./dtos/DataEnvelope";
 
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
-export interface LoginResponse {
-  data: UserDto;
+export interface AuthData {
+  user: UserDto;
+  restaurant: RestaurantDto;
 }
 
-export interface GetAuthUserResponse {
-  data: UserDto;
-}
+export type GetAuthUserResponse = DataEnvelope<UserDto>;
 
 class AuthApi extends Api {
   public login(data: LoginRequest) {
-    return this.post<LoginResponse>("/api/login", data);
+    return this.post<DataEnvelope<AuthData>>("/api/login", data);
   }
 
   public logout() {

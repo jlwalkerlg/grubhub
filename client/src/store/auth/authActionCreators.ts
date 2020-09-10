@@ -1,10 +1,15 @@
 import { User } from "./User";
 import { LOGIN, LoginAction, LOGOUT, LogoutAction } from "./authReducer";
+import { RestaurantDto } from "~/api/dtos/RestaurantDto";
 
-export const createLoginAction = (user: User): LoginAction => ({
+export const createLoginAction = (
+  user: User,
+  restaurant: RestaurantDto
+): LoginAction => ({
   type: LOGIN,
   payload: {
     user,
+    restaurant,
   },
 });
 

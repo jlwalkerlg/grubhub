@@ -1,37 +1,34 @@
 import { NextPageContext } from "next";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
-import { UserDto } from "~/api/dtos/UserDto";
 import { AxiosResponse } from "axios";
-import { LoginResponse } from "~/api/AuthApi";
+import { AuthData } from "~/api/AuthApi";
 import { ServerResponse } from "http";
+import { DataEnvelope } from "~/api/dtos/DataEnvelope";
 
 export const getAuthToken = (context: NextPageContext) => {
   return cookie.parse(context.req.headers.cookie || "")["auth_token"] || null;
 };
 
-export const getUserFromContext = async (
+export const getAuthDataFromContext = async (
   context: NextPageContext
-): Promise<UserDto> => {
+): Promise<AuthData> => {
   const authUserCacheToken = cookie.parse(context.req.headers.cookie || "")[
     "auth_jwt"
   ];
   if (!authUserCacheToken) return null;
 
   try {
-    const user: UserDto = jwt.verify(
-      authUserCacheToken,
-      process.env.JWT_SECRET
-    ) as UserDto;
-
-    return user;
+    return jwt.verify(authUserCacheToken, process.env.JWT_SECRET) as AuthData;
   } catch (e) {
     clearAuthCookies(context.res);
     return null;
   }
 };
 
-export const getSignInCookies = (response: AxiosResponse<LoginResponse>) => {
+export const getSignInCookies = (
+  response: AxiosResponse<DataEnvelope<AuthData>>
+) => {
   const cookies: string[] = response.headers["set-cookie"];
   const authCookie = cookies.find((x) => x.startsWith("auth_token="));
 
@@ -40,8 +37,8 @@ export const getSignInCookies = (response: AxiosResponse<LoginResponse>) => {
   const decoded = jwt.decode(authToken);
   const expiry = decoded["exp"];
 
-  const user = response.data.data;
-  const authUserCacheToken = jwt.sign(user, process.env.JWT_SECRET);
+  const data: AuthData = response.data.data;
+  const authUserCacheToken = jwt.sign(data, process.env.JWT_SECRET);
   const authUserCacheCookie = cookie.serialize("auth_jwt", authUserCacheToken, {
     expires: new Date(expiry * 1000),
     httpOnly: true,
