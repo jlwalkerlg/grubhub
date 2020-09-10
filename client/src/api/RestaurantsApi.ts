@@ -1,4 +1,6 @@
 import Api from "./Api";
+import { RestaurantDto } from "./dtos/RestaurantDto";
+import { DataEnvelope } from "./dtos/DataEnvelope";
 
 export interface RegisterRequest {
   managerName: string;
@@ -14,7 +16,13 @@ export interface RegisterRequest {
 
 class RestaurantsApi extends Api {
   public register(request: RegisterRequest) {
-    return this.post(this.getUrl("/restaurants/register"), request);
+    return this.post<null>(this.getUrl("/restaurants/register"), request);
+  }
+
+  public getAuthUserRestaurantDetails() {
+    return this.get<DataEnvelope<RestaurantDto>>(
+      this.getUrl("/auth/restaurant/details")
+    );
   }
 }
 

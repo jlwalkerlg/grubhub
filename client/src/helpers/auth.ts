@@ -6,6 +6,10 @@ import { AxiosResponse } from "axios";
 import { LoginResponse } from "~/api/AuthApi";
 import { ServerResponse } from "http";
 
+export const getAuthToken = (context: NextPageContext) => {
+  return cookie.parse(context.req.headers.cookie || "")["auth_token"] || null;
+};
+
 export const getUserFromContext = async (
   context: NextPageContext
 ): Promise<UserDto> => {

@@ -23,18 +23,18 @@ namespace FoodSnap.Web.Services.Authentication
 
             if (token == null)
             {
-                return Guid.Empty;
+                return null;
             }
 
             var result = tokenizer.Decode(token);
             if (!result.IsSuccess)
             {
-                return Guid.Empty;
+                return null;
             }
 
             if (!Guid.TryParse(result.Value, out Guid id))
             {
-                return Guid.Empty;
+                return null;
             }
 
             return id;

@@ -3,14 +3,19 @@ import { NextPage } from "next";
 
 import Layout from "~/components/Layout/Layout";
 import DashboardIcon from "~/components/Icons/DashboardIcon";
+import useAuth from "~/store/auth/useAuth";
 
 export const Dashboard: NextPage = () => {
+  const { restaurant } = useAuth();
+
   return (
     <Layout title="Dashboard">
       <main>
         <div className="restaurant-banner py-24">
           <div className="container">
-            <h2 className="text-white text-4xl tracking-wider">Chow Main</h2>
+            <h2 className="text-white text-4xl tracking-wider">
+              {restaurant.name}
+            </h2>
           </div>
         </div>
 

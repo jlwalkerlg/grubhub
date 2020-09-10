@@ -34,6 +34,12 @@ namespace FoodSnap.WebTests.Services.Authentication
         }
 
         [Fact]
+        public void It_Returns_Null_For_User_Id_If_Not_Signed_In()
+        {
+            Assert.Null(authenticator.GetUserId());
+        }
+
+        [Fact]
         public void It_Signs_The_User_In()
         {
             var user = new UserDto

@@ -1,7 +1,9 @@
 import { NextPageContext } from "next";
 import { State, initializeStore } from "~/store/store";
-import { UserRole } from "~/store/auth/User";
-import { getUserFromContext } from "./auth";
+import { UserRole, User } from "~/store/auth/User";
+import { getUserFromContext, getAuthToken } from "./auth";
+import restaurantsApi from "~/api/restaurantsApi";
+import Api from "~/api/Api";
 
 function redirect(context: NextPageContext, location: string) {
   context.res.writeHead(307, {
@@ -35,25 +37,37 @@ export class GetInitialPropsBuilder {
 
       let state: State = null;
 
-      const user = await getUserFromContext(context);
+      const userDto = await getUserFromContext(context);
 
-      if (this.requiresAuth && user === null) {
+      if (this.requiresAuth && userDto === null) {
         redirect(context, "/login");
       }
 
-      if (this.isGuestOnly && user !== null) {
+      if (this.isGuestOnly && userDto !== null) {
         redirect(context, "/");
       }
 
-      if (user !== null) {
+      if (userDto !== null) {
         const store = initializeStore();
         state = store.getState();
-        state.auth.user = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: UserRole[user.role],
+
+        const user: User = {
+          id: userDto.id,
+          name: userDto.name,
+          email: userDto.email,
+          role: UserRole[userDto.role],
         };
+
+        state.auth.user = user;
+
+        Api.addAuthToken(getAuthToken(context));
+
+        if (user.role === UserRole.RestaurantManager) {
+          const restaurantResult = await restaurantsApi.getAuthUserRestaurantDetails();
+          const restaurant = restaurantResult.data.data;
+
+          state.auth.restaurant = restaurant;
+        }
       }
 
       return {

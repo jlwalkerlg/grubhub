@@ -1,4 +1,5 @@
 import { User } from "./User";
+import { RestaurantDto } from "~/api/dtos/RestaurantDto";
 
 export const LOGIN = "AUTH_LOGIN";
 export const LOGOUT = "AUTH_LOGOUT";
@@ -18,10 +19,12 @@ type AuthAction = LoginAction | LogoutAction;
 
 export interface AuthState {
   user: User;
+  restaurant: RestaurantDto;
 }
 
 const initialState = {
   user: null,
+  restaurant: null,
 };
 
 export default function (
@@ -30,13 +33,16 @@ export default function (
 ): AuthState {
   if (action.type === LOGIN) {
     return {
+      ...state,
       user: action.payload.user,
     };
   }
 
   if (action.type === LOGOUT) {
     return {
+      ...state,
       user: null,
+      restaurant: null,
     };
   }
 

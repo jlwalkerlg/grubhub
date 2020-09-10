@@ -7,12 +7,12 @@ import { User, UserRole } from "./User";
 import { createLoginAction, createLogoutAction } from "./authActionCreators";
 import { ApiError } from "~/lib/Error";
 import { Result } from "~/lib/Result";
-import { useRouter } from "next/router";
 
 export default function useAuth() {
-  const router = useRouter();
   const dispatch = useDispatch();
-  const { user } = useSelector<State, AuthState>((state) => state.auth);
+  const { user, restaurant } = useSelector<State, AuthState>(
+    (state) => state.auth
+  );
 
   const isLoggedIn = user !== null;
 
@@ -51,5 +51,5 @@ export default function useAuth() {
     return Result.fail(new ApiError(response));
   };
 
-  return { isLoggedIn, user, login, logout };
+  return { isLoggedIn, user, restaurant, login, logout };
 }
