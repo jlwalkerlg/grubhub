@@ -24,10 +24,13 @@ import useCompositeForm from "~/lib/Form/useCompositeForm";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 
 import RegisterRestaurantForm from "./RegisterRestaurantForm";
+import useAuth from "~/store/auth/useAuth";
 
 const MySwal = withReactContent(Swal);
 
 const RegisterRestaurantFormController: FC = () => {
+  const auth = useAuth();
+
   const managerName = useFormComponent("", [new RequiredRule()]);
   const managerEmail = useFormComponent("", [
     new RequiredRule(),
@@ -122,16 +125,22 @@ const RegisterRestaurantFormController: FC = () => {
       return;
     }
 
-    await MySwal.fire({
-      title: <p>Thanks For Registering!</p>,
-      text:
-        "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
-      icon: "success",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      allowEnterKey: false,
-      showConfirmButton: true,
-    });
+    await Promise.all([
+      MySwal.fire({
+        title: <p>Thanks For Registering!</p>,
+        text:
+          "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
+        icon: "success",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: true,
+      }),
+      auth.login({
+        email: managerEmail.value,
+        password: managerPassword.value,
+      }),
+    ]);
 
     router.push("/dashboard");
   };

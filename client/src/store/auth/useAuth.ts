@@ -10,6 +10,7 @@ import { Result } from "~/lib/Result";
 
 export default function useAuth() {
   const dispatch = useDispatch();
+
   const { user, restaurant } = useSelector<State, AuthState>(
     (state) => state.auth
   );
