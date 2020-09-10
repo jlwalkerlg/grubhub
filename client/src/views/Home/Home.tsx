@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React from "react";
+import { NextPage } from "next";
 
 import Layout from "~/components/Layout/Layout";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
 
-export const Home: FC = () => {
+export const Home: NextPage = () => {
   return (
     <Layout title="Home">
       <main>

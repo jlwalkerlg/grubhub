@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React from "react";
+import { NextPage } from "next";
 
 import Layout from "~/components/Layout/Layout";
 import LoginForm from "./LoginForm/LoginForm";
 
-export const Login: FC = () => {
+export const Login: NextPage = () => {
   return (
     <Layout title="Login">
       <main>

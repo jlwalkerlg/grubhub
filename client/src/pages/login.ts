@@ -1,3 +1,6 @@
-export { Login as default } from "~/views/Login/Login";
+import { GetInitialPropsBuilder } from "~/helpers/GetInitialPropsBuilder";
+import { Login } from "~/views/Login/Login";
 
-export { ensureUnauthenticated as getServerSideProps } from "~/helpers/auth";
+Login.getInitialProps = new GetInitialPropsBuilder().guestOnly().build();
+
+export default Login;

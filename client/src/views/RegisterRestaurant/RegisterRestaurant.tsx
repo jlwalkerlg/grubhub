@@ -1,10 +1,11 @@
-import React, { FC } from "react";
+import React from "react";
+import { NextPage } from "next";
 
 import Layout from "~/components/Layout/Layout";
 
 import RegisterRestaurantFormController from "./RegisterRestaurantForm/RegisterRestaurantFormController";
 
-export const RegisterRestaurant: FC = () => {
+export const RegisterRestaurant: NextPage = () => {
   return (
     <Layout title="Register Restaurant">
       <main>
