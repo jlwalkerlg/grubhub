@@ -9,17 +9,17 @@ namespace FoodSnap.Web.Services.Authentication
     public class Authenticator : IAuthenticator
     {
         private readonly ITokenizer tokenizer;
-        private readonly ICookieBag cookieBag;
+        private readonly ICookieBag cookies;
 
-        public Authenticator(ITokenizer tokenizer, ICookieBag cookieBag)
+        public Authenticator(ITokenizer tokenizer, ICookieBag cookies)
         {
             this.tokenizer = tokenizer;
-            this.cookieBag = cookieBag;
+            this.cookies = cookies;
         }
 
         public Guid? GetUserId()
         {
-            var token = cookieBag.Get("auth_token");
+            var token = cookies.Get("auth_token");
 
             if (token == null)
             {
@@ -45,10 +45,21 @@ namespace FoodSnap.Web.Services.Authentication
             var expiresIn = DateTimeOffset.UtcNow.AddDays(14);
 
             var token = tokenizer.Encode(user.Id.ToString());
-            cookieBag.Add("auth_token", token, new CookieOptions
+
+            cookies.Add("auth_token", token, new CookieOptions
             {
                 HttpOnly = true,
                 Expires = expiresIn,
+                Path = "/",
+            });
+        }
+
+        public void SignOut()
+        {
+            cookies.Delete("auth_token", new CookieOptions
+            {
+                HttpOnly = true,
+                Path = "/",
             });
         }
     }

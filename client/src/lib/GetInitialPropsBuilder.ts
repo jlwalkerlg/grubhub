@@ -1,8 +1,10 @@
 import { NextPageContext } from "next";
+
+import cookie from "cookie";
+
 import { State, initializeStore } from "~/store/store";
 import { UserRole, User } from "~/store/auth/User";
-import { getAuthDataFromContext, getAuthToken } from "./auth";
-import Api from "~/api/Api";
+import { AuthData } from "~/api/AuthApi";
 
 function redirect(context: NextPageContext, location: string) {
   context.res.writeHead(307, {
@@ -36,7 +38,8 @@ export class GetInitialPropsBuilder {
 
       let state: State = null;
 
-      const data = await getAuthDataFromContext(context);
+      const cookies = cookie.parse(context.req.headers.cookie || "");
+      const data = JSON.parse(cookies["auth_data"] || null) as AuthData;
 
       if (this.requiresAuth && data === null) {
         redirect(context, "/login");
@@ -58,8 +61,6 @@ export class GetInitialPropsBuilder {
         };
 
         state.auth.user = user;
-
-        Api.addAuthToken(getAuthToken(context));
 
         if (user.role === UserRole.RestaurantManager) {
           const restaurant = data.restaurant;

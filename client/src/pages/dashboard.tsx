@@ -1,4 +1,4 @@
-import { GetInitialPropsBuilder } from "~/helpers/GetInitialPropsBuilder";
+import { GetInitialPropsBuilder } from "~/lib/GetInitialPropsBuilder";
 
 import { Dashboard } from "~/views/Dashboard/Dashboard";
 

@@ -6,8 +6,11 @@ namespace FoodSnap.WebTests.Doubles
 {
     public class CookieBagSpy : ICookieBag
     {
-        private Dictionary<string, object[]> Cookies { get; }
-            = new Dictionary<string, object[]>();
+        public Dictionary<string, CookieData> Cookies { get; }
+            = new Dictionary<string, CookieData>();
+
+        public Dictionary<string, CookieData> Deleted { get; }
+            = new Dictionary<string, CookieData>();
 
         public string Get(string name)
         {
@@ -16,12 +19,7 @@ namespace FoodSnap.WebTests.Doubles
                 return null;
             }
 
-            return (string)Cookies[name][0];
-        }
-
-        public CookieOptions GetOptions(string name)
-        {
-            return Cookies[name][1] as CookieOptions;
+            return Cookies[name].Value;
         }
 
         public void Add(string name, string value)
@@ -31,7 +29,28 @@ namespace FoodSnap.WebTests.Doubles
 
         public void Add(string name, string value, CookieOptions options)
         {
-            Cookies.Add(name, new object[] { value, options });
+            Cookies.Add(name, new CookieData { Value = value, Options = options });
+        }
+
+        public void Delete(string name)
+        {
+            Delete(name, null);
+        }
+
+        public void Delete(string name, CookieOptions options)
+        {
+            if (Cookies.ContainsKey(name))
+            {
+                Cookies.Remove(name);
+            }
+
+            Deleted.Add(name, new CookieData { Options = options });
+        }
+
+        public class CookieData
+        {
+            public string Value { get; set; }
+            public CookieOptions Options { get; set; }
         }
     }
 }

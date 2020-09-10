@@ -7,5 +7,6 @@ namespace FoodSnap.Web.Services.Authentication
     {
         Guid? GetUserId();
         void SignIn(UserDto user);
+        void SignOut();
     }
 }

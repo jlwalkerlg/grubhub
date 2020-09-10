@@ -18,11 +18,11 @@ export type GetAuthUserResponse = DataEnvelope<UserDto>;
 
 class AuthApi extends Api {
   public login(data: LoginRequest) {
-    return this.post<DataEnvelope<AuthData>>("/api/login", data);
+    return this.post<DataEnvelope<AuthData>>("/login", data);
   }
 
   public logout() {
-    return this.post<null>("/api/logout");
+    return this.post<null>("/logout");
   }
 }
 

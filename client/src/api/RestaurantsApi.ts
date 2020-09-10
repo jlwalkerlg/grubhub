@@ -16,13 +16,11 @@ export interface RegisterRequest {
 
 class RestaurantsApi extends Api {
   public register(request: RegisterRequest) {
-    return this.post<null>(this.getUrl("/restaurants/register"), request);
+    return this.post<null>("/restaurants/register", request);
   }
 
   public getAuthUserRestaurantDetails() {
-    return this.get<DataEnvelope<RestaurantDto>>(
-      this.getUrl("/auth/restaurant/details")
-    );
+    return this.get<DataEnvelope<RestaurantDto>>("/auth/restaurant/details");
   }
 }
 

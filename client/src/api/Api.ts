@@ -3,23 +3,6 @@ import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 export default class Api {
   private baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  private static config: AxiosRequestConfig = {
-    headers: {},
-  };
-
-  private static addCookie = (name: string, value: string) => {
-    Api.config.withCredentials = true;
-    Api.config.headers["Cookie"] = `${name}=${value}`;
-  };
-
-  public static addAuthToken = (token: string) => {
-    Api.addCookie("auth_token", token);
-  };
-
-  private static mergeConfig = (config: AxiosRequestConfig = {}) => {
-    return { ...Api.config, ...config };
-  };
-
   protected getUrl(path: string): string {
     if (path.startsWith("/")) {
       path = path.substr(1);
@@ -33,7 +16,7 @@ export default class Api {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await Axios.get<T>(url, Api.mergeConfig(config));
+      const response = await Axios.get<T>(url, config);
 
       return new ApiResponse<T>(response);
     } catch (e) {
@@ -47,7 +30,7 @@ export default class Api {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await Axios.post<T>(url, data, Api.mergeConfig(config));
+      const response = await Axios.post<T>(this.getUrl(url), data, config);
 
       return new ApiResponse<T>(response);
     } catch (e) {

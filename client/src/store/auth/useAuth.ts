@@ -1,5 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 
+import cookie from "cookie";
+
 import { State } from "~/store/store";
 import { AuthState } from "./authReducer";
 import authApi, { LoginRequest } from "~/api/AuthApi";
@@ -34,6 +36,12 @@ export default function useAuth() {
 
       dispatch(createLoginAction(user, data.restaurant));
 
+      document.cookie = cookie.serialize("auth_data", JSON.stringify(data), {
+        expires: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
+        httpOnly: false,
+        path: "/",
+      });
+
       return Result.ok<User, ApiError>(user);
     }
 
@@ -43,8 +51,16 @@ export default function useAuth() {
   const logout = async (): Promise<Result<null, ApiError>> => {
     const response = await authApi.logout();
 
-    if (response.isSuccess) {
+    // TODO
+    console.log(response);
+    if (response.isSuccess || true) {
       dispatch(createLogoutAction());
+
+      document.cookie = cookie.serialize("auth_data", "", {
+        expires: new Date(0),
+        httpOnly: false,
+        path: "/",
+      });
 
       return Result.ok<null, ApiError>(null);
     }

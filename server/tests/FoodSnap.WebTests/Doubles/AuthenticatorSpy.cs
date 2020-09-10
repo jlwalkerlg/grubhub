@@ -17,5 +17,10 @@ namespace FoodSnap.WebTests.Doubles
         {
             User = user;
         }
+
+        public void SignOut()
+        {
+            User = null;
+        }
     }
 }

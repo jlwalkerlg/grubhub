@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 
 namespace FoodSnap.Web.Services.Cookies
@@ -19,6 +20,18 @@ namespace FoodSnap.Web.Services.Cookies
         public void Add(string name, string value, CookieOptions options)
         {
             httpContextAccessor.HttpContext.Response.Cookies.Append(name, value, options);
+        }
+
+        public void Delete(string name)
+        {
+            Add(name, "", new CookieOptions());
+        }
+
+        public void Delete(string name, CookieOptions options)
+        {
+            options.Expires = DateTime.UnixEpoch;
+
+            Add(name, "", options);
         }
 
         public string Get(string name)
