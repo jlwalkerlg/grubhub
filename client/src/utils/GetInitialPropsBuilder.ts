@@ -4,7 +4,7 @@ import cookie from "cookie";
 
 import { State, initializeStore } from "~/store/store";
 import { UserRole, User } from "~/store/auth/User";
-import { AuthData } from "~/api/AuthApi";
+import { AuthData } from "~/api/users/userApi";
 
 function redirect(context: NextPageContext, location: string) {
   context.res.writeHead(307, {

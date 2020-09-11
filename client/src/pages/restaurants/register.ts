@@ -1,5 +1,5 @@
 import { RegisterRestaurant } from "~/views/RegisterRestaurant/RegisterRestaurant";
-import { GetInitialPropsBuilder } from "~/lib/GetInitialPropsBuilder";
+import { GetInitialPropsBuilder } from "~/utils/GetInitialPropsBuilder";
 
 RegisterRestaurant.getInitialProps = new GetInitialPropsBuilder()
   .guestOnly()

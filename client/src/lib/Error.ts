@@ -6,16 +6,16 @@ export class Error {
 
 export class ApiError extends Error {
   readonly statusCode: number;
-  readonly validationErrors: { [key: string]: string };
+  readonly errors: { [key: string]: string };
 
   get isValidationError() {
     return this.statusCode === 422;
   }
 
-  public constructor(response: ApiResponse) {
+  public constructor(response: ApiResponse<any>) {
     super(response.error);
 
     this.statusCode = response.statusCode;
-    this.validationErrors = response.data.errors || null;
+    this.errors = response.data?.errors || null;
   }
 }

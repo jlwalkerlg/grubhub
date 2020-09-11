@@ -1,5 +1,5 @@
 import { User } from "./User";
-import { RestaurantDto } from "~/api/dtos/RestaurantDto";
+import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 
 export const LOGIN = "AUTH_LOGIN";
 export const LOGOUT = "AUTH_LOGOUT";

@@ -4,7 +4,7 @@ import cookie from "cookie";
 
 import { State } from "~/store/store";
 import { AuthState } from "./authReducer";
-import authApi, { LoginRequest } from "~/api/AuthApi";
+import authApi, { LoginRequest } from "~/api/users/userApi";
 import { User, UserRole } from "./User";
 import { createLoginAction, createLogoutAction } from "./authActionCreators";
 import { ApiError } from "~/lib/Error";
@@ -25,7 +25,7 @@ export default function useAuth() {
     const response = await authApi.login(request);
 
     if (response.isSuccess) {
-      const data = response.data.data;
+      const data = response.data;
 
       const user = new User(
         data.user.id,
@@ -51,9 +51,7 @@ export default function useAuth() {
   const logout = async (): Promise<Result<null, ApiError>> => {
     const response = await authApi.logout();
 
-    // TODO
-    console.log(response);
-    if (response.isSuccess || true) {
+    if (response.isSuccess) {
       dispatch(createLogoutAction());
 
       document.cookie = cookie.serialize("auth_data", "", {

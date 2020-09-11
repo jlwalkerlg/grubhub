@@ -11,7 +11,7 @@ export default class Api {
     return `${this.baseUrl}/${path}`;
   }
 
-  protected async get<T = any>(
+  protected async get<T = null>(
     url: string,
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
@@ -24,7 +24,7 @@ export default class Api {
     }
   }
 
-  protected async post<T = any>(
+  protected async post<T = null>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
@@ -39,11 +39,11 @@ export default class Api {
   }
 }
 
-export class ApiResponse<TData = any> {
+export class ApiResponse<TData = null> {
   readonly data: TData;
-  readonly statusCode: number;
   readonly error: string;
-  readonly validationErrors: { [key: string]: string };
+  readonly errors: { [key: string]: string };
+  readonly statusCode: number;
 
   get isSuccess() {
     return this.statusCode >= 200 && this.statusCode < 300;
@@ -54,9 +54,9 @@ export class ApiResponse<TData = any> {
   }
 
   public constructor(response: AxiosResponse) {
-    this.data = response.data || null;
-    this.statusCode = response.status;
+    this.data = response.data?.data || null;
     this.error = response.data?.message || null;
-    this.validationErrors = response.data.errors || null;
+    this.errors = response.data?.errors || null;
+    this.statusCode = response.status;
   }
 }

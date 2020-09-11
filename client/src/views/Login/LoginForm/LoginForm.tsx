@@ -48,7 +48,7 @@ const LoginForm: FC = () => {
     }
 
     if (result.error.isValidationError) {
-      form.errors = result.error.validationErrors;
+      form.errors = result.error.errors;
     } else {
       setError(result.error.message);
     }

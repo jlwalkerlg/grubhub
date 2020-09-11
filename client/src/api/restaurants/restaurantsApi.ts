@@ -1,6 +1,6 @@
-import Api from "./Api";
-import { RestaurantDto } from "./dtos/RestaurantDto";
-import { DataEnvelope } from "./dtos/DataEnvelope";
+import Api from "../Api";
+import { RestaurantDto } from "./RestaurantDto";
+import { DataEnvelope } from "../DataEnvelope";
 
 export interface RegisterRequest {
   managerName: string;

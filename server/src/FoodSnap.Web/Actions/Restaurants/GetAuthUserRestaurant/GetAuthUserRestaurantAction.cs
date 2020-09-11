@@ -21,6 +21,7 @@ namespace FoodSnap.Web.Actions.Restaurants.GetAuthUserRestaurant
         [HttpGet("/auth/restaurant/details")]
         public async Task<IActionResult> Execute()
         {
+            // TODO: add IsAuthenticated getter
             var id = authenticator.GetUserId();
 
             if (id is null)
