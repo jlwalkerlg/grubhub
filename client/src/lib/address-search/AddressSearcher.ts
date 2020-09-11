@@ -1,4 +1,4 @@
-import scriptLoader from "../ScriptLoader/ScriptLoader";
+import scriptLoader from "../script-loader/ScriptLoader";
 
 export interface AddressSearchResult {
   id: string;

@@ -15,7 +15,7 @@ import {
   PostCodeRule,
   combineRules,
 } from "~/lib/form/Rule";
-import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
+import useAddressSearch from "~/lib/address-search/useAddressSearch";
 
 import RegisterRestaurantForm, {
   StepOne,

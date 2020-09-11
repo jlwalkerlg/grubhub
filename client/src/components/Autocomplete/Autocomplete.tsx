@@ -1,6 +1,6 @@
 import React from "react";
 
-import useClickAwayListener from "~/lib/ClickAwayListener/useClickAwayListener";
+import useClickAwayListener from "~/lib/click-away-listener/useClickAwayListener";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   inputRef?: (ref: HTMLInputElement) => void;

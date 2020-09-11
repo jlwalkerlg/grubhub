@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AddressSearchResult } from "~/lib/AddressSearch/AddressSearcher";
+import { AddressSearchResult } from "~/lib/address-search/AddressSearcher";
 import Autocomplete from "~/components/Autocomplete/Autocomplete";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { UseFormMethods } from "react-hook-form";
