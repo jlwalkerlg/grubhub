@@ -1,20 +1,12 @@
 import React from "react";
-import { NextPage } from "next";
 
 import Layout from "~/components/Layout/Layout";
 import DashboardIcon from "~/components/Icons/DashboardIcon";
 import useAuth from "~/store/auth/useAuth";
-import { useRouter } from "next/router";
+import { withAuth } from "~/utils/withAuth";
 
-export const Dashboard: NextPage = () => {
-  const router = useRouter();
-
-  const { isLoggedIn, restaurant } = useAuth();
-
-  if (!isLoggedIn) {
-    router.push("/");
-    return null;
-  }
+export const Dashboard = withAuth(() => {
+  const { restaurant } = useAuth();
 
   return (
     <Layout title="Dashboard">
@@ -59,4 +51,4 @@ export const Dashboard: NextPage = () => {
       </main>
     </Layout>
   );
-};
+});

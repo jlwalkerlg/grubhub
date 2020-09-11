@@ -1,10 +1,9 @@
 import React from "react";
-import { NextPage } from "next";
-
 import Layout from "~/components/Layout/Layout";
 import LoginForm from "./LoginForm/LoginForm";
+import { withGuestOnly } from "~/utils/withGuestOnly";
 
-export const Login: NextPage = () => {
+export const Login = withGuestOnly(() => {
   return (
     <Layout title="Login">
       <main>
@@ -17,4 +16,4 @@ export const Login: NextPage = () => {
       </main>
     </Layout>
   );
-};
+});

@@ -1,11 +1,11 @@
 import React from "react";
-import { NextPage } from "next";
 
 import Layout from "~/components/Layout/Layout";
 
 import RegisterRestaurantFormController from "./RegisterRestaurantForm/RegisterRestaurantFormController";
+import { withGuestOnly } from "~/utils/withGuestOnly";
 
-export const RegisterRestaurant: NextPage = () => {
+export const RegisterRestaurant = withGuestOnly(() => {
   return (
     <Layout title="Register Restaurant">
       <main>
@@ -26,4 +26,4 @@ export const RegisterRestaurant: NextPage = () => {
       </main>
     </Layout>
   );
-};
+});
