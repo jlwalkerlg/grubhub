@@ -4,82 +4,76 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantCommandBuilder
     {
-        private string managerName = "Jordan Walker";
-        private string managerEmail = "walker.jlg@gmail.com";
-        private string managerPassword = "password123";
-        private string restaurantName = "Chow Main";
-        private string restaurantPhoneNumber = "01234 567890";
-        private string addressLine1 = "19 Main Street";
-        private string addressLine2 = null;
-        private string town = "Manchester";
-        private string postcode = "WS12 1WS";
+        private RegisterRestaurantCommand command = new RegisterRestaurantCommand
+        {
+            ManagerName = "Jordan Walker",
+            ManagerEmail = "walker.jlg@gmail.com",
+            ManagerPassword = "password123",
+            RestaurantName = "Chow Main",
+            RestaurantPhoneNumber = "01234 567890",
+            AddressLine1 = "19 Main Street",
+            AddressLine2 = null,
+            Town = "Manchester",
+            Postcode = "WS12 1WS",
+        };
 
         public RegisterRestaurantCommandBuilder SetManagerName(string managerName)
         {
-            this.managerName = managerName;
+            command.ManagerName = managerName;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetManagerEmail(string managerEmail)
         {
-            this.managerEmail = managerEmail;
+            command.ManagerEmail = managerEmail;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetManagerPassword(string managerPassword)
         {
-            this.managerPassword = managerPassword;
+            command.ManagerPassword = managerPassword;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetRestaurantName(string restaurantName)
         {
-            this.restaurantName = restaurantName;
+            command.RestaurantName = restaurantName;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetRestaurantPhoneNumber(string restaurantPhoneNumber)
         {
-            this.restaurantPhoneNumber = restaurantPhoneNumber;
+            command.RestaurantPhoneNumber = restaurantPhoneNumber;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetAddressLine1(string addressLine1)
         {
-            this.addressLine1 = addressLine1;
+            command.AddressLine1 = addressLine1;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetAddressLine2(string addressLine2)
         {
-            this.addressLine2 = addressLine2;
+            command.AddressLine2 = addressLine2;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetTown(string town)
         {
-            this.town = town;
+            command.Town = town;
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetPostcode(string postcode)
         {
-            this.postcode = postcode;
+            command.Postcode = postcode;
             return this;
         }
 
         public RegisterRestaurantCommand Build()
         {
-            return new RegisterRestaurantCommand(
-                managerName,
-                managerEmail,
-                managerPassword,
-                restaurantName,
-                restaurantPhoneNumber,
-                addressLine1,
-                addressLine2,
-                town,
-                postcode);
+            return command;
         }
     }
 }

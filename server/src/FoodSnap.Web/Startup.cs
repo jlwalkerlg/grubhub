@@ -65,7 +65,6 @@ namespace FoodSnap.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.AddPresenters();
             builder.AddErrorPresenters();
             builder.AddGeocoder(Configuration);
             builder.AddMiddleware();

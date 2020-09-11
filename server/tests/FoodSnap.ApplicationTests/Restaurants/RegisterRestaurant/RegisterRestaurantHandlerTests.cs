@@ -41,7 +41,18 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_A_New_Restaurant()
         {
-            var command = new RegisterRestaurantCommandBuilder().Build();
+            var command = new RegisterRestaurantCommand
+            {
+                ManagerName = "Jordan Walker",
+                ManagerEmail = "test@email.com",
+                ManagerPassword = "password123",
+                RestaurantName = "Chow Main",
+                RestaurantPhoneNumber = "01234567890",
+                AddressLine1 = "12 Manchester Road",
+                AddressLine2 = "",
+                Town = "Manchester",
+                Postcode = "MN12 1NM"
+            };
 
             geocoderSpy.Coordinates = new Coordinates(0, 0);
 

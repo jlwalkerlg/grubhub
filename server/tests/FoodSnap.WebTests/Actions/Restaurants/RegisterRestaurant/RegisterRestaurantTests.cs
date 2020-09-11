@@ -1,17 +1,13 @@
 using System.Threading.Tasks;
 using FoodSnap.WebTests.Functional;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantTests : FunctionalTestBase
     {
-        private readonly ITestOutputHelper output;
-
-        public RegisterRestaurantTests(WebAppFactory factory, ITestOutputHelper output) : base(factory)
+        public RegisterRestaurantTests(WebAppFactory factory) : base(factory)
         {
-            this.output = output;
         }
 
         [Fact]
@@ -29,8 +25,6 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
                 town = "Manchester",
                 postcode = "MN12 1NM",
             });
-
-            output.WriteLine(response.Content.ReadAsStringAsync().Result);
 
             response.EnsureSuccessStatusCode();
         }
