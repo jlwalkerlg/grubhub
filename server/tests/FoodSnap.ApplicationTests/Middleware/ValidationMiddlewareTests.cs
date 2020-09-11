@@ -31,9 +31,8 @@ namespace FoodSnap.ApplicationTests.Middleware
         [Fact]
         public async Task It_Returns_A_Validation_Error_If_Validation_Fails()
         {
-            validatorSpy.Result = Result.Fail(
-                new ValidationError(
-                    new Dictionary<string, IValidationFailure>()));
+            var error = Error.ValidationError(new Dictionary<string, string>());
+            validatorSpy.Result = Result.Fail(error);
 
             RequestHandlerDelegate<Result> next = () => Task.FromResult(Result.Ok());
 
@@ -43,7 +42,7 @@ namespace FoodSnap.ApplicationTests.Middleware
                 next);
 
             Assert.False(result.IsSuccess);
-            Assert.Same(validatorSpy.Result.Error, result.Error);
+            Assert.Same(error, result.Error);
         }
 
         [Fact]

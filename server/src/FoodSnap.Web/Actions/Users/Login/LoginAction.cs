@@ -35,12 +35,18 @@ namespace FoodSnap.Web.Actions.Users.Login
 
             if (user is null || !hasher.CheckMatch(request.Password, user.Password))
             {
-                return BadRequest(new ErrorEnvelope("Invalid credentials."));
+                return BadRequest(new ErrorEnvelope
+                {
+                    Message = "Invalid credentials.",
+                });
             }
 
             authenticator.SignIn(user);
 
-            return Ok(new DataEnvelope(data));
+            return Ok(new DataEnvelope
+            {
+                Data = data,
+            });
         }
     }
 }

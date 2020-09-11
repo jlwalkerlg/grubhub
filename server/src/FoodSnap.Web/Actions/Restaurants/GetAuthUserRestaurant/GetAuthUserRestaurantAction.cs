@@ -31,7 +31,10 @@ namespace FoodSnap.Web.Actions.Restaurants.GetAuthUserRestaurant
             var query = new GetRestaurantByManagerIdQuery(id.Value);
             var restaurant = (await mediator.Send(query)).Value;
 
-            return Ok(new DataEnvelope(restaurant));
+            return Ok(new DataEnvelope
+            {
+                Data = restaurant,
+            });
         }
     }
 }

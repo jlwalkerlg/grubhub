@@ -23,14 +23,14 @@ namespace FoodSnap.Application.Validation
                 return Result.Ok();
             }
 
-            var failures = new Dictionary<string, IValidationFailure>();
+            var errors = new Dictionary<string, string>();
 
             foreach (var error in result.Errors)
             {
-                failures.Add(error.PropertyName, (IValidationFailure)error.CustomState);
+                errors.Add(error.PropertyName, error.ErrorMessage);
             }
 
-            return Result.Fail(new ValidationError(failures));
+            return Result.Fail(Error.ValidationError(errors));
         }
     }
 }

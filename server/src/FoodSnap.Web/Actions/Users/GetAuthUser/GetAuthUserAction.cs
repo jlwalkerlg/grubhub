@@ -39,7 +39,10 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
                 return StatusCode(403);
             }
 
-            return Ok(new DataEnvelope(user));
+            return Ok(new DataEnvelope
+            {
+                Data = user,
+            });
         }
     }
 }

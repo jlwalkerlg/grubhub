@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
-using FoodSnap.Application.Validation;
-using FoodSnap.Application.Validation.Failures;
 using FoodSnap.ApplicationTests.Users;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
@@ -23,10 +21,10 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         }
 
         [Theory]
-        [InlineData(null, typeof(RequiredFailure))]
-        [InlineData("", typeof(RequiredFailure))]
-        [InlineData(" ", typeof(RequiredFailure))]
-        public async Task Disallows_Invalid_Manager_Names(string name, Type failureType)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task Disallows_Invalid_Manager_Names(string name)
         {
             var command = new RegisterRestaurantCommandBuilder()
                 .SetManagerName(name)
@@ -35,19 +33,15 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-
-            var error = result.Error as ValidationError;
-            var failures = error.Failures;
-
-            Assert.IsType(failureType, failures[nameof(command.ManagerName)]);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerName)));
         }
 
         [Theory]
-        [InlineData(null, typeof(RequiredFailure))]
-        [InlineData("", typeof(RequiredFailure))]
-        [InlineData(" ", typeof(RequiredFailure))]
-        [InlineData("blahblahblah", typeof(EmailFailure))]
-        public async Task Disallows_Invalid_Manager_Emails(string email, Type failureType)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("blahblahblah")]
+        public async Task Disallows_Invalid_Manager_Emails(string email)
         {
             var command = new RegisterRestaurantCommandBuilder()
                 .SetManagerEmail(email)
@@ -56,11 +50,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-
-            var error = result.Error as ValidationError;
-            var failures = error.Failures;
-
-            Assert.IsType(failureType, failures[nameof(command.ManagerEmail)]);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerEmail)));
         }
 
         [Fact]
@@ -80,19 +70,15 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-
-            var error = result.Error as ValidationError;
-            var failures = error.Failures;
-
-            Assert.IsType<EmailTakenFailure>(failures[nameof(command.ManagerEmail)]);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerEmail)));
         }
 
         [Theory]
-        [InlineData(null, typeof(RequiredFailure))]
-        [InlineData("", typeof(RequiredFailure))]
-        [InlineData(" ", typeof(RequiredFailure))]
-        [InlineData("1234567", typeof(MinLengthFailure))]
-        public async Task Disallows_Invalid_Manager_Passwords(string password, Type failureType)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("1234567")]
+        public async Task Disallows_Invalid_Manager_Passwords(string password)
         {
             var command = new RegisterRestaurantCommandBuilder()
                 .SetManagerPassword(password)
@@ -101,18 +87,14 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-
-            var error = result.Error as ValidationError;
-            var failures = error.Failures;
-
-            Assert.IsType(failureType, failures[nameof(command.ManagerPassword)]);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerPassword)));
         }
 
         [Theory]
-        [InlineData(null, typeof(RequiredFailure))]
-        [InlineData("", typeof(RequiredFailure))]
-        [InlineData(" ", typeof(RequiredFailure))]
-        public async Task Disallows_Invalid_Restaurant_Names(string name, Type failureType)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task Disallows_Invalid_Restaurant_Names(string name)
         {
             var command = new RegisterRestaurantCommandBuilder()
                 .SetRestaurantName(name)
@@ -121,19 +103,15 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-
-            var error = result.Error as ValidationError;
-            var failures = error.Failures;
-
-            Assert.IsType(failureType, failures[nameof(command.RestaurantName)]);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantName)));
         }
 
         [Theory]
-        [InlineData(null, typeof(RequiredFailure))]
-        [InlineData("", typeof(RequiredFailure))]
-        [InlineData(" ", typeof(RequiredFailure))]
-        [InlineData("1352314", typeof(PhoneNumberFailure))]
-        public async Task Disallows_Invalid_Restaurant_Phone_Numbers(string number, Type failureType)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("1352314")]
+        public async Task Disallows_Invalid_Restaurant_Phone_Numbers(string number)
         {
             var command = new RegisterRestaurantCommandBuilder()
                 .SetRestaurantPhoneNumber(number)
@@ -142,11 +120,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-
-            var error = result.Error as ValidationError;
-            var failures = error.Failures;
-
-            Assert.IsType(failureType, failures[nameof(command.RestaurantPhoneNumber)]);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantPhoneNumber)));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace FoodSnap.WebTests.Doubles
         {
             if (!token.StartsWith("token:"))
             {
-                return Result<string>.Fail(new Error());
+                return Result<string>.Fail(Error.BadRequest("Invalid token."));
             }
 
             if (token.Contains(":expiry:"))

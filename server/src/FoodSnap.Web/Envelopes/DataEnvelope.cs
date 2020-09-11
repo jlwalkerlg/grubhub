@@ -2,11 +2,6 @@
 {
     public class DataEnvelope
     {
-        public DataEnvelope(object data)
-        {
-            Data = data;
-        }
-
-        public object Data { get; }
+        public object Data { get; set; }
     }
 }

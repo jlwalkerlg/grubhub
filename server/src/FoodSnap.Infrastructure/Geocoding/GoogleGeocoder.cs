@@ -32,7 +32,7 @@ namespace FoodSnap.Infrastructure.Geocoding
 
             if (status != "OK")
             {
-                Result.Fail(new Error(status));
+                Result.Fail(Error.ServerError(status));
             }
 
             var result = jobj["results"][0];
