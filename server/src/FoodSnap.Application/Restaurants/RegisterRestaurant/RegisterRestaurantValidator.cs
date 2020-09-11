@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FoodSnap.Application.Users;
 using FoodSnap.Application.Validation;
-using FoodSnap.Application.Validation.Failures;
 
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
@@ -22,7 +21,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 .Required()
                 .Email()
                 .MustAsync(EmailIsUnique)
-                .WithState(x => new EmailTakenFailure("Restaurant manager already registered."));
+                .WithMessage("Restaurant manager is already registered.");
 
             CascadeRuleFor(x => x.ManagerPassword)
                 .Required()

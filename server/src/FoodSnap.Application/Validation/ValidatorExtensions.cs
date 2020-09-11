@@ -1,7 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
 using FluentValidation;
-using FoodSnap.Application.Validation.Failures;
 
 namespace FoodSnap.Application.Validation
 {
@@ -21,35 +20,35 @@ namespace FoodSnap.Application.Validation
         {
             return ruleBuilder
                 .NotEmpty()
-                .WithState(x => new RequiredFailure());
+                .WithMessage("Must not be empty.");
         }
 
         public static IRuleBuilderOptions<T, string> MinLength<T>(this IRuleBuilder<T, string> ruleBuilder, int minLength)
         {
             return ruleBuilder
                 .MinimumLength(minLength)
-                .WithState(x => new MinLengthFailure(minLength));
+                .WithMessage($"Must be at least {minLength} characters long.");
         }
 
         public static IRuleBuilderOptions<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
                 .EmailAddress()
-                .WithState(x => new EmailFailure());
+                .WithMessage("Must be a valid email.");
         }
 
         public static IRuleBuilderOptions<T, string> PhoneNumber<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
                 .Matches(phoneNumberRegex)
-                .WithState(x => new PhoneNumberFailure());
+                .WithMessage("Must be a valid phone number.");
         }
 
         public static IRuleBuilderOptions<T, string> Postcode<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
                 .Matches(postcodeRegex)
-                .WithState(x => new PostcodeFailure());
+                .WithMessage("Must be a valid postcode.");
         }
     }
 }
