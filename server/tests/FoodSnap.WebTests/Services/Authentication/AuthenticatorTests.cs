@@ -8,7 +8,7 @@ namespace FoodSnap.WebTests.Services.Authentication
 {
     public class AuthenticatorTests
     {
-        private readonly Authenticator authenticator;
+        private readonly IAuthenticator authenticator;
         private readonly TokenizerFake tokenizer;
         private readonly CookieBagSpy cookieBagSpy;
 
@@ -23,20 +23,22 @@ namespace FoodSnap.WebTests.Services.Authentication
         }
 
         [Fact]
-        public void It_Gets_The_User_Id()
+        public void It_Gets_The_User_Id_When_Authenticated()
         {
             var id = Guid.NewGuid();
 
             var token = tokenizer.Encode(id.ToString());
             cookieBagSpy.Add("auth_token", token);
 
-            Assert.Equal(id, authenticator.GetUserId());
+            Assert.True(authenticator.IsAuthenticated);
+            Assert.Equal(id, authenticator.UserId);
         }
 
         [Fact]
-        public void It_Returns_Null_For_User_Id_If_Not_Signed_In()
+        public void It_Returns_Empty_User_Id_If_Not_Authenticated()
         {
-            Assert.Null(authenticator.GetUserId());
+            Assert.False(authenticator.IsAuthenticated);
+            Assert.Equal(Guid.Empty, authenticator.UserId);
         }
 
         [Fact]
@@ -57,6 +59,7 @@ namespace FoodSnap.WebTests.Services.Authentication
             var token = cookieData.Value;
             var cookieOptions = cookieData.Options;
 
+            Assert.True(authenticator.IsAuthenticated);
             Assert.Equal(user.Id.ToString(), tokenizer.Decode(token).Value);
             Assert.True(cookieOptions.HttpOnly);
         }
@@ -71,6 +74,7 @@ namespace FoodSnap.WebTests.Services.Authentication
             var cookieData = cookieBagSpy.Deleted["auth_token"];
             var cookieOptions = cookieData.Options;
 
+            Assert.False(authenticator.IsAuthenticated);
             Assert.True(cookieOptions.HttpOnly);
         }
     }

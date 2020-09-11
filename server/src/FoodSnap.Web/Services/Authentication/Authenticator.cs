@@ -17,24 +17,30 @@ namespace FoodSnap.Web.Services.Authentication
             this.cookies = cookies;
         }
 
-        public Guid? GetUserId()
+        public bool IsAuthenticated => GetUserId() != Guid.Empty;
+
+        public Guid UserId => userId ??= GetUserId();
+
+        private Guid? userId = null;
+
+        public Guid GetUserId()
         {
             var token = cookies.Get("auth_token");
 
             if (token == null)
             {
-                return null;
+                return Guid.Empty;
             }
 
             var result = tokenizer.Decode(token);
             if (!result.IsSuccess)
             {
-                return null;
+                return Guid.Empty;
             }
 
             if (!Guid.TryParse(result.Value, out Guid id))
             {
-                return null;
+                return Guid.Empty;
             }
 
             return id;

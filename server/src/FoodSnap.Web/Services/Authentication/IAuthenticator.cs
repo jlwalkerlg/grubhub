@@ -5,7 +5,8 @@ namespace FoodSnap.Web.Services.Authentication
 {
     public interface IAuthenticator
     {
-        Guid? GetUserId();
+        bool IsAuthenticated { get; }
+        Guid UserId { get; }
         void SignIn(UserDto user);
         void SignOut();
     }

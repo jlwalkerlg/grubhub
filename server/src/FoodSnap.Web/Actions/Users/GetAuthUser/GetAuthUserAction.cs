@@ -23,14 +23,12 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
         [HttpGet("/auth/user")]
         public async Task<IActionResult> GetAuthUser()
         {
-            var id = authenticator.GetUserId();
-
-            if (id is null)
+            if (!authenticator.IsAuthenticated)
             {
                 return StatusCode(403);
             }
 
-            var query = new GetUserByIdQuery(id.Value);
+            var query = new GetUserByIdQuery(authenticator.UserId);
 
             var user = (await mediator.Send(query)).Value;
 

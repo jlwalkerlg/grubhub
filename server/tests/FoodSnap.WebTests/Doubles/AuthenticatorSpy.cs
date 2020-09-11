@@ -8,10 +8,9 @@ namespace FoodSnap.WebTests.Doubles
     {
         public UserDto User { get; set; }
 
-        public Guid? GetUserId()
-        {
-            return User?.Id;
-        }
+        public bool IsAuthenticated => User != null;
+
+        public Guid UserId => User.Id;
 
         public void SignIn(UserDto user)
         {

@@ -21,15 +21,12 @@ namespace FoodSnap.Web.Actions.Restaurants.GetAuthUserRestaurant
         [HttpGet("/auth/restaurant/details")]
         public async Task<IActionResult> Execute()
         {
-            // TODO: add IsAuthenticated getter
-            var id = authenticator.GetUserId();
-
-            if (id is null)
+            if (!authenticator.IsAuthenticated)
             {
                 return StatusCode(401);
             }
 
-            var query = new GetRestaurantByManagerIdQuery(id.Value);
+            var query = new GetRestaurantByManagerIdQuery(authenticator.UserId);
             var restaurant = (await mediator.Send(query)).Value;
 
             return Ok(new DataEnvelope
