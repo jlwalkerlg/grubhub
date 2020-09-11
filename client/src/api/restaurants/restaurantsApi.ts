@@ -1,8 +1,6 @@
 import Api from "../Api";
-import { RestaurantDto } from "./RestaurantDto";
-import { DataEnvelope } from "../DataEnvelope";
 
-export interface RegisterRequest {
+export interface RegisterRestaurantCommand {
   managerName: string;
   managerEmail: string;
   managerPassword: string;
@@ -15,12 +13,8 @@ export interface RegisterRequest {
 }
 
 class RestaurantsApi extends Api {
-  public register(request: RegisterRequest) {
-    return this.post<null>("/restaurants/register", request);
-  }
-
-  public getAuthUserRestaurantDetails() {
-    return this.get<DataEnvelope<RestaurantDto>>("/auth/restaurant/details");
+  public register(command: RegisterRestaurantCommand) {
+    return this.post<null>("/restaurants/register", command);
   }
 }
 

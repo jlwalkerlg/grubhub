@@ -2,13 +2,18 @@ import React from "react";
 
 import useClickAwayListener from "~/lib/ClickAwayListener/useClickAwayListener";
 
-interface Props {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputRef?: (ref: HTMLInputElement) => void;
   predictions: Array<{ id: string; description: string }>;
-  onSelect(id: string): void;
-  children: HTMLInputElement;
+  onSelection(id: string): void;
 }
 
-const Autocomplete: React.FC<Props> = ({ predictions, onSelect, children }) => {
+const Autocomplete: React.FC<Props> = ({
+  inputRef: ref,
+  predictions,
+  onSelection,
+  ...inputProps
+}) => {
   const [isOpen, setIsOpen] = React.useState(predictions.length > 0);
   React.useEffect(() => {
     setIsOpen(predictions.length > 0);
@@ -19,7 +24,7 @@ const Autocomplete: React.FC<Props> = ({ predictions, onSelect, children }) => {
   const onButtonClick = React.useRef(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      onSelect(e.currentTarget.dataset.id);
+      onSelection(e.currentTarget.dataset.id);
     }
   ).current;
 
@@ -68,7 +73,7 @@ const Autocomplete: React.FC<Props> = ({ predictions, onSelect, children }) => {
         e.preventDefault();
         e.stopPropagation();
 
-        onSelect(predictions[selectedIndex].id);
+        onSelection(predictions[selectedIndex].id);
       }
     },
     [selectedIndex, predictions]
@@ -134,8 +139,16 @@ const Autocomplete: React.FC<Props> = ({ predictions, onSelect, children }) => {
 
   return (
     <div ref={wrapperRef} className="relative">
-      {/* @ts-ignore */}
-      {React.cloneElement(children, { ref: inputRef })}
+      <input
+        ref={(e) => {
+          inputRef.current = e;
+
+          if (ref) {
+            ref(e);
+          }
+        }}
+        {...inputProps}
+      />
       {isOpen && (
         <ul className="absolute top-100 w-full rounded-lg shadow">
           {predictions.map((x, index) => {

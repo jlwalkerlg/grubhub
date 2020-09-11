@@ -1,41 +1,43 @@
-import React, { FC, FormEvent, SyntheticEvent, KeyboardEvent } from "react";
+import React from "react";
 
-import { FormComponent } from "~/lib/Form/useFormComponent";
 import { AddressSearchResult } from "~/lib/AddressSearch/AddressSearcher";
-import FormError from "~/components/FormError/FormError";
 import Autocomplete from "~/components/Autocomplete/Autocomplete";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
+import { UseFormMethods } from "react-hook-form";
 
-export interface Props {
-  isSubmitting: boolean;
-  addressSearchResults: AddressSearchResult[];
-  onSelectAddress(id: string): void;
-  managerName: FormComponent;
-  managerEmail: FormComponent;
-  managerPassword: FormComponent;
-  restaurantName: FormComponent;
-  restaurantPhoneNumber: FormComponent;
-  addressLine1: FormComponent;
-  addressLine2: FormComponent;
-  town: FormComponent;
-  postCode: FormComponent;
-  step: number;
-  canAdvance: boolean;
-  onAdvanceStep(e: SyntheticEvent): void;
-  onBackStep(e: SyntheticEvent): void;
-  onSubmit(e: FormEvent): void;
-  onFormKeydown(e: KeyboardEvent): void;
+export interface StepOne {
+  managerName: string;
+  managerEmail: string;
+  managerPassword: string;
 }
 
-const FirstStep: FC<Props> = ({
-  managerName,
-  managerEmail,
-  managerPassword,
-  canAdvance,
-  onAdvanceStep,
-}) => {
+export interface StepTwo {
+  restaurantName: string;
+  restaurantPhoneNumber: string;
+}
+
+export interface StepThree {
+  addressLine1: string;
+  addressLine2: string;
+  town: string;
+  postCode: string;
+}
+
+export interface Props {
+  step: number;
+  step1: UseFormMethods<StepOne>;
+  step2: UseFormMethods<StepTwo>;
+  step3: UseFormMethods<StepThree>;
+  addressSearchResults: AddressSearchResult[];
+  onSelectAddress(id: string): void;
+  advanceStep(): void;
+  backStep(): void;
+  onSubmit(): void;
+}
+
+const FirstStep: React.FC<Props> = ({ step1: form, advanceStep }) => {
   return (
-    <div>
+    <form onSubmit={form.handleSubmit(advanceStep)}>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
         Manager Details
       </p>
@@ -45,14 +47,17 @@ const FirstStep: FC<Props> = ({
           Manager Name <span className="text-primary">*</span>
         </label>
         <input
-          {...managerName.props}
+          ref={form.register}
           autoFocus
           className="input"
           type="text"
           name="managerName"
           id="managerName"
+          data-invalid={!!form.errors.managerName}
         />
-        <FormError component={managerName} className="mt-1" />
+        {form.errors.managerName && (
+          <p className="form-error mt-1">{form.errors.managerName.message}</p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -60,14 +65,17 @@ const FirstStep: FC<Props> = ({
           Manager Email <span className="text-primary">*</span>
         </label>
         <input
-          {...managerEmail.props}
+          ref={form.register}
           className="input"
           type="email"
           name="managerEmail"
           id="managerEmail"
           placeholder="e.g. email@email.com"
+          data-invalid={!!form.errors.managerEmail}
         />
-        <FormError component={managerEmail} className="mt-1" />
+        {form.errors.managerEmail && (
+          <p className="form-error mt-1">{form.errors.managerEmail.message}</p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -75,38 +83,39 @@ const FirstStep: FC<Props> = ({
           Manager Password <span className="text-primary">*</span>
         </label>
         <input
-          {...managerPassword.props}
+          ref={form.register}
           className="input"
           type="password"
           name="managerPassword"
           id="managerPassword"
         />
-        <FormError component={managerPassword} className="mt-1" />
+        {form.errors.managerPassword && (
+          <p className="form-error mt-1">
+            {form.errors.managerPassword.message}
+          </p>
+        )}
       </div>
 
       <div className="mt-8">
         <button
-          type="button"
+          type="submit"
           className="btn btn-primary font-semibold w-full"
-          onClick={onAdvanceStep}
-          disabled={!canAdvance}
+          disabled={!form.formState.isValid}
         >
           Continue
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
-const SecondStep: FC<Props> = ({
-  restaurantName,
-  restaurantPhoneNumber,
-  canAdvance,
-  onAdvanceStep,
-  onBackStep,
+const SecondStep: React.FC<Props> = ({
+  step2: form,
+  advanceStep,
+  backStep,
 }) => {
   return (
-    <div>
+    <form onSubmit={form.handleSubmit(advanceStep)}>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
         Restaurant Details
       </p>
@@ -116,14 +125,19 @@ const SecondStep: FC<Props> = ({
           Name <span className="text-primary">*</span>
         </label>
         <input
-          {...restaurantName.props}
+          ref={form.register}
           autoFocus
           className="input"
           type="text"
           name="restaurantName"
           id="restaurantName"
+          data-invalid={!!form.errors.restaurantName}
         />
-        <FormError component={restaurantName} className="mt-1" />
+        {form.errors.restaurantName && (
+          <p className="form-error mt-1">
+            {form.errors.restaurantName.message}
+          </p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -131,132 +145,26 @@ const SecondStep: FC<Props> = ({
           Phone Number <span className="text-primary">*</span>
         </label>
         <input
-          {...restaurantPhoneNumber.props}
+          ref={form.register}
           className="input"
           type="tel"
           name="restaurantPhoneNumber"
           id="restaurantPhoneNumber"
           placeholder="e.g. 01234 567890"
+          data-invalid={!!form.errors.restaurantPhoneNumber}
         />
-        <FormError component={restaurantPhoneNumber} className="mt-1" />
+        {form.errors.restaurantPhoneNumber && (
+          <p className="form-error mt-1">
+            {form.errors.restaurantPhoneNumber.message}
+          </p>
+        )}
       </div>
 
       <div className="mt-8">
         <button
           type="button"
           className="btn btn-outline-primary font-semibold w-full"
-          onClick={onBackStep}
-        >
-          Back
-        </button>
-      </div>
-
-      <div className="mt-3">
-        <button
-          type="button"
-          className="btn btn-primary font-semibold w-full"
-          onClick={onAdvanceStep}
-          disabled={!canAdvance}
-        >
-          Continue
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const LastStep: FC<Props> = ({
-  isSubmitting,
-  addressSearchResults,
-  onSelectAddress,
-  addressLine1,
-  addressLine2,
-  town,
-  postCode,
-  canAdvance,
-  onBackStep,
-  onSubmit,
-}) => {
-  return (
-    <div>
-      <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
-        Restaurant Address
-      </p>
-
-      <div className="mt-4">
-        <label className="label" htmlFor="addressLine1">
-          Address Line 1 <span className="text-primary">*</span>
-        </label>
-        {/* @ts-ignore */}
-        <Autocomplete
-          predictions={addressSearchResults}
-          onSelect={onSelectAddress}
-        >
-          {/* @ts-ignore */}
-          <input
-            {...addressLine1.props}
-            autoFocus
-            className="input"
-            type="text"
-            name="addressLine1"
-            id="addressLine1"
-            placeholder="e.g. 123 High Street"
-            autoComplete="new-password"
-          />
-        </Autocomplete>
-        <FormError component={addressLine1} className="mt-1" />
-      </div>
-
-      <div className="mt-4">
-        <label className="label" htmlFor="addressLine2">
-          Address Line 2
-        </label>
-        <input
-          {...addressLine2.props}
-          className="input"
-          type="text"
-          name="addressLine2"
-          id="addressLine2"
-        />
-        <FormError component={addressLine2} className="mt-1" />
-      </div>
-
-      <div className="mt-4">
-        <label className="label" htmlFor="town">
-          Town / City <span className="text-primary">*</span>
-        </label>
-        <input
-          {...town.props}
-          className="input"
-          type="text"
-          name="town"
-          id="town"
-          placeholder="e.g. Manchester"
-        />
-        <FormError component={town} className="mt-1" />
-      </div>
-
-      <div className="mt-4">
-        <label className="label" htmlFor="postCode">
-          Post Code <span className="text-primary">*</span>
-        </label>
-        <input
-          {...postCode.props}
-          className="input"
-          type="text"
-          name="postCode"
-          id="postCode"
-          placeholder="e.g. AB12 3CD"
-        />
-        <FormError component={postCode} className="mt-1" />
-      </div>
-
-      <div className="mt-8">
-        <button
-          type="button"
-          className="btn btn-outline-primary font-semibold w-full"
-          onClick={onBackStep}
-          disabled={!canAdvance}
+          onClick={backStep}
         >
           Back
         </button>
@@ -266,34 +174,145 @@ const LastStep: FC<Props> = ({
         <button
           type="submit"
           className="btn btn-primary font-semibold w-full"
-          onClick={onSubmit}
-          disabled={!canAdvance}
+          disabled={!form.formState.isValid}
         >
-          {isSubmitting ? (
+          Continue
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const LastStep: React.FC<Props> = ({
+  addressSearchResults,
+  onSelectAddress,
+  backStep,
+  onSubmit,
+  step3: form,
+}) => {
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
+        Restaurant Address
+      </p>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="addressLine1">
+          Address Line 1 <span className="text-primary">*</span>
+        </label>
+        <Autocomplete
+          inputRef={form.register}
+          predictions={addressSearchResults}
+          onSelection={onSelectAddress}
+          autoFocus
+          className="input"
+          type="text"
+          name="addressLine1"
+          id="addressLine1"
+          placeholder="e.g. 123 High Street"
+          autoComplete="new-password"
+          data-invalid={!!form.errors.addressLine1}
+        ></Autocomplete>
+        {form.errors.addressLine1 && (
+          <p className="form-error mt-1">{form.errors.addressLine1.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="addressLine2">
+          Address Line 2
+        </label>
+        <input
+          ref={form.register}
+          className="input"
+          type="text"
+          name="addressLine2"
+          id="addressLine2"
+          data-invalid={!!form.errors.addressLine2}
+        />
+        {form.errors.addressLine2 && (
+          <p className="form-error mt-1">{form.errors.addressLine2.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="town">
+          Town / City <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register}
+          className="input"
+          type="text"
+          name="town"
+          id="town"
+          placeholder="e.g. Manchester"
+          data-invalid={!!form.errors.town}
+        />
+        {form.errors.town && (
+          <p className="form-error mt-1">{form.errors.town.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="postCode">
+          Post Code <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register}
+          className="input"
+          type="text"
+          name="postCode"
+          id="postCode"
+          placeholder="e.g. AB12 3CD"
+          data-invalid={!!form.errors.postCode}
+        />
+        {form.errors.postCode && (
+          <p className="form-error mt-1">{form.errors.postCode.message}</p>
+        )}
+      </div>
+
+      <div className="mt-8">
+        <button
+          type="button"
+          className="btn btn-outline-primary font-semibold w-full"
+          onClick={backStep}
+        >
+          Back
+        </button>
+      </div>
+
+      <div className="mt-3">
+        <button
+          type="submit"
+          className="btn btn-primary font-semibold w-full"
+          disabled={!form.formState.isValid}
+        >
+          {form.formState.isSubmitting ? (
             <SpinnerIcon className="fill-current h-6 w-6 inline-block animate-spin" />
           ) : (
             <span>Register</span>
           )}
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
-const RegisterRestaurantForm: FC<Props> = (props: Props) => {
-  const { step, onSubmit, onFormKeydown } = props;
+const RegisterRestaurantForm: React.FC<Props> = (props: Props) => {
+  const { step } = props;
 
   return (
-    <form
-      action="/restaurants/register"
-      method="POST"
-      onSubmit={onSubmit}
-      onKeyDown={onFormKeydown}
-    >
-      {step === 1 && <FirstStep {...props} />}
-      {step === 2 && <SecondStep {...props} />}
-      {step === 3 && <LastStep {...props} />}
-    </form>
+    <div>
+      <div className={step !== 1 ? "sr-only" : undefined}>
+        <FirstStep {...props} />
+      </div>
+      <div className={step !== 2 ? "sr-only" : undefined}>
+        <SecondStep {...props} />
+      </div>
+      <div className={step !== 3 ? "sr-only" : undefined}>
+        <LastStep {...props} />
+      </div>
+    </div>
   );
 };
 

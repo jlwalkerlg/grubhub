@@ -1,16 +1,11 @@
-import React, {
-  FC,
-  FormEvent,
-  useState,
-  SyntheticEvent,
-  useEffect,
-  KeyboardEvent,
-} from "react";
+import React from "react";
 import router from "next/router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-import restaurantsApi from "~/api/restaurants/restaurantsApi";
+import restaurantsApi, {
+  RegisterRestaurantCommand,
+} from "~/api/restaurants/restaurantsApi";
 
 import {
   RequiredRule,
@@ -18,110 +13,121 @@ import {
   EmailRule,
   PhoneRule,
   PostCodeRule,
-} from "~/lib/Form/Rule";
-import { useFormComponent } from "~/lib/Form/useFormComponent";
-import useCompositeForm from "~/lib/Form/useCompositeForm";
+  combineRules,
+} from "~/lib/form/Rule";
 import useAddressSearch from "~/lib/AddressSearch/useAddressSearch";
 
-import RegisterRestaurantForm from "./RegisterRestaurantForm";
+import RegisterRestaurantForm, {
+  StepOne,
+  StepThree,
+  StepTwo,
+} from "./RegisterRestaurantForm";
 import useAuth from "~/store/auth/useAuth";
+import { useForm } from "react-hook-form";
 
 const MySwal = withReactContent(Swal);
 
-const RegisterRestaurantFormController: FC = () => {
+const RegisterRestaurantFormController: React.FC = () => {
   const auth = useAuth();
 
-  const managerName = useFormComponent("", [new RequiredRule()]);
-  const managerEmail = useFormComponent("", [
-    new RequiredRule(),
-    new EmailRule(),
-  ]);
-  const managerPassword = useFormComponent("", [
-    new RequiredRule(),
-    new PasswordRule(),
-  ]);
-  const restaurantName = useFormComponent("", [new RequiredRule()]);
-  const restaurantPhoneNumber = useFormComponent("", [
-    new RequiredRule(),
-    new PhoneRule(),
-  ]);
-  const addressLine1 = useFormComponent("", [new RequiredRule()]);
-  const addressLine2 = useFormComponent("");
-  const town = useFormComponent("", [new RequiredRule()]);
-  const postCode = useFormComponent("", [
-    new RequiredRule(),
-    new PostCodeRule(),
-  ]);
+  const step1 = useForm<StepOne>({
+    defaultValues: {
+      managerName: "",
+      managerEmail: "",
+      managerPassword: "",
+    },
+    mode: "onBlur",
+    reValidateMode: "onChange",
+  });
+
+  const step2 = useForm<StepTwo>({
+    defaultValues: {
+      restaurantName: "",
+      restaurantPhoneNumber: "",
+    },
+    mode: "onBlur",
+    reValidateMode: "onChange",
+  });
+
+  const step3 = useForm<StepThree>({
+    defaultValues: {
+      addressLine1: "",
+      addressLine2: "",
+      town: "",
+      postCode: "",
+    },
+    mode: "onBlur",
+    reValidateMode: "onChange",
+  });
+
+  React.useEffect(() => {
+    step1.register("managerName", {
+      validate: combineRules([new RequiredRule()]),
+    });
+    step1.register("managerEmail", {
+      validate: combineRules([new RequiredRule(), new EmailRule()]),
+    });
+    step1.register("managerPassword", {
+      validate: combineRules([new RequiredRule(), new PasswordRule()]),
+    });
+  }, [step1.register]);
+
+  React.useEffect(() => {
+    step2.register("restaurantName", {
+      validate: combineRules([new RequiredRule()]),
+    });
+    step2.register("restaurantPhoneNumber", {
+      validate: combineRules([new RequiredRule(), new PhoneRule()]),
+    });
+  }, [step2.register]);
+
+  React.useEffect(() => {
+    step3.register("addressLine1", {
+      validate: combineRules([new RequiredRule()]),
+    });
+    step3.register("town", {
+      validate: combineRules([new RequiredRule()]),
+    });
+    step3.register("postCode", {
+      validate: combineRules([new RequiredRule(), new PostCodeRule()]),
+    });
+  }, [step3.register]);
 
   const {
     results: addressSearchResults,
     address,
     onSelectAddress,
-  } = useAddressSearch(addressLine1.value);
+  } = useAddressSearch(step3.watch("addressLine1"));
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (address !== null) {
-      addressLine1.setValue(address.addressLine1);
-      addressLine2.setValue(address.addressLine2);
-      town.setValue(address.town);
-      postCode.setValue(address.postCode);
+      step3.setValue("addressLine1", address.addressLine1);
+      step3.setValue("addressLine2", address.addressLine2);
+      step3.setValue("town", address.town);
+      step3.setValue("postCode", address.postCode);
     }
   }, [address]);
 
-  const [step, setStep] = useState(1);
-
-  const form = useCompositeForm(
-    [
-      { managerName, managerEmail, managerPassword },
-      { restaurantName, restaurantPhoneNumber },
-      { addressLine1, addressLine2, town, postCode },
-    ],
-    step
-  );
+  const [step, setStep] = React.useState(3);
 
   const advanceStep = () => {
-    if (form.validateStep()) {
-      setStep(step + 1);
-    }
+    setStep(step + 1);
   };
 
   const backStep = () => {
     setStep(step - 1);
   };
 
-  const onAdvanceStep = (e: SyntheticEvent) => {
-    e.preventDefault();
+  const onSubmit = async () => {
+    const command: RegisterRestaurantCommand = {
+      ...step1.getValues(),
+      ...step2.getValues(),
+      ...step3.getValues(),
+    };
 
-    advanceStep();
-  };
-
-  const onBackStep = (e: SyntheticEvent) => {
-    e.preventDefault();
-
-    backStep();
-  };
-
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  const submit = async () => {
-    if (!form.isValid) return;
-
-    setIsSubmitting(true);
-
-    const response = await restaurantsApi.register({
-      managerName: managerName.value,
-      managerEmail: managerEmail.value,
-      managerPassword: managerPassword.value,
-      restaurantName: restaurantName.value,
-      restaurantPhoneNumber: restaurantPhoneNumber.value,
-      addressLine1: addressLine1.value,
-      addressLine2: addressLine2.value,
-      town: town.value,
-      postCode: postCode.value,
-    });
+    const response = await restaurantsApi.register(command);
 
     if (!response.isSuccess) {
-      setIsSubmitting(false);
       return;
     }
 
@@ -138,8 +144,8 @@ const RegisterRestaurantFormController: FC = () => {
           showConfirmButton: true,
         }),
         auth.login({
-          email: managerEmail.value,
-          password: managerPassword.value,
+          email: command.managerName,
+          password: command.managerPassword,
         }),
       ]);
 
@@ -149,42 +155,17 @@ const RegisterRestaurantFormController: FC = () => {
     }
   };
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    submit();
-  };
-
-  const onFormKeydown = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      if (step === 3) {
-        submit();
-      } else {
-        advanceStep();
-      }
-    }
-  };
-
   return (
     <RegisterRestaurantForm
-      isSubmitting={isSubmitting}
       addressSearchResults={addressSearchResults}
       onSelectAddress={onSelectAddress}
-      managerName={managerName}
-      managerEmail={managerEmail}
-      managerPassword={managerPassword}
-      restaurantName={restaurantName}
-      restaurantPhoneNumber={restaurantPhoneNumber}
-      addressLine1={addressLine1}
-      addressLine2={addressLine2}
-      town={town}
-      postCode={postCode}
       step={step}
-      canAdvance={!isSubmitting && form.isStepValid}
-      onAdvanceStep={onAdvanceStep}
-      onBackStep={onBackStep}
+      step1={step1}
+      step2={step2}
+      step3={step3}
+      advanceStep={advanceStep}
+      backStep={backStep}
       onSubmit={onSubmit}
-      onFormKeydown={onFormKeydown}
     />
   );
 };
