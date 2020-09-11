@@ -137,16 +137,30 @@ const RegisterRestaurantFormController: React.FC = () => {
       setError(result.error.message);
 
       if (result.error.isValidationError) {
+        let invalidStep = 3;
+
         for (const field in result.error.errors) {
           if (
             Object.prototype.hasOwnProperty.call(result.error.errors, field)
           ) {
             const message = result.error.errors[field];
 
-            step1.setError(field as keyof StepOne, { message });
-            step2.setError(field as keyof StepTwo, { message });
-            step3.setError(field as keyof StepThree, { message });
+            if (Object.keys(step1.getValues()).includes(field)) {
+              invalidStep = 1;
+              step1.setError(field as keyof StepOne, { message });
+            } else if (Object.keys(step2.getValues()).includes(field)) {
+              invalidStep = Math.min(invalidStep, 2);
+              step2.setError(field as keyof StepTwo, { message });
+            } else if (Object.keys(step3.getValues()).includes(field)) {
+              step3.setError(field as keyof StepThree, { message });
+            }
           }
+        }
+
+        if (invalidStep === 1) {
+          setStep(1);
+        } else if (invalidStep === 2) {
+          setStep(2);
         }
       }
 
