@@ -125,24 +125,28 @@ const RegisterRestaurantFormController: FC = () => {
       return;
     }
 
-    await Promise.all([
-      MySwal.fire({
-        title: <p>Thanks For Registering!</p>,
-        text:
-          "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
-        icon: "success",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        showConfirmButton: true,
-      }),
-      auth.login({
-        email: managerEmail.value,
-        password: managerPassword.value,
-      }),
-    ]);
+    try {
+      await Promise.all([
+        MySwal.fire({
+          title: <p>Thanks For Registering!</p>,
+          text:
+            "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
+          icon: "success",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+          showConfirmButton: true,
+        }),
+        auth.login({
+          email: managerEmail.value,
+          password: managerPassword.value,
+        }),
+      ]);
 
-    router.push("/dashboard");
+      router.push("/dashboard");
+    } catch (e) {
+      router.push("/login");
+    }
   };
 
   const onSubmit = async (e: FormEvent) => {

@@ -1,5 +1,5 @@
-import { User } from "./User";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { UserDto } from "~/api/users/UserDto";
 
 export const LOGIN = "AUTH_LOGIN";
 export const LOGOUT = "AUTH_LOGOUT";
@@ -7,7 +7,7 @@ export const LOGOUT = "AUTH_LOGOUT";
 export interface LoginAction {
   type: typeof LOGIN;
   payload: {
-    user: User;
+    user: UserDto;
     restaurant: RestaurantDto;
   };
 }
@@ -19,7 +19,7 @@ export interface LogoutAction {
 type AuthAction = LoginAction | LogoutAction;
 
 export interface AuthState {
-  user: User;
+  user: UserDto;
   restaurant: RestaurantDto;
 }
 

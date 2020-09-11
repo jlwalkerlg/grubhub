@@ -3,7 +3,6 @@ import { NextPageContext } from "next";
 import cookie from "cookie";
 
 import { State, initializeStore } from "~/store/store";
-import { UserRole, User } from "~/store/auth/User";
 import { AuthData } from "~/api/users/userApi";
 
 function redirect(context: NextPageContext, location: string) {
@@ -53,18 +52,11 @@ export class GetInitialPropsBuilder {
         const store = initializeStore();
         state = store.getState();
 
-        const user: User = {
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          role: UserRole[data.user.role],
-        };
-
+        const user = data.user;
         state.auth.user = user;
 
-        if (user.role === UserRole.RestaurantManager) {
+        if (user.role === "RestaurantManager") {
           const restaurant = data.restaurant;
-
           state.auth.restaurant = restaurant;
         }
       }

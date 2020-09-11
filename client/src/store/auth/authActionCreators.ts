@@ -1,9 +1,9 @@
-import { User } from "./User";
 import { LOGIN, LoginAction, LOGOUT, LogoutAction } from "./authReducer";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { UserDto } from "~/api/users/UserDto";
 
 export const createLoginAction = (
-  user: User,
+  user: UserDto,
   restaurant: RestaurantDto
 ): LoginAction => ({
   type: LOGIN,

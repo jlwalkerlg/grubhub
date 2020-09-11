@@ -8,7 +8,6 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
 import useAuth from "~/store/auth/useAuth";
 import { useRouter } from "next/router";
-import { UserRole } from "~/store/auth/User";
 import DashboardIcon from "../Icons/DashboardIcon";
 
 const Nav: FC = () => {
@@ -52,7 +51,7 @@ const Nav: FC = () => {
           {isLoggedIn ? (
             <>
               <div className="hidden md:block ml-auto">
-                {user.role === UserRole.RestaurantManager && (
+                {user.role === "RestaurantManager" && (
                   <Link href="/dashboard">
                     <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
                       Dashboard
@@ -99,7 +98,7 @@ const Nav: FC = () => {
           {isLoggedIn ? (
             <>
               <li>
-                {user.role === UserRole.RestaurantManager && (
+                {user.role === "RestaurantManager" && (
                   <Link href="/dashboard">
                     <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
                       <DashboardIcon className="w-6 h-6 fill-current inline" />

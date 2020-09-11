@@ -8,19 +8,14 @@ import {
   EmailRule,
   PasswordRule,
 } from "~/lib/Form/Rule";
-import { UserRole } from "~/store/auth/User";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import useAuth from "~/store/auth/useAuth";
-
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { LoginRequest } from "~/api/users/userApi";
 
 const LoginForm: FC = () => {
   const auth = useAuth();
 
-  const form = useForm<FormValues>({
+  const form = useForm<LoginRequest>({
     defaultValues: { email: "", password: "" },
     mode: "onBlur",
     reValidateMode: "onChange",
@@ -38,7 +33,7 @@ const LoginForm: FC = () => {
     if (result.isSuccess) {
       const user = result.data;
 
-      if (user.role === UserRole.RestaurantManager) {
+      if (user.role === "RestaurantManager") {
         router.push("/dashboard");
       } else {
         router.push("/");
