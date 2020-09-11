@@ -9,7 +9,7 @@ export interface RegisterRestaurantCommand {
   addressLine1: string;
   addressLine2: string;
   town: string;
-  postCode: string;
+  postcode: string;
 }
 
 class RestaurantsApi extends Api {

@@ -42,10 +42,15 @@ const LoginForm: FC = () => {
       return;
     }
 
+    setError(result.error.message);
+
     if (result.error.isValidationError) {
-      form.errors = result.error.errors;
-    } else {
-      setError(result.error.message);
+      for (const field in result.error.errors) {
+        if (Object.prototype.hasOwnProperty.call(result.error.errors, field)) {
+          const message = result.error.errors[field];
+          form.setError(field as keyof LoginRequest, { message });
+        }
+      }
     }
   });
 

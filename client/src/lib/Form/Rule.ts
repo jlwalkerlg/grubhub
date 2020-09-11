@@ -63,13 +63,13 @@ export class PhoneRule implements Rule {
   }
 }
 
-export class PostCodeRule implements Rule {
+export class PostcodeRule implements Rule {
   private static regex = /^[A-Z]{2}[0-9]{1,2} ?[0-9][A-Z]{2}$/i;
 
   constructor(readonly message: string = "Must be a valid post code.") {}
 
   validate(value: string): string | null {
-    if (!PostCodeRule.regex.test(value)) return this.message;
+    if (!PostcodeRule.regex.test(value)) return this.message;
 
     return null;
   }

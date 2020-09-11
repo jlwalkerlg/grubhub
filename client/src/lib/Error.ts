@@ -16,6 +16,6 @@ export class ApiError extends Error {
     super(response.error);
 
     this.statusCode = response.statusCode;
-    this.errors = response.data?.errors || null;
+    this.errors = response.errors || null;
   }
 }

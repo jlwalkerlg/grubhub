@@ -4,6 +4,7 @@ import { AddressSearchResult } from "~/lib/address-search/AddressSearcher";
 import Autocomplete from "~/components/Autocomplete/Autocomplete";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { UseFormMethods } from "react-hook-form";
+import { ErrorAlert } from "~/components/Alert/Alert";
 
 export interface StepOne {
   managerName: string;
@@ -20,7 +21,7 @@ export interface StepThree {
   addressLine1: string;
   addressLine2: string;
   town: string;
-  postCode: string;
+  postcode: string;
 }
 
 export interface Props {
@@ -28,6 +29,7 @@ export interface Props {
   step1: UseFormMethods<StepOne>;
   step2: UseFormMethods<StepTwo>;
   step3: UseFormMethods<StepThree>;
+  error: string;
   addressSearchResults: AddressSearchResult[];
   onSelectAddress(id: string): void;
   advanceStep(): void;
@@ -254,20 +256,20 @@ const LastStep: React.FC<Props> = ({
       </div>
 
       <div className="mt-4">
-        <label className="label" htmlFor="postCode">
+        <label className="label" htmlFor="postcode">
           Post Code <span className="text-primary">*</span>
         </label>
         <input
           ref={form.register}
           className="input"
           type="text"
-          name="postCode"
-          id="postCode"
+          name="postcode"
+          id="postcode"
           placeholder="e.g. AB12 3CD"
-          data-invalid={!!form.errors.postCode}
+          data-invalid={!!form.errors.postcode}
         />
-        {form.errors.postCode && (
-          <p className="form-error mt-1">{form.errors.postCode.message}</p>
+        {form.errors.postcode && (
+          <p className="form-error mt-1">{form.errors.postcode.message}</p>
         )}
       </div>
 
@@ -299,10 +301,16 @@ const LastStep: React.FC<Props> = ({
 };
 
 const RegisterRestaurantForm: React.FC<Props> = (props: Props) => {
-  const { step } = props;
+  const { step, error } = props;
 
   return (
     <div>
+      {error && (
+        <div className="my-6">
+          <ErrorAlert message={error} />
+        </div>
+      )}
+
       <div className={step !== 1 ? "sr-only" : undefined}>
         <FirstStep {...props} />
       </div>

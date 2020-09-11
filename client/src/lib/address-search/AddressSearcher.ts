@@ -9,7 +9,7 @@ export interface Address {
   addressLine1: string;
   addressLine2: string;
   town: string;
-  postCode: string;
+  postcode: string;
 }
 
 const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
@@ -90,7 +90,7 @@ class AddressSearcher {
           addressLine1: `${streetNumber} ${street}`,
           addressLine2: "",
           town,
-          postCode: postalCode,
+          postcode: postalCode,
         };
 
         resolve(address);

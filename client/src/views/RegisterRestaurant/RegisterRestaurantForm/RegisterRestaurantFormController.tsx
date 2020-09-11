@@ -3,16 +3,14 @@ import router from "next/router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-import restaurantsApi, {
-  RegisterRestaurantCommand,
-} from "~/api/restaurants/restaurantsApi";
+import { RegisterRestaurantCommand } from "~/api/restaurants/restaurantsApi";
 
 import {
   RequiredRule,
   PasswordRule,
   EmailRule,
   PhoneRule,
-  PostCodeRule,
+  PostcodeRule,
   combineRules,
 } from "~/lib/form/Rule";
 import useAddressSearch from "~/lib/address-search/useAddressSearch";
@@ -24,10 +22,14 @@ import RegisterRestaurantForm, {
 } from "./RegisterRestaurantForm";
 import useAuth from "~/store/auth/useAuth";
 import { useForm } from "react-hook-form";
+import useRestaurants from "~/store/restaurants/useRestaurants";
 
 const MySwal = withReactContent(Swal);
 
 const RegisterRestaurantFormController: React.FC = () => {
+  const restaurants = useRestaurants();
+  const [error, setError] = React.useState<string>(null);
+
   const auth = useAuth();
 
   const step1 = useForm<StepOne>({
@@ -54,7 +56,7 @@ const RegisterRestaurantFormController: React.FC = () => {
       addressLine1: "",
       addressLine2: "",
       town: "",
-      postCode: "",
+      postcode: "",
     },
     mode: "onBlur",
     reValidateMode: "onChange",
@@ -88,8 +90,8 @@ const RegisterRestaurantFormController: React.FC = () => {
     step3.register("town", {
       validate: combineRules([new RequiredRule()]),
     });
-    step3.register("postCode", {
-      validate: combineRules([new RequiredRule(), new PostCodeRule()]),
+    step3.register("postcode", {
+      validate: combineRules([new RequiredRule(), new PostcodeRule()]),
     });
   }, [step3.register]);
 
@@ -104,11 +106,11 @@ const RegisterRestaurantFormController: React.FC = () => {
       step3.setValue("addressLine1", address.addressLine1);
       step3.setValue("addressLine2", address.addressLine2);
       step3.setValue("town", address.town);
-      step3.setValue("postCode", address.postCode);
+      step3.setValue("postcode", address.postcode);
     }
   }, [address]);
 
-  const [step, setStep] = React.useState(3);
+  const [step, setStep] = React.useState(1);
 
   const advanceStep = () => {
     setStep(step + 1);
@@ -119,15 +121,35 @@ const RegisterRestaurantFormController: React.FC = () => {
   };
 
   const onSubmit = async () => {
+    if (step3.formState.isSubmitting) return;
+
+    setError(null);
+
     const command: RegisterRestaurantCommand = {
       ...step1.getValues(),
       ...step2.getValues(),
       ...step3.getValues(),
     };
 
-    const response = await restaurantsApi.register(command);
+    const result = await restaurants.register(command);
 
-    if (!response.isSuccess) {
+    if (!result.isSuccess) {
+      setError(result.error.message);
+
+      if (result.error.isValidationError) {
+        for (const field in result.error.errors) {
+          if (
+            Object.prototype.hasOwnProperty.call(result.error.errors, field)
+          ) {
+            const message = result.error.errors[field];
+
+            step1.setError(field as keyof StepOne, { message });
+            step2.setError(field as keyof StepTwo, { message });
+            step3.setError(field as keyof StepThree, { message });
+          }
+        }
+      }
+
       return;
     }
 
@@ -166,6 +188,7 @@ const RegisterRestaurantFormController: React.FC = () => {
       advanceStep={advanceStep}
       backStep={backStep}
       onSubmit={onSubmit}
+      error={error}
     />
   );
 };
