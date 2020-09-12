@@ -19,21 +19,21 @@ namespace FoodSnap.Web.Queries.Restaurants.GetRestaurantByManagerId
         {
             var sql = @"
                 SELECT
-                    ""Id"",
-                    ""ManagerId"",
-                    ""Name"",
-                    ""PhoneNumber"",
-                    ""AddressLine1"",
-                    ""AddressLine2"",
-                    ""Town"",
-                    ""Postcode"",
-                    ""Latitude"",
-                    ""Longitude"",
-                    ""Status""
+                    id,
+                    manager_id,
+                    name,
+                    phone_number,
+                    address_line1,
+                    address_line2,
+                    town,
+                    postcode,
+                    latitude,
+                    longitude,
+                    status
                 FROM
-                    ""Restaurants""
+                    restaurants
                 WHERE
-                    ""ManagerId"" = @ManagerId;";
+                    manager_id = @ManagerId";
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {

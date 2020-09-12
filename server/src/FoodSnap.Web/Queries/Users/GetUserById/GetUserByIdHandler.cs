@@ -20,13 +20,13 @@ namespace FoodSnap.Web.Queries.GetUserById
         {
             var sql = @"
                 SELECT
-                    ""Id"",
-                    ""Name"",
-                    ""Email"",
-                    ""Password"",
-                    ""UserType"" as ""Role""
-                FROM ""Users""
-                WHERE ""Id"" = @Id";
+                    id,
+                    name,
+                    email,
+                    password,
+                    role
+                FROM users
+                WHERE id = @Id";
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {

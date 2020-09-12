@@ -8,7 +8,7 @@ namespace FoodSnap.Domain.Users
         public Email Email { get; }
         public string Password { get; }
 
-        protected abstract UserRole Role { get; }
+        public abstract UserRole Role { get; }
 
         public User(string name, Email email, string password)
         {

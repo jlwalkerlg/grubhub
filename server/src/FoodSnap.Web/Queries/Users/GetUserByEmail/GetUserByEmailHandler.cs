@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Dapper;
 using FoodSnap.Application;
 using FoodSnap.Infrastructure.Persistence;
-using FoodSnap.Web.Actions.Users;
 
 namespace FoodSnap.Web.Queries.Users.GetUserByEmail
 {
@@ -20,17 +19,19 @@ namespace FoodSnap.Web.Queries.Users.GetUserByEmail
         {
             var sql = @"
                 SELECT
-                    ""Id"",
-                    ""Name"",
-                    ""Email"",
-                    ""Password"",
-                    ""UserType"" as ""Role""
-                FROM ""Users""
-                WHERE ""Email"" = @Email";
+                    id,
+                    name,
+                    email,
+                    password,
+                    role
+                FROM users
+                WHERE email = @Email";
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
-                var user = await connection.QueryFirstOrDefaultAsync<UserDto>(sql, new { Email = "walker.jlg@gmail.com" });
+                var user = await connection.QueryFirstOrDefaultAsync<UserDto>(
+                    sql,
+                    new { Email = "walker.jlg@gmail.com" });
 
                 return Result.Ok(user);
             }

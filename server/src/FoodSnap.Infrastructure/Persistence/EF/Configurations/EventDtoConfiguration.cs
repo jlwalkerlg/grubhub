@@ -7,15 +7,16 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
     {
         public void Configure(EntityTypeBuilder<EventDto> builder)
         {
-            builder.ToTable("Events");
+            builder.ToTable("events");
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("id");
 
-            builder.Property(x => x.EventType).IsRequired().HasColumnName("Type");
+            builder.Property(x => x.EventType).IsRequired().HasColumnName("type");
 
-            builder.Property(x => x.Data).IsRequired().HasColumnName("Data").HasColumnType("jsonb");
+            builder.Property(x => x.Data).IsRequired().HasColumnName("data").HasColumnType("jsonb");
 
-            builder.Property(x => x.CreatedAt).IsRequired().HasColumnName("CreatedAt");
+            builder.Property(x => x.CreatedAt).IsRequired().HasColumnName("created_at");
         }
     }
 }

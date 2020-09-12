@@ -22,31 +22,33 @@ namespace FoodSnap.Web.Queries.Auth.GetAuthData
         {
             var sql = @"
                 SELECT
-                    ""Users"".""Id"" AS ""UserId"",
-                    ""Users"".""Name"" AS ""UserName"",
-                    ""Users"".""Email"",
-                    ""Users"".""Password"",
-                    ""Users"".""UserType"",
-                    ""Restaurants"".""Id"" AS ""RestaurantId"",
-                    ""Restaurants"".""Name"" AS ""RestaurantName"",
-                    ""Restaurants"".""PhoneNumber"",
-                    ""Restaurants"".""AddressLine1"",
-                    ""Restaurants"".""AddressLine2"",
-                    ""Restaurants"".""Town"",
-                    ""Restaurants"".""Postcode"",
-                    ""Restaurants"".""Latitude"",
-                    ""Restaurants"".""Longitude"",
-                    ""Restaurants"".""Status""
+                    users.id as UserId,
+                    users.name as UserName,
+                    users.email,
+                    users.password,
+                    users.role,
+                    restaurants.id as RestaurantId,
+                    restaurants.name as RestaurantName,
+                    restaurants.phone_number,
+                    restaurants.address_line1,
+                    restaurants.address_line2,
+                    restaurants.town,
+                    restaurants.postcode,
+                    restaurants.latitude,
+                    restaurants.longitude,
+                    restaurants.status
                 FROM
-                    ""Users""
-                LEFT JOIN ""Restaurants"" ON ""Users"".""Id"" = ""Restaurants"".""ManagerId""
+                    users
+                LEFT JOIN restaurants ON users.id = restaurants.manager_id
                 WHERE
-                    ""Users"".""Email"" = @Email";
+                    users.email = @Email";
             ;
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
-                var row = await connection.QueryFirstOrDefaultAsync<Row>(sql, new { Email = "walker.jlg@gmail.com" });
+                var row = await connection.QueryFirstOrDefaultAsync<Row>(
+                    sql,
+                    new { Email = "walker.jlg@gmail.com" });
 
                 if (row == null)
                 {
@@ -59,7 +61,7 @@ namespace FoodSnap.Web.Queries.Auth.GetAuthData
                     Name = row.UserName,
                     Email = row.Email,
                     Password = row.Password,
-                    Role = row.UserType,
+                    Role = row.Role,
                 };
 
                 RestaurantDto restaurant = null;
@@ -96,7 +98,7 @@ namespace FoodSnap.Web.Queries.Auth.GetAuthData
             public string UserName { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
-            public string UserType { get; set; }
+            public string Role { get; set; }
             public Guid? RestaurantId { get; set; }
             public string RestaurantName { get; set; }
             public string PhoneNumber { get; set; }

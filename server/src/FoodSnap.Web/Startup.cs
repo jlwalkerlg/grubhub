@@ -61,6 +61,8 @@ namespace FoodSnap.Web
             services.AddEntityFramework(Configuration);
 
             services.AddMediatR(typeof(Result).Assembly, typeof(Startup).Assembly);
+
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -98,7 +100,8 @@ namespace FoodSnap.Web
                 using (var scope = app.ApplicationServices.CreateScope())
                 using (var context = scope.ServiceProvider.GetService<AppDbContext>())
                 {
-                    context.Database.EnsureCreated();
+                    // context.Database.EnsureDeleted();
+                    // context.Database.EnsureCreated();
                 }
             }
 
