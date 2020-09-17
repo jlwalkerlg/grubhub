@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Infrastructure.Persistence.EF.Repositories;
-using FoodSnap.InfrstructureTests.Persistence.EF.Repositories.DummyEvent;
 using Xunit;
 
 namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories

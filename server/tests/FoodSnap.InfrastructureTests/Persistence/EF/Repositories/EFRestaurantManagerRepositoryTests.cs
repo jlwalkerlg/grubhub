@@ -5,7 +5,7 @@ using FoodSnap.Domain.Users;
 using FoodSnap.Infrastructure.Persistence.EF.Repositories;
 using Xunit;
 
-namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories.EFRestaurantManagerRepositoryTests
+namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
 {
     public class EFRestaurantManagerRepositoryTests : EFRepositoryTestBase
     {

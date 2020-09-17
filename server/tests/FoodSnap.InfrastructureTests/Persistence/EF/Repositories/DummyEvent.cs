@@ -1,6 +1,6 @@
 using FoodSnap.Application.Events;
 
-namespace FoodSnap.InfrstructureTests.Persistence.EF.Repositories.DummyEvent
+namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
 {
     public class DummyEvent : Event
     {
