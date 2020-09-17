@@ -11,13 +11,16 @@ namespace FoodSnap.Infrastructure.Persistence.EF
     {
         private readonly AppDbContext context;
 
-        public EFUnitOfWork(AppDbContext context)
+        public EFUnitOfWork(
+            AppDbContext context,
+            EFRestaurantRepository restaurantRepository,
+            EFRestaurantManagerRepository restaurantManagerRepository,
+            EFEventRepository eventRepository)
         {
-            RestaurantRepository = new EFRestaurantRepository(context);
-            RestaurantManagerRepository = new EFRestaurantManagerRepository(context);
-            EventRepository = new EFEventRepository(context);
-
             this.context = context;
+            RestaurantRepository = restaurantRepository;
+            RestaurantManagerRepository = restaurantManagerRepository;
+            EventRepository = eventRepository;
         }
 
         public IRestaurantRepository RestaurantRepository { get; }

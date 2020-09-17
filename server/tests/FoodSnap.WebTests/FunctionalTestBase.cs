@@ -25,7 +25,7 @@ namespace FoodSnap.WebTests.Functional
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            appDbContext = scope.ServiceProvider.GetService<AppDbContext>();
+            appDbContext = GetService<AppDbContext>();
             appDbContext.Database.EnsureCreated();
         }
 
@@ -33,6 +33,11 @@ namespace FoodSnap.WebTests.Functional
         {
             appDbContext.Database.EnsureDeleted();
             scope.Dispose();
+        }
+
+        protected T GetService<T>()
+        {
+            return scope.ServiceProvider.GetService<T>();
         }
 
         protected Task<HttpResponseMessage> GetJson(string uri)

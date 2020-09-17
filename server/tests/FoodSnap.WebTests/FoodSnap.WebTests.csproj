@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FoodSnap.Web\FoodSnap.Web.csproj" />
+    <ProjectReference Include="..\FoodSnap.ApplicationTests\FoodSnap.ApplicationTests.csproj" />
   </ItemGroup>
 
 </Project>

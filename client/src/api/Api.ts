@@ -16,7 +16,10 @@ export default class Api {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await Axios.get<T>(url, config);
+      const response = await Axios.get<T>(this.getUrl(url), {
+        ...config,
+        withCredentials: true,
+      });
 
       return new ApiResponse<T>(response);
     } catch (e) {
@@ -30,7 +33,10 @@ export default class Api {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await Axios.post<T>(this.getUrl(url), data, config);
+      const response = await Axios.post<T>(this.getUrl(url), data, {
+        ...config,
+        withCredentials: true,
+      });
 
       return new ApiResponse<T>(response);
     } catch (e) {

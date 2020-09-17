@@ -10,12 +10,12 @@ import {
 } from "~/lib/form/Rule";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import useAuth from "~/store/auth/useAuth";
-import { LoginRequest } from "~/api/users/userApi";
+import { LoginCommand } from "~/api/users/userApi";
 
 const LoginForm: FC = () => {
   const auth = useAuth();
 
-  const form = useForm<LoginRequest>({
+  const form = useForm<LoginCommand>({
     defaultValues: { email: "", password: "" },
     mode: "onBlur",
     reValidateMode: "onChange",
@@ -48,7 +48,7 @@ const LoginForm: FC = () => {
       for (const field in result.error.errors) {
         if (Object.prototype.hasOwnProperty.call(result.error.errors, field)) {
           const message = result.error.errors[field];
-          form.setError(field as keyof LoginRequest, { message });
+          form.setError(field as keyof LoginCommand, { message });
         }
       }
     }

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Text.Json;
 using Autofac;
 using FoodSnap.Application;
+using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Infrastructure.Hashing;
 using FoodSnap.Infrastructure.Persistence;

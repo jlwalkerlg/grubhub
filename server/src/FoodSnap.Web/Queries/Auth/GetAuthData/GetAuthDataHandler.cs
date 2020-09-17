@@ -18,7 +18,7 @@ namespace FoodSnap.Web.Queries.Auth.GetAuthData
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<Result<AuthDataDto>> Handle(GetAuthDataQuery request, CancellationToken cancellationToken)
+        public async Task<Result<AuthDataDto>> Handle(GetAuthDataQuery query, CancellationToken cancellationToken)
         {
             var sql = @"
                 SELECT
@@ -41,14 +41,14 @@ namespace FoodSnap.Web.Queries.Auth.GetAuthData
                     users
                 LEFT JOIN restaurants ON users.id = restaurants.manager_id
                 WHERE
-                    users.email = @Email";
+                    users.Id = @Id";
             ;
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
                 var row = await connection.QueryFirstOrDefaultAsync<Row>(
                     sql,
-                    new { Email = "walker.jlg@gmail.com" });
+                    new { Id = query.Id });
 
                 if (row == null)
                 {

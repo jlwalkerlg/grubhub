@@ -1,5 +1,6 @@
 using System;
-using FoodSnap.Web.Queries.Users;
+using FoodSnap.Application.Services.Authentication;
+using FoodSnap.Domain.Users;
 using FoodSnap.Web.Services.Cookies;
 using FoodSnap.Web.Services.Tokenization;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +47,7 @@ namespace FoodSnap.Web.Services.Authentication
             return id;
         }
 
-        public void SignIn(UserDto user)
+        public void SignIn(User user)
         {
             var expiresIn = DateTimeOffset.UtcNow.AddDays(14);
 

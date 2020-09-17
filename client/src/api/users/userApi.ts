@@ -3,7 +3,7 @@ import { UserDto } from "./UserDto";
 import Api from "../Api";
 import { RestaurantDto } from "../restaurants/RestaurantDto";
 
-export interface LoginRequest {
+export interface LoginCommand {
   email: string;
   password: string;
 }
@@ -14,12 +14,16 @@ export interface AuthData {
 }
 
 class UserApi extends Api {
-  public login(request: LoginRequest) {
-    return this.post<AuthData>("/login", request);
+  public login(request: LoginCommand) {
+    return this.post("/auth/login", request);
   }
 
   public logout() {
-    return this.post("/logout");
+    return this.post("/auth/logout");
+  }
+
+  public getAuthData() {
+    return this.get<AuthData>("/auth/data");
   }
 }
 

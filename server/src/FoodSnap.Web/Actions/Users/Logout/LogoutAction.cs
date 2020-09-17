@@ -1,21 +1,23 @@
-using FoodSnap.Web.Services.Authentication;
+using System.Threading.Tasks;
+using FoodSnap.Application.Users.Logout;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodSnap.Web.Actions.Users.Logout
 {
     public class LogoutAction : Action
     {
-        private readonly IAuthenticator authenticator;
+        private readonly IMediator mediator;
 
-        public LogoutAction(IAuthenticator authenticator)
+        public LogoutAction(IMediator mediator)
         {
-            this.authenticator = authenticator;
+            this.mediator = mediator;
         }
 
-        [HttpPost("/logout")]
-        public IActionResult Execute()
+        [HttpPost("/auth/logout")]
+        public async Task<IActionResult> Execute()
         {
-            authenticator.SignOut();
+            var result = await mediator.Send(new LogoutCommand());
 
             return Ok();
         }

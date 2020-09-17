@@ -1,5 +1,7 @@
 using System;
-using FoodSnap.Web.Queries.Users;
+using FoodSnap.Application.Services.Authentication;
+using FoodSnap.Domain;
+using FoodSnap.Domain.Users;
 using FoodSnap.Web.Services.Authentication;
 using FoodSnap.WebTests.Doubles;
 using Xunit;
@@ -44,14 +46,10 @@ namespace FoodSnap.WebTests.Services.Authentication
         [Fact]
         public void It_Signs_The_User_In()
         {
-            var user = new UserDto
-            {
-                Id = Guid.NewGuid(),
-                Name = "Jordan Walker",
-                Email = "walker.jlg@gmail.com",
-                Password = "password123",
-                Role = "RestaurantManager",
-            };
+            User user = new RestaurantManager(
+                "Jordan Walker",
+                new Email("walker.jlg@gmail.com"),
+                "password123");
 
             authenticator.SignIn(user);
 

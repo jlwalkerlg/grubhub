@@ -1,6 +1,6 @@
+using System.Threading.Tasks;
+using FoodSnap.Application;
 using FoodSnap.Web.Actions.Users.Logout;
-using FoodSnap.Web.Queries.Users;
-using FoodSnap.WebTests.Doubles;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
@@ -8,25 +8,24 @@ namespace FoodSnap.WebTests.Actions.Users.Logout
 {
     public class LogoutActionTests
     {
-        private readonly AuthenticatorSpy authenticatorSpy;
+        private readonly MediatorSpy mediatorSpy;
         private readonly LogoutAction action;
 
         public LogoutActionTests()
         {
-            authenticatorSpy = new AuthenticatorSpy();
+            mediatorSpy = new MediatorSpy();
 
-            action = new LogoutAction(authenticatorSpy);
+            action = new LogoutAction(mediatorSpy);
         }
 
         [Fact]
-        public void It_Signs_The_User_Out()
+        public async Task It_Returns_200_On_Success()
         {
-            authenticatorSpy.User = new UserDto();
+            mediatorSpy.Result = Result.Ok();
 
-            var response = action.Execute() as StatusCodeResult;
+            var result = await action.Execute() as StatusCodeResult;
 
-            Assert.Null(authenticatorSpy.User);
-            Assert.Equal(200, response.StatusCode);
+            Assert.Equal(200, result.StatusCode);
         }
     }
 }

@@ -1,18 +1,18 @@
 using System;
-using FoodSnap.Web.Queries.Users;
-using FoodSnap.Web.Services.Authentication;
+using FoodSnap.Application.Services.Authentication;
+using FoodSnap.Domain.Users;
 
-namespace FoodSnap.WebTests.Doubles
+namespace FoodSnap.ApplicationTests.Doubles
 {
     public class AuthenticatorSpy : IAuthenticator
     {
-        public UserDto User { get; set; }
+        public User User { get; set; }
 
         public bool IsAuthenticated => User != null;
 
-        public Guid UserId => User.Id;
+        public Guid UserId => User?.Id ?? Guid.Empty;
 
-        public void SignIn(UserDto user)
+        public void SignIn(User user)
         {
             User = user;
         }

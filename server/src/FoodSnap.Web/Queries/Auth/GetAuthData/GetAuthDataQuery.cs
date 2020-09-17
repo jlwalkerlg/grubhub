@@ -1,14 +1,15 @@
+using System;
 using FoodSnap.Application;
 
 namespace FoodSnap.Web.Queries.Auth.GetAuthData
 {
     public class GetAuthDataQuery : IRequest<AuthDataDto>
     {
-        public GetAuthDataQuery(string email)
+        public GetAuthDataQuery(Guid id)
         {
-            Email = email;
+            Id = id;
         }
 
-        public string Email { get; }
+        public Guid Id { get; }
     }
 }

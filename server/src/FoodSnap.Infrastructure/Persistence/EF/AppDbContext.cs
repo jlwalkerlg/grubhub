@@ -14,6 +14,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF
         public DbSet<Restaurant> Restaurants { get; protected set; }
         public DbSet<EventDto> Events { get; protected set; }
         public DbSet<RestaurantManager> RestaurantManagers { get; protected set; }
+        public DbSet<User> Users { get; protected set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
