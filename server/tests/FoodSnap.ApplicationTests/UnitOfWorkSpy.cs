@@ -11,13 +11,16 @@ namespace FoodSnap.ApplicationTests
 {
     public class UnitOfWorkSpy : IUnitOfWork
     {
-        public IRestaurantRepository RestaurantRepository => RestaurantRepositorySpy;
+        public IRestaurantRepository Restaurants => RestaurantRepositorySpy;
         public RestaurantRepositorySpy RestaurantRepositorySpy { get; }
 
-        public IRestaurantManagerRepository RestaurantManagerRepository => RestaurantManagerRepositorySpy;
+        public IRestaurantManagerRepository RestaurantManagers => RestaurantManagerRepositorySpy;
         public RestaurantManagerRepositorySpy RestaurantManagerRepositorySpy { get; }
 
-        public IEventRepository EventRepository => EventRepositorySpy;
+        public IUserRepository Users => UserRepositorySpy;
+        public UserRepositorySpy UserRepositorySpy { get; }
+
+        public IEventRepository Events => EventRepositorySpy;
         public EventRepositorySpy EventRepositorySpy { get; }
 
         public bool Commited { get; private set; } = false;
@@ -26,6 +29,7 @@ namespace FoodSnap.ApplicationTests
         {
             RestaurantRepositorySpy = new RestaurantRepositorySpy();
             RestaurantManagerRepositorySpy = new RestaurantManagerRepositorySpy();
+            UserRepositorySpy = new UserRepositorySpy();
             EventRepositorySpy = new EventRepositorySpy();
         }
 

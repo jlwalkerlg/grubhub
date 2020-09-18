@@ -1,7 +1,5 @@
-using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
-using FoodSnap.ApplicationTests.Users;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
 using Xunit;
@@ -10,14 +8,14 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantValidatorTests
     {
-        private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
+        private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly RegisterRestaurantValidator validator;
 
         public RegisterRestaurantValidatorTests()
         {
-            restaurantManagerRepositorySpy = new RestaurantManagerRepositorySpy();
+            unitOfWorkSpy = new UnitOfWorkSpy();
 
-            validator = new RegisterRestaurantValidator(restaurantManagerRepositorySpy);
+            validator = new RegisterRestaurantValidator(unitOfWorkSpy);
         }
 
         [Theory]
@@ -61,7 +59,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                 new Email("wong@test.com"),
                 "password123");
 
-            await restaurantManagerRepositorySpy.Add(manager);
+            await unitOfWorkSpy.RestaurantManagers.Add(manager);
 
             var command = new RegisterRestaurantCommandBuilder()
                 .SetManagerEmail(manager.Email.Address)

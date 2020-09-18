@@ -7,23 +7,23 @@ namespace FoodSnap.Application.Users.Login
 {
     public class LoginHandler : IRequestHandler<LoginCommand>
     {
-        private readonly IUserRepository repository;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
         private readonly IHasher hasher;
 
         public LoginHandler(
-            IUserRepository repository,
+            IUnitOfWork unitOfWork,
             IAuthenticator authenticator,
             IHasher hasher)
         {
-            this.repository = repository;
+            this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
             this.hasher = hasher;
         }
 
         public async Task<Result> Handle(LoginCommand command, CancellationToken cancellationToken)
         {
-            var user = await repository.GetByEmail(command.Email);
+            var user = await unitOfWork.Users.GetByEmail(command.Email);
 
             if (user == null)
             {

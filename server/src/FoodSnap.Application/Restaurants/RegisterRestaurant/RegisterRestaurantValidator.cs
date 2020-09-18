@@ -1,18 +1,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using FoodSnap.Application.Users;
 using FoodSnap.Application.Validation;
 
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantValidator : FluentValidator<RegisterRestaurantCommand>
     {
-        private readonly IRestaurantManagerRepository restaurantManagerRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public RegisterRestaurantValidator(IRestaurantManagerRepository restaurantManagerRepository)
+        public RegisterRestaurantValidator(IUnitOfWork unitOfWork)
         {
-            this.restaurantManagerRepository = restaurantManagerRepository;
+            this.unitOfWork = unitOfWork;
 
             CascadeRuleFor(x => x.ManagerName)
                 .Required();
@@ -47,7 +46,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
         private async Task<bool> EmailIsUnique(string email, CancellationToken cancellationToken)
         {
-            return !(await restaurantManagerRepository.EmailExists(email));
+            return !(await unitOfWork.RestaurantManagers.EmailExists(email));
         }
     }
 }

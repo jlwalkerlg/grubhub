@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Users;
 using FoodSnap.Domain.Users;
 
-namespace FoodSnap.ApplicationTests.Doubles
+namespace FoodSnap.ApplicationTests.Users
 {
     public class UserRepositorySpy : IUserRepository
     {

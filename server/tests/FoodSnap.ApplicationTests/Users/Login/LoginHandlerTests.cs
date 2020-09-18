@@ -11,20 +11,18 @@ namespace FoodSnap.ApplicationTests.Users.Login
     public class LoginHandlerTests
     {
         private readonly HasherFake hasherFake;
-        private readonly UserRepositorySpy userRepositorySpy;
+        private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly AuthenticatorSpy authenticatorSpy;
         private readonly LoginHandler handler;
 
         public LoginHandlerTests()
         {
             hasherFake = new HasherFake();
-
-            userRepositorySpy = new UserRepositorySpy();
-
+            unitOfWorkSpy = new UnitOfWorkSpy();
             authenticatorSpy = new AuthenticatorSpy();
 
             handler = new LoginHandler(
-                userRepositorySpy,
+                unitOfWorkSpy,
                 authenticatorSpy,
                 hasherFake);
         }
@@ -37,7 +35,7 @@ namespace FoodSnap.ApplicationTests.Users.Login
                 new Email("walker.jlg@gmail.com"),
                 hasherFake.Hash("password123"));
 
-            userRepositorySpy.Users.Add(user);
+            unitOfWorkSpy.UserRepositorySpy.Users.Add(user);
 
             var command = new LoginCommand
             {
@@ -71,7 +69,7 @@ namespace FoodSnap.ApplicationTests.Users.Login
                 new Email("walker.jlg@gmail.com"),
                 hasherFake.Hash("password123"));
 
-            userRepositorySpy.Users.Add(user);
+            unitOfWorkSpy.UserRepositorySpy.Users.Add(user);
 
             var command = new LoginCommand
             {

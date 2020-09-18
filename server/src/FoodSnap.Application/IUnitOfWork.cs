@@ -7,9 +7,10 @@ namespace FoodSnap.Application
 {
     public interface IUnitOfWork
     {
-        IRestaurantRepository RestaurantRepository { get; }
-        IRestaurantManagerRepository RestaurantManagerRepository { get; }
-        IEventRepository EventRepository { get; }
+        IRestaurantRepository Restaurants { get; }
+        IRestaurantManagerRepository RestaurantManagers { get; }
+        IUserRepository Users { get; }
+        IEventRepository Events { get; }
 
         Task Commit();
     }
