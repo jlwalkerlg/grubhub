@@ -40,8 +40,6 @@ namespace FoodSnap.Web
                     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                 });
 
-            System.Console.WriteLine(WebConfig.CorsOrigins);
-
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>

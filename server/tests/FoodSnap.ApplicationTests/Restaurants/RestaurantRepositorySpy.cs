@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants;
 using FoodSnap.Domain.Restaurants;
@@ -13,6 +15,11 @@ namespace FoodSnap.ApplicationTests.Restaurants
         {
             Restaurants.Add(restaurant);
             return Task.CompletedTask;
+        }
+
+        public Task<Restaurant> GetById(Guid id)
+        {
+            return Task.FromResult(Restaurants.FirstOrDefault(x => x.Id == id));
         }
     }
 }

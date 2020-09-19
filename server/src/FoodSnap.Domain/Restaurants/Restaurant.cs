@@ -9,9 +9,14 @@ namespace FoodSnap.Domain.Restaurants
         public PhoneNumber PhoneNumber { get; }
         public Address Address { get; }
         public Coordinates Coordinates { get; }
-        public RestaurantApplicationStatus Status { get; }
+        public RestaurantApplicationStatus Status { get; private set; }
 
-        public Restaurant(Guid managerId, string name, PhoneNumber phoneNumber, Address address, Coordinates coordinates)
+        public Restaurant(
+            Guid managerId,
+            string name,
+            PhoneNumber phoneNumber,
+            Address address,
+            Coordinates coordinates)
         {
             if (managerId == Guid.Empty)
             {
@@ -44,6 +49,11 @@ namespace FoodSnap.Domain.Restaurants
             Address = address;
             Coordinates = coordinates;
             Status = RestaurantApplicationStatus.Pending;
+        }
+
+        public void AcceptApplication()
+        {
+            Status = RestaurantApplicationStatus.Accepted;
         }
 
         // EF Core

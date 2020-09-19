@@ -25,7 +25,7 @@ namespace FoodSnap.Domain
 
             var other = obj as Entity;
 
-            return (Id != other.Id);
+            return (Id == other.Id);
         }
 
         public override int GetHashCode()

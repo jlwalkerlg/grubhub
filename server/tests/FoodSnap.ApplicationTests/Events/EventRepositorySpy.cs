@@ -13,5 +13,10 @@ namespace FoodSnap.ApplicationTests.Events
             Events.Add(ev);
             return Task.CompletedTask;
         }
+
+        public Task<List<Event>> All()
+        {
+            return Task.FromResult(Events);
+        }
     }
 }

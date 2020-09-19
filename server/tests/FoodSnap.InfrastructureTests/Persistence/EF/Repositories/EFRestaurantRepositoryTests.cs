@@ -48,13 +48,37 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
 
             var found = context.Restaurants.First();
 
-            Assert.Equal(restaurant.Id, found.Id);
-            Assert.Equal(restaurant.ManagerId, found.ManagerId);
-            Assert.Equal(restaurant.Name, found.Name);
-            Assert.Equal(restaurant.PhoneNumber, found.PhoneNumber);
-            Assert.Equal(restaurant.Address, found.Address);
-            Assert.Equal(restaurant.Coordinates, found.Coordinates);
-            Assert.Equal(restaurant.Status, found.Status);
+            Assert.Equal(restaurant, found);
+        }
+
+        [Fact]
+        public async Task It_Gets_A_Restaurant_By_Id()
+        {
+            var manager = new RestaurantManager(
+                "Mr Chow",
+                new Email("mr@chow.com"),
+                "wongkarwai");
+
+            var restaurant = new Restaurant(
+                manager.Id,
+                "Chow Main",
+                new PhoneNumber("01234 567890"),
+                new Address(
+                    "19 Gold Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")
+                ),
+                new Coordinates(0, 0)
+            );
+
+            context.RestaurantManagers.Add(manager);
+            context.Restaurants.Add(restaurant);
+            FlushContext();
+
+            var found = await restaurantRepository.GetById(restaurant.Id);
+
+            Assert.True(restaurant.Equals(found));
         }
     }
 }

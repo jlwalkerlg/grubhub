@@ -24,6 +24,7 @@ namespace FoodSnap.Application
         public enum ErrorType
         {
             BadRequest,
+            NotFound,
             ValidationError,
             ServerError,
         }
@@ -31,6 +32,11 @@ namespace FoodSnap.Application
         public static Error BadRequest(string message)
         {
             return new Error(ErrorType.BadRequest, message);
+        }
+
+        public static Error NotFound(string message)
+        {
+            return new Error(ErrorType.NotFound, message);
         }
 
         public static Error ValidationError(Dictionary<string, string> errors)

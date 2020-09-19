@@ -25,6 +25,25 @@ namespace FoodSnap.DomainTests.Restaurants
         }
 
         [Fact]
+        public void Status_Changes_To_Accepted_When_Application_Is_Accepted()
+        {
+            var restaurant = new Restaurant(
+                Guid.NewGuid(),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address(
+                    "12 Manchester Road",
+                    "",
+                    "Manchester",
+                    new Postcode("WS12 1WS")),
+                new Coordinates(1, 1));
+
+            restaurant.AcceptApplication();
+
+            Assert.Equal(RestaurantApplicationStatus.Accepted, restaurant.Status);
+        }
+
+        [Fact]
         public void Disallows_Empty_Manager_Ids()
         {
             var name = "Chow Main";
