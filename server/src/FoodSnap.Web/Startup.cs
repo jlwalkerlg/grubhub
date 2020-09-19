@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Text.Json;
 using Autofac;
 using FoodSnap.Application;
@@ -24,13 +23,15 @@ namespace FoodSnap.Web
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            configuration.Bind(WebConfig);
         }
 
-        public IConfiguration Configuration { get; }
+        public WebConfig WebConfig { get; } = new WebConfig();
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(WebConfig);
+
             services
                 .AddControllers()
                 .AddJsonOptions(options =>
@@ -39,18 +40,14 @@ namespace FoodSnap.Web
                     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                 });
 
+            System.Console.WriteLine(WebConfig.CorsOrigins);
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    var origins = Configuration
-                        .GetSection("CorsOrigins")
-                        .GetChildren()
-                        .Select(x => x.Value)
-                        .ToArray();
-
                     builder
-                        .WithOrigins(origins)
+                        .WithOrigins(WebConfig.CorsOrigins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -59,7 +56,7 @@ namespace FoodSnap.Web
 
             services.AddHttpContextAccessor();
 
-            services.AddEntityFramework(Configuration);
+            services.AddEntityFramework(WebConfig);
 
             services.AddMediatR(typeof(Result).Assembly, typeof(Startup).Assembly);
 
@@ -68,10 +65,10 @@ namespace FoodSnap.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.AddGeocoder(Configuration);
+            builder.AddGeocoder(WebConfig);
             builder.AddMiddleware();
 
-            builder.Register(ctx => new DbConnectionFactory(Configuration["DbConnectionString"]))
+            builder.Register(ctx => new DbConnectionFactory(WebConfig.DbConnectionString))
                 .As<IDbConnectionFactory>()
                 .SingleInstance();
 
@@ -79,7 +76,7 @@ namespace FoodSnap.Web
                 .As<IHasher>()
                 .SingleInstance();
 
-            builder.Register(ctx => new JWTTokenizer(Configuration["JWTSecret"]))
+            builder.Register(ctx => new JWTTokenizer(WebConfig.JWTSecret))
                 .As<ITokenizer>()
                 .SingleInstance();
 

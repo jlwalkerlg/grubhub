@@ -4,9 +4,9 @@ namespace FoodSnap.InfrastructureTests
 {
     public static class ConfigurationFactory
     {
-        private static IConfigurationRoot configuration;
+        private static IConfiguration configuration;
 
-        public static IConfigurationRoot Make()
+        public static IConfiguration Make()
         {
             if (configuration == null)
             {
