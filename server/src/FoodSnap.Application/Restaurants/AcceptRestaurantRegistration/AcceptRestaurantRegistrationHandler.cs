@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using FoodSnap.Domain.Menus;
 
 namespace FoodSnap.Application.Restaurants.AcceptRestaurantRegistration
 {
@@ -24,6 +25,9 @@ namespace FoodSnap.Application.Restaurants.AcceptRestaurantRegistration
             }
 
             restaurant.AcceptApplication();
+
+            var menu = new Menu(restaurant.Id);
+            await unitOfWork.Menus.Add(menu);
 
             var @event = new RestaurantAcceptedEvent(restaurant.Id);
             await unitOfWork.Events.Add(@event);

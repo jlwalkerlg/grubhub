@@ -23,7 +23,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
         }
 
         [Fact]
-        public async Task It_Creates_A_Restauran_The_Restaurant()
+        public async Task It_Accepts_The_Restaurant()
         {
             var restaurant = new Restaurant(
                 Guid.NewGuid(),
@@ -47,6 +47,32 @@ namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
             Assert.True(result.IsSuccess);
             Assert.Equal(RestaurantApplicationStatus.Accepted, restaurant.Status);
             Assert.True(unitOfWorkSpy.Commited);
+        }
+
+        [Fact]
+        public async Task It_Creates_An_Empty_Restaurant_Menu()
+        {
+            var restaurant = new Restaurant(
+                Guid.NewGuid(),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address(
+                    "Manchester Road",
+                    "",
+                    "Manchester",
+                    new Postcode("MN121NM")),
+                new Coordinates(0, 0));
+
+            await unitOfWorkSpy.Restaurants.Add(restaurant);
+
+            var command = new AcceptRestaurantRegistrationCommand
+            {
+                RestaurantId = restaurant.Id
+            };
+            await handler.Handle(command, default(CancellationToken));
+
+            var menu = unitOfWorkSpy.MenuRepositorySpy.Menus.First();
+            Assert.Equal(menu.RestaurantId, restaurant.Id);
         }
 
         [Fact]
