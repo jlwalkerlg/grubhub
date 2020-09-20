@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Domain;
+using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 
@@ -49,6 +50,9 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 new PhoneNumber(command.RestaurantPhoneNumber),
                 address,
                 coordinates);
+
+            var menu = new Menu(restaurant.Id);
+            await unitOfWork.Menus.Add(menu);
 
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
 

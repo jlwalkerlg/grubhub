@@ -82,5 +82,29 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 
             Assert.True(unitOfWorkSpy.Commited);
         }
+
+        [Fact]
+        public async Task It_Creates_An_Empty_Restaurant_Menu()
+        {
+            geocoderSpy.Coordinates = new Coordinates(0, 0);
+
+            var command = new RegisterRestaurantCommand
+            {
+                ManagerName = "Jordan Walker",
+                ManagerEmail = "test@email.com",
+                ManagerPassword = "password123",
+                RestaurantName = "Chow Main",
+                RestaurantPhoneNumber = "01234567890",
+                AddressLine1 = "12 Manchester Road",
+                AddressLine2 = "",
+                Town = "Manchester",
+                Postcode = "MN12 1NM"
+            };
+            await handler.Handle(command, CancellationToken.None);
+
+            var restaurant = restaurantRepositorySpy.Restaurants.Single();
+            var menu = unitOfWorkSpy.MenuRepositorySpy.Menus.First();
+            Assert.Equal(menu.RestaurantId, restaurant.Id);
+        }
     }
 }

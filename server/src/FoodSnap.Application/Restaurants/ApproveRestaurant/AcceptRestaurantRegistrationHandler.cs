@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Domain.Menus;
 
 namespace FoodSnap.Application.Restaurants.ApproveRestaurant
 {
@@ -11,16 +10,6 @@ namespace FoodSnap.Application.Restaurants.ApproveRestaurant
         public ApproveRestaurantHandler(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
 
         public async Task<Result> Handle(
@@ -36,20 +25,12 @@ namespace FoodSnap.Application.Restaurants.ApproveRestaurant
 
             restaurant.Approve();
 
-            var menu = new Menu(restaurant.Id);
-            await unitOfWork.Menus.Add(menu);
-
             var @event = new RestaurantApprovedEvent(restaurant.Id);
             await unitOfWork.Events.Add(@event);
 
             await unitOfWork.Commit();
 
             return Result.Ok();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }
