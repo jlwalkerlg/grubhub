@@ -3,9 +3,9 @@ using FoodSnap.Application.Events;
 
 namespace FoodSnap.Application.Restaurants
 {
-    public class RestaurantAcceptedEvent : Event
+    public class RestaurantApprovedEvent : Event
     {
-        public RestaurantAcceptedEvent(Guid restaurantId)
+        public RestaurantApprovedEvent(Guid restaurantId)
         {
             RestaurantId = restaurantId;
         }

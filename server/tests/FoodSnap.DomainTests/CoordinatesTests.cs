@@ -1,8 +1,8 @@
 ﻿using System;
-using FoodSnap.Domain.Restaurants;
+using FoodSnap.Domain;
 using Xunit;
 
-namespace FoodSnap.DomainTests.Restaurants
+namespace FoodSnap.DomainTests
 {
     public class CoordinatesTests
     {

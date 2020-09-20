@@ -9,7 +9,7 @@ namespace FoodSnap.Domain.Restaurants
         public PhoneNumber PhoneNumber { get; }
         public Address Address { get; }
         public Coordinates Coordinates { get; }
-        public RestaurantApplicationStatus Status { get; private set; }
+        public RestaurantStatus Status { get; private set; }
 
         public Restaurant(
             Guid managerId,
@@ -48,12 +48,17 @@ namespace FoodSnap.Domain.Restaurants
             PhoneNumber = phoneNumber;
             Address = address;
             Coordinates = coordinates;
-            Status = RestaurantApplicationStatus.Pending;
+            Status = RestaurantStatus.PendingApproval;
         }
 
-        public void AcceptApplication()
+        public void Approve()
         {
-            Status = RestaurantApplicationStatus.Accepted;
+            if (Status != RestaurantStatus.PendingApproval)
+            {
+                throw new InvalidOperationException("Restaurant already approved.");
+            }
+
+            Status = RestaurantStatus.Approved;
         }
 
         // EF Core

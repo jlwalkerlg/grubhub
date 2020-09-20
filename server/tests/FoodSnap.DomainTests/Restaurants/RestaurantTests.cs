@@ -21,11 +21,11 @@ namespace FoodSnap.DomainTests.Restaurants
                     new Postcode("WS12 1WS")),
                 new Coordinates(1, 1));
 
-            Assert.Equal(RestaurantApplicationStatus.Pending, restaurant.Status);
+            Assert.Equal(RestaurantStatus.PendingApproval, restaurant.Status);
         }
 
         [Fact]
-        public void Status_Changes_To_Accepted_When_Application_Is_Accepted()
+        public void Status_Changes_To_Approved_When_Approved()
         {
             var restaurant = new Restaurant(
                 Guid.NewGuid(),
@@ -38,9 +38,28 @@ namespace FoodSnap.DomainTests.Restaurants
                     new Postcode("WS12 1WS")),
                 new Coordinates(1, 1));
 
-            restaurant.AcceptApplication();
+            restaurant.Approve();
 
-            Assert.Equal(RestaurantApplicationStatus.Accepted, restaurant.Status);
+            Assert.Equal(RestaurantStatus.Approved, restaurant.Status);
+        }
+
+        [Fact]
+        public void Can_Only_Be_Approved_If_Status_Is_Pending_Approval()
+        {
+            var restaurant = new Restaurant(
+                Guid.NewGuid(),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address(
+                    "12 Manchester Road",
+                    "",
+                    "Manchester",
+                    new Postcode("WS12 1WS")),
+                new Coordinates(1, 1));
+
+            restaurant.Approve();
+
+            Assert.Throws<InvalidOperationException>(() => restaurant.Approve());
         }
 
         [Fact]

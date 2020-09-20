@@ -1,29 +1,29 @@
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using FoodSnap.Application.Restaurants.AcceptRestaurantRegistration;
+using FoodSnap.Application.Restaurants.ApproveRestaurant;
 using Xunit;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain;
 using System.Linq;
 using FoodSnap.Application.Restaurants;
 
-namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
+namespace FoodSnap.ApplicationTests.Restaurants.ApproveRestaurant
 {
-    public class AcceptRestaurantRegistrationHandlerTests
+    public class ApproveRestaurantHandlerTests
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
-        private readonly AcceptRestaurantRegistrationHandler handler;
+        private readonly ApproveRestaurantHandler handler;
 
-        public AcceptRestaurantRegistrationHandlerTests()
+        public ApproveRestaurantHandlerTests()
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            handler = new AcceptRestaurantRegistrationHandler(unitOfWorkSpy);
+            handler = new ApproveRestaurantHandler(unitOfWorkSpy);
         }
 
         [Fact]
-        public async Task It_Accepts_The_Restaurant()
+        public async Task It_Approves_The_Restaurant()
         {
             var restaurant = new Restaurant(
                 Guid.NewGuid(),
@@ -38,14 +38,14 @@ namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            var command = new AcceptRestaurantRegistrationCommand
+            var command = new ApproveRestaurantCommand
             {
                 RestaurantId = restaurant.Id
             };
             var result = await handler.Handle(command, default(CancellationToken));
 
             Assert.True(result.IsSuccess);
-            Assert.Equal(RestaurantApplicationStatus.Accepted, restaurant.Status);
+            Assert.Equal(RestaurantStatus.Approved, restaurant.Status);
             Assert.True(unitOfWorkSpy.Commited);
         }
 
@@ -65,7 +65,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            var command = new AcceptRestaurantRegistrationCommand
+            var command = new ApproveRestaurantCommand
             {
                 RestaurantId = restaurant.Id
             };
@@ -76,7 +76,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
         }
 
         [Fact]
-        public async Task It_Creates_A_Restaurant_Application_Accepted_Event()
+        public async Task It_Creates_A_Restaurant_Approved_Event()
         {
             var restaurant = new Restaurant(
                 Guid.NewGuid(),
@@ -91,14 +91,14 @@ namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            var command = new AcceptRestaurantRegistrationCommand
+            var command = new ApproveRestaurantCommand
             {
                 RestaurantId = restaurant.Id
             };
             var result = await handler.Handle(command, default(CancellationToken));
 
             var @event = (await unitOfWorkSpy.EventRepositorySpy.All())
-                .OfType<RestaurantAcceptedEvent>()
+                .OfType<RestaurantApprovedEvent>()
                 .Single();
 
             Assert.Equal(@event.RestaurantId, restaurant.Id);
@@ -107,7 +107,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.AcceptRestaurantRegistration
         [Fact]
         public async Task It_Returns_An_Error_If_The_Restaurant_Was_Not_Found()
         {
-            var command = new AcceptRestaurantRegistrationCommand
+            var command = new ApproveRestaurantCommand
             {
                 RestaurantId = Guid.NewGuid()
             };

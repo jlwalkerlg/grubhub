@@ -1,6 +1,6 @@
 using System;
 
-namespace FoodSnap.Domain.Restaurants
+namespace FoodSnap.Domain
 {
     public class Coordinates : ValueObject<Coordinates>
     {

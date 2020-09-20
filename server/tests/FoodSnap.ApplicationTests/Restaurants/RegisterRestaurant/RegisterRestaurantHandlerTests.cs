@@ -6,7 +6,7 @@ using FoodSnap.ApplicationTests.Doubles;
 using FoodSnap.ApplicationTests.Doubles.GeocoderSpy;
 using FoodSnap.ApplicationTests.Events;
 using FoodSnap.ApplicationTests.Users;
-using FoodSnap.Domain.Restaurants;
+using FoodSnap.Domain;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
