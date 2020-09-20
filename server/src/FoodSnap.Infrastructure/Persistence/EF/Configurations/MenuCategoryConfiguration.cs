@@ -15,7 +15,8 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
 
             builder.HasMany<MenuItem>("items")
                 .WithOne()
-                .HasForeignKey("menu_category_id");
+                .HasForeignKey("menu_category_id")
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(x => x.Name)
                 .HasColumnName("name")

@@ -16,7 +16,9 @@ namespace Bruno.Infrastructure.Persistence.EF.Configurations
 
             builder.HasOne<RestaurantManager>()
                 .WithMany()
-                .HasForeignKey(x => x.ManagerId);
+                .HasForeignKey(x => x.ManagerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Property(x => x.ManagerId).HasColumnName("manager_id");
 
             builder.Property(x => x.Name).IsRequired().HasColumnName("name");
