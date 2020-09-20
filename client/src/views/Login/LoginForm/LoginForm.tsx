@@ -7,7 +7,7 @@ import {
   RequiredRule,
   EmailRule,
   PasswordRule,
-} from "~/lib/form/Rule";
+} from "~/lib/Form/Rule";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import useAuth from "~/store/auth/useAuth";
 import { LoginCommand } from "~/api/users/userApi";

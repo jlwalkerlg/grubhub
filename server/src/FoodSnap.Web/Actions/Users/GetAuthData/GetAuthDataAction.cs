@@ -23,7 +23,7 @@ namespace FoodSnap.Web.Actions.Users.GetAuthData
         {
             if (!authenticator.IsAuthenticated)
             {
-                return StatusCode(403);
+                return StatusCode(401);
             }
 
             var id = authenticator.UserId;

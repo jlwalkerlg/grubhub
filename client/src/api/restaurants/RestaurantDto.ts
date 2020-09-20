@@ -12,4 +12,4 @@ export interface RestaurantDto {
   status: RestaurantStatus;
 }
 
-type RestaurantStatus = "Pending" | "Accepted";
+type RestaurantStatus = "PendingApproval" | "Approved";

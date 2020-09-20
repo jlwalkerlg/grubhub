@@ -12,7 +12,7 @@ import {
   PhoneRule,
   PostcodeRule,
   combineRules,
-} from "~/lib/form/Rule";
+} from "~/lib/Form/Rule";
 import useAddressSearch from "~/lib/address-search/useAddressSearch";
 
 import RegisterRestaurantForm, {
@@ -180,7 +180,7 @@ const RegisterRestaurantFormController: React.FC = () => {
           showConfirmButton: true,
         }),
         auth.login({
-          email: command.managerName,
+          email: command.managerEmail,
           password: command.managerPassword,
         }),
       ]);

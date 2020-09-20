@@ -28,11 +28,11 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
         }
 
         [Fact]
-        public async Task It_Returns_403_If_Unauthorised()
+        public async Task It_Returns_401_If_Unauthorised()
         {
             var result = await action.Execute() as StatusCodeResult;
 
-            Assert.Equal(403, result.StatusCode);
+            Assert.Equal(401, result.StatusCode);
         }
 
         [Fact]
