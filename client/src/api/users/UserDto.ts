@@ -6,4 +6,4 @@ export interface UserDto {
   role: UserRole;
 }
 
-type UserRole = "RestaurantManager" | "Customer" | "Admin";
+export type UserRole = "RestaurantManager" | "Customer" | "Admin";

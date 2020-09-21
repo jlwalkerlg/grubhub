@@ -1,16 +1,9 @@
-import { UserDto } from "./UserDto";
-
 import Api from "../Api";
-import { RestaurantDto } from "../restaurants/RestaurantDto";
+import { UserDto } from "./UserDto";
 
 export interface LoginCommand {
   email: string;
   password: string;
-}
-
-export interface AuthData {
-  user: UserDto;
-  restaurant: RestaurantDto;
 }
 
 class UserApi extends Api {
@@ -23,7 +16,7 @@ class UserApi extends Api {
   }
 
   public getAuthData() {
-    return this.get<AuthData>("/auth/data");
+    return this.get<UserDto>("/auth/user");
   }
 }
 

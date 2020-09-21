@@ -1,4 +1,5 @@
 import Api from "../Api";
+import { RestaurantDto } from "./RestaurantDto";
 
 export interface RegisterRestaurantCommand {
   managerName: string;
@@ -13,6 +14,10 @@ export interface RegisterRestaurantCommand {
 }
 
 class RestaurantsApi extends Api {
+  public getByManagerId(id: string) {
+    return this.get<RestaurantDto>(`/managers/${id}/restaurant`);
+  }
+
   public register(command: RegisterRestaurantCommand) {
     return this.post<null>("/restaurants/register", command);
   }

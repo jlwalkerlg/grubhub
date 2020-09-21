@@ -1,24 +1,24 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.Auth.GetAuthData;
+using FoodSnap.Web.Queries.Users.GetUserById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodSnap.Web.Actions.Users.GetAuthData
+namespace FoodSnap.Web.Actions.Users.GetAuthUser
 {
-    public class GetAuthDataAction : Action
+    public class GetAuthUserAction : Action
     {
         private readonly IMediator mediator;
         private readonly IAuthenticator authenticator;
 
-        public GetAuthDataAction(IMediator mediator, IAuthenticator authenticator)
+        public GetAuthUserAction(IMediator mediator, IAuthenticator authenticator)
         {
             this.mediator = mediator;
             this.authenticator = authenticator;
         }
 
-        [HttpGet("/auth/data")]
+        [HttpGet("/auth/user")]
         public async Task<IActionResult> Execute()
         {
             if (!authenticator.IsAuthenticated)
@@ -28,7 +28,7 @@ namespace FoodSnap.Web.Actions.Users.GetAuthData
 
             var id = authenticator.UserId;
 
-            var data = (await mediator.Send(new GetAuthDataQuery(id))).Value;
+            var data = (await mediator.Send(new GetUserByIdQuery(id))).Value;
 
             return Ok(new DataEnvelope
             {

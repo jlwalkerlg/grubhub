@@ -3,9 +3,8 @@ using FoodSnap.Application;
 using FoodSnap.ApplicationTests.Doubles;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
-using FoodSnap.Web.Actions.Users.GetAuthData;
+using FoodSnap.Web.Actions.Users.GetAuthUser;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.Auth;
 using FoodSnap.Web.Queries.Users;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -16,7 +15,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
     {
         private readonly MediatorSpy mediatorSpy;
         private readonly AuthenticatorSpy authenticatorSpy;
-        private readonly GetAuthDataAction action;
+        private readonly GetAuthUserAction action;
 
         public GetAuthDataActionTests()
         {
@@ -24,7 +23,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
 
             authenticatorSpy = new AuthenticatorSpy();
 
-            action = new GetAuthDataAction(mediatorSpy, authenticatorSpy);
+            action = new GetAuthUserAction(mediatorSpy, authenticatorSpy);
         }
 
         [Fact]
@@ -44,24 +43,21 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
                 "password123");
             authenticatorSpy.User = user;
 
-            var data = new AuthDataDto
+            var userDto = new UserDto
             {
-                User = new UserDto
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email.Address,
-                    Password = user.Password,
-                    Role = user.Role.ToString(),
-                }
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email.Address,
+                Password = user.Password,
+                Role = user.Role.ToString(),
             };
-            mediatorSpy.Result = Result.Ok(data);
+            mediatorSpy.Result = Result.Ok(userDto);
 
             var result = await action.Execute() as ObjectResult;
             var envelope = result.Value as DataEnvelope;
 
             Assert.Equal(200, result.StatusCode);
-            Assert.Same(data, envelope.Data);
+            Assert.Same(userDto, envelope.Data);
         }
     }
 }

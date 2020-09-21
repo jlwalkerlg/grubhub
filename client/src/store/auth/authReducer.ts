@@ -8,7 +8,6 @@ export interface LoginAction {
   type: typeof LOGIN;
   payload: {
     user: UserDto;
-    restaurant: RestaurantDto;
   };
 }
 
@@ -36,7 +35,7 @@ export default function (
     return {
       ...state,
       user: action.payload.user,
-      restaurant: action.payload.restaurant,
+      restaurant: null,
     };
   }
 

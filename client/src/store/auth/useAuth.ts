@@ -28,23 +28,23 @@ export default function useAuth() {
       return Result.fail(new ApiError(loginResponse));
     }
 
-    const getAuthDataResponse = await authApi.getAuthData();
+    const getAuthUserResponse = await authApi.getAuthData();
 
-    if (!getAuthDataResponse.isSuccess) {
-      return Result.fail(new ApiError(getAuthDataResponse));
+    if (!getAuthUserResponse.isSuccess) {
+      return Result.fail(new ApiError(getAuthUserResponse));
     }
 
-    const data = getAuthDataResponse.data;
+    const user = getAuthUserResponse.data;
 
-    dispatch(createLoginAction(data.user, data.restaurant));
+    dispatch(createLoginAction(user));
 
-    document.cookie = cookie.serialize("auth_data", JSON.stringify(data), {
+    document.cookie = cookie.serialize("auth_data", JSON.stringify(user), {
       expires: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
       httpOnly: false,
       path: "/",
     });
 
-    return Result.ok<UserDto, ApiError>(data.user);
+    return Result.ok<UserDto, ApiError>(user);
   };
 
   const logout = async (): Promise<Result<null, ApiError>> => {
