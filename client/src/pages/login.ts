@@ -1,6 +1,26 @@
-import { GetInitialPropsBuilder } from "~/utils/GetInitialPropsBuilder";
+import { GetServerSideProps } from "next";
+
+import cookie from "cookie";
+
 import { Login } from "~/views/Login/Login";
+import { UserDto } from "~/api/users/UserDto";
+import { withGuestOnly } from "~/utils/withGuestOnly";
 
-Login.getInitialProps = new GetInitialPropsBuilder().guestOnly().build();
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = cookie.parse(ctx.req.headers.cookie || "");
+  const user = JSON.parse(cookies["auth_data"] || null) as UserDto;
 
-export default Login;
+  if (user !== null) {
+    ctx.res
+      .writeHead(307, {
+        Location: "/dashboard",
+      })
+      .end();
+  }
+
+  return {
+    props: {},
+  };
+};
+
+export default withGuestOnly(Login);

@@ -35,11 +35,11 @@ export const initializeStore = (initialState: State = null) => {
   let state: State;
 
   if (initialState !== null) {
-    state = { ...(state || {}), ...initialState };
+    state = initialState;
   }
 
   if (store !== null) {
-    state = { ...(state || {}), ...store.getState() };
+    state = { ...store.getState(), ...state };
   }
 
   store = initStore(state);

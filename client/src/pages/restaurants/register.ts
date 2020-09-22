@@ -1,8 +1,26 @@
+import { GetServerSideProps } from "next";
+
+import cookie from "cookie";
+
+import { UserDto } from "~/api/users/UserDto";
 import { RegisterRestaurant } from "~/views/RegisterRestaurant/RegisterRestaurant";
-import { GetInitialPropsBuilder } from "~/utils/GetInitialPropsBuilder";
+import { withGuestOnly } from "~/utils/withGuestOnly";
 
-RegisterRestaurant.getInitialProps = new GetInitialPropsBuilder()
-  .guestOnly()
-  .build();
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = cookie.parse(ctx.req.headers.cookie || "");
+  const user = JSON.parse(cookies["auth_data"] || null) as UserDto;
 
-export default RegisterRestaurant;
+  if (user !== null) {
+    ctx.res
+      .writeHead(307, {
+        Location: "/dashboard",
+      })
+      .end();
+  }
+
+  return {
+    props: {},
+  };
+};
+
+export default withGuestOnly(RegisterRestaurant);

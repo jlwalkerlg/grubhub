@@ -1,11 +1,11 @@
+import { NextPage } from "next";
 import React from "react";
 
 import Layout from "~/components/Layout/Layout";
 import DashboardIcon from "~/components/Icons/DashboardIcon";
 import useAuth from "~/store/auth/useAuth";
-import { withAuth } from "~/utils/withAuth";
 
-export const Dashboard = withAuth(() => {
+export const Dashboard: NextPage = () => {
   const { restaurant } = useAuth();
 
   return (
@@ -53,4 +53,4 @@ export const Dashboard = withAuth(() => {
       </main>
     </Layout>
   );
-});
+};

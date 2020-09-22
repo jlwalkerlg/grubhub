@@ -1,5 +1,12 @@
-import { LOGIN, LoginAction, LOGOUT, LogoutAction } from "./authReducer";
+import {
+  LOGIN,
+  LoginAction,
+  LOGOUT,
+  LogoutAction,
+  SetAuthRestaurantAction,
+} from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
+import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 
 export const createLoginAction = (user: UserDto): LoginAction => ({
   type: LOGIN,
@@ -10,4 +17,13 @@ export const createLoginAction = (user: UserDto): LoginAction => ({
 
 export const createLogoutAction = (): LogoutAction => ({
   type: LOGOUT,
+});
+
+export const createSetAuthRestaurantAction = (
+  restaurant: RestaurantDto
+): SetAuthRestaurantAction => ({
+  type: "SET_AUTH_RESTAURANT",
+  payload: {
+    restaurant,
+  },
 });

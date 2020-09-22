@@ -3,6 +3,7 @@ import { UserDto } from "~/api/users/UserDto";
 
 export const LOGIN = "AUTH_LOGIN";
 export const LOGOUT = "AUTH_LOGOUT";
+export const SET_AUTH_RESTAURANT = "SET_AUTH_RESTAURANT";
 
 export interface LoginAction {
   type: typeof LOGIN;
@@ -15,7 +16,14 @@ export interface LogoutAction {
   type: typeof LOGOUT;
 }
 
-type AuthAction = LoginAction | LogoutAction;
+export interface SetAuthRestaurantAction {
+  type: typeof SET_AUTH_RESTAURANT;
+  payload: {
+    restaurant: RestaurantDto;
+  };
+}
+
+type AuthAction = LoginAction | LogoutAction | SetAuthRestaurantAction;
 
 export interface AuthState {
   user: UserDto;
@@ -28,14 +36,13 @@ const initialState = {
 };
 
 export default function (
-  state: AuthState = initialState,
+  state: AuthState = { ...initialState },
   action: AuthAction
 ): AuthState {
   if (action.type === LOGIN) {
     return {
       ...state,
       user: action.payload.user,
-      restaurant: null,
     };
   }
 
@@ -44,6 +51,13 @@ export default function (
       ...state,
       user: null,
       restaurant: null,
+    };
+  }
+
+  if (action.type === SET_AUTH_RESTAURANT) {
+    return {
+      ...state,
+      restaurant: action.payload.restaurant,
     };
   }
 
