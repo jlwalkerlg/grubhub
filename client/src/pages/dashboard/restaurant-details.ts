@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import restaurantsApi from "~/api/restaurants/restaurantsApi";
 import { initializeStore } from "~/store/store";
 
-import { Dashboard } from "~/views/Dashboard/Dashboard";
+import RestaurantDetails from "~/views/Dashboard/RestaurantDetails";
 import { withAuth } from "~/utils/withAuth";
 import { createSetAuthRestaurantAction } from "~/store/auth/authActionCreators";
 import { dispatchUserFromRequest } from "~/utils/dispatchUserFromRequest";
@@ -28,4 +28,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-export default withAuth(Dashboard);
+export default withAuth(RestaurantDetails);
