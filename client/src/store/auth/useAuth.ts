@@ -3,12 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import cookie from "cookie";
 
 import { State } from "~/store/store";
-import { AuthState } from "./authReducer";
 import authApi, { LoginCommand } from "~/api/users/userApi";
-import { createLoginAction, createLogoutAction } from "./authActionCreators";
-import { ApiError } from "~/lib/Error";
+import {
+  createLoginAction,
+  createLogoutAction,
+  createUpdateAuthRestaurantDetailsAction,
+} from "./authActionCreators";
 import { Result } from "~/lib/Result";
 import { UserDto } from "~/api/users/UserDto";
+import restaurantsApi, {
+  UpdateRestaurantDetailsCommand,
+} from "~/api/restaurants/restaurantsApi";
+import { AuthState } from "./authReducer";
 
 export default function useAuth() {
   const dispatch = useDispatch();
@@ -19,19 +25,17 @@ export default function useAuth() {
 
   const isLoggedIn = user !== null;
 
-  const login = async (
-    request: LoginCommand
-  ): Promise<Result<UserDto, ApiError>> => {
-    const loginResponse = await authApi.login(request);
+  const login = async (command: LoginCommand): Promise<Result<UserDto>> => {
+    const loginResponse = await authApi.login(command);
 
     if (!loginResponse.isSuccess) {
-      return Result.fail(new ApiError(loginResponse));
+      return Result.fail(loginResponse.error);
     }
 
     const getAuthUserResponse = await authApi.getAuthData();
 
     if (!getAuthUserResponse.isSuccess) {
-      return Result.fail(new ApiError(getAuthUserResponse));
+      return Result.fail(getAuthUserResponse.error);
     }
 
     const user = getAuthUserResponse.data;
@@ -44,10 +48,10 @@ export default function useAuth() {
       path: "/",
     });
 
-    return Result.ok<UserDto, ApiError>(user);
+    return Result.ok(user);
   };
 
-  const logout = async (): Promise<Result<null, ApiError>> => {
+  const logout = async (): Promise<Result<null>> => {
     const response = await authApi.logout();
 
     if (response.isSuccess) {
@@ -59,11 +63,32 @@ export default function useAuth() {
         path: "/",
       });
 
-      return Result.ok<null, ApiError>(null);
+      return Result.ok<null>(null);
     }
 
-    return Result.fail(new ApiError(response));
+    return Result.fail(response.error);
   };
 
-  return { isLoggedIn, user, restaurant, login, logout };
+  const updateRestaurantDetails = async (
+    command: UpdateRestaurantDetailsCommand
+  ): Promise<Result<null>> => {
+    const response = await restaurantsApi.updateDetails(restaurant.id, command);
+
+    if (response.isSuccess) {
+      dispatch(createUpdateAuthRestaurantDetailsAction(command));
+
+      return Result.ok<null>(null);
+    }
+
+    return Result.fail(response.error);
+  };
+
+  return {
+    isLoggedIn,
+    user,
+    restaurant,
+    login,
+    logout,
+    updateRestaurantDetails,
+  };
 }

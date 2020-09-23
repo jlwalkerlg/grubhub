@@ -4,9 +4,11 @@ import {
   LOGOUT,
   LogoutAction,
   SetAuthRestaurantAction,
+  UpdateRestaurantDetailsAction,
 } from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
 
 export const createLoginAction = (user: UserDto): LoginAction => ({
   type: LOGIN,
@@ -25,5 +27,14 @@ export const createSetAuthRestaurantAction = (
   type: "SET_AUTH_RESTAURANT",
   payload: {
     restaurant,
+  },
+});
+
+export const createUpdateAuthRestaurantDetailsAction = (
+  command: UpdateRestaurantDetailsCommand
+): UpdateRestaurantDetailsAction => ({
+  type: "UPDATE_RESTAURANT_DETAILS",
+  payload: {
+    command,
   },
 });

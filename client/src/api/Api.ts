@@ -1,9 +1,10 @@
-import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import Axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import { Error } from "~/lib/Error";
 
 export default class Api {
   private baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  protected getUrl(path: string): string {
+  private getUrl(path: string): string {
     if (path.startsWith("/")) {
       path = path.substr(1);
     }
@@ -15,16 +16,7 @@ export default class Api {
     url: string,
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
-    try {
-      const response = await Axios.get<T>(this.getUrl(url), {
-        ...config,
-        withCredentials: true,
-      });
-
-      return new ApiResponse<T>(response);
-    } catch (e) {
-      return new ApiResponse<T>(e.response);
-    }
+    return this.request(url, "GET");
   }
 
   protected async post<T = null>(
@@ -32,16 +24,9 @@ export default class Api {
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
-    try {
-      const response = await Axios.post<T>(this.getUrl(url), data, {
-        ...config,
-        withCredentials: true,
-      });
-
-      return new ApiResponse<T>(response);
-    } catch (e) {
-      return new ApiResponse<T>(e.response);
-    }
+    return this.request(url, "POST", {
+      data,
+    });
   }
 
   protected async put<T = null>(
@@ -49,10 +34,22 @@ export default class Api {
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
+    return this.request(url, "PUT", {
+      data,
+    });
+  }
+
+  private async request<T = null>(
+    url: string,
+    method: Method,
+    config?: AxiosRequestConfig
+  ): Promise<ApiResponse<T>> {
     try {
-      const response = await Axios.put<T>(this.getUrl(url), data, {
-        ...config,
+      const response = await Axios.request({
+        url: this.getUrl(url),
+        method,
         withCredentials: true,
+        ...config,
       });
 
       return new ApiResponse<T>(response);
@@ -63,24 +60,28 @@ export default class Api {
 }
 
 export class ApiResponse<TData = null> {
-  readonly data: TData;
-  readonly error: string;
-  readonly errors: { [key: string]: string };
+  readonly data: TData = null;
+  readonly error: Error = null;
   readonly statusCode: number;
 
   get isSuccess() {
-    return this.statusCode >= 200 && this.statusCode < 300;
+    return this.isSuccessStatusCode(this.statusCode);
   }
 
-  get isValidationError() {
-    return this.statusCode === 422;
+  private isSuccessStatusCode(statusCode: number) {
+    return statusCode >= 200 && statusCode < 300;
   }
 
   public constructor(response: AxiosResponse) {
-    console.log(response);
     this.data = response.data?.data || null;
-    this.error = response.data?.message || null;
-    this.errors = response.data?.errors || null;
     this.statusCode = response.status;
+
+    if (!this.isSuccessStatusCode(response.status)) {
+      this.error = new Error(
+        response.data?.message || response.statusText,
+        response.status,
+        response.data?.errors
+      );
+    }
   }
 }

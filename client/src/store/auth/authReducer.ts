@@ -1,9 +1,11 @@
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
 import { UserDto } from "~/api/users/UserDto";
 
 export const LOGIN = "AUTH_LOGIN";
 export const LOGOUT = "AUTH_LOGOUT";
 export const SET_AUTH_RESTAURANT = "SET_AUTH_RESTAURANT";
+export const UPDATE_RESTAURANT_DETAILS = "UPDATE_RESTAURANT_DETAILS";
 
 export interface LoginAction {
   type: typeof LOGIN;
@@ -23,7 +25,18 @@ export interface SetAuthRestaurantAction {
   };
 }
 
-type AuthAction = LoginAction | LogoutAction | SetAuthRestaurantAction;
+export interface UpdateRestaurantDetailsAction {
+  type: typeof UPDATE_RESTAURANT_DETAILS;
+  payload: {
+    command: UpdateRestaurantDetailsCommand;
+  };
+}
+
+type AuthAction =
+  | LoginAction
+  | LogoutAction
+  | SetAuthRestaurantAction
+  | UpdateRestaurantDetailsAction;
 
 export interface AuthState {
   user: UserDto;
@@ -58,6 +71,16 @@ export default function (
     return {
       ...state,
       restaurant: action.payload.restaurant,
+    };
+  }
+
+  if (action.type === UPDATE_RESTAURANT_DETAILS) {
+    return {
+      ...state,
+      restaurant: {
+        ...state.restaurant,
+        ...action.payload.command,
+      },
     };
   }
 

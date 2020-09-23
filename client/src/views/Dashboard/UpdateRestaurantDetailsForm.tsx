@@ -4,18 +4,16 @@ import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi
 import { ErrorAlert } from "~/components/Alert/Alert";
 import { combineRules, PhoneRule, RequiredRule } from "~/lib/Form/Rule";
 import useAuth from "~/store/auth/useAuth";
-import useRestaurants from "~/store/restaurants/useRestaurants";
 import { setFormErrors } from "~/utils/setFormErrors";
 
 const UpdateRestaurantDetailsForm: React.FC = () => {
-  const { restaurant } = useAuth();
-  const restaurants = useRestaurants();
+  const auth = useAuth();
   const [error, setError] = React.useState<string>(null);
 
   const form = useForm<UpdateRestaurantDetailsCommand>({
     defaultValues: {
-      name: restaurant.name,
-      phoneNumber: restaurant.phoneNumber,
+      name: auth.restaurant.name,
+      phoneNumber: auth.restaurant.phoneNumber,
     },
     mode: "onBlur",
     reValidateMode: "onChange",
@@ -35,7 +33,7 @@ const UpdateRestaurantDetailsForm: React.FC = () => {
 
     setError(null);
 
-    const result = await restaurants.updateDetails(restaurant.id, command);
+    const result = await auth.updateRestaurantDetails(command);
 
     if (!result.isSuccess) {
       setError(result.error.message);

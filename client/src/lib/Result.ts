@@ -1,34 +1,23 @@
 import { Error } from "./Error";
 
-export class Result<T, TError extends Error = Error> {
+export class Result<T> {
   readonly data?: T;
-  readonly error?: TError;
+  readonly error?: Error;
 
   get isSuccess() {
     return this.error === null;
   }
 
-  public constructor(data: T, error: TError) {
+  private constructor(data: T, error: Error) {
     this.data = data;
     this.error = error;
   }
 
-  public static ok(): Result<null>;
-  public static ok<T>(data: T): Result<T>;
-  public static ok<T, TError extends Error = Error>(data: T): Result<T, TError>;
-  public static ok<T>(data: T = null): Result<T> {
+  public static ok<T = null>(data: T = null): Result<T> {
     return new Result<T>(data, null);
   }
 
-  public static fail<TError extends Error = Error>(
-    error: TError
-  ): Result<null, TError>;
-  public static fail<T, TError extends Error = Error>(
-    error: TError
-  ): Result<T, TError>;
-  public static fail<T, TError extends Error = Error>(
-    error: TError
-  ): Result<T, TError> {
-    return new Result<T, TError>(null, error);
+  public static fail<T = null>(error: Error): Result<T> {
+    return new Result<T>(null, error);
   }
 }
