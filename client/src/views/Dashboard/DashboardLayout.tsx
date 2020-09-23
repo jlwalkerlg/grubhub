@@ -1,7 +1,6 @@
 import React from "react";
 
 import Layout from "~/components/Layout/Layout";
-import DashboardIcon from "~/components/Icons/DashboardIcon";
 import useAuth from "~/store/auth/useAuth";
 import { useRouter } from "next/router";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
@@ -13,11 +12,6 @@ interface DashboardRoute {
 }
 
 const routes: DashboardRoute[] = [
-  {
-    title: "Dashboard",
-    pathname: "/dashboard",
-    icon: DashboardIcon,
-  },
   {
     title: "Restaurant Details",
     pathname: "/dashboard/restaurant-details",
