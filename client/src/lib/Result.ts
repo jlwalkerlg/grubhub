@@ -1,6 +1,6 @@
 import { Error } from "./Error";
 
-export class Result<T> {
+export class Result<T = null> {
   readonly data?: T;
   readonly error?: Error;
 

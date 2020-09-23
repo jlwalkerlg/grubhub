@@ -51,7 +51,7 @@ export default function useAuth() {
     return Result.ok(user);
   };
 
-  const logout = async (): Promise<Result<null>> => {
+  const logout = async (): Promise<Result> => {
     const response = await authApi.logout();
 
     if (response.isSuccess) {
@@ -71,7 +71,7 @@ export default function useAuth() {
 
   const updateRestaurantDetails = async (
     command: UpdateRestaurantDetailsCommand
-  ): Promise<Result<null>> => {
+  ): Promise<Result> => {
     const response = await restaurantsApi.updateDetails(restaurant.id, command);
 
     if (response.isSuccess) {

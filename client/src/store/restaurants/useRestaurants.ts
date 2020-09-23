@@ -6,7 +6,7 @@ import { Result } from "~/lib/Result";
 export default function useRestaurants() {
   const register = async (
     command: RegisterRestaurantCommand
-  ): Promise<Result<null>> => {
+  ): Promise<Result> => {
     const response = await restaurantsApi.register(command);
 
     if (response.isSuccess) {
