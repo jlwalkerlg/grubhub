@@ -90,6 +90,15 @@ namespace FoodSnap.DomainTests.Restaurants
             {
                 new Restaurant(Guid.NewGuid(), name, phoneNumber, address, coordinates);
             });
+
+            var restaurant = new Restaurant(
+                Guid.NewGuid(), "Valid Name", phoneNumber, address, coordinates);
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                restaurant.Name = name;
+            });
+
         }
 
         [Fact]
@@ -102,6 +111,14 @@ namespace FoodSnap.DomainTests.Restaurants
             Assert.Throws<ArgumentNullException>(() =>
             {
                 new Restaurant(Guid.NewGuid(), name, null, address, coordinates);
+            });
+
+            var restaurant = new Restaurant(
+                Guid.NewGuid(), name, new PhoneNumber("01234567890"), address, coordinates);
+
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                restaurant.PhoneNumber = null;
             });
         }
 

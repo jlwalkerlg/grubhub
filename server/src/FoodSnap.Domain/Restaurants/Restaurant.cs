@@ -4,13 +4,6 @@ namespace FoodSnap.Domain.Restaurants
 {
     public class Restaurant : Entity
     {
-        public Guid ManagerId { get; }
-        public string Name { get; }
-        public PhoneNumber PhoneNumber { get; }
-        public Address Address { get; }
-        public Coordinates Coordinates { get; }
-        public RestaurantStatus Status { get; private set; }
-
         public Restaurant(
             Guid managerId,
             string name,
@@ -21,16 +14,6 @@ namespace FoodSnap.Domain.Restaurants
             if (managerId == Guid.Empty)
             {
                 throw new ArgumentException($"{nameof(managerId)} must not be empty.");
-            }
-
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"{nameof(name)} must not be empty.");
-            }
-
-            if (phoneNumber is null)
-            {
-                throw new ArgumentNullException(nameof(phoneNumber));
             }
 
             if (address is null)
@@ -50,6 +33,44 @@ namespace FoodSnap.Domain.Restaurants
             Coordinates = coordinates;
             Status = RestaurantStatus.PendingApproval;
         }
+
+        public Guid ManagerId { get; }
+
+        private string name;
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException($"{nameof(Name)} must not be empty.");
+                }
+
+                name = value;
+            }
+        }
+
+        private PhoneNumber phoneNumber;
+        public PhoneNumber PhoneNumber
+        {
+            get => phoneNumber;
+            set
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(PhoneNumber));
+                }
+
+                phoneNumber = value;
+            }
+        }
+
+        public Address Address { get; }
+
+        public Coordinates Coordinates { get; }
+
+        public RestaurantStatus Status { get; private set; }
 
         public void Approve()
         {

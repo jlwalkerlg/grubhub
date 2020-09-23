@@ -4,6 +4,7 @@ import React from "react";
 import Layout from "~/components/Layout/Layout";
 import DashboardIcon from "~/components/Icons/DashboardIcon";
 import useAuth from "~/store/auth/useAuth";
+import UpdateRestaurantDetailsForm from "./UpdateRestaurantDetailsForm";
 
 export const Dashboard: NextPage = () => {
   const { restaurant } = useAuth();
@@ -46,6 +47,9 @@ export const Dashboard: NextPage = () => {
                   Your restaurant is currently pending application. Please check
                   back later.
                 </p>
+              )}
+              {restaurant.status === "Approved" && (
+                <UpdateRestaurantDetailsForm />
               )}
             </div>
           </div>

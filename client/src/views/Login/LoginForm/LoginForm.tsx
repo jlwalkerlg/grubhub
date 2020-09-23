@@ -11,6 +11,7 @@ import {
 import { ErrorAlert } from "~/components/Alert/Alert";
 import useAuth from "~/store/auth/useAuth";
 import { LoginCommand } from "~/api/users/userApi";
+import { setFormErrors } from "~/utils/setFormErrors";
 
 const LoginForm: FC = () => {
   const auth = useAuth();
@@ -45,12 +46,7 @@ const LoginForm: FC = () => {
     setError(result.error.message);
 
     if (result.error.isValidationError) {
-      for (const field in result.error.errors) {
-        if (Object.prototype.hasOwnProperty.call(result.error.errors, field)) {
-          const message = result.error.errors[field];
-          form.setError(field as keyof LoginCommand, { message });
-        }
-      }
+      setFormErrors(result.error.errors, form);
     }
   });
 
@@ -78,7 +74,7 @@ const LoginForm: FC = () => {
         <input
           ref={form.register}
           className="input"
-          type="text"
+          type="email"
           name="email"
           id="email"
           data-invalid={!!form.errors.email}

@@ -43,6 +43,23 @@ export default class Api {
       return new ApiResponse<T>(e.response);
     }
   }
+
+  protected async put<T = null>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<ApiResponse<T>> {
+    try {
+      const response = await Axios.put<T>(this.getUrl(url), data, {
+        ...config,
+        withCredentials: true,
+      });
+
+      return new ApiResponse<T>(response);
+    } catch (e) {
+      return new ApiResponse<T>(e.response);
+    }
+  }
 }
 
 export class ApiResponse<TData = null> {
@@ -60,6 +77,7 @@ export class ApiResponse<TData = null> {
   }
 
   public constructor(response: AxiosResponse) {
+    console.log(response);
     this.data = response.data?.data || null;
     this.error = response.data?.message || null;
     this.errors = response.data?.errors || null;
