@@ -14,6 +14,10 @@ const green = {
 
 module.exports = {
   purge: ["./src/views/**/*.tsx", "./src/components/**/*.tsx"],
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
   theme: {
     container: {
       center: true,
@@ -21,7 +25,7 @@ module.exports = {
     },
     extend: {
       inset: {
-        "100": "100%",
+        100: "100%",
       },
       colors: {
         primary: {

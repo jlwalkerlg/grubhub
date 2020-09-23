@@ -48,7 +48,7 @@ const initialState = {
   restaurant: null,
 };
 
-export default function (
+export default function authReducer(
   state: AuthState = { ...initialState },
   action: AuthAction
 ): AuthState {
