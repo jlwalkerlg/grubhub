@@ -24,11 +24,16 @@ namespace FoodSnap.Web.Actions.Restaurants.GetByManagerId
                 ManagerId = managerId
             };
 
-            var restaurant = (await mediator.Send(query)).Value;
+            var result = await mediator.Send(query);
+
+            if (!result.IsSuccess)
+            {
+                return PresentError(result.Error);
+            }
 
             return Ok(new DataEnvelope
             {
-                Data = restaurant
+                Data = result.Value
             });
         }
     }

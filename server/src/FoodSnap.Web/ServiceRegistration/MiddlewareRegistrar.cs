@@ -1,6 +1,6 @@
 using Autofac;
 using FoodSnap.Application;
-using FoodSnap.Application.Middleware;
+using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Application.Validation;
 
 namespace FoodSnap.Web.ServiceRegistration
@@ -10,7 +10,12 @@ namespace FoodSnap.Web.ServiceRegistration
         public static void AddMiddleware(this ContainerBuilder builder)
         {
             builder
-                .RegisterAssemblyTypes(typeof(IRequest).Assembly)
+                .RegisterGeneric(typeof(AuthenticationMiddleware<,>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterAssemblyTypes(typeof(IRequest).Assembly, typeof(Startup).Assembly)
                 .AsClosedTypesOf(typeof(IValidator<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();

@@ -12,6 +12,7 @@ namespace FoodSnap.Web.Actions
             = new Dictionary<Error.ErrorType, int>
             {
                 { Error.ErrorType.BadRequest, 400 },
+                { Error.ErrorType.Unauthenticated, 401 },
                 { Error.ErrorType.Unauthorised, 403 },
                 { Error.ErrorType.NotFound, 404 },
                 { Error.ErrorType.ValidationError, 422 },

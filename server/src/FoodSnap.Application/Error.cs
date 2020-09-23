@@ -31,6 +31,16 @@ namespace FoodSnap.Application
             return new Error(ErrorType.BadRequest, message);
         }
 
+        public static Error Unauthenticated()
+        {
+            return new Error(ErrorType.Unauthenticated, "Unauthenticated.");
+        }
+
+        public static Error Unauthorised()
+        {
+            return new Error(ErrorType.Unauthorised, "Unauthorised.");
+        }
+
         public static Error NotFound(string message)
         {
             return new Error(ErrorType.NotFound, message);
@@ -41,16 +51,6 @@ namespace FoodSnap.Application
             return new Error(errors);
         }
 
-        public static Error Unauthorised()
-        {
-            return Unauthorised("Unauthorised.");
-        }
-
-        public static Error Unauthorised(string message)
-        {
-            return new Error(ErrorType.Unauthorised, message);
-        }
-
         public static Error ServerError(string message)
         {
             return new Error(ErrorType.ServerError, message);
@@ -59,6 +59,7 @@ namespace FoodSnap.Application
         public enum ErrorType
         {
             BadRequest,
+            Unauthenticated,
             Unauthorised,
             NotFound,
             ValidationError,

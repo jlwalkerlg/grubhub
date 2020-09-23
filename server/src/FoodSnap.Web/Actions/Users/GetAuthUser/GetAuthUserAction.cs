@@ -28,11 +28,16 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
 
             var id = authenticator.UserId;
 
-            var data = (await mediator.Send(new GetUserByIdQuery(id))).Value;
+            var result = await mediator.Send(new GetUserByIdQuery(id));
+
+            if (!result.IsSuccess)
+            {
+                return PresentError(result.Error);
+            }
 
             return Ok(new DataEnvelope
             {
-                Data = data
+                Data = result.Value
             });
         }
     }

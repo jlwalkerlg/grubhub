@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Application.Validation;
 using MediatR;
 
-namespace FoodSnap.Application.Middleware
+namespace FoodSnap.Application.Validation
 {
     public class ValidationMiddleware<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest
         where TResponse : Result, new()
     {
         private readonly IEnumerable<IValidator<TRequest>> validators;
