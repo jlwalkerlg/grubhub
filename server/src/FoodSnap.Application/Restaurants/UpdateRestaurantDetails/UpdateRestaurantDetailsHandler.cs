@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain;
 
 namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
@@ -7,10 +8,12 @@ namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
     public class UpdateRestaurantDetailsHandler : IRequestHandler<UpdateRestaurantDetailsCommand>
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IAuthenticator authenticator;
 
-        public UpdateRestaurantDetailsHandler(IUnitOfWork unitOfWork)
+        public UpdateRestaurantDetailsHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator)
         {
             this.unitOfWork = unitOfWork;
+            this.authenticator = authenticator;
         }
 
         public async Task<Result> Handle(
@@ -22,6 +25,11 @@ namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
             if (restaurant == null)
             {
                 return Result.Fail(Error.NotFound("Restaurant not found."));
+            }
+
+            if (authenticator.UserId != restaurant.ManagerId)
+            {
+                return Result.Fail(Error.Unauthorised());
             }
 
             restaurant.Name = command.Name;

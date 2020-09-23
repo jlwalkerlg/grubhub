@@ -41,6 +41,16 @@ namespace FoodSnap.Application
             return new Error(errors);
         }
 
+        public static Error Unauthorised()
+        {
+            return Unauthorised("Unauthorised.");
+        }
+
+        public static Error Unauthorised(string message)
+        {
+            return new Error(ErrorType.Unauthorised, message);
+        }
+
         public static Error ServerError(string message)
         {
             return new Error(ErrorType.ServerError, message);
@@ -49,6 +59,7 @@ namespace FoodSnap.Application
         public enum ErrorType
         {
             BadRequest,
+            Unauthorised,
             NotFound,
             ValidationError,
             ServerError,
