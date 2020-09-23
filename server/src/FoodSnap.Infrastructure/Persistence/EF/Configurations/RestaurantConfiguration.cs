@@ -3,7 +3,7 @@ using FoodSnap.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Bruno.Infrastructure.Persistence.EF.Configurations
+namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
 {
     public class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
     {
