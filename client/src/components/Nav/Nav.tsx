@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import Link from "next/link";
 
 import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
-import LoginIcon from "~/components/Icons/LoginIcon";
+import LogoutIcon from "~/components/Icons/LogoutIcon";
 import RegisterIcon from "~/components/Icons/RegisterIcon";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
@@ -10,7 +10,7 @@ import useAuth from "~/store/auth/useAuth";
 import { useRouter } from "next/router";
 import DashboardIcon from "../Icons/DashboardIcon";
 
-const Nav: FC = () => {
+const Nav: React.FC = () => {
   const router = useRouter();
   const { isLoggedIn, user, logout } = useAuth();
 
@@ -31,7 +31,7 @@ const Nav: FC = () => {
         <div className="container flex items-center h-16 py-3">
           <Link href="/">
             <a className="font-semibold">
-              <RestaurantMenuIcon className="w-6 h-6 fill-current inline" />
+              <RestaurantMenuIcon className="w-6 h-6 inline" />
               <span className="align-middle ml-1">FOOD</span>
               <span className="text-primary align-middle ml-1">SNAP</span>
             </a>
@@ -42,9 +42,9 @@ const Nav: FC = () => {
             onClick={toggleNav}
           >
             {isOpen ? (
-              <CloseIcon className="fill-current w-6 h-6" />
+              <CloseIcon className="w-6 h-6" />
             ) : (
-              <MenuIcon className="fill-current w-6 h-6" />
+              <MenuIcon className="w-6 h-6" />
             )}
           </button>
 
@@ -101,7 +101,7 @@ const Nav: FC = () => {
                 {user.role === "RestaurantManager" && (
                   <Link href="/dashboard">
                     <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                      <DashboardIcon className="w-6 h-6 fill-current inline" />
+                      <DashboardIcon className="w-6 h-6 inline" />
                       <span className="ml-2 align-middle">Dashboard</span>
                     </a>
                   </Link>
@@ -111,7 +111,7 @@ const Nav: FC = () => {
                   onClick={onLogout}
                   className="block py-2 uppercase font-medium text-gray-900 hover:text-primary"
                 >
-                  <LoginIcon className="w-6 h-6 fill-current inline" />
+                  <LogoutIcon className="w-6 h-6 inline" />
                   <span className="ml-2 align-middle">Logout</span>
                 </button>
               </li>
@@ -121,7 +121,7 @@ const Nav: FC = () => {
               <li>
                 <Link href="/login">
                   <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                    <LoginIcon className="w-6 h-6 fill-current inline" />
+                    <LogoutIcon className="w-6 h-6 inline" />
                     <span className="ml-2 align-middle">Login</span>
                   </a>
                 </Link>
@@ -129,7 +129,7 @@ const Nav: FC = () => {
               <li>
                 <Link href="/register">
                   <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                    <RegisterIcon className="w-6 h-6 fill-current inline" />
+                    <RegisterIcon className="w-6 h-6 inline" />
                     <span className="ml-2 align-middle">Register</span>
                   </a>
                 </Link>

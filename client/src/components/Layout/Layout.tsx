@@ -8,7 +8,7 @@ interface Props {
   children: ReactNode;
 }
 
-const Layout: FC<Props> = ({ title, children }) => {
+const Layout: React.FC<Props> = ({ title, children }) => {
   return (
     <div className="pt-16 pb-64">
       <Head>

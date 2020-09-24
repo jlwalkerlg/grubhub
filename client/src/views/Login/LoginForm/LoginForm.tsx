@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import router from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -13,7 +13,7 @@ import useAuth from "~/store/auth/useAuth";
 import { LoginCommand } from "~/api/users/userApi";
 import { setFormErrors } from "~/utils/setFormErrors";
 
-const LoginForm: FC = () => {
+const LoginForm: React.FC = () => {
   const auth = useAuth();
 
   const form = useForm<LoginCommand>({

@@ -4,7 +4,7 @@ interface Props {
   className?: string;
 }
 
-const DashboardIcon: React.FC<Props> = ({ className }) => {
+const LogoutIcon: React.FC<Props> = ({ className }) => {
   return (
     <svg
       className={className}
@@ -17,10 +17,10 @@ const DashboardIcon: React.FC<Props> = ({ className }) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
-        d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
       ></path>
     </svg>
   );
 };
 
-export default DashboardIcon;
+export default LogoutIcon;

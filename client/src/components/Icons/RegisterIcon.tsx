@@ -1,13 +1,14 @@
-import React, { FC } from "react";
+import React from "react";
 
 interface Props {
   className?: string;
 }
 
-const RegisterIcon: FC<Props> = ({ className }) => {
+const RegisterIcon: React.FC<Props> = ({ className }) => {
   return (
     <svg
       className={className}
+      fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
     >

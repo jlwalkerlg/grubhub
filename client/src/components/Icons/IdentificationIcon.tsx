@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import React from "react";
 
 interface Props {
   className?: string;
 }
 
-const IdentificationIcon: FC<Props> = ({ className }) => {
+const IdentificationIcon: React.FC<Props> = ({ className }) => {
   return (
     <svg
       className={className}

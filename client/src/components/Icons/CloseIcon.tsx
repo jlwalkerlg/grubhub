@@ -1,18 +1,24 @@
-import React, { FC } from "react";
+import React from "react";
 
 interface Props {
   className?: string;
 }
 
-const CloseIcon: FC<Props> = ({ className }) => {
+const CloseIcon: React.FC<Props> = ({ className }) => {
   return (
     <svg
       className={className}
-      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
       viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M0 0h24v24H0z" fill="none" />
-      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M6 18L18 6M6 6l12 12"
+      ></path>
     </svg>
   );
 };

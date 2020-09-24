@@ -290,7 +290,7 @@ const LastStep: React.FC<Props> = ({
           disabled={!form.formState.isValid}
         >
           {form.formState.isSubmitting ? (
-            <SpinnerIcon className="fill-current h-6 w-6 inline-block animate-spin" />
+            <SpinnerIcon className="h-6 w-6 inline-block animate-spin" />
           ) : (
             <span>Register</span>
           )}

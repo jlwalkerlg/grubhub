@@ -22,7 +22,7 @@ export const Home: NextPage = () => {
           <div className="bg-primary rounded-sm py-4 px-4 mt-8 text-center">
             <div className="relative rounded-sm border bg-white text-gray-600">
               <span className="absolute left-0 top-0 pt-2 px-2">
-                <LocationMarkerIcon className="w-6 h-6 text-gray-500 fill-current" />
+                <LocationMarkerIcon className="w-6 h-6 text-gray-500" />
               </span>
               <input
                 className="relative shadow bg-transparent appearance-none w-full py-2 pl-10 pr-3 text-gray-700 focus:outline-none focus:shadow-outline"
