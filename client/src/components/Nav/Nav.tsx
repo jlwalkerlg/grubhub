@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React from "react";
 import Link from "next/link";
 
 import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
@@ -14,7 +14,7 @@ const Nav: React.FC = () => {
   const router = useRouter();
   const { isLoggedIn, user, logout } = useAuth();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const toggleNav = () => {
     setIsOpen(!isOpen);

@@ -1,11 +1,11 @@
-import React, { FC, ReactNode } from "react";
+import React from "react";
 import Head from "next/head";
 
 import Nav from "~/components/Nav/Nav";
 
 interface Props {
   title: string;
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 const Layout: React.FC<Props> = ({ title, children }) => {
