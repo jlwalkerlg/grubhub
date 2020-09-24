@@ -3,11 +3,15 @@ import { useSelector, useDispatch } from "react-redux";
 import cookie from "cookie";
 
 import { State } from "~/store/store";
-import authApi, { LoginCommand } from "~/api/users/userApi";
+import authApi, {
+  LoginCommand,
+  UpdateUserDetailsCommand,
+} from "~/api/users/userApi";
 import {
   createLoginAction,
   createLogoutAction,
   createUpdateAuthRestaurantDetailsAction,
+  createUpdateAuthUserDetailsAction,
 } from "./authActionCreators";
 import { Result } from "~/lib/Result";
 import { UserDto } from "~/api/users/UserDto";
@@ -15,6 +19,7 @@ import restaurantsApi, {
   UpdateRestaurantDetailsCommand,
 } from "~/api/restaurants/restaurantsApi";
 import { AuthState } from "./authReducer";
+import userApi from "~/api/users/userApi";
 
 export default function useAuth() {
   const dispatch = useDispatch();
@@ -83,6 +88,20 @@ export default function useAuth() {
     return Result.fail(response.error);
   };
 
+  const updateUserDetails = async (
+    command: UpdateUserDetailsCommand
+  ): Promise<Result> => {
+    const response = await userApi.updateDetails(command);
+
+    if (response.isSuccess) {
+      dispatch(createUpdateAuthUserDetailsAction(command));
+
+      return Result.ok<null>(null);
+    }
+
+    return Result.fail(response.error);
+  };
+
   return {
     isLoggedIn,
     user,
@@ -90,5 +109,6 @@ export default function useAuth() {
     login,
     logout,
     updateRestaurantDetails,
+    updateUserDetails,
   };
 }

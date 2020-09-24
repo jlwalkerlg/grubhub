@@ -1,11 +1,13 @@
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
+import { UpdateUserDetailsCommand } from "~/api/users/userApi";
 import { UserDto } from "~/api/users/UserDto";
 
 export const LOGIN = "AUTH_LOGIN";
 export const LOGOUT = "AUTH_LOGOUT";
 export const SET_AUTH_RESTAURANT = "SET_AUTH_RESTAURANT";
 export const UPDATE_RESTAURANT_DETAILS = "UPDATE_RESTAURANT_DETAILS";
+export const UPDATE_USER_DETAILS = "UPDATE_USER_DETAILS";
 
 export interface LoginAction {
   type: typeof LOGIN;
@@ -32,11 +34,19 @@ export interface UpdateRestaurantDetailsAction {
   };
 }
 
+export interface UpdateUserDetailsAction {
+  type: typeof UPDATE_USER_DETAILS;
+  payload: {
+    command: UpdateUserDetailsCommand;
+  };
+}
+
 type AuthAction =
   | LoginAction
   | LogoutAction
   | SetAuthRestaurantAction
-  | UpdateRestaurantDetailsAction;
+  | UpdateRestaurantDetailsAction
+  | UpdateUserDetailsAction;
 
 export interface AuthState {
   user: UserDto;
@@ -79,6 +89,16 @@ export default function authReducer(
       ...state,
       restaurant: {
         ...state.restaurant,
+        ...action.payload.command,
+      },
+    };
+  }
+
+  if (action.type === UPDATE_USER_DETAILS) {
+    return {
+      ...state,
+      user: {
+        ...state.user,
         ...action.payload.command,
       },
     };

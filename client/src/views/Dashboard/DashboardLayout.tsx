@@ -4,6 +4,7 @@ import Layout from "~/components/Layout/Layout";
 import useAuth from "~/store/auth/useAuth";
 import { useRouter } from "next/router";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
+import IdentificationIcon from "~/components/Icons/IdentificationIcon";
 
 interface DashboardRoute {
   title: string;
@@ -16,6 +17,11 @@ const routes: DashboardRoute[] = [
     title: "Restaurant Details",
     pathname: "/dashboard/restaurant-details",
     icon: BuildingIcon,
+  },
+  {
+    title: "Manager Details",
+    pathname: "/dashboard/manager-details",
+    icon: IdentificationIcon,
   },
 ];
 
@@ -56,7 +62,7 @@ export const DashboardLayout: React.FC<Props> = ({ children }) => {
                           (x === route ? " text-primary" : "")
                         }
                       >
-                        <x.icon className="w-4 h-4 fill-current" />
+                        <x.icon className="w-4 h-4" />
                         <span className="uppercase ml-2 text-xs font-semibold tracking-wide">
                           {x.title}
                         </span>

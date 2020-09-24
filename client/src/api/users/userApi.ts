@@ -6,6 +6,11 @@ export interface LoginCommand {
   password: string;
 }
 
+export interface UpdateUserDetailsCommand {
+  name: string;
+  email: string;
+}
+
 class UserApi extends Api {
   public login(request: LoginCommand) {
     return this.post("/auth/login", request);
@@ -17,6 +22,10 @@ class UserApi extends Api {
 
   public getAuthData() {
     return this.get<UserDto>("/auth/user");
+  }
+
+  public updateDetails(request: UpdateUserDetailsCommand) {
+    return this.put("/auth/user", request);
   }
 }
 
