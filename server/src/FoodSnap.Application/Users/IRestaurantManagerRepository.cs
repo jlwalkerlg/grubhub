@@ -6,6 +6,5 @@ namespace FoodSnap.Application.Users
     public interface IRestaurantManagerRepository
     {
         Task Add(RestaurantManager manager);
-        Task<bool> EmailExists(string email);
     }
 }

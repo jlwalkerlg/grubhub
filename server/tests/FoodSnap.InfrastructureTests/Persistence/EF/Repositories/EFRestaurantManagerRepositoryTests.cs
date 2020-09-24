@@ -34,23 +34,5 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             Assert.Equal(manager.Email, found.Email);
             Assert.Equal(manager.Password, found.Password);
         }
-
-        [Fact]
-        public async Task It_Checks_If_An_Email_Exists()
-        {
-            var emailAddress = "test@email.com";
-
-            var manager = new RestaurantManager(
-                "Jordan Walker",
-                new Email(emailAddress),
-                "password123");
-
-            Assert.False(await repository.EmailExists(emailAddress));
-
-            context.RestaurantManagers.Add(manager);
-            context.SaveChanges();
-
-            Assert.True(await repository.EmailExists(emailAddress));
-        }
     }
 }

@@ -8,5 +8,6 @@ namespace FoodSnap.Application.Users
     {
         Task<User> GetById(Guid id);
         Task<User> GetByEmail(string email);
+        Task<bool> EmailExists(string email);
     }
 }

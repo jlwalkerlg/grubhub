@@ -20,7 +20,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 .Required()
                 .Email()
                 .MustAsync(EmailIsUnique)
-                .WithMessage("Restaurant manager is already registered.");
+                .WithMessage("User is already registered.");
 
             CascadeRuleFor(x => x.ManagerPassword)
                 .Required()
@@ -46,7 +46,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
         private async Task<bool> EmailIsUnique(string email, CancellationToken cancellationToken)
         {
-            return !(await unitOfWork.RestaurantManagers.EmailExists(email));
+            return !(await unitOfWork.Users.EmailExists(email));
         }
     }
 }

@@ -26,5 +26,10 @@ namespace FoodSnap.ApplicationTests.Users
         {
             return Task.FromResult(Users.FirstOrDefault(x => x.Id == id));
         }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            return await GetByEmail(email) == null;
+        }
     }
 }
