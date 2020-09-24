@@ -68,7 +68,7 @@ export default function useAuth() {
         path: "/",
       });
 
-      return Result.ok<null>(null);
+      return Result.ok();
     }
 
     return Result.fail(response.error);
@@ -82,7 +82,7 @@ export default function useAuth() {
     if (response.isSuccess) {
       dispatch(createUpdateAuthRestaurantDetailsAction(command));
 
-      return Result.ok<null>(null);
+      return Result.ok();
     }
 
     return Result.fail(response.error);
@@ -96,7 +96,7 @@ export default function useAuth() {
     if (response.isSuccess) {
       dispatch(createUpdateAuthUserDetailsAction(command));
 
-      return Result.ok<null>(null);
+      return Result.ok();
     }
 
     return Result.fail(response.error);

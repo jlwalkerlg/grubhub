@@ -10,7 +10,7 @@ export default function useRestaurants() {
     const response = await restaurantsApi.register(command);
 
     if (response.isSuccess) {
-      return Result.ok(null);
+      return Result.ok();
     }
 
     return Result.fail(response.error);
