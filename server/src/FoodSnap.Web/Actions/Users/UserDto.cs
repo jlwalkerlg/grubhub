@@ -1,6 +1,6 @@
 using System;
 
-namespace FoodSnap.Web.Queries.Users
+namespace FoodSnap.Web.Actions.Users
 {
     public class UserDto
     {

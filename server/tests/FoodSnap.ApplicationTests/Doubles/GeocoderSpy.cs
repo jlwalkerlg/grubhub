@@ -1,20 +1,18 @@
 using System.Threading.Tasks;
 using FoodSnap.Application;
 using FoodSnap.Application.Services.Geocoding;
-using FoodSnap.Domain;
-using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.ApplicationTests.Doubles.GeocoderSpy
 {
     public class GeocoderSpy : IGeocoder
     {
-        public Coordinates Coordinates { get; set; }
-        public Address Address { get; private set; }
+        public GeocodingData Data { get; set; }
+        public string SearchAddress { get; private set; }
 
-        public Task<Result<Coordinates>> GetCoordinates(Address address)
+        public Task<Result<GeocodingData>> Geocode(string address)
         {
-            Address = address;
-            return Task.FromResult(Result.Ok(Coordinates));
+            SearchAddress = address;
+            return Task.FromResult(Result.Ok(Data));
         }
     }
 }

@@ -4,7 +4,7 @@ using Dapper;
 using FoodSnap.Application;
 using FoodSnap.Infrastructure.Persistence;
 
-namespace FoodSnap.Web.Queries.Users.GetUserById
+namespace FoodSnap.Web.Actions.Users.GetUserById
 {
     public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto>
     {

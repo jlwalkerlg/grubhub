@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.Restaurants;
-using FoodSnap.Web.Queries.Restaurants.GetMenuByRestaurantId;
+using FoodSnap.Web.Actions.Restaurants;
+using FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

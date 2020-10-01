@@ -4,7 +4,6 @@ using FoodSnap.Application.Services.Geocoding;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using FoodSnap.Application;
-using FoodSnap.Domain;
 
 namespace FoodSnap.Infrastructure.Geocoding
 {
@@ -17,9 +16,9 @@ namespace FoodSnap.Infrastructure.Geocoding
             this.key = key;
         }
 
-        public async Task<Result<Coordinates>> GetCoordinates(Address address)
+        public async Task<Result<GeocodingData>> Geocode(string address)
         {
-            var response = await SendRequest(address.Value);
+            var response = await SendRequest(address);
             var json = ConvertResponseToJson(response);
 
             var jobj = JObject.Parse(json);
@@ -28,15 +27,17 @@ namespace FoodSnap.Infrastructure.Geocoding
 
             if (status != "OK")
             {
-                return Result<Coordinates>.Fail(Error.Internal(status));
+                return Result<GeocodingData>.Fail(Error.Internal(status));
             }
 
             var result = jobj["results"][0];
 
-            return Result.Ok(
-                new Coordinates(
-                    (float)result["geometry"]["location"]["lat"],
-                    (float)result["geometry"]["location"]["lng"]));
+            return Result.Ok(new GeocodingData
+            {
+                FormattedAddress = (string)result["formatted_address"],
+                Latitude = (float)result["geometry"]["location"]["lat"],
+                Longitude = (float)result["geometry"]["location"]["lng"],
+            });
         }
 
         private Task<WebResponse> SendRequest(string formattedAddress)

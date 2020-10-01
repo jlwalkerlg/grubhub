@@ -24,16 +24,12 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
         public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
         {
-            var address = new Address(command.Address);
+            var geocodingResult = await geocoder.Geocode(command.Address);
 
-            var coordinatesResult = await geocoder.GetCoordinates(address);
-
-            if (!coordinatesResult.IsSuccess)
+            if (!geocodingResult.IsSuccess)
             {
                 return Result.Fail(Error.BadRequest("Address is not a valid postal address."));
             }
-
-            var coordinates = coordinatesResult.Value;
 
             var manager = new RestaurantManager(
                 command.ManagerName,
@@ -44,8 +40,8 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 manager.Id,
                 command.RestaurantName,
                 new PhoneNumber(command.RestaurantPhoneNumber),
-                address,
-                coordinates);
+                new Address(geocodingResult.Value.FormattedAddress),
+                new Coordinates(geocodingResult.Value.Latitude, geocodingResult.Value.Longitude));
 
             var menu = new Menu(restaurant.Id);
             await unitOfWork.Menus.Add(menu);

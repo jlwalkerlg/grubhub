@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using FoodSnap.Domain;
 using FoodSnap.Infrastructure.Geocoding;
 using Xunit;
 
@@ -19,22 +18,19 @@ namespace FoodSnap.InfrastructureTests.Geocoding
         [Trait("Category", "ExternalService")]
         public async Task It_Converts_An_Address_Into_Coordinates()
         {
-            var address = new Address("1 Maine Road, Manchester, UK");
+            var result = await geocoder.Geocode("1 Maine Road, Manchester, UK");
 
-            var coordinatesResult = await geocoder.GetCoordinates(address);
-
-            Assert.True(coordinatesResult.IsSuccess);
-            Assert.NotEqual(default(float), coordinatesResult.Value.Latitude);
-            Assert.NotEqual(default(float), coordinatesResult.Value.Longitude);
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Value.FormattedAddress);
+            Assert.NotEqual(default(float), result.Value.Latitude);
+            Assert.NotEqual(default(float), result.Value.Longitude);
         }
 
         [Fact]
         [Trait("Category", "ExternalService")]
         public async Task It_Returns_An_Error_If_Geocoding_Fails()
         {
-            var address = new Address("random");
-
-            var coordinatesResult = await geocoder.GetCoordinates(address);
+            var coordinatesResult = await geocoder.Geocode("random");
 
             Assert.False(coordinatesResult.IsSuccess);
         }

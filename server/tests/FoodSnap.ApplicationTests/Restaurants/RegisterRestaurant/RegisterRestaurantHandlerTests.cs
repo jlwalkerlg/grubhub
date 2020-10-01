@@ -2,11 +2,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
+using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.ApplicationTests.Doubles;
 using FoodSnap.ApplicationTests.Doubles.GeocoderSpy;
 using FoodSnap.ApplicationTests.Events;
 using FoodSnap.ApplicationTests.Users;
-using FoodSnap.Domain;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
@@ -41,7 +41,12 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_A_New_Restaurant()
         {
-            geocoderSpy.Coordinates = new Coordinates(0, 0);
+            geocoderSpy.Data = new GeocodingData
+            {
+                FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
+                Latitude = 1,
+                Longitude = 1,
+            };
 
             var command = new RegisterRestaurantCommand
             {
@@ -66,7 +71,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.Equal(command.RestaurantName, restaurant.Name);
             Assert.Equal(command.RestaurantPhoneNumber, restaurant.PhoneNumber.Number);
             Assert.Equal(command.Address, restaurant.Address.Value);
-            Assert.Equal(restaurant.Address, geocoderSpy.Address);
+            Assert.Equal(restaurant.Address.Value, geocoderSpy.Data.FormattedAddress);
 
             var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy
                 .Events
@@ -80,7 +85,12 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_An_Empty_Restaurant_Menu()
         {
-            geocoderSpy.Coordinates = new Coordinates(0, 0);
+            geocoderSpy.Data = new GeocodingData
+            {
+                FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
+                Latitude = 1,
+                Longitude = 1,
+            };
 
             var command = new RegisterRestaurantCommand
             {

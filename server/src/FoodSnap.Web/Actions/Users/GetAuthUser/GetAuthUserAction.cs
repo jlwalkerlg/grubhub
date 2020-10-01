@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.Users.GetUserById;
+using FoodSnap.Web.Actions.Users.GetUserById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

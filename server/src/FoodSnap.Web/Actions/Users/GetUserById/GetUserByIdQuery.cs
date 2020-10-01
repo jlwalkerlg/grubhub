@@ -1,7 +1,7 @@
 ﻿using System;
 using FoodSnap.Application;
 
-namespace FoodSnap.Web.Queries.Users.GetUserById
+namespace FoodSnap.Web.Actions.Users.GetUserById
 {
     public class GetUserByIdQuery : IRequest<UserDto>
     {

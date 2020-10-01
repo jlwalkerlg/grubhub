@@ -4,9 +4,9 @@ using FoodSnap.Application;
 using FoodSnap.ApplicationTests.Doubles;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
+using FoodSnap.Web.Actions.Users;
 using FoodSnap.Web.Actions.Users.GetAuthUser;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.Users;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 

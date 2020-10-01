@@ -4,7 +4,7 @@ using Dapper;
 using FoodSnap.Application;
 using FoodSnap.Infrastructure.Persistence;
 
-namespace FoodSnap.Web.Queries.Restaurants.GetRestaurantById
+namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
 {
     public class GetRestaurantByIdHandler : IRequestHandler<GetRestaurantByIdQuery, RestaurantDto>
     {
