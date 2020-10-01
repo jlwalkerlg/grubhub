@@ -27,5 +27,16 @@ namespace FoodSnap.InfrastructureTests.Geocoding
             Assert.NotEqual(default(float), coordinatesResult.Value.Latitude);
             Assert.NotEqual(default(float), coordinatesResult.Value.Longitude);
         }
+
+        [Fact]
+        [Trait("Category", "ExternalService")]
+        public async Task It_Returns_An_Error_If_Geocoding_Fails()
+        {
+            var address = new Address("random");
+
+            var coordinatesResult = await geocoder.GetCoordinates(address);
+
+            Assert.False(coordinatesResult.IsSuccess);
+        }
     }
 }
