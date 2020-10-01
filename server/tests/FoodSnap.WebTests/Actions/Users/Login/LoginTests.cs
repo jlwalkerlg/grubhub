@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Hashing;
+using FoodSnap.Application.Users.Login;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
 using FoodSnap.WebTests.Functional;
@@ -27,10 +28,10 @@ namespace FoodSnap.WebTests.Actions.Restaurants.Login
             await appDbContext.Users.AddAsync(user);
             await appDbContext.SaveChangesAsync();
 
-            var response = await PostJson("/auth/login", new
+            var response = await PostJson("/auth/login", new LoginCommand
             {
-                email = "walker.jlg@gmail.com",
-                password = "password123",
+                Email = "walker.jlg@gmail.com",
+                Password = "password123",
             });
 
             response.EnsureSuccessStatusCode();
