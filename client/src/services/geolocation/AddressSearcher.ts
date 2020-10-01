@@ -1,4 +1,4 @@
-import scriptLoader from "../script-loader/ScriptLoader";
+import { loadScript } from "../helpers";
 
 export interface AddressSearchResult {
   id: string;
@@ -22,11 +22,9 @@ class AddressSearcher {
   constructor() {
     if (typeof window !== "undefined") {
       if (!window.google) {
-        scriptLoader
-          .load(
-            `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`
-          )
-          .then(this.init.bind(this));
+        loadScript(
+          `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`
+        ).then(this.init.bind(this));
       } else {
         this.init();
       }

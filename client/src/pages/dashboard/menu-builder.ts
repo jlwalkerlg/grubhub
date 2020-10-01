@@ -9,7 +9,7 @@ import {
   createSetAuthRestaurantMenuAction,
   createSetAuthRestaurantAction,
 } from "~/store/auth/authActionCreators";
-import { dispatchUserFromRequest } from "~/services/auth/dispatchUserFromRequest";
+import { dispatchUserFromRequest } from "~/services/auth/authHelpers";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const store = initializeStore();

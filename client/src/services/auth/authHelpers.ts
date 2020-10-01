@@ -1,8 +1,10 @@
 import { GetServerSidePropsContext } from "next";
 import { Store } from "redux";
+import cookie from "cookie";
 import { createLoginAction } from "~/store/auth/authActionCreators";
 import { State } from "~/store/store";
-import { getUserFromRequest } from "./getUserFromRequest";
+import { IncomingMessage } from "http";
+import { UserDto } from "~/api/users/UserDto";
 import { redirect } from "../helpers";
 
 export const dispatchUserFromRequest = (
@@ -21,4 +23,17 @@ export const dispatchUserFromRequest = (
   }
 
   return user;
+};
+
+export const getUserFromRequest = (req: IncomingMessage) => {
+  const cookies = cookie.parse(req.headers.cookie || "");
+  return JSON.parse(cookies["auth_data"] || null) as UserDto;
+};
+
+export const redirectIfAuthenticated = (ctx: GetServerSidePropsContext) => {
+  const user = getUserFromRequest(ctx.req);
+
+  if (user !== null) {
+    redirect(ctx.res, "/dashboard");
+  }
 };
