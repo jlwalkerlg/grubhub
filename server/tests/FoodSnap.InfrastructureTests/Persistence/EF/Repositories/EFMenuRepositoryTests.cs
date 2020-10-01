@@ -28,11 +28,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address(
-                    "1 Manchester Road",
-                    "",
-                    "Madchester",
-                    new Postcode("MA444AD")),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(0, 0));
 
             context.RestaurantManagers.Add(manager);

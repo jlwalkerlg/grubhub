@@ -39,11 +39,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Missa Few",
-                    "",
-                    "NinetyNine",
-                    new Postcode("ON33NO")),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -95,11 +91,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 Guid.NewGuid(),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Missa Few",
-                    "",
-                    "NinetyNine",
-                    new Postcode("ON33NO")),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);

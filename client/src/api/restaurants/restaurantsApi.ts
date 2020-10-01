@@ -8,10 +8,7 @@ export interface RegisterRestaurantCommand {
   managerPassword: string;
   restaurantName: string;
   restaurantPhoneNumber: string;
-  addressLine1: string;
-  addressLine2: string;
-  town: string;
-  postcode: string;
+  address: string;
 }
 
 export interface UpdateRestaurantDetailsCommand {

@@ -3,10 +3,7 @@ export interface RestaurantDto {
   managerId: string;
   name: string;
   phoneNumber: string;
-  addressLine1: string;
-  addressLine2: string;
-  town: string;
-  postcode: string;
+  address: string;
   latitude: number;
   longitude: number;
   status: RestaurantStatus;

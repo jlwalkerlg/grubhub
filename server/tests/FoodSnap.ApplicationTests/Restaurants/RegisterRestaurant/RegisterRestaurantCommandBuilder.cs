@@ -11,10 +11,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             ManagerPassword = "password123",
             RestaurantName = "Chow Main",
             RestaurantPhoneNumber = "01234 567890",
-            AddressLine1 = "19 Main Street",
-            AddressLine2 = null,
-            Town = "Manchester",
-            Postcode = "WS12 1WS",
+            Address = "1 Maine Road, Manchester, UK"
         };
 
         public RegisterRestaurantCommandBuilder SetManagerName(string managerName)
@@ -47,27 +44,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             return this;
         }
 
-        public RegisterRestaurantCommandBuilder SetAddressLine1(string addressLine1)
+        public RegisterRestaurantCommandBuilder SetAddress(string address)
         {
-            command.AddressLine1 = addressLine1;
-            return this;
-        }
-
-        public RegisterRestaurantCommandBuilder SetAddressLine2(string addressLine2)
-        {
-            command.AddressLine2 = addressLine2;
-            return this;
-        }
-
-        public RegisterRestaurantCommandBuilder SetTown(string town)
-        {
-            command.Town = town;
-            return this;
-        }
-
-        public RegisterRestaurantCommandBuilder SetPostcode(string postcode)
-        {
-            command.Postcode = postcode;
+            command.Address = address;
             return this;
         }
 

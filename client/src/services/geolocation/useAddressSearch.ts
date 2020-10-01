@@ -1,15 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import debounce from "lodash/debounce";
 
-import addressSearcher, {
-  AddressSearchResult,
-  Address,
-} from "./AddressSearcher";
+import addressSearcher, { AddressSearchResult } from "./AddressSearcher";
 
 export default function useAddressSearch(query: string) {
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState<AddressSearchResult[]>([]);
-  const [address, setAddress] = useState<Address>(null);
+  const [address, setAddress] = useState<string>(null);
 
   const search = useRef(
     debounce((query: string) => {

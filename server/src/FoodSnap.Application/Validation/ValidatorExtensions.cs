@@ -11,11 +11,6 @@ namespace FoodSnap.Application.Validation
             RegexOptions.Compiled,
             TimeSpan.FromMilliseconds(250));
 
-        private static Regex postcodeRegex = new Regex(
-            "^[A-Z]{2}[0-9]{1,2} ?[0-9][A-Z]{2}$",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled,
-            TimeSpan.FromMilliseconds(250));
-
         public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
         {
             return ruleBuilder
@@ -42,13 +37,6 @@ namespace FoodSnap.Application.Validation
             return ruleBuilder
                 .Matches(phoneNumberRegex)
                 .WithMessage("Must be a valid phone number.");
-        }
-
-        public static IRuleBuilderOptions<T, string> Postcode<T>(this IRuleBuilder<T, string> ruleBuilder)
-        {
-            return ruleBuilder
-                .Matches(postcodeRegex)
-                .WithMessage("Must be a valid postcode.");
         }
     }
 }

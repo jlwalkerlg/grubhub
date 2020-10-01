@@ -25,10 +25,7 @@ namespace FoodSnap.Web.Queries.Restaurants.GetRestaurantById
                     r.manager_id,
                     r.name,
                     r.phone_number,
-                    r.address_line1,
-                    r.address_line2,
-                    r.town,
-                    r.postcode,
+                    r.address,
                     r.latitude,
                     r.longitude,
                     r.status

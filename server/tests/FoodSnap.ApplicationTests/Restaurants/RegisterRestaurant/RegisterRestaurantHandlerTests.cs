@@ -50,10 +50,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
                 RestaurantPhoneNumber = "01234567890",
-                AddressLine1 = "12 Manchester Road",
-                AddressLine2 = "",
-                Town = "Manchester",
-                Postcode = "MN12 1NM"
+                Address = "1 Maine Road, Manchester, UK"
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
@@ -68,10 +65,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.Equal(manager.Id, restaurant.ManagerId);
             Assert.Equal(command.RestaurantName, restaurant.Name);
             Assert.Equal(command.RestaurantPhoneNumber, restaurant.PhoneNumber.Number);
-            Assert.Equal(command.AddressLine1, restaurant.Address.Line1);
-            Assert.Equal(command.AddressLine2, restaurant.Address.Line2);
-            Assert.Equal(command.Town, restaurant.Address.Town);
-            Assert.Equal(command.Postcode, restaurant.Address.Postcode.Code);
+            Assert.Equal(command.Address, restaurant.Address.Value);
             Assert.Equal(restaurant.Address, geocoderSpy.Address);
 
             var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy
@@ -95,10 +89,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
                 RestaurantPhoneNumber = "01234567890",
-                AddressLine1 = "12 Manchester Road",
-                AddressLine2 = "",
-                Town = "Manchester",
-                Postcode = "MN12 1NM"
+                Address = "1 Maine Road, Manchester, UK"
             };
             await handler.Handle(command, CancellationToken.None);
 

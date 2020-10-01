@@ -7,9 +7,6 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
         public string ManagerPassword { get; set; }
         public string RestaurantName { get; set; }
         public string RestaurantPhoneNumber { get; set; }
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string Town { get; set; }
-        public string Postcode { get; set; }
+        public string Address { get; set; }
     }
 }

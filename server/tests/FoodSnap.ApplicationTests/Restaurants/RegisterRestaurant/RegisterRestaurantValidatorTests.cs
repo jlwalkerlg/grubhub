@@ -120,5 +120,21 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.False(result.IsSuccess);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantPhoneNumber)));
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task Disallows_Invalid_Restaurant_Addresses(string address)
+        {
+            var command = new RegisterRestaurantCommandBuilder()
+                .SetAddress(address)
+                .Build();
+
+            var result = await validator.Validate(command);
+
+            Assert.False(result.IsSuccess);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Address)));
+        }
     }
 }

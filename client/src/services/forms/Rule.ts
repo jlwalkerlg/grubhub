@@ -62,15 +62,3 @@ export class PhoneRule implements Rule {
     return null;
   }
 }
-
-export class PostcodeRule implements Rule {
-  private static regex = /^[A-Z]{2}[0-9]{1,2} ?[0-9][A-Z]{2}$/i;
-
-  constructor(readonly message: string = "Must be a valid post code.") {}
-
-  validate(value: string): string | null {
-    if (!PostcodeRule.regex.test(value)) return this.message;
-
-    return null;
-  }
-}

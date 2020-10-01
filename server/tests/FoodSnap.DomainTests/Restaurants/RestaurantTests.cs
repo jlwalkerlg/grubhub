@@ -14,11 +14,7 @@ namespace FoodSnap.DomainTests.Restaurants
                 Guid.NewGuid(),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Manchester Road",
-                    "",
-                    "Manchester",
-                    new Postcode("WS12 1WS")),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
 
             Assert.Equal(RestaurantStatus.PendingApproval, restaurant.Status);
@@ -31,11 +27,7 @@ namespace FoodSnap.DomainTests.Restaurants
                 Guid.NewGuid(),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Manchester Road",
-                    "",
-                    "Manchester",
-                    new Postcode("WS12 1WS")),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
 
             restaurant.Approve();
@@ -50,11 +42,7 @@ namespace FoodSnap.DomainTests.Restaurants
                 Guid.NewGuid(),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Manchester Road",
-                    "",
-                    "Manchester",
-                    new Postcode("WS12 1WS")),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
 
             restaurant.Approve();
@@ -67,7 +55,7 @@ namespace FoodSnap.DomainTests.Restaurants
         {
             var name = "Chow Main";
             var phoneNumber = new PhoneNumber("01234567890");
-            var address = new Address("12 Manchester Road", "", "Manchester", new Postcode("WS12 1WS"));
+            var address = new Address("1 Maine Road, Manchester, UK");
             var coordinates = new Coordinates(0, 0);
 
             Assert.Throws<ArgumentException>(() =>
@@ -83,7 +71,7 @@ namespace FoodSnap.DomainTests.Restaurants
         public void Disallows_Invalid_Names(string name)
         {
             var phoneNumber = new PhoneNumber("01234567890");
-            var address = new Address("12 Manchester Road", "", "Manchester", new Postcode("WS12 1WS"));
+            var address = new Address("1 Maine Road, Manchester, UK");
             var coordinates = new Coordinates(0, 0);
 
             Assert.Throws<ArgumentException>(() =>
@@ -105,7 +93,7 @@ namespace FoodSnap.DomainTests.Restaurants
         public void Disallows_Null_Phone_Numbers()
         {
             var name = "Chow Main";
-            var address = new Address("12 Manchester Road", "", "Manchester", new Postcode("WS12 1WS"));
+            var address = new Address("1 Maine Road, Manchester, UK");
             var coordinates = new Coordinates(0, 0);
 
             Assert.Throws<ArgumentNullException>(() =>
@@ -139,7 +127,7 @@ namespace FoodSnap.DomainTests.Restaurants
         public void Disallows_Null_Coordinates()
         {
             var name = "Chow Main";
-            var address = new Address("12 Manchester Road", "", "Manchester", new Postcode("WS12 1WS"));
+            var address = new Address("1 Maine Road, Manchester, UK");
             var phoneNumber = new PhoneNumber("01234567890");
 
             Assert.Throws<ArgumentNullException>(() =>

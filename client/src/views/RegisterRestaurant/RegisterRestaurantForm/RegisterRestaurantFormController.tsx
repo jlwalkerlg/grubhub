@@ -10,7 +10,6 @@ import {
   PasswordRule,
   EmailRule,
   PhoneRule,
-  PostcodeRule,
   combineRules,
 } from "~/services/forms/Rule";
 import useAddressSearch from "~/services/geolocation/useAddressSearch";
@@ -53,10 +52,7 @@ const RegisterRestaurantFormController: React.FC = () => {
 
   const step3 = useForm<StepThree>({
     defaultValues: {
-      addressLine1: "",
-      addressLine2: "",
-      town: "",
-      postcode: "",
+      address: "",
     },
     mode: "onBlur",
     reValidateMode: "onChange",
@@ -84,14 +80,8 @@ const RegisterRestaurantFormController: React.FC = () => {
   }, [step2.register]);
 
   React.useEffect(() => {
-    step3.register("addressLine1", {
+    step3.register("address", {
       validate: combineRules([new RequiredRule()]),
-    });
-    step3.register("town", {
-      validate: combineRules([new RequiredRule()]),
-    });
-    step3.register("postcode", {
-      validate: combineRules([new RequiredRule(), new PostcodeRule()]),
     });
   }, [step3.register]);
 
@@ -99,14 +89,11 @@ const RegisterRestaurantFormController: React.FC = () => {
     results: addressSearchResults,
     address,
     onSelectAddress,
-  } = useAddressSearch(step3.watch("addressLine1"));
+  } = useAddressSearch(step3.watch("address"));
 
   React.useEffect(() => {
     if (address !== null) {
-      step3.setValue("addressLine1", address.addressLine1);
-      step3.setValue("addressLine2", address.addressLine2);
-      step3.setValue("town", address.town);
-      step3.setValue("postcode", address.postcode);
+      step3.setValue("address", address);
     }
   }, [address]);
 

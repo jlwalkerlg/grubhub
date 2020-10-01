@@ -16,7 +16,7 @@ export const Home: NextPage = () => {
             What would you like to eat?
           </p>
           <p className="mt-4 text-lg">
-            Enter your postcode to find nearby restaurants ready to serve fresh
+            Enter your address to find nearby restaurants ready to serve fresh
             food straight to your door!
           </p>
           <div className="bg-primary rounded-sm py-4 px-4 mt-8 text-center">
@@ -26,9 +26,9 @@ export const Home: NextPage = () => {
               </span>
               <input
                 className="relative shadow bg-transparent appearance-none w-full py-2 pl-10 pr-3 text-gray-700 focus:outline-none focus:shadow-outline"
-                id="postcode"
+                id="address"
                 type="text"
-                placeholder="Enter your postcode"
+                placeholder="Enter your address"
               />
             </div>
             <button className="btn btn-secondary text-lg w-full mt-3">

@@ -24,17 +24,13 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 
         public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
         {
-            var address = new Address(
-                    command.AddressLine1,
-                    command.AddressLine2,
-                    command.Town,
-                    new Postcode(command.Postcode));
+            var address = new Address(command.Address);
 
             var coordinatesResult = await geocoder.GetCoordinates(address);
 
             if (!coordinatesResult.IsSuccess)
             {
-                return coordinatesResult;
+                return Result.Fail(Error.BadRequest("Address is not a valid postal address."));
             }
 
             var coordinates = coordinatesResult.Value;

@@ -33,15 +33,8 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 .Required()
                 .PhoneNumber();
 
-            CascadeRuleFor(x => x.AddressLine1)
+            CascadeRuleFor(x => x.Address)
                 .Required();
-
-            CascadeRuleFor(x => x.Town)
-                .Required();
-
-            CascadeRuleFor(x => x.Postcode)
-                .Required()
-                .Postcode();
         }
 
         private async Task<bool> EmailIsUnique(string email, CancellationToken cancellationToken)

@@ -30,13 +30,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
 
             builder.OwnsOne(x => x.Address, x =>
             {
-                x.Property(y => y.Line1).IsRequired().HasColumnName("address_line1");
-                x.Property(y => y.Line2).HasColumnName("address_line2");
-                x.Property(y => y.Town).IsRequired().HasColumnName("town");
-                x.OwnsOne(y => y.Postcode, y =>
-                {
-                    y.Property(p => p.Code).IsRequired().HasColumnName("postcode");
-                });
+                x.Property(y => y.Value).IsRequired().HasColumnName("address");
             });
 
             builder.OwnsOne(x => x.Coordinates, x =>

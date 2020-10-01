@@ -1,13 +1,10 @@
 using System.Net;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using FoodSnap.Application;
 using FoodSnap.Domain;
-using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Infrastructure.Geocoding
 {
@@ -22,8 +19,7 @@ namespace FoodSnap.Infrastructure.Geocoding
 
         public async Task<Result<Coordinates>> GetCoordinates(Address address)
         {
-            var formattedAddress = FormatAddress(address);
-            var response = await SendRequest(formattedAddress);
+            var response = await SendRequest(address.Value);
             var json = ConvertResponseToJson(response);
 
             var jobj = JObject.Parse(json);
@@ -41,21 +37,6 @@ namespace FoodSnap.Infrastructure.Geocoding
                 new Coordinates(
                     (float)result["geometry"]["location"]["lat"],
                     (float)result["geometry"]["location"]["lng"]));
-        }
-
-        private string FormatAddress(Address address)
-        {
-            var components = new List<string>
-            {
-                address.Line1,
-                address.Line2,
-                address.Town,
-                address.Postcode.Code,
-            }
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .ToList();
-
-            return string.Join(", ", components);
         }
 
         private Task<WebResponse> SendRequest(string formattedAddress)

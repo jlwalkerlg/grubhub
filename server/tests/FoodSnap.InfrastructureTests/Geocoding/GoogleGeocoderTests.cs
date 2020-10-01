@@ -19,11 +19,7 @@ namespace FoodSnap.InfrastructureTests.Geocoding
         [Trait("Category", "ExternalService")]
         public async Task It_Converts_An_Address_Into_Coordinates()
         {
-            var address = new Address(
-                "19 Bodmin Avenue",
-                "Wrose",
-                "Shipley",
-                new Postcode("BD181LT"));
+            var address = new Address("1 Maine Road, Manchester, UK");
 
             var coordinatesResult = await geocoder.GetCoordinates(address);
 

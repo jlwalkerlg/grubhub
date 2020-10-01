@@ -20,10 +20,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
                 managerPassword = "password123",
                 restaurantName = "Chow Main",
                 restaurantPhoneNumber = "01234567890",
-                addressLine1 = "1 Mean Street",
-                addressLine2 = "",
-                town = "Manchester",
-                postcode = "MN12 1NM",
+                address = "1 Maine Road, Manchester, UK"
             });
 
             response.EnsureSuccessStatusCode();

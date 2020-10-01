@@ -31,12 +31,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234 567890"),
-                new Address(
-                    "19 Gold Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")
-                ),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(0, 0)
             );
 
@@ -63,12 +58,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234 567890"),
-                new Address(
-                    "19 Gold Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")
-                ),
+                new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(0, 0)
             );
 

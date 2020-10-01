@@ -18,10 +18,7 @@ export interface StepTwo {
 }
 
 export interface StepThree {
-  addressLine1: string;
-  addressLine2: string;
-  town: string;
-  postcode: string;
+  address: string;
 }
 
 export interface Props {
@@ -199,8 +196,8 @@ const LastStep: React.FC<Props> = ({
       </p>
 
       <div className="mt-4">
-        <label className="label" htmlFor="addressLine1">
-          Address Line 1 <span className="text-primary">*</span>
+        <label className="label" htmlFor="address">
+          Address <span className="text-primary">*</span>
         </label>
         <Autocomplete
           inputRef={form.register}
@@ -209,67 +206,14 @@ const LastStep: React.FC<Props> = ({
           autoFocus
           className="input"
           type="text"
-          name="addressLine1"
-          id="addressLine1"
+          name="address"
+          id="address"
           placeholder="e.g. 123 High Street"
           autoComplete="new-password"
-          data-invalid={!!form.errors.addressLine1}
+          data-invalid={!!form.errors.address}
         ></Autocomplete>
-        {form.errors.addressLine1 && (
-          <p className="form-error mt-1">{form.errors.addressLine1.message}</p>
-        )}
-      </div>
-
-      <div className="mt-4">
-        <label className="label" htmlFor="addressLine2">
-          Address Line 2
-        </label>
-        <input
-          ref={form.register}
-          className="input"
-          type="text"
-          name="addressLine2"
-          id="addressLine2"
-          data-invalid={!!form.errors.addressLine2}
-        />
-        {form.errors.addressLine2 && (
-          <p className="form-error mt-1">{form.errors.addressLine2.message}</p>
-        )}
-      </div>
-
-      <div className="mt-4">
-        <label className="label" htmlFor="town">
-          Town / City <span className="text-primary">*</span>
-        </label>
-        <input
-          ref={form.register}
-          className="input"
-          type="text"
-          name="town"
-          id="town"
-          placeholder="e.g. Manchester"
-          data-invalid={!!form.errors.town}
-        />
-        {form.errors.town && (
-          <p className="form-error mt-1">{form.errors.town.message}</p>
-        )}
-      </div>
-
-      <div className="mt-4">
-        <label className="label" htmlFor="postcode">
-          Post Code <span className="text-primary">*</span>
-        </label>
-        <input
-          ref={form.register}
-          className="input"
-          type="text"
-          name="postcode"
-          id="postcode"
-          placeholder="e.g. AB12 3CD"
-          data-invalid={!!form.errors.postcode}
-        />
-        {form.errors.postcode && (
-          <p className="form-error mt-1">{form.errors.postcode.message}</p>
+        {form.errors.address && (
+          <p className="form-error mt-1">{form.errors.address.message}</p>
         )}
       </div>
 
