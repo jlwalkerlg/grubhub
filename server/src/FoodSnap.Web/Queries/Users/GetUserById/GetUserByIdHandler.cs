@@ -6,11 +6,11 @@ using FoodSnap.Infrastructure.Persistence;
 
 namespace FoodSnap.Web.Queries.Users.GetUserById
 {
-    public class GetAuthDataHandler : IRequestHandler<GetUserByIdQuery, UserDto>
+    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto>
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetAuthDataHandler(IDbConnectionFactory dbConnectionFactory)
+        public GetUserByIdHandler(IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
@@ -19,16 +19,18 @@ namespace FoodSnap.Web.Queries.Users.GetUserById
         {
             var sql = @"
                 SELECT
-                    users.id,
-                    users.name,
-                    users.email,
-                    users.password,
-                    users.role
+                    u.id,
+                    u.name,
+                    u.email,
+                    u.password,
+                    u.role,
+                    r.id as restaurant_id,
+                    r.name as restaurant_name
                 FROM
-                    users
+                    users u
+                LEFT JOIN restaurants r ON r.manager_id = u.id
                 WHERE
-                    users.Id = @Id";
-            ;
+                    u.Id = @Id";
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {

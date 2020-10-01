@@ -3,6 +3,7 @@ import {
   LoginAction,
   LOGOUT,
   LogoutAction,
+  SetAuthRestaurantMenuAction,
   SetAuthRestaurantAction,
   UpdateRestaurantDetailsAction,
   UpdateUserDetailsAction,
@@ -11,6 +12,7 @@ import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
 import { UpdateUserDetailsCommand } from "~/api/users/userApi";
+import { MenuDto } from "~/api/restaurants/MenuDto";
 
 export const createLoginAction = (user: UserDto): LoginAction => ({
   type: LOGIN,
@@ -29,6 +31,15 @@ export const createSetAuthRestaurantAction = (
   type: "SET_AUTH_RESTAURANT",
   payload: {
     restaurant,
+  },
+});
+
+export const createSetAuthRestaurantMenuAction = (
+  menu: MenuDto
+): SetAuthRestaurantMenuAction => ({
+  type: "SET_AUTH_RESTAURANT_MENU",
+  payload: {
+    menu,
   },
 });
 

@@ -5,6 +5,7 @@ import useAuth from "~/store/auth/useAuth";
 import { useRouter } from "next/router";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
 import IdentificationIcon from "~/components/Icons/IdentificationIcon";
+import ClipboardIcon from "~/components/Icons/ClipboardIcon";
 
 interface DashboardRoute {
   title: string;
@@ -22,6 +23,11 @@ const routes: DashboardRoute[] = [
     title: "Manager Details",
     pathname: "/dashboard/manager-details",
     icon: IdentificationIcon,
+  },
+  {
+    title: "Menu Builder",
+    pathname: "/dashboard/menu-builder",
+    icon: ClipboardIcon,
   },
 ];
 

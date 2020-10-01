@@ -3,9 +3,12 @@ import { GetServerSideProps } from "next";
 import restaurantsApi from "~/api/restaurants/restaurantsApi";
 import { initializeStore } from "~/store/store";
 
-import RestaurantDetails from "~/views/Dashboard/RestaurantDetails";
+import MenuBuilder from "~/views/Dashboard/MenuBuilder";
 import { withAuth } from "~/utils/withAuth";
-import { createSetAuthRestaurantAction } from "~/store/auth/authActionCreators";
+import {
+  createSetAuthRestaurantMenuAction,
+  createSetAuthRestaurantAction,
+} from "~/store/auth/authActionCreators";
 import { dispatchUserFromRequest } from "~/utils/dispatchUserFromRequest";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -17,9 +20,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     ctx.res.writeHead(403).end();
   }
 
-  const response = await restaurantsApi.getById(user.restaurantId);
-  const restaurant = response.data;
+  const [restaurantResponse, menuResponse] = await Promise.all([
+    await restaurantsApi.getById(user.restaurantId),
+    await restaurantsApi.getMenuByRestaurantId(user.restaurantId),
+  ]);
+
+  const restaurant = restaurantResponse.data;
   store.dispatch(createSetAuthRestaurantAction(restaurant));
+
+  const menu = menuResponse.data;
+  store.dispatch(createSetAuthRestaurantMenuAction(menu));
 
   return {
     props: {
@@ -28,4 +38,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-export default withAuth(RestaurantDetails);
+export default withAuth(MenuBuilder);

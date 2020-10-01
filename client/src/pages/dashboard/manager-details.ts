@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     ctx.res.writeHead(403).end();
   }
 
-  const response = await restaurantsApi.getByManagerId(user.id);
+  const response = await restaurantsApi.getById(user.restaurantId);
   const restaurant = response.data;
   store.dispatch(createSetAuthRestaurantAction(restaurant));
 

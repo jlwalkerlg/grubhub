@@ -4,6 +4,8 @@ export interface UserDto {
   email: string;
   password: string;
   role: UserRole;
+  restaurantId: string;
+  restaurantName: string;
 }
 
 export type UserRole = "RestaurantManager" | "Customer" | "Admin";

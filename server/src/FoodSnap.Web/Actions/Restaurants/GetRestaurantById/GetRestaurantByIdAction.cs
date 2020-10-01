@@ -1,27 +1,27 @@
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Queries.Restaurants.GetRestaurantByManagerId;
+using FoodSnap.Web.Queries.Restaurants.GetRestaurantById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodSnap.Web.Actions.Restaurants.GetByManagerId
+namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
 {
-    public class GetByManagerIdAction : Action
+    public class GetRestaurantByIdAction : Action
     {
         private readonly IMediator mediator;
 
-        public GetByManagerIdAction(IMediator mediator)
+        public GetRestaurantByIdAction(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpGet("/managers/{managerId}/restaurant")]
-        public async Task<IActionResult> Execute([FromRoute] Guid managerId)
+        [HttpGet("/restaurants/{id}")]
+        public async Task<IActionResult> Execute([FromRoute] Guid id)
         {
-            var query = new GetRestaurantByManagerIdQuery
+            var query = new GetRestaurantByIdQuery
             {
-                ManagerId = managerId
+                Id = id
             };
 
             var result = await mediator.Send(query);

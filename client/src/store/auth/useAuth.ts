@@ -24,7 +24,7 @@ import userApi from "~/api/users/userApi";
 export default function useAuth() {
   const dispatch = useDispatch();
 
-  const { user, restaurant } = useSelector<State, AuthState>(
+  const { user, restaurant, menu } = useSelector<State, AuthState>(
     (state) => state.auth
   );
 
@@ -106,6 +106,7 @@ export default function useAuth() {
     isLoggedIn,
     user,
     restaurant,
+    menu,
     login,
     logout,
     updateRestaurantDetails,

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FoodSnap.Application;
 using FoodSnap.ApplicationTests.Doubles;
@@ -50,6 +51,8 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
                 Email = user.Email.Address,
                 Password = user.Password,
                 Role = user.Role.ToString(),
+                RestaurantId = Guid.NewGuid(),
+                RestaurantName = "Chow Main",
             };
             mediatorSpy.Result = Result.Ok(userDto);
 
