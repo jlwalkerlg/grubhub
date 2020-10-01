@@ -1,40 +1,42 @@
-import Axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import Axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+} from "axios";
 import { Error } from "~/lib/Error";
 
-export default class Api {
-  private baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL;
+class Api {
+  private client: AxiosInstance = Axios.create({
+    withCredentials: true,
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
 
-  private getUrl(path: string): string {
-    if (path.startsWith("/")) {
-      path = path.substr(1);
-    }
-
-    return `${this.baseUrl}/${path}`;
-  }
-
-  protected async get<T = null>(
+  public async get<T = null>(
     url: string,
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
-    return this.request(url, "GET");
+    return this.request(url, "GET", config);
   }
 
-  protected async post<T = null>(
+  public async post<T = null>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     return this.request(url, "POST", {
+      ...config,
       data,
     });
   }
 
-  protected async put<T = null>(
+  public async put<T = null>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     return this.request(url, "PUT", {
+      ...config,
       data,
     });
   }
@@ -45,11 +47,10 @@ export default class Api {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await Axios.request({
-        url: this.getUrl(url),
-        method,
-        withCredentials: true,
+      const response = await this.client.request({
         ...config,
+        url,
+        method,
       });
 
       return new ApiResponse<T>(response);
@@ -85,3 +86,5 @@ export class ApiResponse<TData = null> {
     }
   }
 }
+
+export default new Api();

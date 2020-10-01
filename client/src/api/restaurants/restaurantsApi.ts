@@ -1,4 +1,4 @@
-import Api from "../Api";
+import api from "../Api";
 import { MenuDto } from "./MenuDto";
 import { RestaurantDto } from "./RestaurantDto";
 
@@ -19,21 +19,21 @@ export interface UpdateRestaurantDetailsCommand {
   phoneNumber: string;
 }
 
-class RestaurantsApi extends Api {
+class RestaurantsApi {
   public getById(id: string) {
-    return this.get<RestaurantDto>(`/restaurants/${id}`);
+    return api.get<RestaurantDto>(`/restaurants/${id}`);
   }
 
   public getMenuByRestaurantId(restaurantId: string) {
-    return this.get<MenuDto>(`/restaurants/${restaurantId}/menu`);
+    return api.get<MenuDto>(`/restaurants/${restaurantId}/menu`);
   }
 
   public register(command: RegisterRestaurantCommand) {
-    return this.post<null>("/restaurants/register", command);
+    return api.post<null>("/restaurants/register", command);
   }
 
   public updateDetails(id: string, command: UpdateRestaurantDetailsCommand) {
-    return this.put<null>(`/restaurants/${id}`, command);
+    return api.put<null>(`/restaurants/${id}`, command);
   }
 }
 

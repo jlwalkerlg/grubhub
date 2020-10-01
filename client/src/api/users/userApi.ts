@@ -1,4 +1,4 @@
-import Api from "../Api";
+import api from "../Api";
 import { UserDto } from "./UserDto";
 
 export interface LoginCommand {
@@ -11,21 +11,21 @@ export interface UpdateUserDetailsCommand {
   email: string;
 }
 
-class UserApi extends Api {
+class UserApi {
   public login(request: LoginCommand) {
-    return this.post("/auth/login", request);
+    return api.post("/auth/login", request);
   }
 
   public logout() {
-    return this.post("/auth/logout");
+    return api.post("/auth/logout");
   }
 
   public getAuthData() {
-    return this.get<UserDto>("/auth/user");
+    return api.get<UserDto>("/auth/user");
   }
 
   public updateDetails(request: UpdateUserDetailsCommand) {
-    return this.put("/auth/user", request);
+    return api.put("/auth/user", request);
   }
 }
 
