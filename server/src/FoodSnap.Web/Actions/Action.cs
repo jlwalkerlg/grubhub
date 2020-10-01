@@ -16,7 +16,7 @@ namespace FoodSnap.Web.Actions
                 { Error.ErrorType.Unauthorised, 403 },
                 { Error.ErrorType.NotFound, 404 },
                 { Error.ErrorType.ValidationError, 422 },
-                { Error.ErrorType.ServerError, 500 },
+                { Error.ErrorType.Internal, 500 },
             };
 
         protected IActionResult PresentError(Error error)

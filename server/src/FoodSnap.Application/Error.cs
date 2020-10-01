@@ -51,9 +51,9 @@ namespace FoodSnap.Application
             return new Error(errors);
         }
 
-        public static Error ServerError(string message)
+        public static Error Internal(string message)
         {
-            return new Error(ErrorType.ServerError, message);
+            return new Error(ErrorType.Internal, message);
         }
 
         public enum ErrorType
@@ -63,7 +63,7 @@ namespace FoodSnap.Application
             Unauthorised,
             NotFound,
             ValidationError,
-            ServerError,
+            Internal,
         }
     }
 }

@@ -28,7 +28,7 @@ namespace FoodSnap.Infrastructure.Geocoding
 
             if (status != "OK")
             {
-                return Result<Coordinates>.Fail(Error.ServerError(status));
+                return Result<Coordinates>.Fail(Error.Internal(status));
             }
 
             var result = jobj["results"][0];

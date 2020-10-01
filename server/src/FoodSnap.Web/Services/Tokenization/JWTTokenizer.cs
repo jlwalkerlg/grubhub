@@ -27,15 +27,15 @@ namespace FoodSnap.Web.Services.Tokenization
             }
             catch (JWT.Exceptions.TokenExpiredException)
             {
-                return Result<string>.Fail(Error.BadRequest("Token expired."));
+                return Result<string>.Fail(Error.Internal("Token expired."));
             }
             catch (JWT.Exceptions.InvalidTokenPartsException)
             {
-                return Result<string>.Fail(Error.BadRequest("Invalid token."));
+                return Result<string>.Fail(Error.Internal("Invalid token."));
             }
             catch (JWT.Exceptions.SignatureVerificationException)
             {
-                return Result<string>.Fail(Error.BadRequest("Signature invalid."));
+                return Result<string>.Fail(Error.Internal("Signature invalid."));
             }
         }
 

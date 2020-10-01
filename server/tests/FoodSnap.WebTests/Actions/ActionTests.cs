@@ -17,9 +17,9 @@ namespace FoodSnap.WebTests.Actions
         }
 
         [Fact]
-        public void It_Returns_500_For_Server_Errors()
+        public void It_Returns_500_For_Internal_Errors()
         {
-            var error = Error.ServerError("Database failed.");
+            var error = Error.Internal("Database failed.");
 
             var result = action.Execute(error) as ObjectResult;
             var envelope = result.Value as ErrorEnvelope;
@@ -31,7 +31,7 @@ namespace FoodSnap.WebTests.Actions
         [Fact]
         public void It_Returns_400_For_Bad_Request_Errors()
         {
-            var error = Error.BadRequest("Invalid token.");
+            var error = Error.BadRequest("Malformed request.");
 
             var result = action.Execute(error) as ObjectResult;
             var envelope = result.Value as ErrorEnvelope;
