@@ -4,7 +4,7 @@ import Axios, {
   AxiosResponse,
   Method,
 } from "axios";
-import { Error } from "~/lib/Error";
+import { Error } from "~/services/Error";
 
 class Api {
   private client: AxiosInstance = Axios.create({

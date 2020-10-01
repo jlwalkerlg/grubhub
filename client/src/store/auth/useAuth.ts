@@ -13,7 +13,7 @@ import {
   createUpdateAuthRestaurantDetailsAction,
   createUpdateAuthUserDetailsAction,
 } from "./authActionCreators";
-import { Result } from "~/lib/Result";
+import { Result } from "~/services/Result";
 import { UserDto } from "~/api/users/UserDto";
 import restaurantsApi, {
   UpdateRestaurantDetailsCommand,

@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { getUserFromRequest } from "./getUserFromRequest";
-import { redirect } from "./redirect";
+import { redirect } from "../helpers";
 
 export const redirectIfAuthenticated = (ctx: GetServerSidePropsContext) => {
   const user = getUserFromRequest(ctx.req);

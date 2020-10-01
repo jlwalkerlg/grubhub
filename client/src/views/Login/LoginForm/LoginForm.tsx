@@ -7,11 +7,11 @@ import {
   RequiredRule,
   EmailRule,
   PasswordRule,
-} from "~/lib/Form/Rule";
+} from "~/services/forms/Rule";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import useAuth from "~/store/auth/useAuth";
 import { LoginCommand } from "~/api/users/userApi";
-import { setFormErrors } from "~/utils/setFormErrors";
+import { setFormErrors } from "~/services/forms/setFormErrors";
 
 const LoginForm: React.FC = () => {
   const auth = useAuth();

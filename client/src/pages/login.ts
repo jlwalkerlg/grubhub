@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next";
 
 import { Login } from "~/views/Login/Login";
-import { withGuestOnly } from "~/utils/withGuestOnly";
-import { redirectIfAuthenticated } from "~/utils/redirectIfAuthenticated";
+import { withGuestOnly } from "~/services/auth/withGuestOnly";
+import { redirectIfAuthenticated } from "~/services/auth/redirectIfAuthenticated";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   redirectIfAuthenticated(ctx);

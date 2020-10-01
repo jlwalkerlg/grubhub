@@ -3,9 +3,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { UpdateUserDetailsCommand } from "~/api/users/userApi";
 import { ErrorAlert } from "~/components/Alert/Alert";
-import { combineRules, EmailRule, RequiredRule } from "~/lib/Form/Rule";
+import { combineRules, EmailRule, RequiredRule } from "~/services/forms/Rule";
 import useAuth from "~/store/auth/useAuth";
-import { setFormErrors } from "~/utils/setFormErrors";
+import { setFormErrors } from "~/services/forms/setFormErrors";
 import { DashboardLayout } from "./DashboardLayout";
 
 const ManagerDetails: NextPage = () => {

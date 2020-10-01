@@ -3,9 +3,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
 import { ErrorAlert } from "~/components/Alert/Alert";
-import { combineRules, PhoneRule, RequiredRule } from "~/lib/Form/Rule";
+import { combineRules, PhoneRule, RequiredRule } from "~/services/forms/Rule";
 import useAuth from "~/store/auth/useAuth";
-import { setFormErrors } from "~/utils/setFormErrors";
+import { setFormErrors } from "~/services/forms/setFormErrors";
 import { DashboardLayout } from "./DashboardLayout";
 
 const RestaurantDetails: NextPage = () => {

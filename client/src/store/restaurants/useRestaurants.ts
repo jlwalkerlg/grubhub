@@ -1,7 +1,7 @@
 import restaurantsApi, {
   RegisterRestaurantCommand,
 } from "~/api/restaurants/restaurantsApi";
-import { Result } from "~/lib/Result";
+import { Result } from "~/services/Result";
 
 export default function useRestaurants() {
   const register = async (

@@ -12,8 +12,8 @@ import {
   PhoneRule,
   PostcodeRule,
   combineRules,
-} from "~/lib/Form/Rule";
-import useAddressSearch from "~/lib/address-search/useAddressSearch";
+} from "~/services/forms/Rule";
+import useAddressSearch from "~/services/geolocation/useAddressSearch";
 
 import RegisterRestaurantForm, {
   StepOne,

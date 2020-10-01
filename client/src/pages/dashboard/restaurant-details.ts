@@ -4,9 +4,9 @@ import restaurantsApi from "~/api/restaurants/restaurantsApi";
 import { initializeStore } from "~/store/store";
 
 import RestaurantDetails from "~/views/Dashboard/RestaurantDetails";
-import { withAuth } from "~/utils/withAuth";
+import { withAuth } from "~/services/auth/withAuth";
 import { createSetAuthRestaurantAction } from "~/store/auth/authActionCreators";
-import { dispatchUserFromRequest } from "~/utils/dispatchUserFromRequest";
+import { dispatchUserFromRequest } from "~/services/auth/dispatchUserFromRequest";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const store = initializeStore();

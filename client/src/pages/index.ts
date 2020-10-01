@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 
 import { Home } from "~/views/Home/Home";
 import { initializeStore } from "~/store/store";
-import { dispatchUserFromRequest } from "~/utils/dispatchUserFromRequest";
+import { dispatchUserFromRequest } from "~/services/auth/dispatchUserFromRequest";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const store = initializeStore();
