@@ -26,16 +26,16 @@ namespace FoodSnap.Domain.Menus
             categories.Add(new MenuCategory(categoryName));
         }
 
-        public Guid AddItem(string categoryName, string name, string description, Money price)
+        public void AddItem(Guid categoryId, string name, string description, Money price)
         {
-            var category = categories.FirstOrDefault(x => x.Name == categoryName);
+            var category = categories.FirstOrDefault(x => x.Id == categoryId);
 
             if (category == null)
             {
-                throw new InvalidOperationException($"Category {categoryName} doesn't exist.");
+                throw new InvalidOperationException($"Category doesn't exist.");
             }
 
-            return category.AddItem(name, description, price);
+            category.AddItem(name, description, price);
         }
 
         // EF Core

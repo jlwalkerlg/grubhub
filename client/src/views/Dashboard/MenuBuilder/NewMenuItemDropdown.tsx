@@ -40,11 +40,10 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
 
     const request: AddMenuItemRequest = {
       ...data,
-      categoryName: category.name,
       price: +data.price,
     };
 
-    const result = await restaurants.addMenuItem(request);
+    const result = await restaurants.addMenuItem(category.id, request);
 
     if (!result.isSuccess) {
       setError(result.error.message);

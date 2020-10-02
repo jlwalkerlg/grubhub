@@ -24,16 +24,21 @@ export default function useRestaurants() {
     return Result.fail(response.error);
   };
 
-  const addMenuItem = async (request: AddMenuItemRequest): Promise<Result> => {
-    const response = await restaurantsApi.addMenuItem(menu.id, request);
+  const addMenuItem = async (
+    categoryId: string,
+    request: AddMenuItemRequest
+  ): Promise<Result> => {
+    const response = await restaurantsApi.addMenuItem(
+      menu.id,
+      categoryId,
+      request
+    );
 
     if (!response.isSuccess) {
       return Result.fail(response.error);
     }
 
-    const category = menu.categories.find(
-      (x) => x.name === request.categoryName
-    );
+    const category = menu.categories.find((x) => x.id === categoryId);
 
     const item: MenuItemDto = {
       id: response.data,

@@ -16,13 +16,16 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
             this.mediator = mediator;
         }
 
-        [HttpPost("/menus/{menuId}/items")]
-        public async Task<IActionResult> Execute([FromRoute] Guid menuId, [FromBody] AddMenuItemRequest request)
+        [HttpPost("/menus/{menuId}/categories/{categoryId}/items")]
+        public async Task<IActionResult> Execute(
+            [FromRoute] Guid menuId,
+            [FromRoute] Guid categoryId,
+            [FromBody] AddMenuItemRequest request)
         {
             var command = new AddMenuItemCommand
             {
                 MenuId = menuId,
-                CategoryName = request.CategoryName,
+                CategoryId = categoryId,
                 Name = request.Name,
                 Description = request.Description,
                 Price = request.Price
@@ -40,7 +43,6 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
                 Data = result.Value
             });
             response.StatusCode = 201;
-
             return response;
         }
     }

@@ -20,11 +20,10 @@ namespace FoodSnap.Domain.Menus
 
         public string Name { get; }
 
-        internal Guid AddItem(string name, string description, Money price)
+        internal void AddItem(string name, string description, Money price)
         {
             var item = new MenuItem(name, description, price);
             items.Add(item);
-            return item.Id;
         }
 
         // EF Core

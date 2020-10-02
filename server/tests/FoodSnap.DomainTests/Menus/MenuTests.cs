@@ -32,9 +32,16 @@ namespace FoodSnap.DomainTests.Menus
             var menu = new Menu(Guid.NewGuid());
             menu.AddCategory("Pizza");
 
-            var id = menu.AddItem("Pizza", "Margherita", "Cheese & tomato", new Money(10));
+            var category = menu.Categories.Single();
 
-            Assert.Equal(menu.Categories.Single().Items.Single().Id, id);
+            menu.AddItem(category.Id, "Margherita", "Cheese & tomato", new Money(10));
+
+            Assert.Single(category.Items);
+
+            var item = category.Items.Single();
+            Assert.Equal("Margherita", item.Name);
+            Assert.Equal("Cheese & tomato", item.Description);
+            Assert.Equal(new Money(10), item.Price);
         }
 
         [Fact]
@@ -44,9 +51,8 @@ namespace FoodSnap.DomainTests.Menus
 
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var category = "Pizza";
                 menu.AddItem(
-                    category,
+                    Guid.NewGuid(),
                     "Margherita Pizza",
                     "Cheese, tomatoes, thin crust",
                     new Money(10));
@@ -73,9 +79,11 @@ namespace FoodSnap.DomainTests.Menus
             var menu = new Menu(Guid.NewGuid());
             menu.AddCategory("Pizza");
 
+            var category = menu.Categories.Single();
+
             Assert.Throws<ArgumentException>(() =>
             {
-                menu.AddItem("Pizza", itemName, "", new Money(10));
+                menu.AddItem(category.Id, itemName, "", new Money(10));
             });
         }
 
@@ -85,9 +93,11 @@ namespace FoodSnap.DomainTests.Menus
             var menu = new Menu(Guid.NewGuid());
             menu.AddCategory("Pizza");
 
+            var category = menu.Categories.Single();
+
             Assert.Throws<ArgumentNullException>(() =>
             {
-                menu.AddItem("Pizza", "Margherita Pizza", "", null);
+                menu.AddItem(category.Id, "Margherita Pizza", "", null);
             });
         }
     }

@@ -52,10 +52,12 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
 
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
+            var category = menu.Categories.Single();
+
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id,
-                CategoryName = "Pizza",
+                CategoryId = category.Id,
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
@@ -88,14 +90,48 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
 
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
+            var command = new AddMenuItemCommand
+            {
+                MenuId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                Name = "Margherita",
+                Description = "Cheese & tomato",
+                Price = 9.99m,
+            };
+
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_Category_Not_Found()
+        {
+            var authUser = new RestaurantManager(
+                "Jordan Walker",
+                new Email("walker.jlg@gmail.com"),
+                "password123");
+
+            authenticatorSpy.User = authUser;
+
+            var restaurant = new Restaurant(
+                Guid.NewGuid(),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(1, 1));
+
+            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
+
             var menu = new Menu(restaurant.Id);
 
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
-                CategoryName = "Pizza",
+                MenuId = menu.Id,
+                CategoryId = Guid.NewGuid(),
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
@@ -132,10 +168,12 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
 
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
+            var category = menu.Categories.Single();
+
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id,
-                CategoryName = "Pizza",
+                CategoryId = category.Id,
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,

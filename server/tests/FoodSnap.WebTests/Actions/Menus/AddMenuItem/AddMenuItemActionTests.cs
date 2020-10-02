@@ -24,9 +24,9 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
         public async Task It_Returns_201_On_Success()
         {
             var menuId = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
             var request = new AddMenuItemRequest
             {
-                CategoryName = "Pizza",
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m
@@ -34,7 +34,7 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
 
             mediatorSpy.Result = Result.Ok(Guid.NewGuid());
 
-            var response = await action.Execute(menuId, request) as ObjectResult;
+            var response = await action.Execute(menuId, categoryId, request) as ObjectResult;
 
             Assert.Equal(201, response.StatusCode);
 
