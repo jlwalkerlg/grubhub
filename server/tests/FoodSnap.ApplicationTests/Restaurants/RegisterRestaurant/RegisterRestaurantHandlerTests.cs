@@ -70,7 +70,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.Equal(manager.Id, restaurant.ManagerId);
             Assert.Equal(command.RestaurantName, restaurant.Name);
             Assert.Equal(command.RestaurantPhoneNumber, restaurant.PhoneNumber.Number);
-            Assert.Equal(command.Address, restaurant.Address.Value);
+            Assert.Equal(command.Address, geocoderSpy.SearchAddress);
             Assert.Equal(restaurant.Address.Value, geocoderSpy.Data.FormattedAddress);
 
             var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy

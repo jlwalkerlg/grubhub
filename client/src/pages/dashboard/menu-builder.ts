@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import restaurantsApi from "~/api/restaurants/restaurantsApi";
 import { initializeStore } from "~/store/store";
 
-import MenuBuilder from "~/views/Dashboard/MenuBuilder";
+import MenuBuilder from "~/views/Dashboard/MenuBuilder/MenuBuilder";
 import { withAuth } from "~/services/auth/withAuth";
 import {
   createSetAuthRestaurantMenuAction,
