@@ -36,9 +36,9 @@ namespace FoodSnap.Application
             return new Error(ErrorType.Unauthenticated, "Unauthenticated.");
         }
 
-        public static Error Unauthorised()
+        public static Error Unauthorised(string message = null)
         {
-            return new Error(ErrorType.Unauthorised, "Unauthorised.");
+            return new Error(ErrorType.Unauthorised, message ?? "Unauthorised.");
         }
 
         public static Error NotFound(string message)

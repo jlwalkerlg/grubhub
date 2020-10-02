@@ -1,3 +1,5 @@
+using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus;
@@ -13,6 +15,11 @@ namespace FoodSnap.ApplicationTests.Menus
         {
             Menus.Add(menu);
             return Task.CompletedTask;
+        }
+
+        public Task<Menu> GetById(Guid id)
+        {
+            return Task.FromResult(Menus.FirstOrDefault(x => x.Id == id));
         }
     }
 }

@@ -16,6 +16,13 @@ export interface UpdateRestaurantDetailsCommand {
   phoneNumber: string;
 }
 
+export interface AddMenuItemRequest {
+  categoryName: string;
+  name: string;
+  description: string;
+  price: number;
+}
+
 class RestaurantsApi {
   public getById(id: string) {
     return api.get<RestaurantDto>(`/restaurants/${id}`);
@@ -26,11 +33,15 @@ class RestaurantsApi {
   }
 
   public register(command: RegisterRestaurantCommand) {
-    return api.post<null>("/restaurants/register", command);
+    return api.post("/restaurants/register", command);
   }
 
   public updateDetails(id: string, command: UpdateRestaurantDetailsCommand) {
-    return api.put<null>(`/restaurants/${id}`, command);
+    return api.put(`/restaurants/${id}`, command);
+  }
+
+  public addMenuItem(menuId: string, request: AddMenuItemRequest) {
+    return api.post<string>(`/menus/${menuId}/items`, request);
   }
 }
 

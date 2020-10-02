@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
@@ -23,6 +24,17 @@ namespace FoodSnap.DomainTests.Menus
 
             menu.AddCategory("Pizza");
             Assert.Throws<InvalidOperationException>(() => menu.AddCategory("Pizza"));
+        }
+
+        [Fact]
+        public void It_Adds_An_Item()
+        {
+            var menu = new Menu(Guid.NewGuid());
+            menu.AddCategory("Pizza");
+
+            var id = menu.AddItem("Pizza", "Margherita", "Cheese & tomato", new Money(10));
+
+            Assert.Equal(menu.Categories.Single().Items.Single().Id, id);
         }
 
         [Fact]

@@ -7,6 +7,7 @@ namespace FoodSnap.Domain.Menus
     public class Menu : Entity
     {
         private List<MenuCategory> categories = new List<MenuCategory>();
+        public IReadOnlyList<MenuCategory> Categories => categories;
 
         public Menu(Guid restaurantId)
         {
@@ -25,16 +26,16 @@ namespace FoodSnap.Domain.Menus
             categories.Add(new MenuCategory(categoryName));
         }
 
-        public void AddItem(string categoryName, string name, string description, Money price)
+        public Guid AddItem(string categoryName, string name, string description, Money price)
         {
             var category = categories.FirstOrDefault(x => x.Name == categoryName);
 
             if (category == null)
             {
-                throw new InvalidOperationException("Category doesn't exist.");
+                throw new InvalidOperationException($"Category {categoryName} doesn't exist.");
             }
 
-            category.AddItem(name, description, price);
+            return category.AddItem(name, description, price);
         }
 
         // EF Core

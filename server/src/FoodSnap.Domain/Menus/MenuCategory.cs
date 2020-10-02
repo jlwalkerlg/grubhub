@@ -6,6 +6,7 @@ namespace FoodSnap.Domain.Menus
     public class MenuCategory : Entity
     {
         private List<MenuItem> items = new List<MenuItem>();
+        public IReadOnlyList<MenuItem> Items => items;
 
         public MenuCategory(string name)
         {
@@ -19,9 +20,11 @@ namespace FoodSnap.Domain.Menus
 
         public string Name { get; }
 
-        public void AddItem(string name, string description, Money price)
+        internal Guid AddItem(string name, string description, Money price)
         {
-            items.Add(new MenuItem(name, description, price));
+            var item = new MenuItem(name, description, price);
+            items.Add(item);
+            return item.Id;
         }
 
         // EF Core

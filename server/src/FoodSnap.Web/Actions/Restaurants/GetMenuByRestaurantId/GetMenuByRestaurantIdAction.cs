@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using FoodSnap.Application;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Actions.Restaurants;
-using FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,43 +33,15 @@ namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
                 return PresentError(result.Error);
             }
 
+            if (result.Value == null)
+            {
+                return PresentError(Error.NotFound("Menu not found."));
+            }
+
             return Ok(new DataEnvelope
             {
                 Data = result.Value
             });
-
-            // var menuId = Guid.NewGuid();
-            // var pizzaCategoryId = Guid.NewGuid();
-
-            // return Ok(new DataEnvelope
-            // {
-            //     Data = new MenuDto
-            //     {
-            //         Id = menuId,
-            //         RestaurantId = Guid.NewGuid(),
-            //         Name = "Chow Main",
-            //         Categories = new List<MenuCategoryDto>
-            //         {
-            //             new MenuCategoryDto
-            //             {
-            //                 Id = pizzaCategoryId,
-            //                 MenuId = menuId,
-            //                 Name = "Pizza",
-            //                 Items = new List<MenuItemDto>
-            //                 {
-            //                     new MenuItemDto
-            //                     {
-            //                         Id = Guid.NewGuid(),
-            //                         MenuCategoryId = pizzaCategoryId,
-            //                         Name = "Margherita",
-            //                         Description = "Cheese & tomato",
-            //                         Price = 9.99m,
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // });
         }
     }
 }

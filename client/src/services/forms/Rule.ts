@@ -62,3 +62,24 @@ export class PhoneRule implements Rule {
     return null;
   }
 }
+
+export class MinRule implements Rule {
+  private min: number;
+  readonly message: string;
+
+  constructor(min: number);
+  constructor(min: number, message: string);
+  constructor(min: number, message: string = null) {
+    this.min = min;
+
+    if (message === null) {
+      this.message = `Minimum value is ${min}.`;
+    }
+  }
+
+  validate(value: string): string | null {
+    if (+value < this.min) return this.message;
+
+    return null;
+  }
+}

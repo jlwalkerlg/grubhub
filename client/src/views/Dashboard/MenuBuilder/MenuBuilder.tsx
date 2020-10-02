@@ -2,56 +2,9 @@ import { NextPage } from "next";
 import React from "react";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
-import PlusIcon from "~/components/Icons/PlusIcon";
 import useAuth from "~/store/auth/useAuth";
 import { DashboardLayout } from "../DashboardLayout";
-
-const categories = [
-  {
-    id: "1",
-    name: "Pizza",
-    items: [
-      {
-        id: "1",
-        name: "Margherita",
-        description: "Cheese & tomato",
-        price: 9.99,
-        menuCategoryId: "1",
-      },
-      {
-        id: "2",
-        name: "Hawaiian",
-        description: "Ham & pineapple",
-        price: 12.99,
-        menuCategoryId: "1",
-      },
-    ],
-    menuId: "1",
-  },
-  {
-    id: "2",
-    name: "Curries",
-    items: [
-      {
-        id: "3",
-        name: "Chicken Tikka Masala",
-        description:
-          "Tandoori style chicken with tikka marinade cooked in masala sauce",
-        price: 11.99,
-        menuCategoryId: "2",
-      },
-      {
-        id: "4",
-        name: "Lamb Rogan Josh",
-        description:
-          "Lamb meat cooked in rich, medium-spice, tomato-based sauce",
-        price: 13.99,
-        menuCategoryId: "2",
-      },
-    ],
-    menuId: "1",
-  },
-];
+import NewMenuItemDropdown from "./NewMenuItemDropdown";
 
 const MenuBuilder: NextPage = () => {
   const { menu } = useAuth();
@@ -63,7 +16,7 @@ const MenuBuilder: NextPage = () => {
       </h2>
 
       <div className="mt-4">
-        {categories.map((category) => (
+        {menu.categories.map((category) => (
           <div key={category.id} className="mt-4">
             <div className="rounded bg-gray-100 px-4 py-3 shadow-sm text-primary font-medium">
               {category.name}
@@ -90,10 +43,7 @@ const MenuBuilder: NextPage = () => {
                 </div>
               ))}
 
-              <div className="rounded px-4 py-3 mt-2 border-dashed border border-gray-400 text-gray-600 font-medium flex items-center hover:shadow-sm cursor-pointer hover:bg-gray-100 hover:text-gray-700">
-                <PlusIcon className="w-4 h-4" />
-                <span className="ml-2">Add New Menu Item</span>
-              </div>
+              <NewMenuItemDropdown category={category} />
             </div>
           </div>
         ))}

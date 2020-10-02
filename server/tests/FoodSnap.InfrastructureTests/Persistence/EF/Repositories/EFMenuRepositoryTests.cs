@@ -36,16 +36,28 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         }
 
         [Fact]
-        public async Task It_Adds_A_Menu()
+        public async Task It_Adds_A_Menu_And_Gets_It_By_Id()
         {
             var menu = new Menu(restaurant.Id);
+            menu.AddCategory("Pizza");
+            menu.AddItem("Pizza", "Margherita", "Cheese & tomato", new Money(9.99m));
 
             await repository.Add(menu);
             FlushContext();
 
-            var found = context.Menus.Single();
+            var found = await repository.GetById(menu.Id);
 
             Assert.Equal(menu, found);
+
+            Assert.Single(menu.Categories);
+
+            var category = found.Categories.First();
+            Assert.Equal("Pizza", category.Name);
+
+            Assert.Single(category.Items);
+
+            var item = category.Items.First();
+            Assert.Equal("Margherita", item.Name);
         }
     }
 }
