@@ -11,7 +11,7 @@ export interface RegisterRestaurantCommand {
   address: string;
 }
 
-export interface UpdateRestaurantDetailsCommand {
+export interface UpdateRestaurantDetailsRequest {
   name: string;
   phoneNumber: string;
 }
@@ -36,7 +36,7 @@ class RestaurantsApi {
     return api.post("/restaurants/register", command);
   }
 
-  public updateDetails(id: string, command: UpdateRestaurantDetailsCommand) {
+  public updateDetails(id: string, command: UpdateRestaurantDetailsRequest) {
     return api.put(`/restaurants/${id}`, command);
   }
 

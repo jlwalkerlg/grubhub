@@ -11,7 +11,7 @@ import {
 } from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
-import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
+import { UpdateRestaurantDetailsRequest } from "~/api/restaurants/restaurantsApi";
 import { UpdateUserDetailsCommand } from "~/api/users/userApi";
 import { MenuDto, MenuItemDto } from "~/api/restaurants/MenuDto";
 
@@ -45,11 +45,11 @@ export const createSetAuthRestaurantMenuAction = (
 });
 
 export const createUpdateAuthRestaurantDetailsAction = (
-  command: UpdateRestaurantDetailsCommand
+  request: UpdateRestaurantDetailsRequest
 ): UpdateRestaurantDetailsAction => ({
   type: "UPDATE_RESTAURANT_DETAILS",
   payload: {
-    command,
+    request: request,
   },
 });
 

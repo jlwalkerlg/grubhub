@@ -16,7 +16,7 @@ import {
 import { Result } from "~/services/Result";
 import { UserDto } from "~/api/users/UserDto";
 import restaurantsApi, {
-  UpdateRestaurantDetailsCommand,
+  UpdateRestaurantDetailsRequest,
 } from "~/api/restaurants/restaurantsApi";
 import { AuthState } from "./authReducer";
 import userApi from "~/api/users/userApi";
@@ -75,7 +75,7 @@ export default function useAuth() {
   };
 
   const updateRestaurantDetails = async (
-    command: UpdateRestaurantDetailsCommand
+    command: UpdateRestaurantDetailsRequest
   ): Promise<Result> => {
     const response = await restaurantsApi.updateDetails(restaurant.id, command);
 

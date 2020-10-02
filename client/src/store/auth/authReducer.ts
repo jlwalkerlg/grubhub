@@ -1,6 +1,6 @@
 import { MenuDto, MenuItemDto } from "~/api/restaurants/MenuDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
-import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
+import { UpdateRestaurantDetailsRequest } from "~/api/restaurants/restaurantsApi";
 import { UpdateUserDetailsCommand } from "~/api/users/userApi";
 import { UserDto } from "~/api/users/UserDto";
 
@@ -40,7 +40,7 @@ export interface SetAuthRestaurantMenuAction {
 export interface UpdateRestaurantDetailsAction {
   type: typeof UPDATE_RESTAURANT_DETAILS;
   payload: {
-    command: UpdateRestaurantDetailsCommand;
+    request: UpdateRestaurantDetailsRequest;
   };
 }
 
@@ -118,7 +118,7 @@ export default function authReducer(
       ...state,
       restaurant: {
         ...state.restaurant,
-        ...action.payload.command,
+        ...action.payload.request,
       },
     };
   }

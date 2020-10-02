@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { UpdateRestaurantDetailsCommand } from "~/api/restaurants/restaurantsApi";
+import { UpdateRestaurantDetailsRequest } from "~/api/restaurants/restaurantsApi";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import { combineRules, PhoneRule, RequiredRule } from "~/services/forms/Rule";
 import useAuth from "~/store/auth/useAuth";
@@ -12,7 +12,7 @@ const RestaurantDetails: NextPage = () => {
   const auth = useAuth();
   const [error, setError] = React.useState<string>(null);
 
-  const form = useForm<UpdateRestaurantDetailsCommand>({
+  const form = useForm<UpdateRestaurantDetailsRequest>({
     defaultValues: {
       name: auth.restaurant.name,
       phoneNumber: auth.restaurant.phoneNumber,
@@ -30,12 +30,12 @@ const RestaurantDetails: NextPage = () => {
     });
   }, [form.register]);
 
-  const onSubmit = async (command: UpdateRestaurantDetailsCommand) => {
+  const onSubmit = async (request: UpdateRestaurantDetailsRequest) => {
     if (form.formState.isSubmitting) return;
 
     setError(null);
 
-    const result = await auth.updateRestaurantDetails(command);
+    const result = await auth.updateRestaurantDetails(request);
 
     if (!result.isSuccess) {
       setError(result.error.message);
