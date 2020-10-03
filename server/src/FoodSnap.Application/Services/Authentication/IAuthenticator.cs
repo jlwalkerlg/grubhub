@@ -1,4 +1,3 @@
-using System;
 using FoodSnap.Domain.Users;
 
 namespace FoodSnap.Application.Services.Authentication
@@ -8,6 +7,6 @@ namespace FoodSnap.Application.Services.Authentication
         void SignIn(User user);
         void SignOut();
         bool IsAuthenticated { get; }
-        Guid UserId { get; }
+        UserId UserId { get; }
     }
 }

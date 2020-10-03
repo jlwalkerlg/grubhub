@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain;
+using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
 {
@@ -21,7 +22,8 @@ namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
             UpdateRestaurantDetailsCommand command,
             CancellationToken cancellationToken)
         {
-            var restaurant = await unitOfWork.Restaurants.GetById(command.Id);
+            var id = new RestaurantId(command.Id);
+            var restaurant = await unitOfWork.Restaurants.GetById(id);
 
             if (restaurant == null)
             {

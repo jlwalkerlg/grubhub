@@ -7,6 +7,7 @@ using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain;
 using System.Linq;
 using FoodSnap.Application.Restaurants;
+using FoodSnap.Domain.Users;
 
 namespace FoodSnap.ApplicationTests.Restaurants.ApproveRestaurant
 {
@@ -26,7 +27,8 @@ namespace FoodSnap.ApplicationTests.Restaurants.ApproveRestaurant
         public async Task It_Approves_The_Restaurant()
         {
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
@@ -36,7 +38,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.ApproveRestaurant
 
             var command = new ApproveRestaurantCommand
             {
-                RestaurantId = restaurant.Id
+                RestaurantId = restaurant.Id.Value,
             };
             var result = await handler.Handle(command, default(CancellationToken));
 
@@ -49,7 +51,8 @@ namespace FoodSnap.ApplicationTests.Restaurants.ApproveRestaurant
         public async Task It_Creates_A_Restaurant_Approved_Event()
         {
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
@@ -59,7 +62,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.ApproveRestaurant
 
             var command = new ApproveRestaurantCommand
             {
-                RestaurantId = restaurant.Id
+                RestaurantId = restaurant.Id.Value,
             };
             var result = await handler.Handle(command, default(CancellationToken));
 

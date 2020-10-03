@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Domain;
@@ -55,6 +56,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         public async Task Disallows_Emails_That_Are_Already_Taken()
         {
             var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Mr Wong",
                 new Email("wong@test.com"),
                 "password123");

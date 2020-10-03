@@ -28,7 +28,7 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
 
             var id = authenticator.UserId;
 
-            var result = await mediator.Send(new GetUserByIdQuery(id));
+            var result = await mediator.Send(new GetUserByIdQuery(id.Value));
 
             if (!result.IsSuccess)
             {

@@ -39,6 +39,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
         public async Task It_Returns_The_User_With_Auth_Data()
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -46,7 +47,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
 
             var userDto = new UserDto
             {
-                Id = user.Id,
+                Id = user.Id.Value,
                 Name = user.Name,
                 Email = user.Email.Address,
                 Password = user.Password,

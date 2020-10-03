@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users.Logout;
 using FoodSnap.ApplicationTests.Doubles;
@@ -24,6 +25,7 @@ namespace FoodSnap.ApplicationTests.Users.Logout
         public async Task It_Signs_The_User_Out()
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");

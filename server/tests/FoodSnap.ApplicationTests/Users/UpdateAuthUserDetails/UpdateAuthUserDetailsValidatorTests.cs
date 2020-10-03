@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users.UpdateAuthUserDetails;
 using FoodSnap.ApplicationTests.Doubles;
@@ -28,6 +29,7 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
         public async Task Disallows_Invalid_Manager_Names(string name)
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -54,6 +56,7 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
         public async Task Disallows_Invalid_Manager_Emails(string email)
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -76,11 +79,13 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
         public async Task Disallows_Changing_Email_If_Already_Taken()
         {
             User authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
             User existingUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Walker Jordan",
                 new Email("taken@email.com"),
                 "password123");

@@ -12,7 +12,12 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
             builder.ToTable("restaurants");
 
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
+            builder.Property(x => x.Id)
+                .HasConversion(
+                    x => x.Value,
+                    x => new RestaurantId(x))
+                .HasColumnName("id")
+                .ValueGeneratedNever();
 
             builder.HasOne<RestaurantManager>()
                 .WithMany()

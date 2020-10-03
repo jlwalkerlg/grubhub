@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
@@ -32,11 +33,13 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
             }
 
             var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 command.ManagerName,
                 new Email(command.ManagerEmail),
                 hasher.Hash(command.ManagerPassword));
 
             var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
                 manager.Id,
                 command.RestaurantName,
                 new PhoneNumber(command.RestaurantPhoneNumber),

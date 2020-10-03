@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
@@ -19,6 +20,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         public async Task It_Gets_A_User_By_Email()
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Mr Chow",
                 new Email("mr@chow.com"),
                 "wongkarwai");
@@ -38,6 +40,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         public async Task It_Gets_A_User_By_Id()
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Mr Chow",
                 new Email("mr@chow.com"),
                 "wongkarwai");
@@ -59,6 +62,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             var emailAddress = "test@email.com";
 
             User manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email(emailAddress),
                 "password123");

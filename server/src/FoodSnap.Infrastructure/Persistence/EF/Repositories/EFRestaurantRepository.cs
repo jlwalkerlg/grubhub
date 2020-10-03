@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants;
 using FoodSnap.Domain.Restaurants;
@@ -19,7 +18,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
             await context.Restaurants.AddAsync(restaurant);
         }
 
-        public async Task<Restaurant> GetById(Guid id)
+        public async Task<Restaurant> GetById(RestaurantId id)
         {
             return await context.Restaurants.FindAsync(id);
         }

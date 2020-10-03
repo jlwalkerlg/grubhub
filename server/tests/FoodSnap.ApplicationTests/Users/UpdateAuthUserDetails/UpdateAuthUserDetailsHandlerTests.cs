@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users.UpdateAuthUserDetails;
@@ -26,6 +27,7 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
         public async Task It_Updates_The_Authenticated_User()
         {
             User authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");

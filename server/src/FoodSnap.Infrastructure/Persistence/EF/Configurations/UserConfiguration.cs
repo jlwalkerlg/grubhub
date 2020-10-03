@@ -14,7 +14,12 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations.UserConfiguratio
                 .HasValue<RestaurantManager>(UserRole.RestaurantManager.ToString());
 
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
+            builder.Property(x => x.Id)
+                .HasConversion(
+                    x => x.Value,
+                    x => new UserId(x))
+                .HasColumnName("id")
+                .ValueGeneratedNever();
 
             builder.Property(x => x.Name).IsRequired().HasColumnName("name");
 

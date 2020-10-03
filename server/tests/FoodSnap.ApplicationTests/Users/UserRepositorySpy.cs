@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users;
 using FoodSnap.Domain.Users;
-using System;
 
 namespace FoodSnap.ApplicationTests.Users
 {
@@ -22,7 +21,7 @@ namespace FoodSnap.ApplicationTests.Users
             return Task.CompletedTask;
         }
 
-        public Task<User> GetById(Guid id)
+        public Task<User> GetById(UserId id)
         {
             return Task.FromResult(Users.FirstOrDefault(x => x.Id == id));
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
@@ -20,6 +21,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         public async Task It_Adds_A_Manager()
         {
             var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("test@email.com"),
                 "password123");

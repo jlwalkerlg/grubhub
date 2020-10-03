@@ -1,19 +1,26 @@
 using System;
+using FoodSnap.Domain.Users;
 
 namespace FoodSnap.Domain.Restaurants
 {
-    public class Restaurant : Entity
+    public class Restaurant : Entity<Restaurant>
     {
         public Restaurant(
-            Guid managerId,
+            RestaurantId id,
+            UserId managerId,
             string name,
             PhoneNumber phoneNumber,
             Address address,
             Coordinates coordinates)
         {
-            if (managerId == Guid.Empty)
+            if (id == null)
             {
-                throw new ArgumentException($"{nameof(managerId)} must not be empty.");
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            if (managerId == null)
+            {
+                throw new ArgumentNullException(nameof(managerId));
             }
 
             if (address is null)
@@ -26,6 +33,7 @@ namespace FoodSnap.Domain.Restaurants
                 throw new ArgumentNullException(nameof(coordinates));
             }
 
+            Id = id;
             ManagerId = managerId;
             Name = name;
             PhoneNumber = phoneNumber;
@@ -34,7 +42,9 @@ namespace FoodSnap.Domain.Restaurants
             Status = RestaurantStatus.PendingApproval;
         }
 
-        public Guid ManagerId { get; }
+        public RestaurantId Id { get; }
+
+        public UserId ManagerId { get; }
 
         private string name;
         public string Name
@@ -80,6 +90,16 @@ namespace FoodSnap.Domain.Restaurants
             }
 
             Status = RestaurantStatus.Approved;
+        }
+
+        protected override bool IdentityEquals(Restaurant other)
+        {
+            return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         // EF Core

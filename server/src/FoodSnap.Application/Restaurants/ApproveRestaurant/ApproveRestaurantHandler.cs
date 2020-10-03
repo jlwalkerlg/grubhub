@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Application.Restaurants.ApproveRestaurant
 {
@@ -16,7 +17,8 @@ namespace FoodSnap.Application.Restaurants.ApproveRestaurant
             ApproveRestaurantCommand command,
             CancellationToken cancellationToken)
         {
-            var restaurant = await unitOfWork.Restaurants.GetById(command.RestaurantId);
+            var id = new RestaurantId(command.RestaurantId);
+            var restaurant = await unitOfWork.Restaurants.GetById(id);
 
             if (restaurant is null)
             {

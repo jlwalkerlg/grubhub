@@ -27,9 +27,9 @@ namespace FoodSnap.WebTests.Services.Authentication
         [Fact]
         public void It_Gets_The_User_Id_When_Authenticated()
         {
-            var id = Guid.NewGuid();
+            var id = new UserId(Guid.NewGuid());
 
-            var token = tokenizer.Encode(id.ToString());
+            var token = tokenizer.Encode(id.Value.ToString());
             cookieBagSpy.Add("auth_token", token);
 
             Assert.True(authenticator.IsAuthenticated);
@@ -37,16 +37,17 @@ namespace FoodSnap.WebTests.Services.Authentication
         }
 
         [Fact]
-        public void It_Returns_Empty_User_Id_If_Not_Authenticated()
+        public void It_Returns_A_Null_User_Id_If_Not_Authenticated()
         {
             Assert.False(authenticator.IsAuthenticated);
-            Assert.Equal(Guid.Empty, authenticator.UserId);
+            Assert.Null(authenticator.UserId);
         }
 
         [Fact]
         public void It_Signs_The_User_In()
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -58,7 +59,7 @@ namespace FoodSnap.WebTests.Services.Authentication
             var cookieOptions = cookieData.Options;
 
             Assert.True(authenticator.IsAuthenticated);
-            Assert.Equal(user.Id.ToString(), tokenizer.Decode(token).Value);
+            Assert.Equal(user.Id.Value.ToString(), tokenizer.Decode(token).Value);
             Assert.True(cookieOptions.HttpOnly);
         }
 

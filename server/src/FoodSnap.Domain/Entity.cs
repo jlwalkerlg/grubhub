@@ -1,11 +1,7 @@
-using System;
-
-namespace FoodSnap.Domain
+﻿namespace FoodSnap.Domain
 {
-    public class Entity
+    public abstract class Entity<T> where T : Entity<T>
     {
-        public Guid Id { get; } = Guid.NewGuid();
-
         public override bool Equals(object obj)
         {
             if (obj is null)
@@ -23,17 +19,15 @@ namespace FoodSnap.Domain
                 return false;
             }
 
-            var other = obj as Entity;
+            var other = obj as T;
 
-            return (Id == other.Id);
+            return IdentityEquals(other);
         }
 
-        public override int GetHashCode()
-        {
-            return (GetType().ToString() + Id).GetHashCode();
-        }
+        protected abstract bool IdentityEquals(T other);
+        public abstract override int GetHashCode();
 
-        public static bool operator ==(Entity a, Entity b)
+        public static bool operator ==(Entity<T> a, Entity<T> b)
         {
             if (a is null && b is null)
             {
@@ -48,7 +42,7 @@ namespace FoodSnap.Domain
             return a.Equals(b);
         }
 
-        public static bool operator !=(Entity a, Entity b)
+        public static bool operator !=(Entity<T> a, Entity<T> b)
         {
             return !(a == b);
         }

@@ -8,6 +8,7 @@ using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain.Users;
 using FoodSnap.Domain;
 using static FoodSnap.Application.Error;
+using System;
 
 namespace FoodSnap.ApplicationTests.Services.Authentication
 {
@@ -27,6 +28,7 @@ namespace FoodSnap.ApplicationTests.Services.Authentication
         public async Task It_Returns_The_Handler_Result_If_Authentication_Passes()
         {
             authenticatorSpy.User = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -36,7 +38,7 @@ namespace FoodSnap.ApplicationTests.Services.Authentication
 
             var result = await middleware.Handle(
                 new RequireAuthenticationCommand(),
-                default(CancellationToken),
+                CancellationToken.None,
                 next);
 
             Assert.True(result.IsSuccess);
@@ -52,7 +54,7 @@ namespace FoodSnap.ApplicationTests.Services.Authentication
 
             var result = await middleware.Handle(
                 new RequireAuthenticationCommand(),
-                default(CancellationToken),
+                CancellationToken.None,
                 next);
 
             Assert.False(result.IsSuccess);

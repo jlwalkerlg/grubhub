@@ -2,10 +2,11 @@ namespace FoodSnap.Domain.Users
 {
     public class Admin : User
     {
-        public override UserRole Role => UserRole.Admin;
-
-        public Admin(string name, Email email, string password) : base(name, email, password)
+        public Admin(UserId id, string name, Email email, string password)
+            : base(id, name, email, password)
         {
         }
+
+        public override UserRole Role => UserRole.Admin;
     }
 }

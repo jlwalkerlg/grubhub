@@ -1,6 +1,7 @@
 using System;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Restaurants;
+using FoodSnap.Domain.Users;
 using Xunit;
 
 namespace FoodSnap.DomainTests.Restaurants
@@ -11,7 +12,8 @@ namespace FoodSnap.DomainTests.Restaurants
         public void New_Restaurants_Have_Pending_Status()
         {
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
@@ -24,7 +26,8 @@ namespace FoodSnap.DomainTests.Restaurants
         public void Status_Changes_To_Approved_When_Approved()
         {
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
@@ -39,7 +42,8 @@ namespace FoodSnap.DomainTests.Restaurants
         public void Can_Only_Be_Approved_If_Status_Is_Pending_Approval()
         {
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
@@ -51,16 +55,69 @@ namespace FoodSnap.DomainTests.Restaurants
         }
 
         [Fact]
-        public void Disallows_Empty_Manager_Ids()
+        public void Two_Restaurants_Are_Equal_When_Their_Ids_Are_The_Same()
+        {
+            var id = new RestaurantId(Guid.NewGuid());
+
+            var first = new Restaurant(
+                id,
+                new UserId(Guid.NewGuid()),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(0, 0));
+
+            var second = new Restaurant(
+                id,
+                new UserId(Guid.NewGuid()),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(0, 0));
+
+            Assert.Equal(first, second);
+            Assert.True(first == second);
+            Assert.Equal(first.GetHashCode(), second.GetHashCode());
+        }
+
+        [Fact]
+        public void Id_Cant_Be_Null()
+        {
+            var managerId = new UserId(Guid.NewGuid());
+            var name = "Chow Main";
+            var phoneNumber = new PhoneNumber("01234567890");
+            var address = new Address("1 Maine Road, Manchester, UK");
+            var coordinates = new Coordinates(0, 0);
+
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                new Restaurant(
+                    null,
+                    managerId,
+                    name,
+                    phoneNumber,
+                    address,
+                    coordinates);
+            });
+        }
+
+        [Fact]
+        public void Manager_Id_Cant_Be_Null()
         {
             var name = "Chow Main";
             var phoneNumber = new PhoneNumber("01234567890");
             var address = new Address("1 Maine Road, Manchester, UK");
             var coordinates = new Coordinates(0, 0);
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
-                new Restaurant(Guid.Empty, name, phoneNumber, address, coordinates);
+                new Restaurant(
+                    new RestaurantId(Guid.NewGuid()),
+                    null,
+                    name,
+                    phoneNumber,
+                    address,
+                    coordinates);
             });
         }
 
@@ -76,11 +133,22 @@ namespace FoodSnap.DomainTests.Restaurants
 
             Assert.Throws<ArgumentException>(() =>
             {
-                new Restaurant(Guid.NewGuid(), name, phoneNumber, address, coordinates);
+                new Restaurant(
+                    new RestaurantId(Guid.NewGuid()),
+                    new UserId(Guid.NewGuid()),
+                    name,
+                    phoneNumber,
+                    address,
+                    coordinates);
             });
 
             var restaurant = new Restaurant(
-                Guid.NewGuid(), "Valid Name", phoneNumber, address, coordinates);
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
+                "Jordan Walker",
+                phoneNumber,
+                address,
+                coordinates);
 
             Assert.Throws<ArgumentException>(() =>
             {
@@ -98,11 +166,22 @@ namespace FoodSnap.DomainTests.Restaurants
 
             Assert.Throws<ArgumentNullException>(() =>
             {
-                new Restaurant(Guid.NewGuid(), name, null, address, coordinates);
+                new Restaurant(
+                    new RestaurantId(Guid.NewGuid()),
+                    new UserId(Guid.NewGuid()),
+                    name,
+                    null,
+                    address,
+                    coordinates);
             });
 
             var restaurant = new Restaurant(
-                Guid.NewGuid(), name, new PhoneNumber("01234567890"), address, coordinates);
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
+                name,
+                new PhoneNumber("01234567890"),
+                address,
+                coordinates);
 
             Assert.Throws<ArgumentNullException>(() =>
             {
@@ -119,7 +198,13 @@ namespace FoodSnap.DomainTests.Restaurants
 
             Assert.Throws<ArgumentNullException>(() =>
             {
-                new Restaurant(Guid.NewGuid(), name, phoneNumber, null, coordinates);
+                new Restaurant(
+                    new RestaurantId(Guid.NewGuid()),
+                    new UserId(Guid.NewGuid()),
+                    name,
+                    phoneNumber,
+                    null,
+                    coordinates);
             });
         }
 
@@ -132,7 +217,13 @@ namespace FoodSnap.DomainTests.Restaurants
 
             Assert.Throws<ArgumentNullException>(() =>
             {
-                new Restaurant(Guid.NewGuid(), name, phoneNumber, address, null);
+                new Restaurant(
+                    new RestaurantId(Guid.NewGuid()),
+                    new UserId(Guid.NewGuid()),
+                    name,
+                    phoneNumber,
+                    address,
+                    null);
             });
         }
     }

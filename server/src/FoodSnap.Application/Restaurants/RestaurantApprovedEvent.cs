@@ -1,15 +1,15 @@
-﻿using System;
-using FoodSnap.Application.Events;
+﻿using FoodSnap.Application.Events;
+using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Application.Restaurants
 {
     public class RestaurantApprovedEvent : Event
     {
-        public RestaurantApprovedEvent(Guid restaurantId)
+        public RestaurantApprovedEvent(RestaurantId restaurantId)
         {
             RestaurantId = restaurantId;
         }
 
-        public Guid RestaurantId { get; }
+        public RestaurantId RestaurantId { get; }
     }
 }

@@ -31,6 +31,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
         public async Task It_Adds_An_Item_To_The_Menu()
         {
             var authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -38,6 +39,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
                 authUser.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
@@ -75,6 +77,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
         public async Task It_Fails_If_Menu_Not_Found()
         {
             var authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -82,7 +85,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                authUser.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
@@ -109,6 +113,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
         public async Task It_Fails_If_Category_Not_Found()
         {
             var authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -116,7 +121,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                authUser.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
@@ -147,6 +153,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
         public async Task It_Requires_Authorisation()
         {
             var authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
@@ -154,7 +161,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
-                Guid.NewGuid(),
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),

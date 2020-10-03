@@ -2,7 +2,7 @@ using System;
 
 namespace FoodSnap.Domain.Menus
 {
-    public class MenuItem : Entity
+    public class MenuItem : Entity<MenuItem>
     {
         public MenuItem(string name, string description, Money price)
         {
@@ -21,9 +21,21 @@ namespace FoodSnap.Domain.Menus
             Price = price;
         }
 
+        public Guid Id { get; } = Guid.NewGuid();
+
         public string Name { get; }
         public string Description { get; }
         public Money Price { get; }
+
+        protected override bool IdentityEquals(MenuItem other)
+        {
+            return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
 
         // EF Core
         private MenuItem() { }

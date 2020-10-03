@@ -1,20 +1,28 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Domain.Menus
 {
-    public class Menu : Entity
+    public class Menu : Entity<Menu>
     {
-        private List<MenuCategory> categories = new List<MenuCategory>();
-        public IReadOnlyList<MenuCategory> Categories => categories;
-
-        public Menu(Guid restaurantId)
+        public Menu(RestaurantId restaurantId)
         {
+            if (restaurantId == null)
+            {
+                throw new ArgumentNullException(nameof(restaurantId));
+            }
+
             RestaurantId = restaurantId;
         }
 
-        public Guid RestaurantId { get; }
+        public Guid Id { get; } = Guid.NewGuid();
+
+        private List<MenuCategory> categories = new List<MenuCategory>();
+        public IReadOnlyList<MenuCategory> Categories => categories;
+
+        public RestaurantId RestaurantId { get; }
 
         public void AddCategory(string categoryName)
         {
@@ -36,6 +44,16 @@ namespace FoodSnap.Domain.Menus
             }
 
             category.AddItem(name, description, price);
+        }
+
+        protected override bool IdentityEquals(Menu other)
+        {
+            return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         // EF Core

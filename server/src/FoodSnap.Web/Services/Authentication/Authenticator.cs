@@ -18,11 +18,22 @@ namespace FoodSnap.Web.Services.Authentication
             this.cookies = cookies;
         }
 
-        public bool IsAuthenticated => GetUserId() != Guid.Empty;
+        public bool IsAuthenticated => UserId != null;
 
-        public Guid UserId => userId ??= GetUserId();
+        public UserId UserId
+        {
+            get
+            {
+                if (idValue == null)
+                {
+                    idValue = GetUserId();
+                }
 
-        private Guid? userId = null;
+                return idValue == Guid.Empty ? null : new UserId(idValue.Value);
+            }
+        }
+
+        private Guid? idValue = null;
 
         public Guid GetUserId()
         {
@@ -51,7 +62,7 @@ namespace FoodSnap.Web.Services.Authentication
         {
             var expiresIn = DateTimeOffset.UtcNow.AddDays(14);
 
-            var token = tokenizer.Encode(user.Id.ToString());
+            var token = tokenizer.Encode(user.Id.Value.ToString());
 
             cookies.Add("auth_token", token, new CookieOptions
             {

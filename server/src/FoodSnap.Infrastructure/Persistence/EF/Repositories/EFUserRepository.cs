@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users;
@@ -21,7 +20,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
             return await context.Users.FirstOrDefaultAsync(x => x.Email.Address == email);
         }
 
-        public async Task<User> GetById(Guid id)
+        public async Task<User> GetById(UserId id)
         {
             return await context.Users.FindAsync(id);
         }

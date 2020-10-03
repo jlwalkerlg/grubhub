@@ -1,4 +1,3 @@
-using System;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain.Users;
 
@@ -10,7 +9,7 @@ namespace FoodSnap.ApplicationTests.Doubles
 
         public bool IsAuthenticated => User != null;
 
-        public Guid UserId => User?.Id ?? Guid.Empty;
+        public UserId UserId => User?.Id;
 
         public void SignIn(User user)
         {

@@ -2,8 +2,28 @@ using System;
 
 namespace FoodSnap.Domain.Users
 {
-    public abstract class User : Entity
+    public abstract class User : Entity<User>
     {
+        public User(UserId id, string name, Email email, string password)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentException($"{nameof(password)} must not be empty.");
+            }
+
+            Id = id;
+            Name = name;
+            Email = email;
+            Password = password;
+        }
+
+        public UserId Id { get; }
+
         private string name;
         public string Name
         {
@@ -38,19 +58,17 @@ namespace FoodSnap.Domain.Users
 
         public abstract UserRole Role { get; }
 
-        public User(string name, Email email, string password)
-        {
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new ArgumentException($"{nameof(password)} must not be empty.");
-            }
-
-            Name = name;
-            Email = email;
-            Password = password;
-        }
-
         // EF Core
         protected User() { }
+
+        protected sealed override bool IdentityEquals(User other)
+        {
+            return Id == other.Id;
+        }
+
+        public sealed override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

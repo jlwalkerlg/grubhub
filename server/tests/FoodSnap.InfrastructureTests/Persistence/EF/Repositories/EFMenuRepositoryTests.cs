@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
@@ -20,11 +21,13 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             repository = new EFMenuRepository(context);
 
             var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Ian Brown",
                 new Email("browny@ian.com"),
                 "bellona");
 
             restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),

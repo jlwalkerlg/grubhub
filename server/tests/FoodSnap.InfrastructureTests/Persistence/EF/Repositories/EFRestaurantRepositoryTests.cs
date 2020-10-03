@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
@@ -23,17 +24,18 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         public async Task It_Adds_A_Restaurant()
         {
             var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Mr Chow",
                 new Email("mr@chow.com"),
                 "wongkarwai");
 
             var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234 567890"),
                 new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(0, 0)
-            );
+                new Coordinates(0, 0));
 
             await restaurantManagerRepository.Add(manager);
             await restaurantRepository.Add(restaurant);
@@ -50,17 +52,18 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         public async Task It_Gets_A_Restaurant_By_Id()
         {
             var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Mr Chow",
                 new Email("mr@chow.com"),
                 "wongkarwai");
 
             var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234 567890"),
                 new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(0, 0)
-            );
+                new Coordinates(0, 0));
 
             context.RestaurantManagers.Add(manager);
             context.Restaurants.Add(restaurant);

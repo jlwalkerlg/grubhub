@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Application.Users.Login;
@@ -21,6 +22,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.Login
         public async Task It_Succeeds()
         {
             User user = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 hasher.Hash("password123"));
