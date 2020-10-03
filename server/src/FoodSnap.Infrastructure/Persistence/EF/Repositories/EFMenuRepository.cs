@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus;
 using FoodSnap.Domain.Menus;
@@ -20,7 +19,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
             await context.Menus.AddAsync(menu);
         }
 
-        public async Task<Menu> GetById(Guid id)
+        public async Task<Menu> GetById(MenuId id)
         {
             return await context.Menus
                 .Include(x => x.Categories)

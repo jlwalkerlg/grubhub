@@ -46,13 +46,13 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 new Address(geocodingResult.Value.FormattedAddress),
                 new Coordinates(geocodingResult.Value.Latitude, geocodingResult.Value.Longitude));
 
-            var menu = new Menu(restaurant.Id);
-            await unitOfWork.Menus.Add(menu);
+            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
 
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
 
             await unitOfWork.RestaurantManagers.Add(manager);
             await unitOfWork.Restaurants.Add(restaurant);
+            await unitOfWork.Menus.Add(menu);
             await unitOfWork.Events.Add(ev);
 
             await unitOfWork.Commit();

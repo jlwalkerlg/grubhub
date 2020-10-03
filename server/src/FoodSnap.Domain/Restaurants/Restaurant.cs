@@ -3,7 +3,7 @@ using FoodSnap.Domain.Users;
 
 namespace FoodSnap.Domain.Restaurants
 {
-    public class Restaurant : Entity<Restaurant>
+    public class Restaurant : Entity<RestaurantId>
     {
         public Restaurant(
             RestaurantId id,
@@ -42,6 +42,7 @@ namespace FoodSnap.Domain.Restaurants
             Status = RestaurantStatus.PendingApproval;
         }
 
+        protected override RestaurantId ID => Id;
         public RestaurantId Id { get; }
 
         public UserId ManagerId { get; }
@@ -90,16 +91,6 @@ namespace FoodSnap.Domain.Restaurants
             }
 
             Status = RestaurantStatus.Approved;
-        }
-
-        protected override bool IdentityEquals(Restaurant other)
-        {
-            return Id == other.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
         }
 
         // EF Core

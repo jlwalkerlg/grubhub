@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FoodSnap.Domain.Menus
 {
-    public class MenuCategory : Entity<MenuCategory>
+    public class MenuCategory : Entity<Guid>
     {
         public MenuCategory(string name)
         {
@@ -15,6 +15,7 @@ namespace FoodSnap.Domain.Menus
             Name = name;
         }
 
+        protected override Guid ID => Id;
         public Guid Id { get; } = Guid.NewGuid();
 
         private List<MenuItem> items = new List<MenuItem>();
@@ -26,16 +27,6 @@ namespace FoodSnap.Domain.Menus
         {
             var item = new MenuItem(name, description, price);
             items.Add(item);
-        }
-
-        protected override bool IdentityEquals(MenuCategory other)
-        {
-            return Id == other.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
         }
 
         // EF Core

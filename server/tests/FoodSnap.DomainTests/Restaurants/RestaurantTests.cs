@@ -55,32 +55,6 @@ namespace FoodSnap.DomainTests.Restaurants
         }
 
         [Fact]
-        public void Two_Restaurants_Are_Equal_When_Their_Ids_Are_The_Same()
-        {
-            var id = new RestaurantId(Guid.NewGuid());
-
-            var first = new Restaurant(
-                id,
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(0, 0));
-
-            var second = new Restaurant(
-                id,
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(0, 0));
-
-            Assert.Equal(first, second);
-            Assert.True(first == second);
-            Assert.Equal(first.GetHashCode(), second.GetHashCode());
-        }
-
-        [Fact]
         public void Id_Cant_Be_Null()
         {
             var managerId = new UserId(Guid.NewGuid());

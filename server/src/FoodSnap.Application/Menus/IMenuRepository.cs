@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using FoodSnap.Domain.Menus;
 
@@ -7,6 +6,6 @@ namespace FoodSnap.Application.Menus
     public interface IMenuRepository
     {
         Task Add(Menu menu);
-        Task<Menu> GetById(Guid id);
+        Task<Menu> GetById(MenuId id);
     }
 }

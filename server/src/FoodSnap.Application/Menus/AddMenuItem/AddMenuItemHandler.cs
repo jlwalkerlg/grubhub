@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain;
+using FoodSnap.Domain.Menus;
 
 namespace FoodSnap.Application.Menus.AddMenuItem
 {
@@ -20,7 +21,7 @@ namespace FoodSnap.Application.Menus.AddMenuItem
 
         public async Task<Result<Guid>> Handle(AddMenuItemCommand command, CancellationToken cancellationToken)
         {
-            var menu = await unitOfWork.Menus.GetById(command.MenuId);
+            var menu = await unitOfWork.Menus.GetById(new MenuId(command.MenuId));
 
             if (menu == null)
             {

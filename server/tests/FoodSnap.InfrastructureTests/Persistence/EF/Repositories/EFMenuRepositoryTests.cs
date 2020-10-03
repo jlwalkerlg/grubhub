@@ -41,7 +41,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         [Fact]
         public async Task It_Adds_A_Menu_And_Gets_It_By_Id()
         {
-            var menu = new Menu(restaurant.Id);
+            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
             menu.AddCategory("Pizza");
 
             var category = menu.Categories.Single();
