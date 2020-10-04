@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Autofac;
-using FoodSnap.Application;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Infrastructure.Hashing;
@@ -56,7 +55,9 @@ namespace FoodSnap.Web
 
             services.AddEntityFramework(WebConfig);
 
-            services.AddMediatR(typeof(Result).Assembly, typeof(Startup).Assembly);
+            services.AddMediatR(
+                typeof(FoodSnap.Application.IRequest).Assembly,
+                typeof(Startup).Assembly);
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

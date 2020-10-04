@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using FoodSnap.Application;
+using FoodSnap.Domain;
 using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

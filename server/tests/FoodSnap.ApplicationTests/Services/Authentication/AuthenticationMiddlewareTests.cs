@@ -1,13 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Application;
 using FoodSnap.ApplicationTests.Doubles;
 using Xunit;
 using MediatR;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain.Users;
 using FoodSnap.Domain;
-using static FoodSnap.Application.Error;
+using static FoodSnap.Domain.Error;
 using System;
 
 namespace FoodSnap.ApplicationTests.Services.Authentication

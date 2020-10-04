@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using FoodSnap.Application;
+using FoodSnap.Domain;
 using FoodSnap.Web.Actions.Menus.AddMenuItem;
-using FoodSnap.Web.Envelopes;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
@@ -27,6 +26,7 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
             var categoryId = Guid.NewGuid();
             var request = new AddMenuItemRequest
             {
+                Category = "Pizza",
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m
@@ -34,14 +34,9 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
 
             mediatorSpy.Result = Result.Ok(Guid.NewGuid());
 
-            var response = await action.Execute(menuId, categoryId, request) as ObjectResult;
+            var response = await action.Execute(menuId, request) as StatusCodeResult;
 
             Assert.Equal(201, response.StatusCode);
-
-            var envelope = response.Value as DataEnvelope;
-
-            Assert.IsType<Guid>(envelope.Data);
-            Assert.NotEqual(default(Guid), envelope.Data);
         }
     }
 }

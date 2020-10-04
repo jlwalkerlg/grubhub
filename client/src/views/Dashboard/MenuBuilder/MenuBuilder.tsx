@@ -17,14 +17,14 @@ const MenuBuilder: NextPage = () => {
 
       <div className="mt-4">
         {menu.categories.map((category) => (
-          <div key={category.id} className="mt-4">
+          <div key={category.name} className="mt-4">
             <div className="rounded bg-gray-100 px-4 py-3 shadow-sm text-primary font-medium">
               {category.name}
             </div>
 
             <div className="p-2">
               {category.items.map((item) => (
-                <div key={item.id} className="px-4 py-2">
+                <div key={item.name} className="px-4 py-2">
                   <div className="flex items-center justify-between">
                     <p className="font-semibold">{item.name}</p>
                     <div className="flex items-center justify-between">

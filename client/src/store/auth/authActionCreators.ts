@@ -63,10 +63,12 @@ export const createUpdateAuthUserDetailsAction = (
 });
 
 export const createAddMenuItemAction = (
+  category: string,
   item: MenuItemDto
 ): AddMenuItemAction => ({
   type: "ADD_MENU_ITEM",
   payload: {
+    category,
     item,
   },
 });

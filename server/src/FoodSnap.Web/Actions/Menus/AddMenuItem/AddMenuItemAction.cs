@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus.AddMenuItem;
-using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,16 +15,15 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
             this.mediator = mediator;
         }
 
-        [HttpPost("/menus/{menuId}/categories/{categoryId}/items")]
+        [HttpPost("/menus/{menuId}/items")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid menuId,
-            [FromRoute] Guid categoryId,
             [FromBody] AddMenuItemRequest request)
         {
             var command = new AddMenuItemCommand
             {
                 MenuId = menuId,
-                CategoryId = categoryId,
+                Category = request.Category,
                 Name = request.Name,
                 Description = request.Description,
                 Price = request.Price
@@ -38,12 +36,7 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
                 return PresentError(result.Error);
             }
 
-            var response = Ok(new DataEnvelope
-            {
-                Data = result.Value
-            });
-            response.StatusCode = 201;
-            return response;
+            return StatusCode(201);
         }
     }
 }

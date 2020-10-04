@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
+using FoodSnap.Domain;
 
 namespace FoodSnap.Application.Users.Logout
 {

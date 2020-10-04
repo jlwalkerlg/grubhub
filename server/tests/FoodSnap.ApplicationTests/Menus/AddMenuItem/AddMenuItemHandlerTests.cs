@@ -8,8 +8,7 @@ using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Xunit;
-using static FoodSnap.Application.Error;
-using System.Linq;
+using static FoodSnap.Domain.Error;
 
 namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
 {
@@ -35,7 +34,6 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
@@ -45,21 +43,16 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
-
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
-
             menu.AddCategory("Pizza");
-
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
-
-            var category = menu.Categories.Single();
 
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                CategoryId = category.Id,
+                Category = "Pizza",
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
@@ -68,9 +61,6 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var result = await handler.Handle(command, CancellationToken.None);
 
             Assert.True(result.IsSuccess);
-            Assert.Single(
-                menu.Categories.First(x => x.Name == "Pizza").Items,
-                item => item.Id == result.Value);
         }
 
         [Fact]
@@ -81,7 +71,6 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
@@ -91,13 +80,12 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
-
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             var command = new AddMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                CategoryId = Guid.NewGuid(),
+                Category = "Pizza",
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
@@ -117,7 +105,6 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
@@ -127,17 +114,15 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
-
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
-
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                CategoryId = Guid.NewGuid(),
+                Category = "Pizza",
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
@@ -146,7 +131,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var result = await handler.Handle(command, CancellationToken.None);
 
             Assert.False(result.IsSuccess);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
         }
 
         [Fact]
@@ -157,7 +142,6 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-
             authenticatorSpy.User = authUser;
 
             var restaurant = new Restaurant(
@@ -167,21 +151,16 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
-
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
-
             menu.AddCategory("Pizza");
-
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
-
-            var category = menu.Categories.Single();
 
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                CategoryId = category.Id,
+                Category = "Pizza",
                 Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,

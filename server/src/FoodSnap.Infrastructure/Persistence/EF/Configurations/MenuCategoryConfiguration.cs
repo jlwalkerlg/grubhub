@@ -10,10 +10,12 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
         {
             builder.ToTable("menu_categories");
 
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
+            builder.Property<int>("id")
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            builder.HasKey("id");
 
-            builder.HasMany<MenuItem>(x => x.Items)
+            builder.HasMany<MenuItem>("items")
                 .WithOne()
                 .HasForeignKey("menu_category_id")
                 .OnDelete(DeleteBehavior.Cascade);

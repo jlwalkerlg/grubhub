@@ -10,8 +10,10 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
         {
             builder.ToTable("menu_items");
 
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
+            builder.Property<int>("id")
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            builder.HasKey("id");
 
             builder.Property(x => x.Name)
                 .HasColumnName("name")

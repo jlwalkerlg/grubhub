@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Application.Services.Hashing;
+using FoodSnap.Domain;
 
 namespace FoodSnap.Application.Users.Login
 {

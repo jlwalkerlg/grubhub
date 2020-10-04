@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using FoodSnap.Application;
 using FoodSnap.Application.Services.Geocoding;
+using FoodSnap.Domain;
 
 namespace FoodSnap.ApplicationTests.Doubles.GeocoderSpy
 {

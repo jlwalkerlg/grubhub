@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
@@ -43,9 +42,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         {
             var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
             menu.AddCategory("Pizza");
-
-            var category = menu.Categories.Single();
-            menu.AddItem(category.Id, "Margherita", "Cheese & tomato", new Money(9.99m));
+            menu.AddItem("Pizza", "Margherita", "Cheese & tomato", new Money(9.99m));
 
             await repository.Add(menu);
             FlushContext();
@@ -53,16 +50,6 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             var found = await repository.GetById(menu.Id);
 
             Assert.Equal(menu, found);
-
-            Assert.Single(menu.Categories);
-
-            var foundCategory = found.Categories.First();
-            Assert.Equal("Pizza", foundCategory.Name);
-
-            Assert.Single(foundCategory.Items);
-
-            var item = foundCategory.Items.First();
-            Assert.Equal("Margherita", item.Name);
         }
     }
 }

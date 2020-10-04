@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FoodSnap.Domain.Menus
 {
@@ -15,27 +16,30 @@ namespace FoodSnap.Domain.Menus
             Name = name;
         }
 
-        public Guid Id { get; } = Guid.NewGuid();
-
         private List<MenuItem> items = new List<MenuItem>();
-        public IReadOnlyList<MenuItem> Items => items;
 
         public string Name { get; }
 
-        internal void AddItem(string name, string description, Money price)
+        internal Result AddItem(string name, string description, Money price)
         {
-            var item = new MenuItem(name, description, price);
-            items.Add(item);
+            if (items.Any(x => x.Name == name))
+            {
+                return Result.Fail(Error.BadRequest($"Item {name} already exists for this category."));
+            }
+
+            items.Add(new MenuItem(name, description, price));
+
+            return Result.Ok();
         }
 
         protected override bool IdentityEquals(MenuCategory other)
         {
-            return Id == other.Id;
+            return Name == other.Name;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return Name.GetHashCode();
         }
 
         // EF Core

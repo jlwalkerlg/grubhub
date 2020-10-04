@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using FoodSnap.Application;
+using FoodSnap.Domain;
 using FoodSnap.Infrastructure.Persistence;
 
 namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById

@@ -1,4 +1,3 @@
-using System.Linq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ using FoodSnap.Domain.Menus;
 
 namespace FoodSnap.Application.Menus.AddMenuItem
 {
-    public class AddMenuItemHandler : IRequestHandler<AddMenuItemCommand, Guid>
+    public class AddMenuItemHandler : IRequestHandler<AddMenuItemCommand>
     {
         private readonly IAuthenticator authenticator;
         private readonly IUnitOfWork unitOfWork;
@@ -19,18 +18,13 @@ namespace FoodSnap.Application.Menus.AddMenuItem
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<Guid>> Handle(AddMenuItemCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(AddMenuItemCommand command, CancellationToken cancellationToken)
         {
             var menu = await unitOfWork.Menus.GetById(new MenuId(command.MenuId));
 
             if (menu == null)
             {
                 return Result<Guid>.Fail(Error.NotFound("Menu not found."));
-            }
-
-            if (!menu.Categories.Any(x => x.Id == command.CategoryId))
-            {
-                return Result<Guid>.Fail(Error.NotFound("Category not found."));
             }
 
             var restaurant = await unitOfWork.Restaurants.GetById(menu.RestaurantId);
@@ -40,19 +34,20 @@ namespace FoodSnap.Application.Menus.AddMenuItem
                 return Result<Guid>.Fail(Error.Unauthorised("Only the restaurant owner can add menu items."));
             }
 
-            menu.AddItem(
-                command.CategoryId,
+            var result = menu.AddItem(
+                command.Category,
                 command.Name,
                 command.Description,
                 new Money(command.Price));
 
+            if (!result.IsSuccess)
+            {
+                return result;
+            }
+
             await unitOfWork.Commit();
 
-            var item = menu
-                .Categories.First(x => x.Id == command.CategoryId)
-                .Items.Last(x => x.Name == command.Name);
-
-            return Result.Ok(item.Id);
+            return Result.Ok();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using FoodSnap.Application;
+using FoodSnap.Domain;
 using FoodSnap.Web.Actions;
 using FoodSnap.Web.Envelopes;
 using Microsoft.AspNetCore.Mvc;

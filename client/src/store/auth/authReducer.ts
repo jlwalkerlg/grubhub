@@ -54,6 +54,7 @@ export interface UpdateUserDetailsAction {
 export interface AddMenuItemAction {
   type: typeof ADD_MENU_ITEM;
   payload: {
+    category: string;
     item: MenuItemDto;
   };
 }
@@ -139,8 +140,9 @@ export default function authReducer(
       menu: {
         ...state.menu,
         categories: state.menu.categories.map((category) => {
-          if (category.id !== action.payload.item.menuCategoryId)
+          if (category.name !== action.payload.category) {
             return category;
+          }
 
           return {
             ...category,

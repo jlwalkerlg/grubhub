@@ -21,20 +21,18 @@ namespace FoodSnap.Domain.Menus
             Price = price;
         }
 
-        public Guid Id { get; } = Guid.NewGuid();
-
         public string Name { get; }
         public string Description { get; }
         public Money Price { get; }
 
         protected override bool IdentityEquals(MenuItem other)
         {
-            return Id == other.Id;
+            return Name == other.Name;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return Name.GetHashCode();
         }
 
         // EF Core

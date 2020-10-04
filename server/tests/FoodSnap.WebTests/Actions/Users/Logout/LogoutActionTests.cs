@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using FoodSnap.Application;
+using FoodSnap.Domain;
 using FoodSnap.Web.Actions.Users.Logout;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;

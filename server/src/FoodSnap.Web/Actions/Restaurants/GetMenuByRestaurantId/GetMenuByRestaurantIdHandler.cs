@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using FoodSnap.Application;
+using FoodSnap.Domain;
 using FoodSnap.Infrastructure.Persistence;
 
 namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
@@ -23,10 +24,8 @@ namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
                     m.id,
                     m.restaurant_id,
                     c.id,
-                    c.menu_id,
                     c.name,
                     i.id,
-                    i.menu_category_id,
                     i.name,
                     i.description,
                     i.price
@@ -52,7 +51,7 @@ namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
 
                         if (categoryEntry != null)
                         {
-                            var category = menu.Categories.FirstOrDefault(x => x.Id == categoryEntry.Id);
+                            var category = menu.Categories.FirstOrDefault(x => x.Name == categoryEntry.Name);
 
                             if (category == null)
                             {

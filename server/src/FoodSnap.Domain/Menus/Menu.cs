@@ -28,28 +28,29 @@ namespace FoodSnap.Domain.Menus
         public RestaurantId RestaurantId { get; }
 
         private List<MenuCategory> categories = new List<MenuCategory>();
-        public IReadOnlyList<MenuCategory> Categories => categories;
 
-        public void AddCategory(string categoryName)
+        public Result AddCategory(string name)
         {
-            if (categories.Any(x => x.Name == categoryName))
+            if (categories.Any(x => x.Name == name))
             {
-                throw new InvalidOperationException("Category already exists.");
+                return Result.Fail(Error.BadRequest($"Category {name} already exists."));
             }
 
-            categories.Add(new MenuCategory(categoryName));
+            categories.Add(new MenuCategory(name));
+
+            return Result.Ok();
         }
 
-        public void AddItem(Guid categoryId, string name, string description, Money price)
+        public Result AddItem(string categoryName, string itemName, string itemDescription, Money price)
         {
-            var category = categories.FirstOrDefault(x => x.Id == categoryId);
+            var category = categories.FirstOrDefault(x => x.Name == categoryName);
 
             if (category == null)
             {
-                throw new InvalidOperationException($"Category doesn't exist.");
+                return Result.Fail(Error.BadRequest($"Category {categoryName} doesn't exist."));
             }
 
-            category.AddItem(name, description, price);
+            return category.AddItem(itemName, itemDescription, price);
         }
 
         protected override bool IdentityEquals(Menu other)

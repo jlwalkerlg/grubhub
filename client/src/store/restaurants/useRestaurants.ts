@@ -24,29 +24,22 @@ export default function useRestaurants() {
     return Result.fail(response.error);
   };
 
-  const addMenuItem = async (
-    categoryId: string,
-    request: AddMenuItemRequest
-  ): Promise<Result> => {
-    const response = await restaurantsApi.addMenuItem(
-      menu.id,
-      categoryId,
-      request
-    );
+  const addMenuItem = async (request: AddMenuItemRequest): Promise<Result> => {
+    const response = await restaurantsApi.addMenuItem(menu.id, request);
 
     if (!response.isSuccess) {
       return Result.fail(response.error);
     }
 
-    const category = menu.categories.find((x) => x.id === categoryId);
+    const category = menu.categories.find((x) => x.name === request.category);
 
     const item: MenuItemDto = {
-      id: response.data,
-      menuCategoryId: category.id,
-      ...request,
+      name: request.name,
+      description: request.description,
+      price: request.price,
     };
 
-    dispatch(createAddMenuItemAction(item));
+    dispatch(createAddMenuItemAction(category.name, item));
 
     return Result.ok();
   };
