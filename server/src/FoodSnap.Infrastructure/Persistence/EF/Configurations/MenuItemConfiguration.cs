@@ -29,6 +29,11 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
                     .HasColumnName("price")
                     .IsRequired();
             });
+
+            builder.Property<int>("menu_category_id")
+                .IsRequired();
+            builder.HasIndex("menu_category_id", "Name")
+                .IsUnique();
         }
     }
 }

@@ -26,6 +26,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations.UserConfiguratio
             builder.OwnsOne(x => x.Email, y =>
             {
                 y.Property(x => x.Address).IsRequired().HasColumnName("email");
+                y.HasIndex(x => x.Address).IsUnique();
             });
 
             builder.Property(x => x.Password).IsRequired().HasColumnName("password");

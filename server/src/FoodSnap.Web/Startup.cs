@@ -94,12 +94,12 @@ namespace FoodSnap.Web
             {
                 app.UseDeveloperExceptionPage();
 
-                // using (var scope = app.ApplicationServices.CreateScope())
-                // using (var context = scope.ServiceProvider.GetService<AppDbContext>())
-                // {
-                //     context.Database.EnsureDeleted();
-                //     context.Database.EnsureCreated();
-                // }
+                using (var scope = app.ApplicationServices.CreateScope())
+                using (var context = scope.ServiceProvider.GetService<AppDbContext>())
+                {
+                    context.Database.EnsureDeleted();
+                    context.Database.EnsureCreated();
+                }
             }
 
             app.UseCors();
