@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace FoodSnap.Web.Actions.Restaurants
+namespace FoodSnap.Web.Actions.Menus
 {
     public class MenuDto
     {

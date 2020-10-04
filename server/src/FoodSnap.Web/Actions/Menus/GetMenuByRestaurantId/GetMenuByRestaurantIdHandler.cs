@@ -6,7 +6,7 @@ using FoodSnap.Application;
 using FoodSnap.Domain;
 using FoodSnap.Infrastructure.Persistence;
 
-namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
+namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
 {
     public class GetMenuByRestaurantIdHandler : IRequestHandler<GetMenuByRestaurantIdQuery, MenuDto>
     {

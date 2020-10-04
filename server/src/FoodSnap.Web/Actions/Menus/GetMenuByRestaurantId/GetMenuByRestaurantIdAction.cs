@@ -5,7 +5,7 @@ using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
+namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
 {
     public class GetMenuByRestaurantIdAction : Action
     {
