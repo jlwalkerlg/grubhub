@@ -2,7 +2,7 @@ using System;
 
 namespace FoodSnap.Domain.Users
 {
-    public abstract class User : Entity<UserId>
+    public abstract class User : Entity<User>
     {
         public User(UserId id, string name, Email email, string password)
         {
@@ -22,7 +22,6 @@ namespace FoodSnap.Domain.Users
             Password = password;
         }
 
-        protected sealed override UserId ID => Id;
         public UserId Id { get; }
 
         private string name;
@@ -58,6 +57,16 @@ namespace FoodSnap.Domain.Users
         public string Password { get; }
 
         public abstract UserRole Role { get; }
+
+        protected override bool IdentityEquals(User other)
+        {
+            return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
 
         // EF Core
         protected User() { }

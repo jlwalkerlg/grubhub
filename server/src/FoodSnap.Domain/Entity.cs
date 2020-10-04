@@ -1,8 +1,9 @@
 ﻿namespace FoodSnap.Domain
 {
-    public abstract class Entity<T>
+    public abstract class Entity<T> where T : Entity<T>
     {
-        protected abstract T ID { get; }
+        protected abstract bool IdentityEquals(T other);
+        public abstract override int GetHashCode();
 
         public sealed override bool Equals(object obj)
         {
@@ -21,14 +22,9 @@
                 return false;
             }
 
-            var other = obj as Entity<T>;
+            var other = obj as T;
 
-            return ID.Equals(other.ID);
-        }
-
-        public sealed override int GetHashCode()
-        {
-            return ID.GetHashCode();
+            return IdentityEquals(other);
         }
 
         public static bool operator ==(Entity<T> a, Entity<T> b)

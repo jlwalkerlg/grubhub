@@ -5,7 +5,7 @@ using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Domain.Menus
 {
-    public class Menu : Entity<MenuId>
+    public class Menu : Entity<Menu>
     {
         public Menu(MenuId id, RestaurantId restaurantId)
         {
@@ -23,7 +23,6 @@ namespace FoodSnap.Domain.Menus
             RestaurantId = restaurantId;
         }
 
-        protected override MenuId ID => Id;
         public MenuId Id { get; }
 
         public RestaurantId RestaurantId { get; }
@@ -51,6 +50,16 @@ namespace FoodSnap.Domain.Menus
             }
 
             category.AddItem(name, description, price);
+        }
+
+        protected override bool IdentityEquals(Menu other)
+        {
+            return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         // EF Core

@@ -10,6 +10,22 @@ namespace FoodSnap.DomainTests.Menus
     public class MenuTests
     {
         [Fact]
+        public void Test_Equality()
+        {
+            var m1 = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            var m2 = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            var m3 = new Menu(m1.Id, new RestaurantId(Guid.NewGuid()));
+
+            Assert.NotEqual(m1, m2);
+            Assert.False(m1 == m2);
+            Assert.False(m1.Equals(m2));
+
+            Assert.Equal(m1, m3);
+            Assert.True(m1 == m3);
+            Assert.True(m1.Equals(m3));
+        }
+
+        [Fact]
         public void Id_Cant_Be_Null()
         {
             var restaurantId = new RestaurantId(Guid.NewGuid());

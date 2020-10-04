@@ -9,6 +9,42 @@ namespace FoodSnap.DomainTests.Restaurants
     public class RestaurantTests
     {
         [Fact]
+        public void Test_Equality()
+        {
+            var r1 = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(1, 1));
+
+            var r2 = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(1, 1));
+
+            var r3 = new Restaurant(
+                r1.Id,
+                new UserId(Guid.NewGuid()),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(1, 1));
+
+            Assert.NotEqual(r1, r2);
+            Assert.False(r1 == r2);
+            Assert.False(r1.Equals(r2));
+
+            Assert.Equal(r1, r3);
+            Assert.True(r1 == r3);
+            Assert.True(r1.Equals(r3));
+        }
+
+        [Fact]
         public void New_Restaurants_Have_Pending_Status()
         {
             var restaurant = new Restaurant(
