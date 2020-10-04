@@ -73,8 +73,9 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
   }, [form.register]);
 
   const handleCancel = () => {
-    form.reset();
     setIsOpen(false);
+    form.reset();
+    setError(null);
   };
 
   return (
