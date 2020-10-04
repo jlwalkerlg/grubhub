@@ -40,7 +40,7 @@ namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
             {
                 MenuDto menu = null;
 
-                await connection.QueryAsync<MenuDto, MenuCategoryDto, MenuItemDto, object>(
+                await connection.QueryAsync<MenuDto, MenuCategoryEntry, MenuItemEntry, object>(
                     sql,
                     (menuEntry, categoryEntry, item) =>
                     {
@@ -71,6 +71,16 @@ namespace FoodSnap.Web.Actions.Restaurants.GetMenuByRestaurantId
 
                 return Result.Ok(menu);
             }
+        }
+
+        private class MenuCategoryEntry : MenuCategoryDto
+        {
+            public int Id { get; set; }
+        }
+
+        private class MenuItemEntry : MenuItemDto
+        {
+            public int Id { get; set; }
         }
     }
 }
