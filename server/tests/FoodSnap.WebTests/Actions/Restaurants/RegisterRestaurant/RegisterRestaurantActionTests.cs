@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 using FoodSnap.Web.Actions.Restaurants.RegisterRestaurant;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;

@@ -1,4 +1,4 @@
-namespace FoodSnap.Domain
+namespace FoodSnap.Shared
 {
     public class Result
     {

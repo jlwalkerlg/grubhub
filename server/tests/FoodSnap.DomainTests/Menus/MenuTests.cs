@@ -3,7 +3,7 @@ using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
 using Xunit;
 using FoodSnap.Domain.Restaurants;
-using static FoodSnap.Domain.Error;
+using static FoodSnap.Shared.Error;
 
 namespace FoodSnap.DomainTests.Menus
 {

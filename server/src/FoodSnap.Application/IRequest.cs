@@ -1,4 +1,4 @@
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 
 namespace FoodSnap.Application
 {

@@ -8,7 +8,7 @@ using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Xunit;
-using static FoodSnap.Domain.Error;
+using static FoodSnap.Shared.Error;
 
 namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
 {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FoodSnap.Application.Validation;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 
 namespace FoodSnap.ApplicationTests.Doubles
 {

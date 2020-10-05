@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 using FoodSnap.Web.Actions.Menus.AddMenuItem;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;

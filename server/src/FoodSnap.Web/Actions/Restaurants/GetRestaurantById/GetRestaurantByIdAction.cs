@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 
 namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
 {

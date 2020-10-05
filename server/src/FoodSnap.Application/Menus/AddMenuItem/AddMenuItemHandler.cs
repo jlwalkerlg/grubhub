@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
+using FoodSnap.Shared;
 
 namespace FoodSnap.Application.Menus.AddMenuItem
 {

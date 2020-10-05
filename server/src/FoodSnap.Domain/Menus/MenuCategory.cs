@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FoodSnap.Shared;
 
 namespace FoodSnap.Domain.Menus
 {

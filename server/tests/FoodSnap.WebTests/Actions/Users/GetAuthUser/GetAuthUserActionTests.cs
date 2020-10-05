@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using FoodSnap.Application;
+using FoodSnap.Shared;
 using FoodSnap.ApplicationTests.Doubles;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;

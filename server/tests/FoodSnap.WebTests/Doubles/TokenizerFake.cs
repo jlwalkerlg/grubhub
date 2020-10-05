@@ -1,5 +1,5 @@
 using System;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 using FoodSnap.Web.Services.Tokenization;
 
 namespace FoodSnap.WebTests.Doubles

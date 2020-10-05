@@ -5,7 +5,7 @@ using FoodSnap.Application.Validation;
 using FoodSnap.ApplicationTests.Doubles;
 using Xunit;
 using MediatR;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 
 namespace FoodSnap.ApplicationTests.Validation
 {

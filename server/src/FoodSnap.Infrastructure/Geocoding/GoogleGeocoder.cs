@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 
 namespace FoodSnap.Infrastructure.Geocoding
 {

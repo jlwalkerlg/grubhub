@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FoodSnap.Domain\FoodSnap.Domain.csproj" />
+    <ProjectReference Include="..\..\src\FoodSnap.Shared\FoodSnap.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ using FoodSnap.Domain;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Xunit;
-using static FoodSnap.Domain.Error;
+using static FoodSnap.Shared.Error;
 
 namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
 {

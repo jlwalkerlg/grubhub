@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.Application.Restaurants.ApproveRestaurant

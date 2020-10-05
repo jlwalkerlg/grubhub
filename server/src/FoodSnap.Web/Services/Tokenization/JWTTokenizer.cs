@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using JWT.Algorithms;
 using JWT.Builder;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 
 namespace FoodSnap.Web.Services.Tokenization
 {

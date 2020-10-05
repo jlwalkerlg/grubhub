@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application;
-using FoodSnap.Domain;
+using FoodSnap.Shared;
 
 namespace FoodSnap.ApplicationTests.Doubles
 {
