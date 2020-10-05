@@ -1,6 +1,6 @@
 ﻿namespace FoodSnap.Application.Services.Geocoding
 {
-    public class GeocodingData
+    public class GeocodingResult
     {
         public string FormattedAddress { get; set; }
         public float Latitude { get; set; }

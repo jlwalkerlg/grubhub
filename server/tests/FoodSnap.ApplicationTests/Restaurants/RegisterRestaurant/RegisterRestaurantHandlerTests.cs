@@ -41,7 +41,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_A_New_Restaurant()
         {
-            geocoderSpy.Data = new GeocodingData
+            geocoderSpy.Data = new GeocodingResult
             {
                 FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
                 Latitude = 1,
@@ -85,7 +85,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_An_Empty_Restaurant_Menu()
         {
-            geocoderSpy.Data = new GeocodingData
+            geocoderSpy.Data = new GeocodingResult
             {
                 FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
                 Latitude = 1,

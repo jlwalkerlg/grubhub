@@ -5,6 +5,6 @@ namespace FoodSnap.Application.Services.Geocoding
 {
     public interface IGeocoder
     {
-        Task<Result<GeocodingData>> Geocode(string address);
+        Task<Result<GeocodingResult>> Geocode(string address);
     }
 }

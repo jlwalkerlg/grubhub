@@ -16,7 +16,7 @@ namespace FoodSnap.Infrastructure.Geocoding
             this.key = key;
         }
 
-        public async Task<Result<GeocodingData>> Geocode(string address)
+        public async Task<Result<GeocodingResult>> Geocode(string address)
         {
             var response = await SendRequest(address);
             var json = ConvertResponseToJson(response);
@@ -27,12 +27,12 @@ namespace FoodSnap.Infrastructure.Geocoding
 
             if (status != "OK")
             {
-                return Result<GeocodingData>.Fail(Error.Internal(status));
+                return Result<GeocodingResult>.Fail(Error.Internal(status));
             }
 
             var result = jobj["results"][0];
 
-            return Result.Ok(new GeocodingData
+            return Result.Ok(new GeocodingResult
             {
                 FormattedAddress = (string)result["formatted_address"],
                 Latitude = (float)result["geometry"]["location"]["lat"],
