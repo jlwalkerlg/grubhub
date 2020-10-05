@@ -25,6 +25,27 @@ namespace FoodSnap.Application.Validation
                 .WithMessage($"Must be at least {minLength} characters long.");
         }
 
+        public static IRuleBuilderOptions<T, int> Min<T>(this IRuleBuilder<T, int> ruleBuilder, int min)
+        {
+            return ruleBuilder
+                .GreaterThanOrEqualTo(min)
+                .WithMessage($"Must be greater than or equal to {min}.");
+        }
+
+        public static IRuleBuilderOptions<T, float> Min<T>(this IRuleBuilder<T, float> ruleBuilder, float min)
+        {
+            return ruleBuilder
+                .GreaterThanOrEqualTo(min)
+                .WithMessage($"Must be greater than or equal to {min}.");
+        }
+
+        public static IRuleBuilderOptions<T, decimal> Min<T>(this IRuleBuilder<T, decimal> ruleBuilder, decimal min)
+        {
+            return ruleBuilder
+                .GreaterThanOrEqualTo(min)
+                .WithMessage($"Must be greater than or equal to {min}.");
+        }
+
         public static IRuleBuilderOptions<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
