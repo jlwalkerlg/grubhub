@@ -9,6 +9,7 @@ import {
   UpdateUserDetailsAction,
   AddMenuItemAction,
   AddMenuCategoryAction,
+  UpdateMenuItemAction,
 } from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
@@ -83,6 +84,19 @@ export const createAddMenuItemAction = (
   type: "ADD_MENU_ITEM",
   payload: {
     category,
+    item,
+  },
+});
+
+export const createUpdateMenuItemAction = (
+  categoryName: string,
+  itemName: string,
+  item: MenuItemDto
+): UpdateMenuItemAction => ({
+  type: "UPDATE_MENU_ITEM",
+  payload: {
+    categoryName,
+    itemName,
     item,
   },
 });

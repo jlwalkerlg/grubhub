@@ -123,6 +123,14 @@ namespace FoodSnap.DomainTests.Menus
             {
                 category.AddItem(name, "", new Money(10));
             });
+
+            category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+            var item = category.Items.Single();
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                item.Name = name;
+            });
         }
 
         [Fact]
@@ -136,6 +144,14 @@ namespace FoodSnap.DomainTests.Menus
             Assert.Throws<ArgumentNullException>(() =>
             {
                 category.AddItem("Margherita", "", null);
+            });
+
+            category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+            var item = category.Items.Single();
+
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                item.Price = null;
             });
         }
     }

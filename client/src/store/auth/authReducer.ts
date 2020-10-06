@@ -16,6 +16,7 @@ export const UPDATE_RESTAURANT_DETAILS = "UPDATE_RESTAURANT_DETAILS";
 export const UPDATE_USER_DETAILS = "UPDATE_USER_DETAILS";
 export const ADD_MENU_CATEGORY = "ADD_MENU_CATEGORY";
 export const ADD_MENU_ITEM = "ADD_MENU_ITEM";
+export const UPDATE_MENU_ITEM = "UPDATE_MENU_ITEM";
 
 export interface LoginAction {
   type: typeof LOGIN;
@@ -71,6 +72,15 @@ export interface AddMenuItemAction {
   };
 }
 
+export interface UpdateMenuItemAction {
+  type: typeof UPDATE_MENU_ITEM;
+  payload: {
+    categoryName: string;
+    itemName: string;
+    item: MenuItemDto;
+  };
+}
+
 type AuthAction =
   | LoginAction
   | LogoutAction
@@ -79,7 +89,8 @@ type AuthAction =
   | UpdateRestaurantDetailsAction
   | UpdateUserDetailsAction
   | AddMenuCategoryAction
-  | AddMenuItemAction;
+  | AddMenuItemAction
+  | UpdateMenuItemAction;
 
 export interface AuthState {
   user: UserDto;
@@ -170,6 +181,31 @@ export default function authReducer(
           return {
             ...category,
             items: [...category.items, action.payload.item],
+          };
+        }),
+      },
+    };
+  }
+
+  if (action.type === UPDATE_MENU_ITEM) {
+    return {
+      ...state,
+      menu: {
+        ...state.menu,
+        categories: state.menu.categories.map((category) => {
+          if (category.name !== action.payload.categoryName) {
+            return category;
+          }
+
+          return {
+            ...category,
+            items: category.items.map((item) => {
+              if (item.name !== action.payload.itemName) {
+                return item;
+              }
+
+              return action.payload.item;
+            }),
           };
         }),
       },

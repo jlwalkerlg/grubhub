@@ -27,6 +27,12 @@ export interface AddMenuItemRequest {
   price: number;
 }
 
+export interface UpdateMenuItemRequest {
+  name: string;
+  description: string;
+  price: number;
+}
+
 class RestaurantsApi {
   public getById(id: string) {
     return api.get<RestaurantDto>(`/restaurants/${id}`);
@@ -50,6 +56,18 @@ class RestaurantsApi {
 
   public addMenuItem(menuId: string, request: AddMenuItemRequest) {
     return api.post(`/menus/${menuId}/items`, request);
+  }
+
+  public updateMenuItem(
+    menuId: string,
+    category: string,
+    item: string,
+    request: UpdateMenuItemRequest
+  ) {
+    return api.put(
+      `/menus/${menuId}/categories/${category}/items/${item}`,
+      request
+    );
   }
 }
 

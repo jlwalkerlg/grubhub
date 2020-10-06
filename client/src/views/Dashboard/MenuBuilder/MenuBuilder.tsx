@@ -5,6 +5,7 @@ import PencilIcon from "~/components/Icons/PencilIcon";
 import useAuth from "~/store/auth/useAuth";
 import { DashboardLayout } from "../DashboardLayout";
 import AddMenuCategoryForm from "./AddMenuCategoryForm";
+import MenuItem from "./MenuItem";
 import NewMenuItemDropdown from "./NewMenuItemDropdown";
 
 const MenuBuilder: NextPage = () => {
@@ -27,23 +28,7 @@ const MenuBuilder: NextPage = () => {
 
             <div className="p-2">
               {category.items.map((item) => (
-                <div key={item.name} className="px-4 py-2">
-                  <div className="flex items-center justify-between">
-                    <p className="font-semibold">{item.name}</p>
-                    <div className="flex items-center justify-between">
-                      <button type="button" className="text-blue-700">
-                        <PencilIcon className="w-5 h-5" />
-                      </button>
-                      <button type="button" className="text-primary ml-2">
-                        <CloseIcon className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-gray-800">{item.description}</p>
-                  <p className="mt-1 font-medium text-sm text-red-700">
-                    £{item.price}
-                  </p>
-                </div>
+                <MenuItem key={item.name} category={category} item={item} />
               ))}
 
               <NewMenuItemDropdown category={category} />

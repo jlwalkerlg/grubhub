@@ -6,24 +6,42 @@ namespace FoodSnap.Domain.Menus
     {
         public MenuItem(string name, string description, Money price)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"{nameof(name)} can't be empty.");
-            }
-
-            if (price == null)
-            {
-                throw new ArgumentNullException(nameof(price));
-            }
-
             Name = name;
             Description = description;
             Price = price;
         }
 
-        public string Name { get; }
-        public string Description { get; }
-        public Money Price { get; }
+        private string name;
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException($"{nameof(name)} can't be empty.");
+                }
+
+                name = value;
+            }
+        }
+
+        public string Description { get; set; }
+
+        public Money price;
+        public Money Price
+        {
+            get => price;
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(price));
+                }
+
+                price = value;
+            }
+        }
 
         protected override bool IdentityEquals(MenuItem other)
         {
