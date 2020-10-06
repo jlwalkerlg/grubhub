@@ -10,6 +10,7 @@ import {
   AddMenuItemAction,
   AddMenuCategoryAction,
   UpdateMenuItemAction,
+  RemoveMenuItemAction,
 } from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
