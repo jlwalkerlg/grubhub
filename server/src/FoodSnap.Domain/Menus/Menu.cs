@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using FoodSnap.Domain.Restaurants;
-using FoodSnap.Shared;
 
 namespace FoodSnap.Domain.Menus
 {
@@ -29,29 +28,16 @@ namespace FoodSnap.Domain.Menus
         public RestaurantId RestaurantId { get; }
 
         private List<MenuCategory> categories = new List<MenuCategory>();
+        public IReadOnlyList<MenuCategory> Categories => categories;
 
-        public Result AddCategory(string name)
+        public void AddCategory(string name)
         {
             if (categories.Any(x => x.Name == name))
             {
-                return Result.Fail(Error.BadRequest($"Category {name} already exists."));
+                throw new InvalidOperationException($"Category {name} already exists.");
             }
 
             categories.Add(new MenuCategory(name));
-
-            return Result.Ok();
-        }
-
-        public Result AddItem(string categoryName, string itemName, string itemDescription, Money price)
-        {
-            var category = categories.FirstOrDefault(x => x.Name == categoryName);
-
-            if (category == null)
-            {
-                return Result.Fail(Error.BadRequest($"Category {categoryName} doesn't exist."));
-            }
-
-            return category.AddItem(itemName, itemDescription, price);
         }
 
         protected override bool IdentityEquals(Menu other)

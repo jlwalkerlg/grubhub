@@ -22,7 +22,8 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
         public async Task<Menu> GetById(MenuId id)
         {
             return await context.Menus
-                .Include("categories.items")
+                .Include(x => x.Categories)
+                .ThenInclude(x => x.Items)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
     }

@@ -1,9 +1,9 @@
+using System.Linq;
 using System;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
 using Xunit;
 using FoodSnap.Domain.Restaurants;
-using static FoodSnap.Shared.Error;
 
 namespace FoodSnap.DomainTests.Menus
 {
@@ -42,39 +42,25 @@ namespace FoodSnap.DomainTests.Menus
         }
 
         [Fact]
+        public void It_Adds_A_Category()
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            Assert.Single(menu.Categories);
+            Assert.Equal("Pizza", menu.Categories.Single().Name);
+        }
+
+        [Fact]
         public void It_Cant_Add_Two_Categories_With_The_Same_Name()
         {
             var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
             menu.AddCategory("Pizza");
 
-            var result = menu.AddCategory("Pizza");
-
-            Assert.False(result.IsSuccess);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
-        }
-
-        [Fact]
-        public void It_Cant_Add_Two_Items_To_The_Same_Category_With_The_Same_Name()
-        {
-            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
-            menu.AddCategory("Pizza");
-            menu.AddItem("Pizza", "Margherita", "Cheese & tomato", new Money(9.99m));
-
-            var result = menu.AddItem("Pizza", "Margherita", "Cheese & tomato", new Money(9.99m));
-
-            Assert.False(result.IsSuccess);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
-        }
-
-        [Fact]
-        public void It_Cant_Add_An_Item_If_The_Category_Doesnt_Exist()
-        {
-            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
-
-            var result = menu.AddItem("Pizza", "Margherita", "Cheese & tomatoes", new Money(9.99m));
-
-            Assert.False(result.IsSuccess);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                menu.AddCategory("Pizza");
+            });
         }
 
         [Theory]
@@ -88,18 +74,54 @@ namespace FoodSnap.DomainTests.Menus
             Assert.Throws<ArgumentException>(() => menu.AddCategory(categoryName));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public void Item_Name_Cant_Be_Empty(string itemName)
+        [Fact]
+        public void It_Adds_An_Item_To_A_Category()
         {
             var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
             menu.AddCategory("Pizza");
 
+            var category = menu.Categories.Single();
+
+            category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+
+            Assert.Single(category.Items);
+
+            var item = category.Items.Single();
+            Assert.Equal("Margherita", item.Name);
+            Assert.Equal("Cheese & tomato", item.Description);
+            Assert.Equal(new Money(9.99m), item.Price);
+        }
+
+        [Fact]
+        public void It_Cant_Add_Two_Items_With_The_Same_Name_To_The_Same_Category()
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            var category = menu.Categories.Single();
+
+            category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+            });
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void Item_Name_Cant_Be_Empty(string name)
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            var category = menu.Categories.Single();
+
             Assert.Throws<ArgumentException>(() =>
             {
-                menu.AddItem("Pizza", itemName, "", new Money(10));
+                category.AddItem(name, "", new Money(10));
             });
         }
 
@@ -109,9 +131,11 @@ namespace FoodSnap.DomainTests.Menus
             var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
             menu.AddCategory("Pizza");
 
+            var category = menu.Categories.Single();
+
             Assert.Throws<ArgumentNullException>(() =>
             {
-                menu.AddItem("Pizza", "Margherita", "", null);
+                category.AddItem("Margherita", "", null);
             });
         }
     }

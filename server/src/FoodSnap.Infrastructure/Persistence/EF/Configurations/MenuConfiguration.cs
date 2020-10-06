@@ -29,7 +29,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
             builder.HasIndex(x => x.RestaurantId)
                 .IsUnique();
 
-            builder.HasMany<MenuCategory>("categories")
+            builder.HasMany(x => x.Categories)
                 .WithOne()
                 .HasForeignKey("menu_id")
                 .OnDelete(DeleteBehavior.Cascade);

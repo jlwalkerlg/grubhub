@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System;
 using System.Threading.Tasks;
@@ -57,6 +58,11 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
             var result = await handler.Handle(command, CancellationToken.None);
 
             Assert.True(result.IsSuccess);
+
+            Assert.Single(menu.Categories);
+
+            var category = menu.Categories.Single();
+            Assert.Equal("Pizza", category.Name);
         }
 
         [Fact]
@@ -88,6 +94,41 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_Category_Already_Exists()
+        {
+            var authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
+                "Jordan Walker",
+                new Email("walker.jlg@gmail.com"),
+                "password123");
+            authenticatorSpy.User = authUser;
+
+            var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                authUser.Id,
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(1, 1));
+            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
+
+            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            menu.AddCategory("Pizza");
+            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
+
+            var command = new AddMenuCategoryCommand
+            {
+                MenuId = menu.Id.Value,
+                Name = "Pizza",
+            };
+
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
         }
 
         [Fact]

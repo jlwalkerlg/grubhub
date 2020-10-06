@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System;
 using System.Threading.Tasks;
@@ -61,6 +62,16 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var result = await handler.Handle(command, CancellationToken.None);
 
             Assert.True(result.IsSuccess);
+
+            var category = menu.Categories.Single();
+
+            Assert.Single(category.Items);
+
+            var item = category.Items.Single();
+
+            Assert.Equal("Margherita", item.Name);
+            Assert.Equal("Cheese & tomato", item.Description);
+            Assert.Equal(new Money(9.99m), item.Price);
         }
 
         [Fact]
@@ -117,6 +128,45 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
+
+            var command = new AddMenuItemCommand
+            {
+                MenuId = menu.Id.Value,
+                Category = "Pizza",
+                Name = "Margherita",
+                Description = "Cheese & tomato",
+                Price = 9.99m,
+            };
+
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_Item_Already_Exists()
+        {
+            var authUser = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
+                "Jordan Walker",
+                new Email("walker.jlg@gmail.com"),
+                "password123");
+            authenticatorSpy.User = authUser;
+
+            var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                authUser.Id,
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(1, 1));
+            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
+
+            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            menu.AddCategory("Pizza");
+            menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuItemCommand
