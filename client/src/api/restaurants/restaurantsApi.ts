@@ -69,6 +69,10 @@ class RestaurantsApi {
       request
     );
   }
+
+  public removeMenuItem(menuId: string, category: string, item: string) {
+    return api.delete(`/menus/${menuId}/categories/${category}/items/${item}`);
+  }
 }
 
 export default new RestaurantsApi();

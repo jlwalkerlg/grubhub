@@ -154,5 +154,33 @@ namespace FoodSnap.DomainTests.Menus
                 item.Price = null;
             });
         }
+
+        [Fact]
+        public void It_Remove_An_Item()
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            var category = menu.Categories.Single();
+            category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+
+            category.RemoveItem("Margherita");
+
+            Assert.Empty(category.Items);
+        }
+
+        [Fact]
+        public void It_Cant_Remove_An_Item_That_Doesnt_Exist()
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            var category = menu.Categories.Single();
+
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                category.RemoveItem("Margherita");
+            });
+        }
     }
 }

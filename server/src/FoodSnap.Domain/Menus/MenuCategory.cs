@@ -41,7 +41,20 @@ namespace FoodSnap.Domain.Menus
             return Name.GetHashCode();
         }
 
+        public void RemoveItem(string name)
+        {
+            var item = items.SingleOrDefault(x => x.Name == name);
+
+            if (item == null)
+            {
+                throw new InvalidOperationException($"Item {name} not found for this category.");
+            }
+
+            items.Remove(item);
+        }
+
         // EF Core
         private MenuCategory() { }
+
     }
 }

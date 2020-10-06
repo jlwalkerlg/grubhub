@@ -8,6 +8,9 @@ import PencilIcon from "~/components/Icons/PencilIcon";
 import { combineRules, MinRule, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
 import useRestaurants from "~/store/restaurants/useRestaurants";
+import Swal, { SweetAlertOptions } from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 
 interface Props {
   category: MenuCategoryDto;
@@ -25,6 +28,8 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
 
   const [isEditFormOpen, setIsEditFormOpen] = React.useState(false);
   const [error, setError] = React.useState(null);
+
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -88,6 +93,43 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
     setError(null);
   };
 
+  const handleClickDelete = async () => {
+    if (isDeleting) return;
+
+    const options: SweetAlertOptions = {
+      title: (
+        <p>
+          Delete menu item {item.name} from category {category.name}?
+        </p>
+      ),
+      icon: "warning",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#c53030",
+      confirmButtonText: "Delete",
+    };
+
+    const dialogResult = await MySwal.fire(options);
+
+    if (!dialogResult.isConfirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    const result = await restaurants.deleteMenuItem(category.name, item.name);
+
+    if (!result.isSuccess) {
+      alert(result.error.message);
+      setIsDeleting(false);
+
+      return;
+    }
+  };
+
   return (
     <div className="px-4 py-2">
       <div>
@@ -98,10 +140,16 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               type="button"
               className="text-blue-700"
               onClick={handleOpenEditForm}
+              disabled={form.formState.isSubmitting}
             >
               <PencilIcon className="w-5 h-5" />
             </button>
-            <button type="button" className="text-primary ml-2">
+            <button
+              type="button"
+              className="text-primary ml-2"
+              onClick={handleClickDelete}
+              disabled={isDeleting}
+            >
               <CloseIcon className="w-5 h-5" />
             </button>
           </div>

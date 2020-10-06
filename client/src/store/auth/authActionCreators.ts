@@ -100,3 +100,14 @@ export const createUpdateMenuItemAction = (
     item,
   },
 });
+
+export const createRemoveMenuItemAction = (
+  categoryName: string,
+  itemName: string
+): RemoveMenuItemAction => ({
+  type: "REMOVE_MENU_ITEM",
+  payload: {
+    categoryName,
+    itemName,
+  },
+});

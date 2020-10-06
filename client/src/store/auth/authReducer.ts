@@ -17,6 +17,7 @@ export const UPDATE_USER_DETAILS = "UPDATE_USER_DETAILS";
 export const ADD_MENU_CATEGORY = "ADD_MENU_CATEGORY";
 export const ADD_MENU_ITEM = "ADD_MENU_ITEM";
 export const UPDATE_MENU_ITEM = "UPDATE_MENU_ITEM";
+export const REMOVE_MENU_ITEM = "REMOVE_MENU_ITEM";
 
 export interface LoginAction {
   type: typeof LOGIN;
@@ -81,6 +82,14 @@ export interface UpdateMenuItemAction {
   };
 }
 
+export interface RemoveMenuItemAction {
+  type: typeof REMOVE_MENU_ITEM;
+  payload: {
+    categoryName: string;
+    itemName: string;
+  };
+}
+
 type AuthAction =
   | LoginAction
   | LogoutAction
@@ -90,7 +99,8 @@ type AuthAction =
   | UpdateUserDetailsAction
   | AddMenuCategoryAction
   | AddMenuItemAction
-  | UpdateMenuItemAction;
+  | UpdateMenuItemAction
+  | RemoveMenuItemAction;
 
 export interface AuthState {
   user: UserDto;
@@ -205,6 +215,27 @@ export default function authReducer(
               }
 
               return action.payload.item;
+            }),
+          };
+        }),
+      },
+    };
+  }
+
+  if (action.type === REMOVE_MENU_ITEM) {
+    return {
+      ...state,
+      menu: {
+        ...state.menu,
+        categories: state.menu.categories.map((category) => {
+          if (category.name !== action.payload.categoryName) {
+            return category;
+          }
+
+          return {
+            ...category,
+            items: category.items.filter((item) => {
+              return item.name !== action.payload.itemName;
             }),
           };
         }),

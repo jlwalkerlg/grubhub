@@ -41,6 +41,15 @@ class Api {
     });
   }
 
+  public async delete<T = null>(
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<ApiResponse<T>> {
+    return this.request(url, "DELETE", {
+      ...config,
+    });
+  }
+
   private async request<T = null>(
     url: string,
     method: Method,
