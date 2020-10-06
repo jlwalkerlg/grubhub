@@ -16,6 +16,10 @@ export interface UpdateRestaurantDetailsRequest {
   phoneNumber: string;
 }
 
+export interface AddMenuCategoryRequest {
+  name: string;
+}
+
 export interface AddMenuItemRequest {
   category: string;
   name: string;
@@ -40,8 +44,12 @@ class RestaurantsApi {
     return api.put(`/restaurants/${id}`, command);
   }
 
+  public addMenuCategory(menuId: string, request: AddMenuCategoryRequest) {
+    return api.post(`/menus/${menuId}/categories`, request);
+  }
+
   public addMenuItem(menuId: string, request: AddMenuItemRequest) {
-    return api.post<string>(`/menus/${menuId}/items`, request);
+    return api.post(`/menus/${menuId}/items`, request);
   }
 }
 

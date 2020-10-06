@@ -4,6 +4,7 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import useAuth from "~/store/auth/useAuth";
 import { DashboardLayout } from "../DashboardLayout";
+import AddMenuCategoryForm from "./AddMenuCategoryForm";
 import NewMenuItemDropdown from "./NewMenuItemDropdown";
 
 const MenuBuilder: NextPage = () => {
@@ -16,6 +17,8 @@ const MenuBuilder: NextPage = () => {
       </h2>
 
       <div className="mt-4">
+        <AddMenuCategoryForm />
+
         {menu.categories.map((category) => (
           <div key={category.name} className="mt-4">
             <div className="rounded bg-gray-100 px-4 py-3 shadow-sm text-primary font-medium">

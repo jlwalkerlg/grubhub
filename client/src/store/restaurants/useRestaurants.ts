@@ -1,11 +1,15 @@
 import { useDispatch } from "react-redux";
-import { MenuItemDto } from "~/api/restaurants/MenuDto";
+import { MenuCategoryDto, MenuItemDto } from "~/api/restaurants/MenuDto";
 import restaurantsApi, {
+  AddMenuCategoryRequest,
   AddMenuItemRequest,
   RegisterRestaurantCommand,
 } from "~/api/restaurants/restaurantsApi";
 import { Result } from "~/services/Result";
-import { createAddMenuItemAction } from "../auth/authActionCreators";
+import {
+  createAddMenuCategoryAction,
+  createAddMenuItemAction,
+} from "../auth/authActionCreators";
 import useAuth from "../auth/useAuth";
 
 export default function useRestaurants() {
@@ -22,6 +26,25 @@ export default function useRestaurants() {
     }
 
     return Result.fail(response.error);
+  };
+
+  const addMenuCategory = async (
+    request: AddMenuCategoryRequest
+  ): Promise<Result> => {
+    const response = await restaurantsApi.addMenuCategory(menu.id, request);
+
+    if (!response.isSuccess) {
+      return Result.fail(response.error);
+    }
+
+    const category: MenuCategoryDto = {
+      name: request.name,
+      items: [],
+    };
+
+    dispatch(createAddMenuCategoryAction(category));
+
+    return Result.ok();
   };
 
   const addMenuItem = async (request: AddMenuItemRequest): Promise<Result> => {
@@ -44,5 +67,5 @@ export default function useRestaurants() {
     return Result.ok();
   };
 
-  return { register, addMenuItem };
+  return { register, addMenuCategory, addMenuItem };
 }

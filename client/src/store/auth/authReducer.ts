@@ -1,4 +1,8 @@
-import { MenuDto, MenuItemDto } from "~/api/restaurants/MenuDto";
+import {
+  MenuCategoryDto,
+  MenuDto,
+  MenuItemDto,
+} from "~/api/restaurants/MenuDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import { UpdateRestaurantDetailsRequest } from "~/api/restaurants/restaurantsApi";
 import { UpdateUserDetailsCommand } from "~/api/users/userApi";
@@ -10,6 +14,7 @@ export const SET_AUTH_RESTAURANT = "SET_AUTH_RESTAURANT";
 export const SET_AUTH_RESTAURANT_MENU = "SET_AUTH_RESTAURANT_MENU";
 export const UPDATE_RESTAURANT_DETAILS = "UPDATE_RESTAURANT_DETAILS";
 export const UPDATE_USER_DETAILS = "UPDATE_USER_DETAILS";
+export const ADD_MENU_CATEGORY = "ADD_MENU_CATEGORY";
 export const ADD_MENU_ITEM = "ADD_MENU_ITEM";
 
 export interface LoginAction {
@@ -51,6 +56,13 @@ export interface UpdateUserDetailsAction {
   };
 }
 
+export interface AddMenuCategoryAction {
+  type: typeof ADD_MENU_CATEGORY;
+  payload: {
+    category: MenuCategoryDto;
+  };
+}
+
 export interface AddMenuItemAction {
   type: typeof ADD_MENU_ITEM;
   payload: {
@@ -66,6 +78,7 @@ type AuthAction =
   | SetAuthRestaurantMenuAction
   | UpdateRestaurantDetailsAction
   | UpdateUserDetailsAction
+  | AddMenuCategoryAction
   | AddMenuItemAction;
 
 export interface AuthState {
@@ -130,6 +143,16 @@ export default function authReducer(
       user: {
         ...state.user,
         ...action.payload.command,
+      },
+    };
+  }
+
+  if (action.type === ADD_MENU_CATEGORY) {
+    return {
+      ...state,
+      menu: {
+        ...state.menu,
+        categories: [action.payload.category, ...state.menu.categories],
       },
     };
   }

@@ -8,12 +8,17 @@ import {
   UpdateRestaurantDetailsAction,
   UpdateUserDetailsAction,
   AddMenuItemAction,
+  AddMenuCategoryAction,
 } from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import { UpdateRestaurantDetailsRequest } from "~/api/restaurants/restaurantsApi";
 import { UpdateUserDetailsCommand } from "~/api/users/userApi";
-import { MenuDto, MenuItemDto } from "~/api/restaurants/MenuDto";
+import {
+  MenuCategoryDto,
+  MenuDto,
+  MenuItemDto,
+} from "~/api/restaurants/MenuDto";
 
 export const createLoginAction = (user: UserDto): LoginAction => ({
   type: LOGIN,
@@ -59,6 +64,15 @@ export const createUpdateAuthUserDetailsAction = (
   type: "UPDATE_USER_DETAILS",
   payload: {
     command,
+  },
+});
+
+export const createAddMenuCategoryAction = (
+  category: MenuCategoryDto
+): AddMenuCategoryAction => ({
+  type: "ADD_MENU_CATEGORY",
+  payload: {
+    category,
   },
 });
 

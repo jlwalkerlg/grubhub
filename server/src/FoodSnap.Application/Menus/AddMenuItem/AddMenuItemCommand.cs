@@ -1,7 +1,9 @@
 using System;
+using FoodSnap.Application.Services.Authentication;
 
 namespace FoodSnap.Application.Menus.AddMenuItem
 {
+    [Authenticate]
     public class AddMenuItemCommand : IRequest
     {
         public Guid MenuId { get; set; }

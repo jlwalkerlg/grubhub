@@ -7,7 +7,6 @@ using FoodSnap.Shared;
 
 namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
 {
-    [Authenticate]
     public class UpdateRestaurantDetailsHandler : IRequestHandler<UpdateRestaurantDetailsCommand>
     {
         private readonly IUnitOfWork unitOfWork;
