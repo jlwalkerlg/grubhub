@@ -30,8 +30,6 @@ const RegisterRestaurantFormController: React.FC = () => {
       managerEmail: "",
       managerPassword: "",
     },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const step2 = useForm<StepTwo>({
@@ -39,16 +37,12 @@ const RegisterRestaurantFormController: React.FC = () => {
       restaurantName: "",
       restaurantPhoneNumber: "",
     },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const step3 = useForm<StepThree>({
     defaultValues: {
       address: "",
     },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const {

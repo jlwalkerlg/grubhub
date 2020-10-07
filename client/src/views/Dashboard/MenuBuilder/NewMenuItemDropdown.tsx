@@ -30,8 +30,6 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
       description: "",
       price: null,
     },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -149,7 +147,7 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting || !form.formState.isValid}
+              disabled={form.formState.isSubmitting}
               className="btn btn-sm btn-primary"
             >
               Add Item

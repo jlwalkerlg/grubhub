@@ -18,8 +18,6 @@ const LoginForm: React.FC = () => {
 
   const form = useForm<LoginCommand>({
     defaultValues: { email: "", password: "" },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const [error, setError] = React.useState<string>(null);
@@ -107,7 +105,7 @@ const LoginForm: React.FC = () => {
       <div className="mt-4">
         <button
           type="submit"
-          disabled={form.formState.isSubmitting || !form.formState.isValid}
+          disabled={form.formState.isSubmitting}
           className="btn btn-primary font-semibold w-full"
         >
           Login

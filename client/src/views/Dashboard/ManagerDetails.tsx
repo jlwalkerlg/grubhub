@@ -17,8 +17,6 @@ const ManagerDetails: NextPage = () => {
       name: auth.user.name,
       email: auth.user.email,
     },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const onSubmit = async (command: UpdateUserDetailsCommand) => {
@@ -93,7 +91,7 @@ const ManagerDetails: NextPage = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={form.formState.isSubmitting || !form.formState.isValid}
+            disabled={form.formState.isSubmitting}
             className="btn btn-primary font-semibold w-full"
           >
             Submit

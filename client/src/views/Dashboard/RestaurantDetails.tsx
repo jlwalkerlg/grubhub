@@ -17,8 +17,6 @@ const RestaurantDetails: NextPage = () => {
       name: auth.restaurant.name,
       phoneNumber: auth.restaurant.phoneNumber,
     },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const onSubmit = async (request: UpdateRestaurantDetailsRequest) => {
@@ -93,7 +91,7 @@ const RestaurantDetails: NextPage = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={form.formState.isSubmitting || !form.formState.isValid}
+            disabled={form.formState.isSubmitting}
             className="btn btn-primary font-semibold w-full"
           >
             Submit

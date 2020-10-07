@@ -38,8 +38,6 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
       description: item.description,
       price: item.price,
     },
-    mode: "onBlur",
-    reValidateMode: "onChange",
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -68,8 +66,11 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
       return;
     }
 
-    setIsEditFormOpen(false);
-    form.reset();
+    if (data.name === item.name) {
+      setIsEditFormOpen(false);
+      form.reset(data);
+      return;
+    }
   });
 
   const handleOpenEditForm = () => {
@@ -213,7 +214,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting || !form.formState.isValid}
+              disabled={form.formState.isSubmitting}
               className="btn btn-sm btn-primary"
             >
               Update Item

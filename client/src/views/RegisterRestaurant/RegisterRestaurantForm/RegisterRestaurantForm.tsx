@@ -109,11 +109,7 @@ const FirstStep: React.FC<Props> = ({ step1: form, advanceStep }) => {
       </div>
 
       <div className="mt-8">
-        <button
-          type="submit"
-          className="btn btn-primary font-semibold w-full"
-          disabled={!form.formState.isValid}
-        >
+        <button type="submit" className="btn btn-primary font-semibold w-full">
           Continue
         </button>
       </div>
@@ -187,11 +183,7 @@ const SecondStep: React.FC<Props> = ({
       </div>
 
       <div className="mt-3">
-        <button
-          type="submit"
-          className="btn btn-primary font-semibold w-full"
-          disabled={!form.formState.isValid}
-        >
+        <button type="submit" className="btn btn-primary font-semibold w-full">
           Continue
         </button>
       </div>
@@ -250,7 +242,7 @@ const LastStep: React.FC<Props> = ({
         <button
           type="submit"
           className="btn btn-primary font-semibold w-full"
-          disabled={form.formState.isSubmitting || !form.formState.isValid}
+          disabled={form.formState.isSubmitting}
         >
           {form.formState.isSubmitting ? (
             <SpinnerIcon className="h-6 w-6 inline-block animate-spin" />
