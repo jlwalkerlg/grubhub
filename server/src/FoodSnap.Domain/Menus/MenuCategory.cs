@@ -6,7 +6,7 @@ namespace FoodSnap.Domain.Menus
 {
     public class MenuCategory : Entity<MenuCategory>
     {
-        public MenuCategory(string name)
+        internal MenuCategory(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {

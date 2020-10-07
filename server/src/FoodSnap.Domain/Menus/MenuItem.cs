@@ -4,7 +4,7 @@ namespace FoodSnap.Domain.Menus
 {
     public class MenuItem : Entity<MenuItem>
     {
-        public MenuItem(string name, string description, Money price)
+        internal MenuItem(string name, string description, Money price)
         {
             Name = name;
             Description = description;
