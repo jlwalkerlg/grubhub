@@ -7,9 +7,9 @@ namespace FoodSnap.Application.Menus.UpdateMenuItem
     public class UpdateMenuItemCommand : IRequest
     {
         public Guid MenuId { get; set; }
-        public string Category { get; set; }
-        public string Item { get; set; }
-        public string Name { get; set; }
+        public string CategoryName { get; set; }
+        public string OldItemName { get; set; }
+        public string NewItemName { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
     }

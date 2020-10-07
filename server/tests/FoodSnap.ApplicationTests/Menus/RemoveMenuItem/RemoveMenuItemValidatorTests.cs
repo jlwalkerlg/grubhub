@@ -24,8 +24,8 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
+                CategoryName = category,
+                ItemName = item,
             };
 
             var result = await validator.Validate(command);
@@ -46,14 +46,14 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
+                CategoryName = category,
+                ItemName = item,
             };
 
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Category)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.CategoryName)));
         }
 
         [Theory]
@@ -68,14 +68,14 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
+                CategoryName = category,
+                ItemName = item,
             };
 
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Item)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ItemName)));
         }
     }
 }

@@ -27,9 +27,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
-                Name = name,
+                CategoryName = category,
+                OldItemName = item,
+                NewItemName = name,
                 Description = description,
                 Price = price,
             };
@@ -55,9 +55,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
-                Name = name,
+                CategoryName = category,
+                OldItemName = item,
+                NewItemName = name,
                 Description = description,
                 Price = price,
             };
@@ -65,7 +65,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Category)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.CategoryName)));
         }
 
         [Theory]
@@ -83,9 +83,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
-                Name = name,
+                CategoryName = category,
+                OldItemName = item,
+                NewItemName = name,
                 Description = description,
                 Price = price,
             };
@@ -93,7 +93,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Item)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.OldItemName)));
         }
 
         [Theory]
@@ -111,9 +111,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
-                Name = name,
+                CategoryName = category,
+                OldItemName = item,
+                NewItemName = name,
                 Description = description,
                 Price = price,
             };
@@ -121,7 +121,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Name)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.NewItemName)));
         }
 
         [Fact]
@@ -137,9 +137,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
-                Name = name,
+                CategoryName = category,
+                OldItemName = item,
+                NewItemName = name,
                 Description = description,
                 Price = price,
             };

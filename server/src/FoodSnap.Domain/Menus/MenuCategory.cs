@@ -16,10 +16,10 @@ namespace FoodSnap.Domain.Menus
             Name = name;
         }
 
+        public string Name { get; }
+
         private List<MenuItem> items = new List<MenuItem>();
         public IReadOnlyList<MenuItem> Items => items;
-
-        public string Name { get; }
 
         public void AddItem(string name, string description, Money price)
         {

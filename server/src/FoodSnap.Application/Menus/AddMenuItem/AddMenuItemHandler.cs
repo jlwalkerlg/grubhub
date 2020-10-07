@@ -35,19 +35,19 @@ namespace FoodSnap.Application.Menus.AddMenuItem
                 return Result.Fail(Error.Unauthorised("Only the restaurant owner can add menu items."));
             }
 
-            var category = menu.Categories.FirstOrDefault(x => x.Name == command.Category);
+            var category = menu.Categories.FirstOrDefault(x => x.Name == command.CategoryName);
 
             if (category == null)
             {
-                return Result.Fail(Error.NotFound($"Category {command.Category} not found."));
+                return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
             }
 
-            if (category.Items.Any(x => x.Name == command.Name))
+            if (category.Items.Any(x => x.Name == command.ItemName))
             {
-                return Result.Fail(Error.BadRequest($"Item {command.Name} already exists for category {command.Category}."));
+                return Result.Fail(Error.BadRequest($"Item {command.ItemName} already exists for category {command.CategoryName}."));
             }
 
-            category.AddItem(command.Name, command.Description, new Money(command.Price));
+            category.AddItem(command.ItemName, command.Description, new Money(command.Price));
 
             await unitOfWork.Commit();
 

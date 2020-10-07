@@ -9,10 +9,10 @@ namespace FoodSnap.Application.Menus.RemoveMenuItem
             RuleFor(x => x.MenuId)
                 .Required();
 
-            RuleFor(x => x.Category)
+            RuleFor(x => x.CategoryName)
                 .Required();
 
-            RuleFor(x => x.Item)
+            RuleFor(x => x.ItemName)
                 .Required();
         }
     }

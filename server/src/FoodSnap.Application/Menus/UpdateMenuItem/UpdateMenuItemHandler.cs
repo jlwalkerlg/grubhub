@@ -35,26 +35,26 @@ namespace FoodSnap.Application.Menus.UpdateMenuItem
                 return Result.Fail(Error.Unauthorised("Only the restaurant owner can update the menu."));
             }
 
-            var category = menu.Categories.FirstOrDefault(x => x.Name == command.Category);
+            var category = menu.Categories.FirstOrDefault(x => x.Name == command.CategoryName);
 
             if (category == null)
             {
-                return Result.Fail(Error.NotFound($"Category {command.Category} not found."));
+                return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
             }
 
-            var item = category.Items.FirstOrDefault(x => x.Name == command.Item);
+            var item = category.Items.FirstOrDefault(x => x.Name == command.OldItemName);
 
             if (item == null)
             {
-                return Result.Fail(Error.NotFound($"Item {command.Item} not found for category {command.Category}."));
+                return Result.Fail(Error.NotFound($"Item {command.OldItemName} not found for category {command.CategoryName}."));
             }
 
-            if (command.Item != command.Name && category.Items.Any(x => x.Name == command.Name))
+            if (command.OldItemName != command.NewItemName && category.Items.Any(x => x.Name == command.NewItemName))
             {
-                return Result.Fail(Error.BadRequest($"Item {command.Name} already exists for category {command.Category}."));
+                return Result.Fail(Error.BadRequest($"Item {command.NewItemName} already exists for category {command.CategoryName}."));
             }
 
-            category.RenameItem(command.Item, command.Name);
+            category.RenameItem(command.OldItemName, command.NewItemName);
             item.Description = command.Description;
             item.Price = new Money(command.Price);
 

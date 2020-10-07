@@ -9,7 +9,7 @@ import useRestaurants from "~/store/restaurants/useRestaurants";
 import { AddMenuItemRequest } from "~/api/restaurants/restaurantsApi";
 
 interface FormValues {
-  name: string;
+  itemName: string;
   description: string;
   price: number;
 }
@@ -26,7 +26,7 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
 
   const form = useForm<FormValues>({
     defaultValues: {
-      name: "",
+      itemName: "",
       description: "",
       price: null,
     },
@@ -40,7 +40,7 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
     setError(null);
 
     const request: AddMenuItemRequest = {
-      category: category.name,
+      categoryName: category.name,
       ...data,
       price: +data.price,
     };
@@ -62,7 +62,7 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
   });
 
   React.useEffect(() => {
-    form.register("name", {
+    form.register("itemName", {
       validate: combineRules([new RequiredRule()]),
     });
     form.register("description", {
@@ -99,19 +99,19 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
           )}
 
           <div className="mt-4">
-            <label className="label" htmlFor="name">
+            <label className="label" htmlFor="itemName">
               Name <span className="text-primary">*</span>
             </label>
             <input
               ref={form.register}
               className="input"
               type="text"
-              name="name"
-              id="name"
-              data-invalid={!!form.errors.name}
+              name="itemName"
+              id="itemName"
+              data-invalid={!!form.errors.itemName}
             />
-            {form.errors.name && (
-              <p className="form-error mt-1">{form.errors.name.message}</p>
+            {form.errors.itemName && (
+              <p className="form-error mt-1">{form.errors.itemName.message}</p>
             )}
           </div>
 

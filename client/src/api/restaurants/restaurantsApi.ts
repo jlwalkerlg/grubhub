@@ -21,8 +21,8 @@ export interface AddMenuCategoryRequest {
 }
 
 export interface AddMenuItemRequest {
-  category: string;
-  name: string;
+  categoryName: string;
+  itemName: string;
   description: string;
   price: number;
 }

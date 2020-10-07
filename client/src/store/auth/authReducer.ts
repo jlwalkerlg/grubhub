@@ -77,7 +77,7 @@ export interface UpdateMenuItemAction {
   type: typeof UPDATE_MENU_ITEM;
   payload: {
     categoryName: string;
-    itemName: string;
+    oldItemName: string;
     item: MenuItemDto;
   };
 }
@@ -210,7 +210,7 @@ export default function authReducer(
           return {
             ...category,
             items: category.items.map((item) => {
-              if (item.name !== action.payload.itemName) {
+              if (item.name !== action.payload.oldItemName) {
                 return item;
               }
 

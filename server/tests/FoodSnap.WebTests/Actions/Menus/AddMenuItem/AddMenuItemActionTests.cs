@@ -26,8 +26,8 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
             var categoryId = Guid.NewGuid();
             var request = new AddMenuItemRequest
             {
-                Category = "Pizza",
-                Name = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m
             };

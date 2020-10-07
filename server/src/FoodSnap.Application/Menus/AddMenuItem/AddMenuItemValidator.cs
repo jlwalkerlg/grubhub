@@ -9,10 +9,10 @@ namespace FoodSnap.Application.Menus.AddMenuItem
             CascadeRuleFor(x => x.MenuId)
                 .Required();
 
-            CascadeRuleFor(x => x.Category)
+            CascadeRuleFor(x => x.CategoryName)
                 .Required();
 
-            CascadeRuleFor(x => x.Name)
+            CascadeRuleFor(x => x.ItemName)
                 .Required();
 
             CascadeRuleFor(x => x.Description)

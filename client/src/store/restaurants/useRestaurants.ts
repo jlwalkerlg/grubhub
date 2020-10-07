@@ -57,10 +57,12 @@ export default function useRestaurants() {
       return Result.fail(response.error);
     }
 
-    const category = menu.categories.find((x) => x.name === request.category);
+    const category = menu.categories.find(
+      (x) => x.name === request.categoryName
+    );
 
     const item: MenuItemDto = {
-      name: request.name,
+      name: request.itemName,
       description: request.description,
       price: request.price,
     };

@@ -25,9 +25,9 @@ namespace FoodSnap.Web.Actions.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
-                Name = request.Name,
+                CategoryName = category,
+                OldItemName = item,
+                NewItemName = request.Name,
                 Description = request.Description,
                 Price = request.Price
             };

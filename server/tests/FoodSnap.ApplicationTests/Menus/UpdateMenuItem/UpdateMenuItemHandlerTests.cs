@@ -61,9 +61,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                Category = "Pizza",
-                Item = "Margherita",
-                Name = "Hawaiian",
+                CategoryName = "Pizza",
+                OldItemName = "Margherita",
+                NewItemName = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
@@ -96,9 +96,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                Category = "Pizza",
-                Item = "Margherita",
-                Name = "Hawaiian",
+                CategoryName = "Pizza",
+                OldItemName = "Margherita",
+                NewItemName = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
@@ -139,9 +139,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                Category = "Pizza",
-                Item = "Margherita",
-                Name = "Hawaiian",
+                CategoryName = "Pizza",
+                OldItemName = "Margherita",
+                NewItemName = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
@@ -183,9 +183,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                Category = "Pizza",
-                Item = "Margherita",
-                Name = "Hawaiian",
+                CategoryName = "Pizza",
+                OldItemName = "Margherita",
+                NewItemName = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
@@ -229,9 +229,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                Category = "Pizza",
-                Item = "Margherita",
-                Name = "Hawaiian",
+                CategoryName = "Pizza",
+                OldItemName = "Margherita",
+                NewItemName = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };

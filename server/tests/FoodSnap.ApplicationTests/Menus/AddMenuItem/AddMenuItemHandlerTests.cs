@@ -53,8 +53,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                Category = "Pizza",
-                Name = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };
@@ -96,8 +96,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                Category = "Pizza",
-                Name = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };
@@ -133,8 +133,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                Category = "Pizza",
-                Name = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };
@@ -172,8 +172,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                Category = "Pizza",
-                Name = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };
@@ -210,8 +210,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                Category = "Pizza",
-                Name = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };

@@ -26,8 +26,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Name = name,
+                CategoryName = category,
+                ItemName = name,
                 Description = description,
                 Price = price,
             };
@@ -52,8 +52,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Name = name,
+                CategoryName = category,
+                ItemName = name,
                 Description = description,
                 Price = price,
             };
@@ -61,7 +61,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Category)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.CategoryName)));
         }
 
         [Theory]
@@ -78,8 +78,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Name = name,
+                CategoryName = category,
+                ItemName = name,
                 Description = description,
                 Price = price,
             };
@@ -87,7 +87,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Name)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ItemName)));
         }
 
         [Fact]
@@ -102,8 +102,8 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Name = name,
+                CategoryName = category,
+                ItemName = name,
                 Description = description,
                 Price = price,
             };

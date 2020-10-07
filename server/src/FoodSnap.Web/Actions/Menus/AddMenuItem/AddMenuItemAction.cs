@@ -23,8 +23,8 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
             var command = new AddMenuItemCommand
             {
                 MenuId = menuId,
-                Category = request.Category,
-                Name = request.Name,
+                CategoryName = request.CategoryName,
+                ItemName = request.ItemName,
                 Description = request.Description,
                 Price = request.Price
             };

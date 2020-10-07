@@ -34,21 +34,21 @@ namespace FoodSnap.Application.Menus.RemoveMenuItem
                 return Result.Fail(Error.Unauthorised("Only the restaurant owner can update the menu."));
             }
 
-            var category = menu.Categories.FirstOrDefault(x => x.Name == command.Category);
+            var category = menu.Categories.FirstOrDefault(x => x.Name == command.CategoryName);
 
             if (category == null)
             {
-                return Result.Fail(Error.NotFound($"Category {command.Category} not found."));
+                return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
             }
 
-            var item = category.Items.FirstOrDefault(x => x.Name == command.Item);
+            var item = category.Items.FirstOrDefault(x => x.Name == command.ItemName);
 
             if (item == null)
             {
-                return Result.Fail(Error.NotFound($"Item {command.Item} not found for category {command.Category}."));
+                return Result.Fail(Error.NotFound($"Item {command.ItemName} not found for category {command.CategoryName}."));
             }
 
-            category.RemoveItem(command.Item);
+            category.RemoveItem(command.ItemName);
 
             await unitOfWork.Commit();
 

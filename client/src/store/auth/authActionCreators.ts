@@ -79,25 +79,25 @@ export const createAddMenuCategoryAction = (
 });
 
 export const createAddMenuItemAction = (
-  category: string,
+  categoryName: string,
   item: MenuItemDto
 ): AddMenuItemAction => ({
   type: "ADD_MENU_ITEM",
   payload: {
-    category,
+    category: categoryName,
     item,
   },
 });
 
 export const createUpdateMenuItemAction = (
   categoryName: string,
-  itemName: string,
+  oldItemName: string,
   item: MenuItemDto
 ): UpdateMenuItemAction => ({
   type: "UPDATE_MENU_ITEM",
   payload: {
     categoryName,
-    itemName,
+    oldItemName: oldItemName,
     item,
   },
 });

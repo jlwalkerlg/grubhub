@@ -9,13 +9,13 @@ namespace FoodSnap.Application.Menus.UpdateMenuItem
             RuleFor(x => x.MenuId)
                 .Required();
 
-            RuleFor(x => x.Category)
+            RuleFor(x => x.CategoryName)
                 .Required();
 
-            RuleFor(x => x.Item)
+            RuleFor(x => x.OldItemName)
                 .Required();
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.NewItemName)
                 .Required();
 
             RuleFor(x => x.Description)

@@ -58,8 +58,8 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = menu.Id.Value,
-                Category = "Pizza",
-                Item = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
@@ -87,8 +87,8 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                Category = "Pizza",
-                Item = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
@@ -127,8 +127,8 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                Category = "Pizza",
-                Item = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
@@ -168,8 +168,8 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = Guid.NewGuid(),
-                Category = "Pizza",
-                Item = "Margherita",
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
             };
 
             var result = await handler.Handle(command, CancellationToken.None);

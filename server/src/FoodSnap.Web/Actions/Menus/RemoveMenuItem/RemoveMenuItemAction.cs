@@ -24,8 +24,8 @@ namespace FoodSnap.Web.Actions.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand
             {
                 MenuId = menuId,
-                Category = category,
-                Item = item,
+                CategoryName = category,
+                ItemName = item,
             };
 
             var result = await mediator.Send(command);
