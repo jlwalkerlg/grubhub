@@ -49,7 +49,12 @@ namespace FoodSnap.Application.Menus.UpdateMenuItem
                 return Result.Fail(Error.NotFound($"Item {command.Item} not found for category {command.Category}."));
             }
 
-            item.Name = command.Name;
+            if (command.Item != command.Name && category.Items.Any(x => x.Name == command.Name))
+            {
+                return Result.Fail(Error.BadRequest($"Item {command.Name} already exists for category {command.Category}."));
+            }
+
+            category.RenameItem(command.Item, command.Name);
             item.Description = command.Description;
             item.Price = new Money(command.Price);
 

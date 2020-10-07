@@ -15,7 +15,7 @@ namespace FoodSnap.Domain.Menus
         public string Name
         {
             get => name;
-            set
+            internal set
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {

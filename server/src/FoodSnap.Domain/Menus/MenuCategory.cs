@@ -41,6 +41,28 @@ namespace FoodSnap.Domain.Menus
             return Name.GetHashCode();
         }
 
+        public void RenameItem(string oldName, string newName)
+        {
+            var item = items.SingleOrDefault(x => x.Name == oldName);
+
+            if (item == null)
+            {
+                throw new InvalidOperationException($"Item {oldName} not found for this category.");
+            }
+
+            if (oldName == newName)
+            {
+                return;
+            }
+
+            if (items.Any(x => x.Name == newName))
+            {
+                throw new InvalidOperationException($"Item {newName} already exists for this category.");
+            }
+
+            item.Name = newName;
+        }
+
         public void RemoveItem(string name)
         {
             var item = items.SingleOrDefault(x => x.Name == name);

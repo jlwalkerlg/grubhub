@@ -93,6 +93,55 @@ namespace FoodSnap.DomainTests.Menus
         }
 
         [Fact]
+        public void It_Can_Rename_An_Item()
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            var category = menu.Categories.Single();
+
+            category.AddItem("Margherita", "Ham & pinapple", new Money(11.99m));
+            category.RenameItem("Margherita", "Hawaiian");
+
+            Assert.Single(category.Items);
+
+            var item = category.Items.Single();
+            Assert.Equal("Hawaiian", item.Name);
+        }
+
+        [Fact]
+        public void Renaming_An_Item_With_The_Same_Name_Is_Ay_Ok()
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            var category = menu.Categories.Single();
+            category.AddItem("Hawaiian", "Ham & pinapple", new Money(11.99m));
+
+            category.RenameItem("Hawaiian", "Hawaiian");
+
+            var item = category.Items.Single();
+            Assert.Equal("Hawaiian", item.Name);
+        }
+
+        [Fact]
+        public void It_Cant_Rename_An_Item_If_An_Item_With_That_Name_Already_Exists()
+        {
+            var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
+            menu.AddCategory("Pizza");
+
+            var category = menu.Categories.Single();
+            category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+
+            category.AddItem("Hawaiian", "Ham & pinapple", new Money(11.99m));
+
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                category.RenameItem("Hawaiian", "Margherita");
+            });
+        }
+
+        [Fact]
         public void It_Cant_Add_Two_Items_With_The_Same_Name_To_The_Same_Category()
         {
             var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
@@ -125,11 +174,10 @@ namespace FoodSnap.DomainTests.Menus
             });
 
             category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
-            var item = category.Items.Single();
 
             Assert.Throws<ArgumentException>(() =>
             {
-                item.Name = name;
+                category.RenameItem("Margherita", name);
             });
         }
 
@@ -156,7 +204,7 @@ namespace FoodSnap.DomainTests.Menus
         }
 
         [Fact]
-        public void It_Remove_An_Item()
+        public void It_Can_Remove_An_Item()
         {
             var menu = new Menu(new MenuId(Guid.NewGuid()), new RestaurantId(Guid.NewGuid()));
             menu.AddCategory("Pizza");
