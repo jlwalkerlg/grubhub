@@ -10,6 +10,7 @@ import { setFormErrors } from "~/services/forms/setFormErrors";
 import useRestaurants from "~/store/restaurants/useRestaurants";
 import Swal, { SweetAlertOptions } from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { toast } from "react-toastify";
 const MySwal = withReactContent(Swal);
 
 interface Props {
@@ -103,13 +104,10 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
         </p>
       ),
       icon: "warning",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      allowEnterKey: false,
-      showConfirmButton: true,
-      showCancelButton: true,
       confirmButtonColor: "#c53030",
       confirmButtonText: "Delete",
+      showCancelButton: true,
+      cancelButtonColor: "#4a5568",
     };
 
     const dialogResult = await MySwal.fire(options);
@@ -123,10 +121,8 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
     const result = await restaurants.deleteMenuItem(category.name, item.name);
 
     if (!result.isSuccess) {
-      alert(result.error.message);
+      toast.error(result.error.message);
       setIsDeleting(false);
-
-      return;
     }
   };
 
