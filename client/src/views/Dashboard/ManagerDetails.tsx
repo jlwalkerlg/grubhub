@@ -21,15 +21,6 @@ const ManagerDetails: NextPage = () => {
     reValidateMode: "onChange",
   });
 
-  React.useEffect(() => {
-    form.register("name", {
-      validate: combineRules([new RequiredRule()]),
-    });
-    form.register("email", {
-      validate: combineRules([new RequiredRule(), new EmailRule()]),
-    });
-  }, [form.register]);
-
   const onSubmit = async (command: UpdateUserDetailsCommand) => {
     if (form.formState.isSubmitting) return;
 
@@ -66,7 +57,9 @@ const ManagerDetails: NextPage = () => {
             Name <span className="text-primary">*</span>
           </label>
           <input
-            ref={form.register}
+            ref={form.register({
+              validate: combineRules([new RequiredRule()]),
+            })}
             className="input"
             type="text"
             name="name"
@@ -83,7 +76,9 @@ const ManagerDetails: NextPage = () => {
             Email <span className="text-primary">*</span>
           </label>
           <input
-            ref={form.register}
+            ref={form.register({
+              validate: combineRules([new RequiredRule(), new EmailRule()]),
+            })}
             className="input"
             type="text"
             name="email"
@@ -98,7 +93,7 @@ const ManagerDetails: NextPage = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
             className="btn btn-primary font-semibold w-full"
           >
             Submit

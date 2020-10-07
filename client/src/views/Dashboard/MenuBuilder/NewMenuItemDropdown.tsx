@@ -61,18 +61,6 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
     form.reset();
   });
 
-  React.useEffect(() => {
-    form.register("itemName", {
-      validate: combineRules([new RequiredRule()]),
-    });
-    form.register("description", {
-      validate: combineRules([new RequiredRule()]),
-    });
-    form.register("price", {
-      validate: combineRules([new RequiredRule(), new MinRule(0)]),
-    });
-  }, [form.register]);
-
   const handleCancel = () => {
     setIsOpen(false);
     form.reset();
@@ -103,7 +91,9 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
               Name <span className="text-primary">*</span>
             </label>
             <input
-              ref={form.register}
+              ref={form.register({
+                validate: combineRules([new RequiredRule()]),
+              })}
               className="input"
               type="text"
               name="itemName"
@@ -120,7 +110,9 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
               Description <span className="text-primary">*</span>
             </label>
             <textarea
-              ref={form.register}
+              ref={form.register({
+                validate: combineRules([new RequiredRule()]),
+              })}
               className="input"
               name="description"
               id="description"
@@ -138,7 +130,9 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
               Price <span className="text-primary">*</span>
             </label>
             <input
-              ref={form.register}
+              ref={form.register({
+                validate: combineRules([new RequiredRule(), new MinRule(0)]),
+              })}
               className="input"
               type="number"
               min="0"
@@ -155,7 +149,7 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={form.formState.isSubmitting || !form.formState.isValid}
               className="btn-sm btn-primary"
             >
               Add Item

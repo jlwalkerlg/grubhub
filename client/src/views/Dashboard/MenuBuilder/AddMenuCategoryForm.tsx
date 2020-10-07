@@ -25,12 +25,6 @@ const AddMenuCategoryForm: React.FC = () => {
     reValidateMode: "onChange",
   });
 
-  React.useEffect(() => {
-    form.register("name", {
-      validate: combineRules([new RequiredRule()]),
-    });
-  }, [form.register]);
-
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
@@ -86,7 +80,9 @@ const AddMenuCategoryForm: React.FC = () => {
               Name <span className="text-primary">*</span>
             </label>
             <input
-              ref={form.register}
+              ref={form.register({
+                validate: combineRules([new RequiredRule()]),
+              })}
               className="input"
               type="text"
               name="name"
@@ -101,7 +97,7 @@ const AddMenuCategoryForm: React.FC = () => {
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={form.formState.isSubmitting || !form.formState.isValid}
               className="btn-sm btn-primary"
             >
               Add Category

@@ -50,15 +50,6 @@ const LoginForm: React.FC = () => {
     }
   });
 
-  React.useEffect(() => {
-    form.register("email", {
-      validate: combineRules([new RequiredRule(), new EmailRule()]),
-    });
-    form.register("password", {
-      validate: combineRules([new RequiredRule(), new PasswordRule()]),
-    });
-  }, [form.register]);
-
   return (
     <form onSubmit={onSubmit}>
       {error && (
@@ -72,7 +63,9 @@ const LoginForm: React.FC = () => {
           Email <span className="text-primary">*</span>
         </label>
         <input
-          ref={form.register}
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new EmailRule()]),
+          })}
           className="input"
           type="email"
           name="email"
@@ -89,7 +82,9 @@ const LoginForm: React.FC = () => {
           Password <span className="text-primary">*</span>
         </label>
         <input
-          ref={form.register}
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new PasswordRule()]),
+          })}
           className="input"
           type="password"
           name="password"
@@ -112,7 +107,7 @@ const LoginForm: React.FC = () => {
       <div className="mt-4">
         <button
           type="submit"
-          disabled={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
           className="btn btn-primary font-semibold w-full"
         >
           Login

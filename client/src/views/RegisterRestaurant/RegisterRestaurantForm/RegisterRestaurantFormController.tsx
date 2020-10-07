@@ -5,13 +5,6 @@ import withReactContent from "sweetalert2-react-content";
 
 import { RegisterRestaurantCommand } from "~/api/restaurants/restaurantsApi";
 
-import {
-  RequiredRule,
-  PasswordRule,
-  EmailRule,
-  PhoneRule,
-  combineRules,
-} from "~/services/forms/Rule";
 import useAddressSearch from "~/services/geolocation/useAddressSearch";
 
 import RegisterRestaurantForm, {
@@ -57,33 +50,6 @@ const RegisterRestaurantFormController: React.FC = () => {
     mode: "onBlur",
     reValidateMode: "onChange",
   });
-
-  React.useEffect(() => {
-    step1.register("managerName", {
-      validate: combineRules([new RequiredRule()]),
-    });
-    step1.register("managerEmail", {
-      validate: combineRules([new RequiredRule(), new EmailRule()]),
-    });
-    step1.register("managerPassword", {
-      validate: combineRules([new RequiredRule(), new PasswordRule()]),
-    });
-  }, [step1.register]);
-
-  React.useEffect(() => {
-    step2.register("restaurantName", {
-      validate: combineRules([new RequiredRule()]),
-    });
-    step2.register("restaurantPhoneNumber", {
-      validate: combineRules([new RequiredRule(), new PhoneRule()]),
-    });
-  }, [step2.register]);
-
-  React.useEffect(() => {
-    step3.register("address", {
-      validate: combineRules([new RequiredRule()]),
-    });
-  }, [step3.register]);
 
   const {
     results: addressSearchResults,

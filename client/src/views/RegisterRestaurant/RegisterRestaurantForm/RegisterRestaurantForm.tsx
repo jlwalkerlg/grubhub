@@ -5,6 +5,13 @@ import Autocomplete from "~/components/Autocomplete/Autocomplete";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { UseFormMethods } from "react-hook-form";
 import { ErrorAlert } from "~/components/Alert/Alert";
+import {
+  combineRules,
+  EmailRule,
+  PasswordRule,
+  PhoneRule,
+  RequiredRule,
+} from "~/services/forms/Rule";
 
 export interface StepOne {
   managerName: string;
@@ -46,7 +53,9 @@ const FirstStep: React.FC<Props> = ({ step1: form, advanceStep }) => {
           Manager Name <span className="text-primary">*</span>
         </label>
         <input
-          ref={form.register}
+          ref={form.register({
+            validate: combineRules([new RequiredRule()]),
+          })}
           autoFocus
           className="input"
           type="text"
@@ -64,7 +73,9 @@ const FirstStep: React.FC<Props> = ({ step1: form, advanceStep }) => {
           Manager Email <span className="text-primary">*</span>
         </label>
         <input
-          ref={form.register}
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new EmailRule()]),
+          })}
           className="input"
           type="email"
           name="managerEmail"
@@ -82,7 +93,9 @@ const FirstStep: React.FC<Props> = ({ step1: form, advanceStep }) => {
           Manager Password <span className="text-primary">*</span>
         </label>
         <input
-          ref={form.register}
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new PasswordRule()]),
+          })}
           className="input"
           type="password"
           name="managerPassword"
@@ -124,7 +137,9 @@ const SecondStep: React.FC<Props> = ({
           Name <span className="text-primary">*</span>
         </label>
         <input
-          ref={form.register}
+          ref={form.register({
+            validate: combineRules([new RequiredRule()]),
+          })}
           autoFocus
           className="input"
           type="text"
@@ -144,7 +159,9 @@ const SecondStep: React.FC<Props> = ({
           Phone Number <span className="text-primary">*</span>
         </label>
         <input
-          ref={form.register}
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new PhoneRule()]),
+          })}
           className="input"
           type="tel"
           name="restaurantPhoneNumber"
@@ -200,7 +217,9 @@ const LastStep: React.FC<Props> = ({
           Address <span className="text-primary">*</span>
         </label>
         <Autocomplete
-          inputRef={form.register}
+          inputRef={form.register({
+            validate: combineRules([new RequiredRule()]),
+          })}
           predictions={addressSearchResults}
           onSelection={onSelectAddress}
           autoFocus
@@ -231,7 +250,7 @@ const LastStep: React.FC<Props> = ({
         <button
           type="submit"
           className="btn btn-primary font-semibold w-full"
-          disabled={!form.formState.isValid}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
           {form.formState.isSubmitting ? (
             <SpinnerIcon className="h-6 w-6 inline-block animate-spin" />

@@ -21,15 +21,6 @@ const RestaurantDetails: NextPage = () => {
     reValidateMode: "onChange",
   });
 
-  React.useEffect(() => {
-    form.register("name", {
-      validate: combineRules([new RequiredRule()]),
-    });
-    form.register("phoneNumber", {
-      validate: combineRules([new RequiredRule(), new PhoneRule()]),
-    });
-  }, [form.register]);
-
   const onSubmit = async (request: UpdateRestaurantDetailsRequest) => {
     if (form.formState.isSubmitting) return;
 
@@ -66,7 +57,9 @@ const RestaurantDetails: NextPage = () => {
             Name <span className="text-primary">*</span>
           </label>
           <input
-            ref={form.register}
+            ref={form.register({
+              validate: combineRules([new RequiredRule()]),
+            })}
             className="input"
             type="text"
             name="name"
@@ -83,7 +76,9 @@ const RestaurantDetails: NextPage = () => {
             Phone Number <span className="text-primary">*</span>
           </label>
           <input
-            ref={form.register}
+            ref={form.register({
+              validate: combineRules([new RequiredRule(), new PhoneRule()]),
+            })}
             className="input"
             type="text"
             name="phoneNumber"
@@ -98,7 +93,7 @@ const RestaurantDetails: NextPage = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
             className="btn btn-primary font-semibold w-full"
           >
             Submit
