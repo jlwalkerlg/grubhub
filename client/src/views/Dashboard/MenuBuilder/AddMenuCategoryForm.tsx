@@ -98,7 +98,7 @@ const AddMenuCategoryForm: React.FC = () => {
             <button
               type="submit"
               disabled={form.formState.isSubmitting || !form.formState.isValid}
-              className="btn-sm btn-primary"
+              className="btn btn-sm btn-primary"
             >
               Add Category
             </button>
@@ -106,7 +106,7 @@ const AddMenuCategoryForm: React.FC = () => {
               type="button"
               onClick={handleCancel}
               disabled={form.formState.isSubmitting}
-              className="btn-sm btn-outline-primary ml-2"
+              className="btn btn-sm btn-outline-primary ml-2"
             >
               Cancel
             </button>

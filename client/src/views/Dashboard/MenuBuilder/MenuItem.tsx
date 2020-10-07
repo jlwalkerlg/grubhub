@@ -214,7 +214,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
             <button
               type="submit"
               disabled={form.formState.isSubmitting || !form.formState.isValid}
-              className="btn-sm btn-primary"
+              className="btn btn-sm btn-primary"
             >
               Update Item
             </button>
@@ -222,7 +222,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               type="button"
               onClick={handleCancelEdit}
               disabled={form.formState.isSubmitting}
-              className="btn-sm btn-outline-primary ml-2"
+              className="btn btn-sm btn-outline-primary ml-2"
             >
               Cancel
             </button>
