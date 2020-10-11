@@ -3,8 +3,7 @@ import React from "react";
 import useAuth from "~/store/auth/useAuth";
 import { DashboardLayout } from "../DashboardLayout";
 import AddMenuCategoryForm from "./AddMenuCategoryForm";
-import MenuItem from "./MenuItem";
-import NewMenuItemDropdown from "./NewMenuItemDropdown";
+import MenuCategory from "./MenuCategory";
 
 const MenuBuilder: NextPage = () => {
   const { menu } = useAuth();
@@ -19,19 +18,7 @@ const MenuBuilder: NextPage = () => {
         <AddMenuCategoryForm />
 
         {menu.categories.map((category) => (
-          <div key={category.name} className="mt-4">
-            <div className="rounded bg-gray-100 px-4 py-3 shadow-sm text-primary font-medium">
-              {category.name}
-            </div>
-
-            <div className="p-2">
-              {category.items.map((item) => (
-                <MenuItem key={item.name} category={category} item={item} />
-              ))}
-
-              <NewMenuItemDropdown category={category} />
-            </div>
-          </div>
+          <MenuCategory key={category.name} category={category} />
         ))}
       </div>
     </DashboardLayout>

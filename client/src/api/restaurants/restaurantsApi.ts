@@ -50,8 +50,17 @@ class RestaurantsApi {
     return api.put(`/restaurants/${id}`, command);
   }
 
-  public addMenuCategory(restaurantId: string, request: AddMenuCategoryRequest) {
+  public addMenuCategory(
+    restaurantId: string,
+    request: AddMenuCategoryRequest
+  ) {
     return api.post(`/restaurants/${restaurantId}/menu/categories`, request);
+  }
+
+  public removeMenuCategory(restaurantId: string, category: string) {
+    return api.delete(
+      `/restaurants/${restaurantId}/menu/categories/${category}`
+    );
   }
 
   public addMenuItem(restaurantId: string, request: AddMenuItemRequest) {
@@ -71,7 +80,9 @@ class RestaurantsApi {
   }
 
   public removeMenuItem(restaurantId: string, category: string, item: string) {
-    return api.delete(`/restaurants/${restaurantId}/menu/categories/${category}/items/${item}`);
+    return api.delete(
+      `/restaurants/${restaurantId}/menu/categories/${category}/items/${item}`
+    );
   }
 }
 

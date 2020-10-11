@@ -11,6 +11,7 @@ import {
   AddMenuCategoryAction,
   UpdateMenuItemAction,
   RemoveMenuItemAction,
+  RemoveMenuCategoryAction,
 } from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
@@ -75,6 +76,15 @@ export const createAddMenuCategoryAction = (
   type: "ADD_MENU_CATEGORY",
   payload: {
     category,
+  },
+});
+
+export const createRemoveMenuCategoryAction = (
+  categoryName: string
+): RemoveMenuCategoryAction => ({
+  type: "REMOVE_MENU_CATEGORY",
+  payload: {
+    categoryName,
   },
 });
 

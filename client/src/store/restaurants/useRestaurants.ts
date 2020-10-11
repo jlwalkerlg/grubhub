@@ -10,6 +10,7 @@ import { Result } from "~/services/Result";
 import {
   createAddMenuCategoryAction,
   createAddMenuItemAction,
+  createRemoveMenuCategoryAction,
   createRemoveMenuItemAction,
   createUpdateMenuItemAction,
 } from "../auth/authActionCreators";
@@ -46,6 +47,23 @@ export default function useRestaurants() {
     };
 
     dispatch(createAddMenuCategoryAction(category));
+
+    return Result.ok();
+  };
+
+  const removeMenuCategory = async (
+    categoryName: string
+  ): Promise<Result> => {
+    const response = await restaurantsApi.removeMenuCategory(
+      menu.restaurantId,
+      categoryName
+    );
+
+    if (!response.isSuccess) {
+      return Result.fail(response.error);
+    }
+
+    dispatch(createRemoveMenuCategoryAction(categoryName));
 
     return Result.ok();
   };
@@ -99,7 +117,7 @@ export default function useRestaurants() {
     return Result.ok();
   };
 
-  const deleteMenuItem = async (
+  const removeMenuItem = async (
     categoryName: string,
     itemName: string
   ): Promise<Result> => {
@@ -121,8 +139,9 @@ export default function useRestaurants() {
   return {
     register,
     addMenuCategory,
+    removeMenuCategory,
     addMenuItem,
     updateMenuItem,
-    deleteMenuItem,
+    deleteMenuItem: removeMenuItem,
   };
 }
