@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus;
 using FoodSnap.Domain.Menus;
+using FoodSnap.Domain.Restaurants;
 
 namespace FoodSnap.ApplicationTests.Menus
 {
@@ -16,9 +17,9 @@ namespace FoodSnap.ApplicationTests.Menus
             return Task.CompletedTask;
         }
 
-        public Task<Menu> GetById(MenuId id)
+        public Task<Menu> GetByRestaurantId(RestaurantId id)
         {
-            return Task.FromResult(Menus.FirstOrDefault(x => x.Id == id));
+            return Task.FromResult(Menus.FirstOrDefault(x => x.RestaurantId == id));
         }
     }
 }

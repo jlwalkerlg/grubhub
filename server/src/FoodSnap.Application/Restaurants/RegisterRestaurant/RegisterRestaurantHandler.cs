@@ -47,7 +47,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 new Address(geocodingResult.Value.FormattedAddress),
                 new Coordinates(geocodingResult.Value.Latitude, geocodingResult.Value.Longitude));
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
 
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
 

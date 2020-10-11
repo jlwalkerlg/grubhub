@@ -6,7 +6,7 @@ namespace FoodSnap.Application.Menus.UpdateMenuItem
     [Authenticate]
     public class UpdateMenuItemCommand : IRequest
     {
-        public Guid MenuId { get; set; }
+        public Guid RestaurantId { get; set; }
         public string CategoryName { get; set; }
         public string OldItemName { get; set; }
         public string NewItemName { get; set; }

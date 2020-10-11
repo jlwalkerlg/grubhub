@@ -15,21 +15,21 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
         }
 
         [Fact]
-        public async Task Disallows_Empty_Menu_Ids()
+        public async Task Disallows_Empty_Restaurant_Ids()
         {
-            var menuId = Guid.Empty;
+            var restaurantId = Guid.Empty;
             var name = "Pizza";
 
             var command = new AddMenuCategoryCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 Name = name,
             };
 
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MenuId)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
         [Theory]
@@ -38,11 +38,11 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
         [InlineData(" ")]
         public async Task Disallows_Invalid_Names(string name)
         {
-            var menuId = Guid.NewGuid();
+            var restaurantId = Guid.NewGuid();
 
             var command = new AddMenuCategoryCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 Name = name,
             };
 

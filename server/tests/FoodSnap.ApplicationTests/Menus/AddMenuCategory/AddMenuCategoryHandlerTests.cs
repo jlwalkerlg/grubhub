@@ -46,12 +46,12 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuCategoryCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 Name = "Pizza",
             };
 
@@ -86,7 +86,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
 
             var command = new AddMenuCategoryCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = Guid.NewGuid(),
                 Name = "Pizza",
             };
 
@@ -115,13 +115,13 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuCategoryCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 Name = "Pizza",
             };
 
@@ -150,12 +150,12 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuCategory
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuCategoryCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 Name = "Pizza",
             };
 

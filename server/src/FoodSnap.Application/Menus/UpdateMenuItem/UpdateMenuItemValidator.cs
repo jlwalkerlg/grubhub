@@ -6,7 +6,7 @@ namespace FoodSnap.Application.Menus.UpdateMenuItem
     {
         public UpdateMenuItemValidator()
         {
-            RuleFor(x => x.MenuId)
+            RuleFor(x => x.RestaurantId)
                 .Required();
 
             RuleFor(x => x.CategoryName)

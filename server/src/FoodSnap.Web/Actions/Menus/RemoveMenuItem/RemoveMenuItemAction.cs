@@ -15,15 +15,15 @@ namespace FoodSnap.Web.Actions.Menus.RemoveMenuItem
             this.mediator = mediator;
         }
 
-        [HttpDelete("/menus/{menuId}/categories/{category}/items/{item}")]
+        [HttpDelete("/restaurants/{restaurantId}/menu/categories/{category}/items/{item}")]
         public async Task<IActionResult> Execute(
-            [FromRoute] Guid menuId,
+            [FromRoute] Guid restaurantId,
             [FromRoute] string category,
             [FromRoute] string item)
         {
             var command = new RemoveMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 ItemName = item,
             };

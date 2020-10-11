@@ -1,4 +1,3 @@
-using System.Linq;
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Domain;
@@ -20,7 +19,7 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
         }
 
         [Fact]
-        public async Task It_Adds_A_Menu_And_Gets_It_By_Id()
+        public async Task It_Adds_A_Menu_And_Gets_It_By_RestaurantId()
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
@@ -39,25 +38,23 @@ namespace FoodSnap.InfrastructureTests.Persistence.EF.Repositories
             context.RestaurantManagers.Add(manager);
             context.Restaurants.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
-            menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+            menu.GetCategory("Pizza").AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
 
             await repository.Add(menu);
             FlushContext();
 
-            var found = await repository.GetById(menu.Id);
+            var found = await repository.GetByRestaurantId(menu.RestaurantId);
 
-            Assert.Equal(menu.Id, found.Id);
             Assert.Equal(menu.RestaurantId, found.RestaurantId);
             Assert.Single(found.Categories);
 
-            var category = menu.Categories.Single();
+            var category = menu.GetCategory("Pizza");
             Assert.Equal("Pizza", category.Name);
             Assert.Single(category.Items);
 
-            var item = category.Items.Single();
-            Assert.Equal("Margherita", item.Name);
+            var item = category.GetItem("Margherita");
             Assert.Equal("Cheese & tomato", item.Description);
             Assert.Equal(new Money(9.99m), item.Price);
         }

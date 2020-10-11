@@ -19,8 +19,6 @@ namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
         [HttpGet("/restaurants/{restaurantId}/menu")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
-            await Task.CompletedTask;
-
             var query = new GetMenuByRestaurantIdQuery
             {
                 RestaurantId = restaurantId,
@@ -35,6 +33,7 @@ namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
 
             if (result.Value == null)
             {
+                // TODO: move to handler
                 return PresentError(Error.NotFound("Menu not found."));
             }
 

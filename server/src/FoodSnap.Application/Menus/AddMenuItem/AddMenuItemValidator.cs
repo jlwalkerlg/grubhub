@@ -6,7 +6,7 @@ namespace FoodSnap.Application.Menus.AddMenuItem
     {
         public AddMenuItemValidator()
         {
-            CascadeRuleFor(x => x.MenuId)
+            CascadeRuleFor(x => x.RestaurantId)
                 .Required();
 
             CascadeRuleFor(x => x.CategoryName)

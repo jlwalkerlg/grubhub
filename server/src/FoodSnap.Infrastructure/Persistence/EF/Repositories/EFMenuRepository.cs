@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus;
 using FoodSnap.Domain.Menus;
+using FoodSnap.Domain.Restaurants;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
@@ -19,12 +20,12 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
             await context.Menus.AddAsync(menu);
         }
 
-        public async Task<Menu> GetById(MenuId id)
+        public async Task<Menu> GetByRestaurantId(RestaurantId id)
         {
             return await context.Menus
                 .Include(x => x.Categories)
                 .ThenInclude(x => x.Items)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.RestaurantId == id);
         }
     }
 }

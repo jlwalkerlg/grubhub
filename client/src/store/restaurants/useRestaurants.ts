@@ -34,7 +34,7 @@ export default function useRestaurants() {
   const addMenuCategory = async (
     request: AddMenuCategoryRequest
   ): Promise<Result> => {
-    const response = await restaurantsApi.addMenuCategory(menu.id, request);
+    const response = await restaurantsApi.addMenuCategory(menu.restaurantId, request);
 
     if (!response.isSuccess) {
       return Result.fail(response.error);
@@ -51,7 +51,7 @@ export default function useRestaurants() {
   };
 
   const addMenuItem = async (request: AddMenuItemRequest): Promise<Result> => {
-    const response = await restaurantsApi.addMenuItem(menu.id, request);
+    const response = await restaurantsApi.addMenuItem(menu.restaurantId, request);
 
     if (!response.isSuccess) {
       return Result.fail(response.error);
@@ -78,7 +78,7 @@ export default function useRestaurants() {
     request: UpdateMenuItemRequest
   ): Promise<Result> => {
     const response = await restaurantsApi.updateMenuItem(
-      menu.id,
+      menu.restaurantId,
       categoryName,
       itemName,
       request
@@ -104,7 +104,7 @@ export default function useRestaurants() {
     itemName: string
   ): Promise<Result> => {
     const response = await restaurantsApi.removeMenuItem(
-      menu.id,
+      menu.restaurantId,
       categoryName,
       itemName
     );

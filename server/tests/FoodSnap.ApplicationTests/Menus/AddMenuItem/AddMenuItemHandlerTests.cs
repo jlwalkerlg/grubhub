@@ -46,13 +46,13 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuItemCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
                 Description = "Cheese & tomato",
@@ -95,7 +95,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
 
             var command = new AddMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = restaurant.Id.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
                 Description = "Cheese & tomato",
@@ -127,12 +127,12 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuItemCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
                 Description = "Cheese & tomato",
@@ -164,14 +164,14 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
             menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuItemCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
                 Description = "Cheese & tomato",
@@ -203,13 +203,13 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(new MenuId(Guid.NewGuid()), restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
             var command = new AddMenuItemCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
                 Description = "Cheese & tomato",

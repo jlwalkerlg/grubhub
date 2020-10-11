@@ -50,28 +50,28 @@ class RestaurantsApi {
     return api.put(`/restaurants/${id}`, command);
   }
 
-  public addMenuCategory(menuId: string, request: AddMenuCategoryRequest) {
-    return api.post(`/menus/${menuId}/categories`, request);
+  public addMenuCategory(restaurantId: string, request: AddMenuCategoryRequest) {
+    return api.post(`/restaurants/${restaurantId}/menu/categories`, request);
   }
 
-  public addMenuItem(menuId: string, request: AddMenuItemRequest) {
-    return api.post(`/menus/${menuId}/items`, request);
+  public addMenuItem(restaurantId: string, request: AddMenuItemRequest) {
+    return api.post(`/restaurants/${restaurantId}/menu/items`, request);
   }
 
   public updateMenuItem(
-    menuId: string,
+    restaurantId: string,
     category: string,
     item: string,
     request: UpdateMenuItemRequest
   ) {
     return api.put(
-      `/menus/${menuId}/categories/${category}/items/${item}`,
+      `/restaurants/${restaurantId}/menu/categories/${category}/items/${item}`,
       request
     );
   }
 
-  public removeMenuItem(menuId: string, category: string, item: string) {
-    return api.delete(`/menus/${menuId}/categories/${category}/items/${item}`);
+  public removeMenuItem(restaurantId: string, category: string, item: string) {
+    return api.delete(`/restaurants/${restaurantId}/menu/categories/${category}/items/${item}`);
   }
 }
 

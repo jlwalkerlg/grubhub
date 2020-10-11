@@ -24,7 +24,7 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
                 .HasColumnName("name")
                 .IsRequired();
 
-            builder.Property<MenuId>("menu_id")
+            builder.Property<int>("menu_id")
                 .IsRequired();
             builder.HasIndex("menu_id", "Name")
                 .IsUnique();

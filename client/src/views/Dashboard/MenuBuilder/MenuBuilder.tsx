@@ -1,7 +1,5 @@
 import { NextPage } from "next";
 import React from "react";
-import CloseIcon from "~/components/Icons/CloseIcon";
-import PencilIcon from "~/components/Icons/PencilIcon";
 import useAuth from "~/store/auth/useAuth";
 import { DashboardLayout } from "../DashboardLayout";
 import AddMenuCategoryForm from "./AddMenuCategoryForm";

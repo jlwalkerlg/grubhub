@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
-using FoodSnap.Domain.Menus;
+using FoodSnap.Domain.Restaurants;
 using FoodSnap.Shared;
 
 namespace FoodSnap.Application.Menus.RemoveMenuItem
@@ -19,7 +19,7 @@ namespace FoodSnap.Application.Menus.RemoveMenuItem
 
         public async Task<Result> Handle(RemoveMenuItemCommand command, CancellationToken cancellationToken)
         {
-            var menu = await unitOfWork.Menus.GetById(new MenuId(command.MenuId));
+            var menu = await unitOfWork.Menus.GetByRestaurantId(new RestaurantId(command.RestaurantId));
 
             if (menu == null)
             {

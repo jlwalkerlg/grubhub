@@ -1,5 +1,4 @@
 export interface MenuDto {
-  id: string;
   restaurantId: string;
   categories: MenuCategoryDto[];
 }

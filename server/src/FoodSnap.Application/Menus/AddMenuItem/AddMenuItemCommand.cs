@@ -6,7 +6,7 @@ namespace FoodSnap.Application.Menus.AddMenuItem
     [Authenticate]
     public class AddMenuItemCommand : IRequest
     {
-        public Guid MenuId { get; set; }
+        public Guid RestaurantId { get; set; }
         public string CategoryName { get; set; }
         public string ItemName { get; set; }
         public string Description { get; set; }

@@ -15,9 +15,9 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
         }
 
         [Fact]
-        public async Task Disallows_Empty_Menu_Ids()
+        public async Task Disallows_Empty_Restaurant_Ids()
         {
-            var menuId = Guid.Empty;
+            var restaurantId = Guid.Empty;
             var category = "Pizza";
             var item = "Margherita";
             var name = "Margherita";
@@ -26,7 +26,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 OldItemName = item,
                 NewItemName = name,
@@ -37,7 +37,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MenuId)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
         [Theory]
@@ -46,7 +46,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
         [InlineData(" ")]
         public async Task Disallows_Invalid_Categories(string category)
         {
-            var menuId = Guid.NewGuid();
+            var restaurantId = Guid.NewGuid();
             var item = "Margherita";
             var name = "Margherita";
             var description = "Cheese & tomato";
@@ -54,7 +54,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 OldItemName = item,
                 NewItemName = name,
@@ -74,7 +74,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
         [InlineData(" ")]
         public async Task Disallows_Invalid_Items(string item)
         {
-            var menuId = Guid.NewGuid();
+            var restaurantId = Guid.NewGuid();
             var category = "Pizza";
             var name = "Margherita";
             var description = "Cheese & tomato";
@@ -82,7 +82,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 OldItemName = item,
                 NewItemName = name,
@@ -102,7 +102,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
         [InlineData(" ")]
         public async Task Disallows_Invalid_Names(string name)
         {
-            var menuId = Guid.NewGuid();
+            var restaurantId = Guid.NewGuid();
             var category = "Pizza";
             var item = "Margherita";
             var description = "Cheese & tomato";
@@ -110,7 +110,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 OldItemName = item,
                 NewItemName = name,
@@ -127,7 +127,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
         [Fact]
         public async Task Disallows_Negative_Prices()
         {
-            var menuId = Guid.NewGuid();
+            var restaurantId = Guid.NewGuid();
             var category = "Pizza";
             var item = "Margherita";
             var name = "Margherita";
@@ -136,7 +136,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 OldItemName = item,
                 NewItemName = name,

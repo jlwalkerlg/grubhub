@@ -94,7 +94,7 @@ const ManagerDetails: NextPage = () => {
             disabled={form.formState.isSubmitting}
             className="btn btn-primary font-semibold w-full"
           >
-            Submit
+            Update
           </button>
         </div>
       </form>

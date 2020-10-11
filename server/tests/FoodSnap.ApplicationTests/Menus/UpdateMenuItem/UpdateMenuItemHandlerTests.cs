@@ -49,9 +49,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(
-                new MenuId(Guid.NewGuid()),
-                restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
             menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
@@ -60,7 +58,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",
@@ -95,7 +93,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = Guid.NewGuid(),
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",
@@ -126,9 +124,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(1, 1));
 
-            var menu = new Menu(
-                new MenuId(Guid.NewGuid()),
-                restaurant.Id);
+            var menu = new Menu(restaurant.Id);
 
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -138,7 +134,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",
@@ -169,9 +165,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(1, 1));
 
-            var menu = new Menu(
-                new MenuId(Guid.NewGuid()),
-                restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
 
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
@@ -182,7 +176,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",
@@ -213,9 +207,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(1, 1));
 
-            var menu = new Menu(
-                new MenuId(Guid.NewGuid()),
-                restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
             menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
             menu.Categories.Single().AddItem("Hawaiian", "Ham & pineapple", new Money(11.99m));
@@ -228,7 +220,7 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 
             var command = new UpdateMenuItemCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",

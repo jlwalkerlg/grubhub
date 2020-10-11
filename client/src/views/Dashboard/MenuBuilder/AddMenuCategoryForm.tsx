@@ -62,7 +62,7 @@ const AddMenuCategoryForm: React.FC = () => {
         className="w-full px-4 py-3 text-gray-600 font-medium flex items-center hover:shadow-sm cursor-pointer hover:bg-gray-100 hover:text-gray-700"
       >
         <PlusIcon className="w-4 h-4" />
-        <span className="ml-2">Add New Menu Category</span>
+        <span className="ml-2">Add Menu Category</span>
       </button>
 
       {isOpen && (

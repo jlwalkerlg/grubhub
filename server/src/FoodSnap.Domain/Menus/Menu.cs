@@ -7,23 +7,15 @@ namespace FoodSnap.Domain.Menus
 {
     public class Menu : Entity<Menu>
     {
-        public Menu(MenuId id, RestaurantId restaurantId)
+        public Menu(RestaurantId restaurantId)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
             if (restaurantId == null)
             {
                 throw new ArgumentNullException(nameof(restaurantId));
             }
 
-            Id = id;
             RestaurantId = restaurantId;
         }
-
-        public MenuId Id { get; }
 
         public RestaurantId RestaurantId { get; }
 
@@ -53,12 +45,12 @@ namespace FoodSnap.Domain.Menus
 
         protected override bool IdentityEquals(Menu other)
         {
-            return Id == other.Id;
+            return RestaurantId == other.RestaurantId;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return RestaurantId.GetHashCode();
         }
 
         // EF Core

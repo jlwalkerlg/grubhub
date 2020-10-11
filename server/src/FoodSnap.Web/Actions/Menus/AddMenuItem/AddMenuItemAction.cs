@@ -15,14 +15,14 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
             this.mediator = mediator;
         }
 
-        [HttpPost("/menus/{menuId}/items")]
+        [HttpPost("/restaurants/{restaurantID}/menu/items")]
         public async Task<IActionResult> Execute(
-            [FromRoute] Guid menuId,
+            [FromRoute] Guid restaurantId,
             [FromBody] AddMenuItemRequest request)
         {
             var command = new AddMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = request.CategoryName,
                 ItemName = request.ItemName,
                 Description = request.Description,

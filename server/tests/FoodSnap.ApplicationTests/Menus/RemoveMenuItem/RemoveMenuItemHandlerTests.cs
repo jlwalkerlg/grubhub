@@ -46,9 +46,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
                 new Coordinates(1, 1));
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(
-                new MenuId(Guid.NewGuid()),
-                restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
             menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
@@ -57,7 +55,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
 
             var command = new RemoveMenuItemCommand
             {
-                MenuId = menu.Id.Value,
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
             };
@@ -86,7 +84,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
 
             var command = new RemoveMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = Guid.NewGuid(),
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
             };
@@ -114,9 +112,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(1, 1));
 
-            var menu = new Menu(
-                new MenuId(Guid.NewGuid()),
-                restaurant.Id);
+            var menu = new Menu(restaurant.Id);
 
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -126,7 +122,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
 
             var command = new RemoveMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
             };
@@ -154,9 +150,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(1, 1));
 
-            var menu = new Menu(
-                new MenuId(Guid.NewGuid()),
-                restaurant.Id);
+            var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
 
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
@@ -167,7 +161,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
 
             var command = new RemoveMenuItemCommand
             {
-                MenuId = Guid.NewGuid(),
+                RestaurantId = menu.RestaurantId.Value,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
             };

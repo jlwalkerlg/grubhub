@@ -5,7 +5,6 @@ namespace FoodSnap.Web.Actions.Menus
 {
     public class MenuDto
     {
-        public Guid Id { get; set; }
         public Guid RestaurantId { get; set; }
         public List<MenuCategoryDto> Categories { get; set; } = new List<MenuCategoryDto>();
     }

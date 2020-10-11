@@ -15,15 +15,15 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
         }
 
         [Fact]
-        public async Task Disallows_Empty_Menu_Ids()
+        public async Task Disallows_Empty_Restaurant_Ids()
         {
-            var menuId = Guid.Empty;
+            var restaurantId = Guid.Empty;
             var category = "Pizza";
             var item = "Margherita";
 
             var command = new RemoveMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 ItemName = item,
             };
@@ -31,7 +31,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MenuId)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
         [Theory]
@@ -40,12 +40,12 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
         [InlineData(" ")]
         public async Task Disallows_Invalid_Categories(string category)
         {
-            var menuId = Guid.NewGuid();
+            var restaurantId = Guid.NewGuid();
             var item = "Margherita";
 
             var command = new RemoveMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 ItemName = item,
             };
@@ -62,12 +62,12 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
         [InlineData(" ")]
         public async Task Disallows_Invalid_Items(string item)
         {
-            var menuId = Guid.NewGuid();
+            var restaurantId = Guid.NewGuid();
             var category = "Pizza";
 
             var command = new RemoveMenuItemCommand
             {
-                MenuId = menuId,
+                RestaurantId = restaurantId,
                 CategoryName = category,
                 ItemName = item,
             };

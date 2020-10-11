@@ -6,7 +6,7 @@ namespace FoodSnap.Application.Menus.AddMenuCategory
     {
         public AddMenuCategoryValidator()
         {
-            RuleFor(x => x.MenuId)
+            RuleFor(x => x.RestaurantId)
                 .Required();
 
             RuleFor(x => x.Name)
