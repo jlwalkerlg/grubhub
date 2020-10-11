@@ -12,6 +12,7 @@ import {
   UpdateMenuItemAction,
   RemoveMenuItemAction,
   RemoveMenuCategoryAction,
+  RenameMenuCategoryAction,
 } from "./authReducer";
 import { UserDto } from "~/api/users/UserDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
@@ -85,6 +86,17 @@ export const createRemoveMenuCategoryAction = (
   type: "REMOVE_MENU_CATEGORY",
   payload: {
     categoryName,
+  },
+});
+
+export const createRenameMenuCategoryAction = (
+  oldName: string,
+  newName: string
+): RenameMenuCategoryAction => ({
+  type: "RENAME_MENU_CATEGORY",
+  payload: {
+    oldName,
+    newName,
   },
 });
 

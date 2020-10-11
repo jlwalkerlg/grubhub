@@ -4,6 +4,7 @@ import restaurantsApi, {
   AddMenuCategoryRequest,
   AddMenuItemRequest,
   RegisterRestaurantCommand,
+  RenameMenuCategoryRequest,
   UpdateMenuItemRequest,
 } from "~/api/restaurants/restaurantsApi";
 import { Result } from "~/services/Result";
@@ -12,6 +13,7 @@ import {
   createAddMenuItemAction,
   createRemoveMenuCategoryAction,
   createRemoveMenuItemAction,
+  createRenameMenuCategoryAction,
   createUpdateMenuItemAction,
 } from "../auth/authActionCreators";
 import useAuth from "../auth/useAuth";
@@ -35,7 +37,10 @@ export default function useRestaurants() {
   const addMenuCategory = async (
     request: AddMenuCategoryRequest
   ): Promise<Result> => {
-    const response = await restaurantsApi.addMenuCategory(menu.restaurantId, request);
+    const response = await restaurantsApi.addMenuCategory(
+      menu.restaurantId,
+      request
+    );
 
     if (!response.isSuccess) {
       return Result.fail(response.error);
@@ -51,9 +56,7 @@ export default function useRestaurants() {
     return Result.ok();
   };
 
-  const removeMenuCategory = async (
-    categoryName: string
-  ): Promise<Result> => {
+  const removeMenuCategory = async (categoryName: string): Promise<Result> => {
     const response = await restaurantsApi.removeMenuCategory(
       menu.restaurantId,
       categoryName
@@ -68,8 +71,30 @@ export default function useRestaurants() {
     return Result.ok();
   };
 
+  const renameMenuCategory = async (
+    oldName: string,
+    request: RenameMenuCategoryRequest
+  ): Promise<Result> => {
+    const response = await restaurantsApi.renameMenuCategory(
+      menu.restaurantId,
+      oldName,
+      request
+    );
+
+    if (!response.isSuccess) {
+      return Result.fail(response.error);
+    }
+
+    dispatch(createRenameMenuCategoryAction(oldName, request.newName));
+
+    return Result.ok();
+  };
+
   const addMenuItem = async (request: AddMenuItemRequest): Promise<Result> => {
-    const response = await restaurantsApi.addMenuItem(menu.restaurantId, request);
+    const response = await restaurantsApi.addMenuItem(
+      menu.restaurantId,
+      request
+    );
 
     if (!response.isSuccess) {
       return Result.fail(response.error);
@@ -140,6 +165,7 @@ export default function useRestaurants() {
     register,
     addMenuCategory,
     removeMenuCategory,
+    renameMenuCategory,
     addMenuItem,
     updateMenuItem,
     deleteMenuItem: removeMenuItem,

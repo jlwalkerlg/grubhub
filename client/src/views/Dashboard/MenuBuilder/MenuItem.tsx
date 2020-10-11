@@ -43,6 +43,12 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
+    if (data.name === item.name) {
+      setIsEditFormOpen(false);
+      form.reset(data);
+      return;
+    }
+
     setError(null);
 
     const request: UpdateMenuItemRequest = {
@@ -63,12 +69,6 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
         setFormErrors(result.error.errors, form);
       }
 
-      return;
-    }
-
-    if (data.name === item.name) {
-      setIsEditFormOpen(false);
-      form.reset(data);
       return;
     }
   });

@@ -20,6 +20,10 @@ export interface AddMenuCategoryRequest {
   name: string;
 }
 
+export interface RenameMenuCategoryRequest {
+  newName: string;
+}
+
 export interface AddMenuItemRequest {
   categoryName: string;
   itemName: string;
@@ -60,6 +64,17 @@ class RestaurantsApi {
   public removeMenuCategory(restaurantId: string, category: string) {
     return api.delete(
       `/restaurants/${restaurantId}/menu/categories/${category}`
+    );
+  }
+
+  public renameMenuCategory(
+    restaurantId: string,
+    oldName: string,
+    request: RenameMenuCategoryRequest
+  ) {
+    return api.put(
+      `/restaurants/${restaurantId}/menu/categories/${oldName}`,
+      request
     );
   }
 

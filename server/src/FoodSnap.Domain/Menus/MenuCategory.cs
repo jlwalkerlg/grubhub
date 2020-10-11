@@ -8,15 +8,23 @@ namespace FoodSnap.Domain.Menus
     {
         internal MenuCategory(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"{nameof(name)} can't be empty.");
-            }
-
             Name = name;
         }
 
-        public string Name { get; }
+        public string name;
+        public string Name
+        {
+            get => name;
+            internal set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException($"{nameof(name)} can't be empty.");
+                }
+
+                name = value;
+            }
+        }
 
         private List<MenuItem> items = new List<MenuItem>();
         public IReadOnlyList<MenuItem> Items => items;

@@ -15,9 +15,10 @@ export const SET_AUTH_RESTAURANT_MENU = "SET_AUTH_RESTAURANT_MENU";
 export const UPDATE_RESTAURANT_DETAILS = "UPDATE_RESTAURANT_DETAILS";
 export const UPDATE_USER_DETAILS = "UPDATE_USER_DETAILS";
 export const ADD_MENU_CATEGORY = "ADD_MENU_CATEGORY";
+export const REMOVE_MENU_CATEGORY = "REMOVE_MENU_CATEGORY";
+export const RENAME_MENU_CATEGORY = "RENAME_MENU_CATEGORY";
 export const ADD_MENU_ITEM = "ADD_MENU_ITEM";
 export const UPDATE_MENU_ITEM = "UPDATE_MENU_ITEM";
-export const REMOVE_MENU_CATEGORY = "REMOVE_MENU_CATEGORY";
 export const REMOVE_MENU_ITEM = "REMOVE_MENU_ITEM";
 
 export interface LoginAction {
@@ -73,6 +74,14 @@ export interface RemoveMenuCategoryAction {
   };
 }
 
+export interface RenameMenuCategoryAction {
+  type: typeof RENAME_MENU_CATEGORY;
+  payload: {
+    oldName: string;
+    newName: string;
+  };
+}
+
 export interface AddMenuItemAction {
   type: typeof ADD_MENU_ITEM;
   payload: {
@@ -106,6 +115,7 @@ type AuthAction =
   | UpdateRestaurantDetailsAction
   | UpdateUserDetailsAction
   | AddMenuCategoryAction
+  | RenameMenuCategoryAction
   | RemoveMenuCategoryAction
   | AddMenuItemAction
   | UpdateMenuItemAction
@@ -193,7 +203,26 @@ export default function authReducer(
       menu: {
         ...state.menu,
         categories: state.menu.categories.filter((category) => {
-          return category.name !== action.payload.categoryName
+          return category.name !== action.payload.categoryName;
+        }),
+      },
+    };
+  }
+
+  if (action.type === RENAME_MENU_CATEGORY) {
+    return {
+      ...state,
+      menu: {
+        ...state.menu,
+        categories: state.menu.categories.map((category) => {
+          if (category.name !== action.payload.oldName) {
+            return category;
+          }
+
+          return {
+            ...category,
+            name: action.payload.newName,
+          };
         }),
       },
     };

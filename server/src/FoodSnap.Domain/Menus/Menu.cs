@@ -44,6 +44,23 @@ namespace FoodSnap.Domain.Menus
             categories.Remove(category);
         }
 
+        public void RenameCategory(string oldName, string newName)
+        {
+            if (!ContainsCategory(oldName))
+            {
+                throw new InvalidOperationException($"Category {oldName} doesn't exist.");
+            }
+
+            if (oldName == newName)
+            {
+                return;
+            }
+
+            var category = GetCategory(oldName);
+
+            category.Name = newName;
+        }
+
         public bool ContainsCategory(string name)
         {
             return categories.Any(x => x.Name == name);
