@@ -23,12 +23,23 @@ namespace FoodSnap.Domain.Menus
 
         public void AddItem(string name, string description, Money price)
         {
-            if (items.Any(x => x.Name == name))
+            if (ContainsItem(name))
             {
                 throw new InvalidOperationException($"Item {name} already exists for this category.");
             }
 
             items.Add(new MenuItem(name, description, price));
+        }
+
+        public bool ContainsItem(string name)
+        {
+            return items.Any(x => x.Name == name);
+        }
+
+        public MenuItem GetItem(string name)
+        {
+            // TODO: throw exception or return null if doesn't exist?
+            return items.Single(x => x.Name == name);
         }
 
         protected override bool IdentityEquals(MenuCategory other)

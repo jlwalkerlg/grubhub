@@ -32,12 +32,23 @@ namespace FoodSnap.Domain.Menus
 
         public void AddCategory(string name)
         {
-            if (categories.Any(x => x.Name == name))
+            if (ContainsCategory(name))
             {
                 throw new InvalidOperationException($"Category {name} already exists.");
             }
 
             categories.Add(new MenuCategory(name));
+        }
+
+        public bool ContainsCategory(string name)
+        {
+            return categories.Any(x => x.Name == name);
+        }
+
+        public MenuCategory GetCategory(string name)
+        {
+            // TODO: throw exception or return null if doesn't exist?
+            return categories.Single(x => x.Name == name);
         }
 
         protected override bool IdentityEquals(Menu other)

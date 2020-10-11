@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
@@ -34,16 +33,14 @@ namespace FoodSnap.Application.Menus.RemoveMenuItem
                 return Result.Fail(Error.Unauthorised("Only the restaurant owner can update the menu."));
             }
 
-            var category = menu.Categories.FirstOrDefault(x => x.Name == command.CategoryName);
-
-            if (category == null)
+            if (!menu.ContainsCategory(command.CategoryName))
             {
                 return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
             }
 
-            var item = category.Items.FirstOrDefault(x => x.Name == command.ItemName);
+            var category = menu.GetCategory(command.CategoryName);
 
-            if (item == null)
+            if (!category.ContainsItem(command.ItemName))
             {
                 return Result.Fail(Error.NotFound($"Item {command.ItemName} not found for category {command.CategoryName}."));
             }

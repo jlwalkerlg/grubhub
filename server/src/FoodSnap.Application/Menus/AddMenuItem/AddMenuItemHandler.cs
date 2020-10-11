@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
@@ -35,14 +34,14 @@ namespace FoodSnap.Application.Menus.AddMenuItem
                 return Result.Fail(Error.Unauthorised("Only the restaurant owner can add menu items."));
             }
 
-            var category = menu.Categories.FirstOrDefault(x => x.Name == command.CategoryName);
-
-            if (category == null)
+            if (!menu.ContainsCategory(command.CategoryName))
             {
                 return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
             }
 
-            if (category.Items.Any(x => x.Name == command.ItemName))
+            var category = menu.GetCategory(command.CategoryName);
+
+            if (category.ContainsItem(command.ItemName))
             {
                 return Result.Fail(Error.BadRequest($"Item {command.ItemName} already exists for category {command.CategoryName}."));
             }

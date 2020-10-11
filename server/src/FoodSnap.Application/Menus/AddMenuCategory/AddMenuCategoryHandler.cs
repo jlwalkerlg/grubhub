@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
@@ -34,7 +33,7 @@ namespace FoodSnap.Application.Menus.AddMenuCategory
                 return Result.Fail(Error.Unauthorised("Only the restaurant owner can add menu categories."));
             }
 
-            if (menu.Categories.Any(x => x.Name == command.Name))
+            if (menu.ContainsCategory(command.Name))
             {
                 return Result.Fail(Error.BadRequest($"Category {command.Name} already exists."));
             }

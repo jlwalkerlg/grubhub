@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
@@ -35,24 +34,24 @@ namespace FoodSnap.Application.Menus.UpdateMenuItem
                 return Result.Fail(Error.Unauthorised("Only the restaurant owner can update the menu."));
             }
 
-            var category = menu.Categories.FirstOrDefault(x => x.Name == command.CategoryName);
-
-            if (category == null)
+            if (!menu.ContainsCategory(command.CategoryName))
             {
                 return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
             }
 
-            var item = category.Items.FirstOrDefault(x => x.Name == command.OldItemName);
+            var category = menu.GetCategory(command.CategoryName);
 
-            if (item == null)
+            if (!category.ContainsItem(command.OldItemName))
             {
                 return Result.Fail(Error.NotFound($"Item {command.OldItemName} not found for category {command.CategoryName}."));
             }
 
-            if (command.OldItemName != command.NewItemName && category.Items.Any(x => x.Name == command.NewItemName))
+            if (command.OldItemName != command.NewItemName && category.ContainsItem(command.NewItemName))
             {
                 return Result.Fail(Error.BadRequest($"Item {command.NewItemName} already exists for category {command.CategoryName}."));
             }
+
+            var item = category.GetItem(command.OldItemName);
 
             category.RenameItem(command.OldItemName, command.NewItemName);
             item.Description = command.Description;
