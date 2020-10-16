@@ -8,20 +8,20 @@ namespace FoodSnap.WebTests.Actions.Users.Logout
 {
     public class LogoutActionTests
     {
-        private readonly MediatorSpy mediatorSpy;
+        private readonly SenderSpy senderSpy;
         private readonly LogoutAction action;
 
         public LogoutActionTests()
         {
-            mediatorSpy = new MediatorSpy();
+            senderSpy = new SenderSpy();
 
-            action = new LogoutAction(mediatorSpy);
+            action = new LogoutAction(senderSpy);
         }
 
         [Fact]
         public async Task It_Returns_200_On_Success()
         {
-            mediatorSpy.Result = Result.Ok();
+            senderSpy.Result = Result.Ok();
 
             var result = await action.Execute() as StatusCodeResult;
 

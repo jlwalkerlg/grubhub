@@ -8,11 +8,11 @@ namespace FoodSnap.Web.Actions.Menus.RemoveMenuCategory
 {
     public class RemoveMenuCategoryAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public RemoveMenuCategoryAction(IMediator mediator)
+        public RemoveMenuCategoryAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpDelete("/restaurants/{restaurantId}/menu/categories/{category}")]
@@ -26,7 +26,7 @@ namespace FoodSnap.Web.Actions.Menus.RemoveMenuCategory
                 CategoryName = category,
             };
 
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {

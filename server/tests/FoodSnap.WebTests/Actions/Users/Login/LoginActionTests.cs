@@ -9,20 +9,20 @@ namespace FoodSnap.WebTests.Actions.Users.Login
 {
     public class LoginActionTests
     {
-        private readonly MediatorSpy mediatorSpy;
+        private readonly SenderSpy senderSpy;
         private readonly LoginAction action;
 
         public LoginActionTests()
         {
-            mediatorSpy = new MediatorSpy();
+            senderSpy = new SenderSpy();
 
-            action = new LoginAction(mediatorSpy);
+            action = new LoginAction(senderSpy);
         }
 
         [Fact]
         public async Task It_Returns_200_On_Success()
         {
-            mediatorSpy.Result = Result.Ok();
+            senderSpy.Result = Result.Ok();
 
             var command = new LoginCommand
             {

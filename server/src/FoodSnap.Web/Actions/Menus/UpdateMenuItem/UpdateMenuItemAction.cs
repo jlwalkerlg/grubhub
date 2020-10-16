@@ -8,11 +8,11 @@ namespace FoodSnap.Web.Actions.Menus.UpdateMenuItem
 {
     public class UpdateMenuItemAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public UpdateMenuItemAction(IMediator mediator)
+        public UpdateMenuItemAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPut("/restaurants/{restaurantId}/menu/categories/{category}/items/{item}")]
@@ -32,7 +32,7 @@ namespace FoodSnap.Web.Actions.Menus.UpdateMenuItem
                 Price = request.Price
             };
 
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {

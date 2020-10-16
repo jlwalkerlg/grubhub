@@ -8,11 +8,11 @@ namespace FoodSnap.Web.Actions.Menus.RenameMenuCategory
 {
     public class RenameMenuCategoryAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public RenameMenuCategoryAction(IMediator mediator)
+        public RenameMenuCategoryAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPut("/restaurants/{restaurantId}/menu/categories/{category}")]
@@ -28,7 +28,7 @@ namespace FoodSnap.Web.Actions.Menus.RenameMenuCategory
                 NewName = request.NewName,
             };
 
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {

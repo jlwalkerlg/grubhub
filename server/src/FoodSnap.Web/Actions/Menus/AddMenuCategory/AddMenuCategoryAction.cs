@@ -8,11 +8,11 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuCategory
 {
     public class AddMenuCategoryAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public AddMenuCategoryAction(IMediator mediator)
+        public AddMenuCategoryAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPost("/restaurants/{restaurantId}/menu/categories")]
@@ -24,7 +24,7 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuCategory
                 Name = request.Name,
             };
 
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {

@@ -9,11 +9,11 @@ namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
 {
     public class GetRestaurantByIdAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public GetRestaurantByIdAction(IMediator mediator)
+        public GetRestaurantByIdAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpGet("/restaurants/{id}")]
@@ -24,7 +24,7 @@ namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
                 Id = id
             };
 
-            var result = await mediator.Send(query);
+            var result = await sender.Send(query);
 
             if (!result.IsSuccess)
             {

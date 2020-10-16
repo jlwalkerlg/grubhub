@@ -9,12 +9,12 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
 {
     public class GetAuthUserAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
         private readonly IAuthenticator authenticator;
 
-        public GetAuthUserAction(IMediator mediator, IAuthenticator authenticator)
+        public GetAuthUserAction(ISender sender, IAuthenticator authenticator)
         {
-            this.mediator = mediator;
+            this.sender = sender;
             this.authenticator = authenticator;
         }
 
@@ -26,7 +26,7 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
                 return StatusCode(401);
             }
 
-            var result = await mediator.Send(
+            var result = await sender.Send(
                 new GetUserByIdQuery(authenticator.UserId.Value));
 
             if (!result.IsSuccess)

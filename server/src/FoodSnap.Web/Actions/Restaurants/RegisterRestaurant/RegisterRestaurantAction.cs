@@ -7,18 +7,18 @@ namespace FoodSnap.Web.Actions.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
         public RegisterRestaurantAction(
-            IMediator mediator)
+            ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPost("/restaurants/register")]
         public async Task<IActionResult> Execute(RegisterRestaurantCommand command)
         {
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {

@@ -7,17 +7,17 @@ namespace FoodSnap.Web.Actions.Users.Logout
 {
     public class LogoutAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public LogoutAction(IMediator mediator)
+        public LogoutAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPost("/auth/logout")]
         public async Task<IActionResult> Execute()
         {
-            var result = await mediator.Send(new LogoutCommand());
+            var result = await sender.Send(new LogoutCommand());
 
             return Ok();
         }

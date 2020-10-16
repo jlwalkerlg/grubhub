@@ -9,14 +9,14 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantActionTests
     {
-        private readonly MediatorSpy mediatorSpy;
+        private readonly SenderSpy senderSpy;
         private readonly RegisterRestaurantAction action;
 
         public RegisterRestaurantActionTests()
         {
-            mediatorSpy = new MediatorSpy();
+            senderSpy = new SenderSpy();
 
-            action = new RegisterRestaurantAction(mediatorSpy);
+            action = new RegisterRestaurantAction(senderSpy);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
                 Address = "1 Maine Road, Manchester, UK"
             };
 
-            mediatorSpy.Result = Result.Ok();
+            senderSpy.Result = Result.Ok();
 
             var result = await action.Execute(command) as StatusCodeResult;
 

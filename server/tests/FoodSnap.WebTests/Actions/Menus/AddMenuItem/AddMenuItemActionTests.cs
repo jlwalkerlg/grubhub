@@ -9,14 +9,14 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
 {
     public class AddMenuItemActionTests
     {
-        private readonly MediatorSpy mediatorSpy;
+        private readonly SenderSpy senderSpy;
         private readonly AddMenuItemAction action;
 
         public AddMenuItemActionTests()
         {
-            mediatorSpy = new MediatorSpy();
+            senderSpy = new SenderSpy();
 
-            action = new AddMenuItemAction(mediatorSpy);
+            action = new AddMenuItemAction(senderSpy);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
                 Price = 9.99m
             };
 
-            mediatorSpy.Result = Result.Ok(Guid.NewGuid());
+            senderSpy.Result = Result.Ok(Guid.NewGuid());
 
             var response = await action.Execute(menuId, request) as StatusCodeResult;
 

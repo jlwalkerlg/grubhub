@@ -8,11 +8,11 @@ namespace FoodSnap.Web.Actions.Restaurants.UpdateRestaurantDetails
 {
     public class UpdateRestaurantDetailsAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public UpdateRestaurantDetailsAction(IMediator mediator)
+        public UpdateRestaurantDetailsAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPut("/restaurants/{id}")]
@@ -27,7 +27,7 @@ namespace FoodSnap.Web.Actions.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = request.PhoneNumber,
             };
 
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {

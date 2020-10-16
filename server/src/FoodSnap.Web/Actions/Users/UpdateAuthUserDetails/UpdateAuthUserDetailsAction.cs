@@ -7,17 +7,17 @@ namespace FoodSnap.Web.Actions.Users.UpdateAuthUserDetails
 {
     public class UpdateAuthUserDetailsAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public UpdateAuthUserDetailsAction(IMediator mediator)
+        public UpdateAuthUserDetailsAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPut("/auth/user")]
         public async Task<IActionResult> Execute([FromBody] UpdateAuthUserDetailsCommand command)
         {
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {

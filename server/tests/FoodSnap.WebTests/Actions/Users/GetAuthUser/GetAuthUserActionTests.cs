@@ -14,17 +14,17 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
 {
     public class GetAuthDataActionTests
     {
-        private readonly MediatorSpy mediatorSpy;
+        private readonly SenderSpy senderSpy;
         private readonly AuthenticatorSpy authenticatorSpy;
         private readonly GetAuthUserAction action;
 
         public GetAuthDataActionTests()
         {
-            mediatorSpy = new MediatorSpy();
+            senderSpy = new SenderSpy();
 
             authenticatorSpy = new AuthenticatorSpy();
 
-            action = new GetAuthUserAction(mediatorSpy, authenticatorSpy);
+            action = new GetAuthUserAction(senderSpy, authenticatorSpy);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
                 RestaurantId = Guid.NewGuid(),
                 RestaurantName = "Chow Main",
             };
-            mediatorSpy.Result = Result.Ok(userDto);
+            senderSpy.Result = Result.Ok(userDto);
 
             var result = await action.Execute() as ObjectResult;
             var envelope = result.Value as DataEnvelope<UserDto>;

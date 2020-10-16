@@ -8,11 +8,11 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
 {
     public class AddMenuItemAction : Action
     {
-        private readonly IMediator mediator;
+        private readonly ISender sender;
 
-        public AddMenuItemAction(IMediator mediator)
+        public AddMenuItemAction(ISender sender)
         {
-            this.mediator = mediator;
+            this.sender = sender;
         }
 
         [HttpPost("/restaurants/{restaurantID}/menu/items")]
@@ -29,7 +29,7 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
                 Price = request.Price
             };
 
-            var result = await mediator.Send(command);
+            var result = await sender.Send(command);
 
             if (!result.IsSuccess)
             {
