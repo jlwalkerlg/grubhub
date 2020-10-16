@@ -36,7 +36,7 @@ namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
                 return PresentError(Error.NotFound("Restaurant not found."));
             }
 
-            return Ok(new DataEnvelope
+            return Ok(new DataEnvelope<RestaurantDto>
             {
                 Data = result.Value
             });

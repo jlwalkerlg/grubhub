@@ -58,7 +58,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthData
             mediatorSpy.Result = Result.Ok(userDto);
 
             var result = await action.Execute() as ObjectResult;
-            var envelope = result.Value as DataEnvelope;
+            var envelope = result.Value as DataEnvelope<UserDto>;
 
             Assert.Equal(200, result.StatusCode);
             Assert.Same(userDto, envelope.Data);

@@ -31,13 +31,13 @@ namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
                 return PresentError(result.Error);
             }
 
+            // TODO: move to handler
             if (result.Value == null)
             {
-                // TODO: move to handler
                 return PresentError(Error.NotFound("Menu not found."));
             }
 
-            return Ok(new DataEnvelope
+            return Ok(new DataEnvelope<MenuDto>
             {
                 Data = result.Value
             });

@@ -26,16 +26,15 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
                 return StatusCode(401);
             }
 
-            var id = authenticator.UserId;
-
-            var result = await mediator.Send(new GetUserByIdQuery(id.Value));
+            var result = await mediator.Send(
+                new GetUserByIdQuery(authenticator.UserId.Value));
 
             if (!result.IsSuccess)
             {
                 return PresentError(result.Error);
             }
 
-            return Ok(new DataEnvelope
+            return Ok(new DataEnvelope<UserDto>
             {
                 Data = result.Value
             });

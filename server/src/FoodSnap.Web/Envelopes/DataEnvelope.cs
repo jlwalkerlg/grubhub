@@ -1,7 +1,7 @@
 ﻿namespace FoodSnap.Web.Envelopes
 {
-    public class DataEnvelope
+    public class DataEnvelope<T>
     {
-        public object Data { get; set; }
+        public T Data { get; set; }
     }
 }
