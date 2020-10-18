@@ -24,7 +24,7 @@ namespace FoodSnap.Web.Services.Cookies
 
         public void Delete(string name)
         {
-            Add(name, "", new CookieOptions());
+            Delete(name, new CookieOptions());
         }
 
         public void Delete(string name, CookieOptions options)
