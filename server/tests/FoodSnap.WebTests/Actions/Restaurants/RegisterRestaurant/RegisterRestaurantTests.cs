@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using FoodSnap.Application;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
@@ -6,7 +7,6 @@ using FoodSnap.Web.Actions.Menus;
 using FoodSnap.Web.Actions.Restaurants;
 using FoodSnap.Web.Actions.Users;
 using FoodSnap.WebTests.Doubles;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
@@ -32,9 +32,9 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
 
             Assert.Equal(201, (int)response.StatusCode);
 
-            await fixture.ExecuteDb(async db =>
+            await fixture.ExecuteService<IUnitOfWork>(async uow =>
             {
-                var user = await db.Users.SingleAsync();
+                var user = await uow.Users.GetByEmail("walker.jlg@gmail.com");
                 fixture.Login(user);
             });
 
@@ -55,6 +55,57 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
 
             var menu = await fixture.Get<MenuDto>($"/restaurants/{restaurant.Id}/menu");
             Assert.Empty(menu.Categories);
+        }
+
+        private int IUnitOfWork(System.Func<object, Task> p)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [Fact]
+        public async Task It_Returns_An_Error_On_Failure()
+        {
+            var invalidAddress = GeocoderStub.InvalidAddress;
+
+            var response = await fixture.Post("/restaurants/register", new RegisterRestaurantCommand
+            {
+                ManagerName = "Jordan Walker",
+                ManagerEmail = "walker.jlg@gmail.com",
+                ManagerPassword = "password123",
+                RestaurantName = "Chow Main",
+                RestaurantPhoneNumber = "01234567890",
+                Address = invalidAddress,
+            });
+
+            Assert.Equal(400, (int)response.StatusCode);
+
+            var envelope = await response.ToErrorEnvelope();
+            Assert.NotEmpty(envelope.Message);
+        }
+
+        [Fact]
+        public async Task It_Returns_Validation_Errors()
+        {
+            var command = new RegisterRestaurantCommand
+            {
+                ManagerName = "",
+                ManagerEmail = "",
+                ManagerPassword = "",
+                RestaurantName = "",
+                RestaurantPhoneNumber = "",
+                Address = ""
+            };
+            var response = await fixture.Post("/restaurants/register", command);
+
+            Assert.Equal(422, (int)response.StatusCode);
+
+            var errors = (await response.ToErrorEnvelope()).Errors;
+            Assert.True(errors.ContainsKey("managerName"));
+            Assert.True(errors.ContainsKey("managerEmail"));
+            Assert.True(errors.ContainsKey("managerPassword"));
+            Assert.True(errors.ContainsKey("restaurantName"));
+            Assert.True(errors.ContainsKey("restaurantPhoneNumber"));
+            Assert.True(errors.ContainsKey("address"));
         }
     }
 }

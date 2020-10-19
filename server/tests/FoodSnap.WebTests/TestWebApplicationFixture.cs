@@ -79,13 +79,12 @@ namespace FoodSnap.WebTests
             }
         }
 
-        public async Task ExecuteDb(Func<AppDbContext, Task> action)
+        public async Task ExecuteService<T>(Func<T, Task> action)
         {
             await ExecuteScope(async scope =>
             {
-                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                await action(db);
-                await db.SaveChangesAsync();
+                var service = scope.ServiceProvider.GetRequiredService<T>();
+                await action(service);
             });
         }
 
