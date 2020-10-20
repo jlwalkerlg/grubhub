@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace FoodSnap.WebTests
     {
         protected readonly TestWebApplicationFixture fixture;
 
+        private HttpClient client;
         private string authToken;
 
         public WebTestBase(TestWebApplicationFixture fixture)
@@ -24,7 +26,10 @@ namespace FoodSnap.WebTests
         public async Task InitializeAsync()
         {
             await fixture.ResetDatabase();
-            authToken = null;
+
+            client = fixture.Factory.CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task DisposeAsync()
@@ -60,7 +65,7 @@ namespace FoodSnap.WebTests
                 });
                 message.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
-            return fixture.Client.SendAsync(message);
+            return client.SendAsync(message);
         }
 
         protected Task<HttpResponseMessage> Get(string uri)

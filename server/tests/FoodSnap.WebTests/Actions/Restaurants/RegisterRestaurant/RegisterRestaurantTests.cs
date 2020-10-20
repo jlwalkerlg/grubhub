@@ -39,19 +39,12 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
             });
 
             var user = await Get<UserDto>("/auth/user");
-            Assert.Equal("Jordan Walker", user.Name);
             Assert.Equal("walker.jlg@gmail.com", user.Email);
-            Assert.NotEqual("password123", user.Password);
             Assert.Equal(UserRole.RestaurantManager.ToString(), user.Role);
 
             var restaurant = await Get<RestaurantDto>($"/restaurants/{user.RestaurantId}");
             Assert.Equal(user.Id, restaurant.ManagerId);
-            Assert.Equal("Chow Main", restaurant.Name);
-            Assert.Equal("01234567890", restaurant.PhoneNumber);
             Assert.Equal(RestaurantStatus.PendingApproval.ToString(), restaurant.Status);
-            Assert.Equal(GeocoderStub.Address, restaurant.Address);
-            Assert.Equal(GeocoderStub.Latitude, restaurant.Latitude);
-            Assert.Equal(GeocoderStub.Longitude, restaurant.Longitude);
 
             var menu = await Get<MenuDto>($"/restaurants/{restaurant.Id}/menu");
             Assert.Empty(menu.Categories);
@@ -73,9 +66,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
             });
 
             Assert.Equal(400, (int)response.StatusCode);
-
-            var envelope = await response.ToErrorEnvelope();
-            Assert.NotEmpty(envelope.Message);
+            Assert.NotNull(await response.GetErrorMessage());
         }
 
         [Fact]
@@ -94,7 +85,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
 
             Assert.Equal(422, (int)response.StatusCode);
 
-            var errors = (await response.ToErrorEnvelope()).Errors;
+            var errors = (await response.GetErrors());
             Assert.True(errors.ContainsKey("managerName"));
             Assert.True(errors.ContainsKey("managerEmail"));
             Assert.True(errors.ContainsKey("managerPassword"));

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -27,17 +25,12 @@ namespace FoodSnap.WebTests
     public class TestWebApplicationFixture
     {
         private readonly TestWebApplicationFactory factory;
-        private readonly HttpClient client;
         private readonly WebConfig config;
         private readonly Checkpoint checkpoint;
 
         public TestWebApplicationFixture()
         {
             factory = new TestWebApplicationFactory();
-
-            client = factory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
 
             config = factory.Services.GetRequiredService<WebConfig>();
 
@@ -56,7 +49,7 @@ namespace FoodSnap.WebTests
             };
         }
 
-        public HttpClient Client => client;
+        public TestWebApplicationFactory Factory => factory;
 
         public async Task ResetDatabase()
         {
@@ -75,11 +68,11 @@ namespace FoodSnap.WebTests
             }
         }
 
-        public async Task ExecuteService<T>(Func<T, Task> action)
+        public async Task ExecuteService<TService>(Func<TService, Task> action)
         {
             await ExecuteScope(async scope =>
             {
-                var service = scope.ServiceProvider.GetRequiredService<T>();
+                var service = scope.ServiceProvider.GetRequiredService<TService>();
                 await action(service);
             });
         }

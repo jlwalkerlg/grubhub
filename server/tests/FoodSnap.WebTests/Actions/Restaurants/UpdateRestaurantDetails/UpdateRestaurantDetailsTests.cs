@@ -106,6 +106,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
             var response = await Put($"/restaurants/{restaurant.Id.Value}", request);
 
             Assert.Equal(403, (int)response.StatusCode);
+            Assert.NotNull(await response.GetErrorMessage());
         }
 
         [Fact]
@@ -139,6 +140,10 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
             var response = await Put($"/restaurants/{restaurant.Id.Value}", request);
 
             Assert.Equal(422, (int)response.StatusCode);
+
+            var errors = await response.GetErrors();
+            Assert.True(errors.ContainsKey("name"));
+            Assert.True(errors.ContainsKey("phoneNumber"));
         }
     }
 }
