@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -39,9 +40,14 @@ namespace FoodSnap.WebTests
 
         public async Task Login(User user)
         {
+            await Login(user.Id.Value);
+        }
+
+        public async Task Login(Guid id)
+        {
             await fixture.ExecuteService<ITokenizer>(tokenizer =>
             {
-                authToken = tokenizer.Encode(user.Id.Value.ToString());
+                authToken = tokenizer.Encode(id.ToString());
                 return Task.CompletedTask;
             });
         }
@@ -96,6 +102,12 @@ namespace FoodSnap.WebTests
         {
             var message = new HttpRequestMessage(HttpMethod.Put, uri);
             return Send(message, data);
+        }
+
+        protected Task<HttpResponseMessage> Delete(string uri)
+        {
+            var message = new HttpRequestMessage(HttpMethod.Delete, uri);
+            return Send(message);
         }
     }
 

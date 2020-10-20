@@ -132,7 +132,7 @@ export default function useRestaurants() {
     }
 
     const item: MenuItemDto = {
-      name: request.name,
+      name: request.newItemName,
       description: request.description,
       price: request.price,
     };

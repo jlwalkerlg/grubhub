@@ -15,19 +15,19 @@ namespace FoodSnap.Web.Actions.Menus.UpdateMenuItem
             this.sender = sender;
         }
 
-        [HttpPut("/restaurants/{restaurantId}/menu/categories/{category}/items/{item}")]
+        [HttpPut("/restaurants/{restaurantId}/menu/categories/{category}/items/{itemName}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromRoute] string category,
-            [FromRoute] string item,
+            [FromRoute] string itemName,
             [FromBody] UpdateMenuItemRequest request)
         {
             var command = new UpdateMenuItemCommand
             {
                 RestaurantId = restaurantId,
                 CategoryName = category,
-                OldItemName = item,
-                NewItemName = request.Name,
+                OldItemName = itemName,
+                NewItemName = request.NewItemName,
                 Description = request.Description,
                 Price = request.Price
             };

@@ -19,7 +19,7 @@ interface Props {
 }
 
 interface FormValues {
-  name: string;
+  newItemName: string;
   description: string;
   price: number;
 }
@@ -34,7 +34,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
 
   const form = useForm<FormValues>({
     defaultValues: {
-      name: item.name,
+      newItemName: item.name,
       description: item.description,
       price: item.price,
     },
@@ -43,7 +43,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
-    if (data.name === item.name) {
+    if (data.newItemName === item.name) {
       setIsEditFormOpen(false);
       form.reset(data);
       return;
@@ -161,12 +161,14 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               })}
               className="input"
               type="text"
-              name="name"
-              id="name"
-              data-invalid={!!form.errors.name}
+              name="newItemName"
+              id="newItemName"
+              data-invalid={!!form.errors.newItemName}
             />
-            {form.errors.name && (
-              <p className="form-error mt-1">{form.errors.name.message}</p>
+            {form.errors.newItemName && (
+              <p className="form-error mt-1">
+                {form.errors.newItemName.message}
+              </p>
             )}
           </div>
 

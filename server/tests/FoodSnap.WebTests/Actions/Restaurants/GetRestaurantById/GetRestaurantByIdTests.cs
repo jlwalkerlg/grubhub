@@ -46,5 +46,13 @@ namespace FoodSnap.WebTests.Actions.Restaurants.GetRestaurantById
             Assert.Equal(1, restaurantDto.Latitude);
             Assert.Equal(2, restaurantDto.Longitude);
         }
+
+        [Fact]
+        public async Task It_Returns_404_When_Restaurant_Not_Found()
+        {
+            var response = await Get($"/restaurants/{Guid.NewGuid()}");
+
+            Assert.Equal(404, (int)response.StatusCode);
+        }
     }
 }

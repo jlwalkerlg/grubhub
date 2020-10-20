@@ -32,7 +32,7 @@ export interface AddMenuItemRequest {
 }
 
 export interface UpdateMenuItemRequest {
-  name: string;
+  newItemName: string;
   description: string;
   price: number;
 }
