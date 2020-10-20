@@ -20,7 +20,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Registers_A_Restaurant_And_A_Manager()
         {
-            var response = await fixture.Post("/restaurants/register", new RegisterRestaurantCommand
+            var response = await Post("/restaurants/register", new RegisterRestaurantCommand
             {
                 ManagerName = "Jordan Walker",
                 ManagerEmail = "walker.jlg@gmail.com",
@@ -35,16 +35,16 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
             await fixture.ExecuteService<IUnitOfWork>(async uow =>
             {
                 var user = await uow.Users.GetByEmail("walker.jlg@gmail.com");
-                fixture.Login(user);
+                await Login(user);
             });
 
-            var user = await fixture.Get<UserDto>("/auth/user");
+            var user = await Get<UserDto>("/auth/user");
             Assert.Equal("Jordan Walker", user.Name);
             Assert.Equal("walker.jlg@gmail.com", user.Email);
             Assert.NotEqual("password123", user.Password);
             Assert.Equal(UserRole.RestaurantManager.ToString(), user.Role);
 
-            var restaurant = await fixture.Get<RestaurantDto>($"/restaurants/{user.RestaurantId}");
+            var restaurant = await Get<RestaurantDto>($"/restaurants/{user.RestaurantId}");
             Assert.Equal(user.Id, restaurant.ManagerId);
             Assert.Equal("Chow Main", restaurant.Name);
             Assert.Equal("01234567890", restaurant.PhoneNumber);
@@ -53,13 +53,8 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
             Assert.Equal(GeocoderStub.Latitude, restaurant.Latitude);
             Assert.Equal(GeocoderStub.Longitude, restaurant.Longitude);
 
-            var menu = await fixture.Get<MenuDto>($"/restaurants/{restaurant.Id}/menu");
+            var menu = await Get<MenuDto>($"/restaurants/{restaurant.Id}/menu");
             Assert.Empty(menu.Categories);
-        }
-
-        private int IUnitOfWork(System.Func<object, Task> p)
-        {
-            throw new System.NotImplementedException();
         }
 
         [Fact]
@@ -67,7 +62,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
         {
             var invalidAddress = GeocoderStub.InvalidAddress;
 
-            var response = await fixture.Post("/restaurants/register", new RegisterRestaurantCommand
+            var response = await Post("/restaurants/register", new RegisterRestaurantCommand
             {
                 ManagerName = "Jordan Walker",
                 ManagerEmail = "walker.jlg@gmail.com",
@@ -95,7 +90,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
                 RestaurantPhoneNumber = "",
                 Address = ""
             };
-            var response = await fixture.Post("/restaurants/register", command);
+            var response = await Post("/restaurants/register", command);
 
             Assert.Equal(422, (int)response.StatusCode);
 

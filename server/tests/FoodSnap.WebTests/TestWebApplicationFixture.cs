@@ -2,17 +2,12 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FoodSnap.Application.Services.Geocoding;
-using FoodSnap.Domain.Users;
 using FoodSnap.Infrastructure.Persistence.EF;
 using FoodSnap.Web;
-using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Services.Tokenization;
 using FoodSnap.WebTests.Doubles;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -35,7 +30,6 @@ namespace FoodSnap.WebTests
         private readonly HttpClient client;
         private readonly WebConfig config;
         private readonly Checkpoint checkpoint;
-        private string authToken = null;
 
         public TestWebApplicationFixture()
         {
@@ -61,6 +55,8 @@ namespace FoodSnap.WebTests
                 },
             };
         }
+
+        public HttpClient Client => client;
 
         public async Task ResetDatabase()
         {
@@ -88,54 +84,13 @@ namespace FoodSnap.WebTests
             });
         }
 
-        private Task<HttpResponseMessage> Send(HttpRequestMessage message)
+        public async Task InsertDb(params object[] entities)
         {
-            if (authToken != null)
+            await ExecuteService<AppDbContext>(async db =>
             {
-                message.Headers.Add("Cookie", $"auth_token={authToken}");
-            }
-            return client.SendAsync(message);
-        }
-
-        public Task<HttpResponseMessage> Get(string uri)
-        {
-            var message = new HttpRequestMessage(HttpMethod.Get, uri);
-            return Send(message);
-        }
-
-        public async Task<T> Get<T>(string uri)
-        {
-            var response = await Get(uri);
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStreamAsync();
-            var envelope = await JsonSerializer.DeserializeAsync<DataEnvelope<T>>(json, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                await db.AddRangeAsync(entities);
+                await db.SaveChangesAsync();
             });
-            return envelope.Data;
-        }
-
-        public Task<HttpResponseMessage> Post(string uri, object data = null)
-        {
-            var message = new HttpRequestMessage(HttpMethod.Post, uri);
-            if (data != null)
-            {
-                var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                });
-                message.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            }
-            return Send(message);
-        }
-
-        public void Login(User user)
-        {
-            using (var scope = factory.Services.CreateScope())
-            {
-                var tokenizer = scope.ServiceProvider.GetRequiredService<ITokenizer>();
-                authToken = tokenizer.Encode(user.Id.Value.ToString());
-            }
         }
     }
 
