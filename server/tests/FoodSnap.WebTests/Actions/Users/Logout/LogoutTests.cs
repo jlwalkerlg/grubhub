@@ -12,7 +12,7 @@ namespace FoodSnap.WebTests.Actions.Users.Logout
 {
     public class LogoutTests : WebTestBase
     {
-        public LogoutTests(TestWebApplicationFixture fixture) : base(fixture)
+        public LogoutTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

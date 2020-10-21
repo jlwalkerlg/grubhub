@@ -13,7 +13,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantTests : WebTestBase
     {
-        public RegisterRestaurantTests(TestWebApplicationFixture fixture) : base(fixture)
+        public RegisterRestaurantTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

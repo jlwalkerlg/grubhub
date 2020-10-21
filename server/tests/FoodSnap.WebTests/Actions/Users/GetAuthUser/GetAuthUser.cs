@@ -11,7 +11,7 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthUser
 {
     public class GetAuthUserTests : WebTestBase
     {
-        public GetAuthUserTests(TestWebApplicationFixture fixture) : base(fixture)
+        public GetAuthUserTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

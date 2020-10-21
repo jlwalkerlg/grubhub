@@ -12,7 +12,7 @@ namespace FoodSnap.WebTests.Actions.Menus.GetMenuByRestaurantId
 {
     public class GetMenuByRestaurantIdTests : WebTestBase
     {
-        public GetMenuByRestaurantIdTests(TestWebApplicationFixture fixture) : base(fixture)
+        public GetMenuByRestaurantIdTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

@@ -13,7 +13,7 @@ namespace FoodSnap.WebTests.Actions.Menus.RenameMenuCategory
 {
     public class RenameMenuCategoryTests : WebTestBase
     {
-        public RenameMenuCategoryTests(TestWebApplicationFixture fixture) : base(fixture)
+        public RenameMenuCategoryTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

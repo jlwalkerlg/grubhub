@@ -12,7 +12,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
 {
     public class UpdateRestaurantDetailsTests : WebTestBase
     {
-        public UpdateRestaurantDetailsTests(TestWebApplicationFixture fixture) : base(fixture)
+        public UpdateRestaurantDetailsTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

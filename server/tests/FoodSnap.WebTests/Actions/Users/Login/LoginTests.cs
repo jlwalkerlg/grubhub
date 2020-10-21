@@ -12,7 +12,7 @@ namespace FoodSnap.WebTests.Actions.Users.Login
 {
     public class LoginTests : WebTestBase
     {
-        public LoginTests(TestWebApplicationFixture fixture) : base(fixture)
+        public LoginTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

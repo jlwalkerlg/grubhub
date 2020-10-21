@@ -11,7 +11,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.GetRestaurantById
 {
     public class GetRestaurantByIdTests : WebTestBase
     {
-        public GetRestaurantByIdTests(TestWebApplicationFixture fixture) : base(fixture)
+        public GetRestaurantByIdTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

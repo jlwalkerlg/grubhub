@@ -12,7 +12,7 @@ namespace FoodSnap.WebTests.Actions.Menus.RemoveMenuItem
 {
     public class RemoveMenuItemTests : WebTestBase
     {
-        public RemoveMenuItemTests(TestWebApplicationFixture fixture) : base(fixture)
+        public RemoveMenuItemTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

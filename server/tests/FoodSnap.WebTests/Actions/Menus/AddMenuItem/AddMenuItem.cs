@@ -13,7 +13,7 @@ namespace FoodSnap.WebTests.Actions.Menus.AddMenuItem
 {
     public class AddMenuItemTests : WebTestBase
     {
-        public AddMenuItemTests(TestWebApplicationFixture fixture) : base(fixture)
+        public AddMenuItemTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

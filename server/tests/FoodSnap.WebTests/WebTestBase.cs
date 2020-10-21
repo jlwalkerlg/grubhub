@@ -11,15 +11,15 @@ using Xunit;
 
 namespace FoodSnap.WebTests
 {
-    [Collection(nameof(TestWebApplicationFixture))]
+    [Collection(nameof(WebAppTestFixture))]
     public class WebTestBase : IAsyncLifetime
     {
-        protected readonly TestWebApplicationFixture fixture;
+        protected readonly WebAppTestFixture fixture;
 
         private HttpClient client;
         private string authToken;
 
-        public WebTestBase(TestWebApplicationFixture fixture)
+        public WebTestBase(WebAppTestFixture fixture)
         {
             this.fixture = fixture;
         }

@@ -10,7 +10,7 @@ namespace FoodSnap.WebTests.Actions.Users.UpdateAuthUserDetails
 {
     public class UpdateAuthUserDetailsTests : WebTestBase
     {
-        public UpdateAuthUserDetailsTests(TestWebApplicationFixture fixture) : base(fixture)
+        public UpdateAuthUserDetailsTests(WebAppTestFixture fixture) : base(fixture)
         {
         }
 

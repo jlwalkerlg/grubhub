@@ -17,20 +17,20 @@ using Xunit;
 
 namespace FoodSnap.WebTests
 {
-    [CollectionDefinition(nameof(TestWebApplicationFixture))]
-    public class TestWebApplicationFixtureCollection : ICollectionFixture<TestWebApplicationFixture>
+    [CollectionDefinition(nameof(WebAppTestFixture))]
+    public class WebAppTestCollection : ICollectionFixture<WebAppTestFixture>
     {
     }
 
-    public class TestWebApplicationFixture
+    public class WebAppTestFixture
     {
-        private readonly TestWebApplicationFactory factory;
+        private readonly TestWebAppFactory factory;
         private readonly WebConfig config;
         private readonly Checkpoint checkpoint;
 
-        public TestWebApplicationFixture()
+        public WebAppTestFixture()
         {
-            factory = new TestWebApplicationFactory();
+            factory = new TestWebAppFactory();
 
             config = factory.Services.GetRequiredService<WebConfig>();
 
@@ -49,7 +49,7 @@ namespace FoodSnap.WebTests
             };
         }
 
-        public TestWebApplicationFactory Factory => factory;
+        public TestWebAppFactory Factory => factory;
 
         public async Task ResetDatabase()
         {
@@ -87,7 +87,7 @@ namespace FoodSnap.WebTests
         }
     }
 
-    public class TestWebApplicationFactory : WebApplicationFactory<Startup>
+    public class TestWebAppFactory : WebApplicationFactory<Startup>
     {
         protected override IHost CreateHost(IHostBuilder builder)
         {
@@ -101,7 +101,7 @@ namespace FoodSnap.WebTests
             {
                 // Suppress info log.
                 services.Configure<ConsoleLifetimeOptions>(options =>
-                    options.SuppressStatusMessages = true);
+                options.SuppressStatusMessages = true);
 
                 var sp = services.BuildServiceProvider();
 
