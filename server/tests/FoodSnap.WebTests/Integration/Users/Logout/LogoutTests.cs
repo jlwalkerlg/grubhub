@@ -8,7 +8,7 @@ using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Xunit;
 
-namespace FoodSnap.WebTests.Actions.Users.Logout
+namespace FoodSnap.WebTests.Integration.Users.Logout
 {
     public class LogoutTests : WebTestBase
     {
