@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -9,17 +9,17 @@ using FoodSnap.Web.Envelopes;
 using FoodSnap.Web.Services.Tokenization;
 using Xunit;
 
-namespace FoodSnap.WebTests
+namespace FoodSnap.WebTests.Integration
 {
-    [Collection(nameof(WebAppTestFixture))]
-    public class WebTestBase : IAsyncLifetime
+    [Collection(nameof(WebAppIntegrationTestFixture))]
+    public class WebIntegrationTestBase : IAsyncLifetime
     {
-        protected readonly WebAppTestFixture fixture;
+        protected readonly WebAppIntegrationTestFixture fixture;
 
         private HttpClient client;
         private string authToken;
 
-        public WebTestBase(WebAppTestFixture fixture)
+        public WebIntegrationTestBase(WebAppIntegrationTestFixture fixture)
         {
             this.fixture = fixture;
         }

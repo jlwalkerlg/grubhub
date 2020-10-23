@@ -9,9 +9,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Restaurants.GetRestaurantById
 {
-    public class GetRestaurantByIdTests : WebTestBase
+    public class GetRestaurantByIdTests : WebIntegrationTestBase
     {
-        public GetRestaurantByIdTests(WebAppTestFixture fixture) : base(fixture)
+        public GetRestaurantByIdTests(WebAppIntegrationTestFixture fixture) : base(fixture)
         {
         }
 

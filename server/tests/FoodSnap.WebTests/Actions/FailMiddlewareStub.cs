@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Shared;
 using MediatR;
 
-namespace FoodSnap.WebTests
+namespace FoodSnap.WebTests.Actions
 {
     public abstract class FailMiddlewareStub
     {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -9,16 +9,16 @@ using FoodSnap.Web.Envelopes;
 using FoodSnap.Web.Services.Tokenization;
 using Xunit;
 
-namespace FoodSnap.WebTests
+namespace FoodSnap.WebTests.Actions
 {
-    public class StubbedWebTestBase : IClassFixture<StubbedWebAppTestFixture>
+    public class WebActionTestBase : IClassFixture<WebActionTestFixture>
     {
-        protected readonly StubbedWebAppTestFixture fixture;
+        protected readonly WebActionTestFixture fixture;
 
         private HttpClient client;
         private string authToken;
 
-        public StubbedWebTestBase(StubbedWebAppTestFixture fixture)
+        public WebActionTestBase(WebActionTestFixture fixture)
         {
             this.fixture = fixture;
 

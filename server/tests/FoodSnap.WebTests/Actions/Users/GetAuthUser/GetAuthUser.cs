@@ -3,9 +3,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Users.GetAuthUser
 {
-    public class GetAuthUserTests : StubbedWebTestBase
+    public class GetAuthUserTests : WebActionTestBase
     {
-        public GetAuthUserTests(StubbedWebAppTestFixture fixture) : base(fixture)
+        public GetAuthUserTests(WebActionTestFixture fixture) : base(fixture)
         {
         }
 

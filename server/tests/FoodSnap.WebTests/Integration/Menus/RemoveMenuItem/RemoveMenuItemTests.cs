@@ -10,9 +10,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Menus.RemoveMenuItem
 {
-    public class RemoveMenuItemTests : WebTestBase
+    public class RemoveMenuItemTests : WebIntegrationTestBase
     {
-        public RemoveMenuItemTests(WebAppTestFixture fixture) : base(fixture)
+        public RemoveMenuItemTests(WebAppIntegrationTestFixture fixture) : base(fixture)
         {
         }
 

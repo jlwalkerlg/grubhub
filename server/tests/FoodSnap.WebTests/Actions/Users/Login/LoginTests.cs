@@ -4,9 +4,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Users.Login
 {
-    public class LoginTests : StubbedWebTestBase
+    public class LoginTests : WebActionTestBase
     {
-        public LoginTests(StubbedWebAppTestFixture fixture) : base(fixture)
+        public LoginTests(WebActionTestFixture fixture) : base(fixture)
         {
         }
 

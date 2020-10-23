@@ -4,9 +4,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Restaurants.GetRestaurantById
 {
-    public class GetRestaurantByIdTests : StubbedWebTestBase
+    public class GetRestaurantByIdTests : WebActionTestBase
     {
-        public GetRestaurantByIdTests(StubbedWebAppTestFixture fixture) : base(fixture)
+        public GetRestaurantByIdTests(WebActionTestFixture fixture) : base(fixture)
         {
         }
 

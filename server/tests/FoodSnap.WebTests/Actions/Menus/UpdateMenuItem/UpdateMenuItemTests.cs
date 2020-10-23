@@ -5,9 +5,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Menus.UpdateMenuItem
 {
-    public class UpdateMenuItemTests : StubbedWebTestBase
+    public class UpdateMenuItemTests : WebActionTestBase
     {
-        public UpdateMenuItemTests(StubbedWebAppTestFixture fixture) : base(fixture)
+        public UpdateMenuItemTests(WebActionTestFixture fixture) : base(fixture)
         {
         }
 

@@ -5,9 +5,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Menus.AddMenuCategory
 {
-    public class AddMenuCategoryTests : StubbedWebTestBase
+    public class AddMenuCategoryTests : WebActionTestBase
     {
-        public AddMenuCategoryTests(StubbedWebAppTestFixture fixture) : base(fixture)
+        public AddMenuCategoryTests(WebActionTestFixture fixture) : base(fixture)
         {
         }
 

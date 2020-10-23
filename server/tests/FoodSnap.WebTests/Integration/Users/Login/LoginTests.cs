@@ -10,9 +10,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Users.Login
 {
-    public class LoginTests : WebTestBase
+    public class LoginTests : WebIntegrationTestBase
     {
-        public LoginTests(WebAppTestFixture fixture) : base(fixture)
+        public LoginTests(WebAppIntegrationTestFixture fixture) : base(fixture)
         {
         }
 

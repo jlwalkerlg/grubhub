@@ -7,9 +7,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Users.UpdateAuthUserDetails
 {
-    public class UpdateAuthUserDetailsTests : StubbedWebTestBase
+    public class UpdateAuthUserDetailsTests : WebActionTestBase
     {
-        public UpdateAuthUserDetailsTests(StubbedWebAppTestFixture fixture) : base(fixture)
+        public UpdateAuthUserDetailsTests(WebActionTestFixture fixture) : base(fixture)
         {
         }
 

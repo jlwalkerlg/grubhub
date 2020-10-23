@@ -11,9 +11,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Restaurants.RegisterRestaurant
 {
-    public class RegisterRestaurantTests : WebTestBase
+    public class RegisterRestaurantTests : WebIntegrationTestBase
     {
-        public RegisterRestaurantTests(WebAppTestFixture fixture) : base(fixture)
+        public RegisterRestaurantTests(WebAppIntegrationTestFixture fixture) : base(fixture)
         {
         }
 

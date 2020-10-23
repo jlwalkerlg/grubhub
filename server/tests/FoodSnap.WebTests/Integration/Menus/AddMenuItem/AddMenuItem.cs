@@ -11,9 +11,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Menus.AddMenuItem
 {
-    public class AddMenuItemTests : WebTestBase
+    public class AddMenuItemTests : WebIntegrationTestBase
     {
-        public AddMenuItemTests(WebAppTestFixture fixture) : base(fixture)
+        public AddMenuItemTests(WebAppIntegrationTestFixture fixture) : base(fixture)
         {
         }
 

@@ -10,9 +10,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Users.Logout
 {
-    public class LogoutTests : WebTestBase
+    public class LogoutTests : WebIntegrationTestBase
     {
-        public LogoutTests(WebAppTestFixture fixture) : base(fixture)
+        public LogoutTests(WebAppIntegrationTestFixture fixture) : base(fixture)
         {
         }
 

@@ -5,9 +5,9 @@ using Xunit;
 
 namespace FoodSnap.WebTests.Actions.Menus.RenameMenuCategory
 {
-    public class RenameMenuCategoryTests : StubbedWebTestBase
+    public class RenameMenuCategoryTests : WebActionTestBase
     {
-        public RenameMenuCategoryTests(StubbedWebAppTestFixture fixture) : base(fixture)
+        public RenameMenuCategoryTests(WebActionTestFixture fixture) : base(fixture)
         {
         }
 

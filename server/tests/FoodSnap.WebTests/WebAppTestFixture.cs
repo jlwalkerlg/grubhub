@@ -4,65 +4,22 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FoodSnap.Application.Services.Geocoding;
-using FoodSnap.Infrastructure.Persistence.EF;
 using FoodSnap.Web;
 using FoodSnap.WebTests.Doubles;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Npgsql;
-using Respawn;
-using Xunit;
 
 namespace FoodSnap.WebTests
 {
-    [CollectionDefinition(nameof(WebAppTestFixture))]
-    public class WebAppTestCollection : ICollectionFixture<WebAppTestFixture>
-    {
-    }
-
     public class WebAppTestFixture
     {
-        private readonly TestWebAppFactory factory;
-        private readonly WebConfig config;
-        private readonly Checkpoint checkpoint;
-
-        public WebAppTestFixture()
-        {
-            factory = new TestWebAppFactory();
-
-            config = factory.Services.GetRequiredService<WebConfig>();
-
-            using (var db = factory.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
-            {
-                db.Database.EnsureCreated();
-            }
-
-            checkpoint = new Checkpoint
-            {
-                DbAdapter = DbAdapter.Postgres,
-                SchemasToInclude = new[]
-                {
-                    "public"
-                },
-            };
-        }
-
-        public TestWebAppFactory Factory => factory;
-
-        public async Task ResetDatabase()
-        {
-            using (var conn = new NpgsqlConnection(config.DbConnectionString))
-            {
-                await conn.OpenAsync();
-                await checkpoint.Reset(conn);
-            }
-        }
+        public virtual TestWebAppFactory Factory { get; } = new TestWebAppFactory();
 
         public async Task ExecuteScope(Func<IServiceScope, Task> action)
         {
-            using (var scope = factory.Services.CreateScope())
+            using (var scope = Factory.Services.CreateScope())
             {
                 await action(scope);
             }
@@ -76,22 +33,15 @@ namespace FoodSnap.WebTests
                 await action(service);
             });
         }
-
-        public async Task InsertDb(params object[] entities)
-        {
-            await ExecuteService<AppDbContext>(async db =>
-            {
-                await db.AddRangeAsync(entities);
-                await db.SaveChangesAsync();
-            });
-        }
     }
 
     public class TestWebAppFactory : WebApplicationFactory<Startup>
     {
+        protected virtual TestWebAppServiceProviderFactory ServiceProviderFactory { get; } = new TestWebAppServiceProviderFactory();
+
         protected override IHost CreateHost(IHostBuilder builder)
         {
-            builder.UseServiceProviderFactory(new TestWebAppServiceProviderFactory());
+            builder.UseServiceProviderFactory(ServiceProviderFactory);
             return base.CreateHost(builder);
         }
 
@@ -102,15 +52,10 @@ namespace FoodSnap.WebTests
                 // Suppress info log.
                 services.Configure<ConsoleLifetimeOptions>(options =>
                 options.SuppressStatusMessages = true);
-
-                var sp = services.BuildServiceProvider();
-
-                var config = sp.GetRequiredService<WebConfig>();
-                config.DbConnectionString = ctx.Configuration["TestDbConnectionString"];
             });
         }
 
-        private void RemoveService<T>(IServiceCollection services)
+        protected void RemoveService<T>(IServiceCollection services)
         {
             var descriptor = services.Single(d => d.ServiceType == typeof(T));
             services.Remove(descriptor);
@@ -134,7 +79,7 @@ namespace FoodSnap.WebTests
             return new AutofacServiceProvider(builder.Build());
         }
 
-        private static void ConfigureContainer(ContainerBuilder builder)
+        protected virtual void ConfigureContainer(ContainerBuilder builder)
         {
             builder
                 .RegisterType<GeocoderStub>()
