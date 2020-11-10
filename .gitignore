@@ -1,21 +1,21 @@
-/client/src/public/img
+src/public/img
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/client/node_modules
-/client/.pnp
+node_modules
+.pnp
 .pnp.js
 
 # testing
-/client/coverage
+coverage
 
 # next.js
-/client/.next/
-/client/out/
+.next/
+out/
 
 # production
-/client/build
+build
 
 # misc
 .DS_Store
