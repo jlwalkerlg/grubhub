@@ -1,22 +1,20 @@
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using Dapper;
-using FoodSnap.Application;
-using FoodSnap.Shared;
-using FoodSnap.Infrastructure.Persistence;
+using FoodSnap.Application.Users;
 
-namespace FoodSnap.Web.Actions.Users.GetUserById
+namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Users
 {
-    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto>
+    public class DPUserDtoRepository : IUserDtoRepository
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetUserByIdHandler(IDbConnectionFactory dbConnectionFactory)
+        public DPUserDtoRepository(IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<Result<UserDto>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
+        public async Task<UserDto> GetById(Guid id)
         {
             var sql = @"
                 SELECT
@@ -37,9 +35,9 @@ namespace FoodSnap.Web.Actions.Users.GetUserById
             {
                 var user = await connection.QueryFirstOrDefaultAsync<UserDto>(
                     sql,
-                    new { Id = query.Id });
+                    new { Id = id });
 
-                return Result.Ok(user);
+                return user;
             }
         }
     }

@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using FoodSnap.Application.Users;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
-using FoodSnap.Web.Actions.Users;
 using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Users.GetAuthUser

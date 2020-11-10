@@ -29,12 +29,12 @@ namespace FoodSnap.ApplicationTests.Users.Logout
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = user;
+            authenticatorSpy.SignIn(user);
 
             var result = await handler.Handle(new LogoutCommand(), default(CancellationToken));
 
             Assert.True(result.IsSuccess);
-            Assert.Null(authenticatorSpy.User);
+            Assert.False(authenticatorSpy.IsAuthenticated);
         }
     }
 }

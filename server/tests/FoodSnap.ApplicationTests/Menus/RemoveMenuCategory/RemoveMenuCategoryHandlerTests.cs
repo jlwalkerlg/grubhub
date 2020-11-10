@@ -50,7 +50,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var command = new RemoveMenuCategoryCommand
             {
@@ -103,7 +103,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var command = new RemoveMenuCategoryCommand
             {

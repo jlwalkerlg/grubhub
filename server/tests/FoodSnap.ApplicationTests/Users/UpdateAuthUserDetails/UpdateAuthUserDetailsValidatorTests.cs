@@ -33,7 +33,7 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = user;
+            authenticatorSpy.SignIn(user);
             await unitOfWorkSpy.UserRepositorySpy.Add(user);
 
             var command = new UpdateAuthUserDetailsCommand
@@ -60,7 +60,7 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = user;
+            authenticatorSpy.SignIn(user);
             await unitOfWorkSpy.UserRepositorySpy.Add(user);
 
             var command = new UpdateAuthUserDetailsCommand
@@ -93,7 +93,7 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
             await unitOfWorkSpy.UserRepositorySpy.Add(existingUser);
 
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var command = new UpdateAuthUserDetailsCommand
             {

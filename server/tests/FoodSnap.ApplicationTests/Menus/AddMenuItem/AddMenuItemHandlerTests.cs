@@ -35,7 +35,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
@@ -82,7 +82,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
@@ -116,7 +116,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
@@ -153,7 +153,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
@@ -192,7 +192,7 @@ namespace FoodSnap.ApplicationTests.Menus.AddMenuItem
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),

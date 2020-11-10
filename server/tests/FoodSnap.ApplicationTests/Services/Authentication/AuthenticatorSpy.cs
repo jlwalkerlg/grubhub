@@ -5,20 +5,23 @@ namespace FoodSnap.ApplicationTests.Services.Authentication
 {
     public class AuthenticatorSpy : IAuthenticator
     {
-        public User User { get; set; }
+        public bool IsAuthenticated => UserId != null;
 
-        public bool IsAuthenticated => User != null;
+        public UserId UserId { get; private set; }
 
-        public UserId UserId => User?.Id;
+        public void SignIn(UserId userId)
+        {
+            UserId = userId;
+        }
 
         public void SignIn(User user)
         {
-            User = user;
+            UserId = user.Id;
         }
 
         public void SignOut()
         {
-            User = null;
+            UserId = null;
         }
     }
 }

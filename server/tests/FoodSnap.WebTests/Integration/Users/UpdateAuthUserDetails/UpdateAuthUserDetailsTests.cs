@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using FoodSnap.Application.Users;
 using FoodSnap.Application.Users.UpdateAuthUserDetails;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
-using FoodSnap.Web.Actions.Users;
 using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Users.UpdateAuthUserDetails

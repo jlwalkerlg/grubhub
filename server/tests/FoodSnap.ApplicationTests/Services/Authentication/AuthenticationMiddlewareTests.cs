@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.ApplicationTests.Services.Authentication;
 using Xunit;
 using MediatR;
 using FoodSnap.Application.Services.Authentication;
@@ -27,11 +26,12 @@ namespace FoodSnap.ApplicationTests.Services.Authentication
         [Fact]
         public async Task It_Returns_The_Handler_Result_If_Authentication_Passes()
         {
-            authenticatorSpy.User = new RestaurantManager(
+            var user = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
+            authenticatorSpy.SignIn(user);
 
             var handlerResult = Result.Ok();
             RequestHandlerDelegate<Result> next = () => Task.FromResult(handlerResult);
@@ -48,7 +48,7 @@ namespace FoodSnap.ApplicationTests.Services.Authentication
         [Fact]
         public async Task It_Returns_An_Authentication_Error_If_Authentication_Fails()
         {
-            authenticatorSpy.User = null;
+            authenticatorSpy.SignOut();
 
             RequestHandlerDelegate<Result> next = () => Task.FromResult(Result.Ok());
 

@@ -47,7 +47,7 @@ namespace FoodSnap.ApplicationTests.Users.Login
             };
             var result = await handler.Handle(command, default(CancellationToken));
 
-            Assert.Same(user, authenticatorSpy.User);
+            Assert.Same(user.Id, authenticatorSpy.UserId);
             Assert.True(result.IsSuccess);
         }
 

@@ -51,7 +51,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var command = new RemoveMenuItemCommand
             {
@@ -80,7 +80,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
                 "password123");
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
 
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var command = new RemoveMenuItemCommand
             {
@@ -118,7 +118,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var command = new RemoveMenuItemCommand
             {
@@ -157,7 +157,7 @@ namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
 
             var command = new RemoveMenuItemCommand
             {

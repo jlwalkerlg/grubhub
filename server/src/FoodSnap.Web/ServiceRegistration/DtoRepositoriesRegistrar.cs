@@ -1,8 +1,10 @@
 using Autofac;
 using FoodSnap.Application.Menus;
 using FoodSnap.Application.Restaurants;
+using FoodSnap.Application.Users;
 using FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Menus;
 using FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Restaurants;
+using FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Users;
 
 namespace FoodSnap.Web.ServiceRegistration
 {
@@ -18,6 +20,11 @@ namespace FoodSnap.Web.ServiceRegistration
             builder
                 .RegisterType<DPRestaurantDtoRepository>()
                 .As<IRestaurantDtoRepository>()
+                .InstancePerDependency();
+
+            builder
+                .RegisterType<DPUserDtoRepository>()
+                .As<IUserDtoRepository>()
                 .InstancePerDependency();
         }
     }

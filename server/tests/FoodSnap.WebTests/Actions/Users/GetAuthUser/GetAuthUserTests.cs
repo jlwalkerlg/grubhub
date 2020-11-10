@@ -16,5 +16,15 @@ namespace FoodSnap.WebTests.Actions.Users.GetAuthUser
 
             Assert.Equal(401, (int)response.StatusCode);
         }
+
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            await Login();
+
+            var response = await Get("/auth/user");
+
+            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+        }
     }
 }

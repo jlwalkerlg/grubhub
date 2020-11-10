@@ -50,7 +50,7 @@ namespace FoodSnap.ApplicationTests.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var command = new RenameMenuCategoryCommand
             {
@@ -105,7 +105,7 @@ namespace FoodSnap.ApplicationTests.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var command = new RenameMenuCategoryCommand
             {
@@ -145,7 +145,7 @@ namespace FoodSnap.ApplicationTests.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var command = new RenameMenuCategoryCommand
             {
@@ -184,7 +184,7 @@ namespace FoodSnap.ApplicationTests.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var command = new RenameMenuCategoryCommand
             {

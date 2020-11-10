@@ -34,7 +34,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
@@ -72,7 +72,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
-            authenticatorSpy.User = manager;
+            authenticatorSpy.SignIn(manager);
 
             var command = new UpdateRestaurantDetailsCommand
             {

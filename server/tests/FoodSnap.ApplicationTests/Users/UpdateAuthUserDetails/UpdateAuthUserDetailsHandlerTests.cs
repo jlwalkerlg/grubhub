@@ -31,7 +31,7 @@ namespace FoodSnap.ApplicationTests.Users.UpdateAuthUserDetails
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.User = authUser;
+            authenticatorSpy.SignIn(authUser);
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
 
             var command = new UpdateAuthUserDetailsCommand

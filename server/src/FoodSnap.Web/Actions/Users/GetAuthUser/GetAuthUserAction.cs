@@ -1,33 +1,26 @@
 ﻿using System.Threading.Tasks;
-using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Web.Envelopes;
-using FoodSnap.Web.Actions.Users.GetUserById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FoodSnap.Application.Users;
+using FoodSnap.Application.Users.GetAuthUser;
 
 namespace FoodSnap.Web.Actions.Users.GetAuthUser
 {
     public class GetAuthUserAction : Action
     {
         private readonly ISender sender;
-        private readonly IAuthenticator authenticator;
 
-        public GetAuthUserAction(ISender sender, IAuthenticator authenticator)
+        public GetAuthUserAction(ISender sender)
         {
             this.sender = sender;
-            this.authenticator = authenticator;
         }
 
         [HttpGet("/auth/user")]
         public async Task<IActionResult> Execute()
         {
-            if (!authenticator.IsAuthenticated)
-            {
-                return StatusCode(401);
-            }
-
-            var result = await sender.Send(
-                new GetUserByIdQuery(authenticator.UserId.Value));
+            var query = new GetAuthUserQuery();
+            var result = await sender.Send(new GetAuthUserQuery());
 
             if (!result.IsSuccess)
             {
