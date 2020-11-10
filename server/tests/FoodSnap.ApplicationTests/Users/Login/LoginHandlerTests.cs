@@ -2,7 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users.Login;
-using FoodSnap.ApplicationTests.Doubles;
+using FoodSnap.ApplicationTests.Services.Authentication;
+using FoodSnap.ApplicationTests.Services.Hashing;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
 using Xunit;

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Shared;
 
-namespace FoodSnap.ApplicationTests.Doubles.GeocoderSpy
+namespace FoodSnap.ApplicationTests.Services.Geocoding
 {
     public class GeocoderSpy : IGeocoder
     {

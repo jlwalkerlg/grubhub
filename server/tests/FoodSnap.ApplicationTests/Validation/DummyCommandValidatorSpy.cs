@@ -2,7 +2,7 @@
 using FoodSnap.Application.Validation;
 using FoodSnap.Shared;
 
-namespace FoodSnap.ApplicationTests.Doubles
+namespace FoodSnap.ApplicationTests.Validation
 {
     public class DummyCommandValidatorSpy : IValidator<DummyCommand>
     {

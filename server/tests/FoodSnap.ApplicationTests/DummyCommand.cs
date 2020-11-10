@@ -1,6 +1,6 @@
 using FoodSnap.Application;
 
-namespace FoodSnap.ApplicationTests.Doubles
+namespace FoodSnap.ApplicationTests
 {
     public class DummyCommand : IRequest
     {

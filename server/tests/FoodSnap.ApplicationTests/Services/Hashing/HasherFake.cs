@@ -1,6 +1,6 @@
 using FoodSnap.Application.Services.Hashing;
 
-namespace FoodSnap.ApplicationTests.Doubles
+namespace FoodSnap.ApplicationTests.Services.Hashing
 {
     public class HasherFake : IHasher
     {

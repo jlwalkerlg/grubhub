@@ -2,7 +2,7 @@ using System.Threading;
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus.RenameMenuCategory;
-using FoodSnap.ApplicationTests.Doubles;
+using FoodSnap.ApplicationTests.Services.Authentication;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;

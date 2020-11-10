@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application;
 using FoodSnap.Shared;
 
-namespace FoodSnap.ApplicationTests.Doubles
+namespace FoodSnap.ApplicationTests
 {
     public class DummyCommandHandlerSpy : IRequestHandler<DummyCommand>
     {

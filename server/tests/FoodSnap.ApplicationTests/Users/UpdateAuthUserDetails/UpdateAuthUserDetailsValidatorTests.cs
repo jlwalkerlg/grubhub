@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users.UpdateAuthUserDetails;
-using FoodSnap.ApplicationTests.Doubles;
+using FoodSnap.ApplicationTests.Services.Authentication;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
 using Xunit;

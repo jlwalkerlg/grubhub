@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.ApplicationTests.Doubles;
+using FoodSnap.ApplicationTests.Services.Authentication;
 using Xunit;
 using MediatR;
 using FoodSnap.Application.Services.Authentication;

@@ -8,7 +8,7 @@ using Xunit;
 using static FoodSnap.Shared.Error;
 using FoodSnap.Domain.Users;
 using FoodSnap.Domain;
-using FoodSnap.ApplicationTests.Doubles;
+using FoodSnap.ApplicationTests.Services.Authentication;
 
 namespace FoodSnap.ApplicationTests.Menus.RemoveMenuCategory
 {

@@ -1,7 +1,7 @@
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain.Users;
 
-namespace FoodSnap.ApplicationTests.Doubles
+namespace FoodSnap.ApplicationTests.Services.Authentication
 {
     public class AuthenticatorSpy : IAuthenticator
     {

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Users.Logout;
-using FoodSnap.ApplicationTests.Doubles;
+using FoodSnap.ApplicationTests.Services.Authentication;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Users;
 using Xunit;

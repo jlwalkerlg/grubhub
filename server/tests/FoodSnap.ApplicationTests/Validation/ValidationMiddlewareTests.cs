@@ -2,7 +2,6 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodSnap.Application.Validation;
-using FoodSnap.ApplicationTests.Doubles;
 using Xunit;
 using MediatR;
 using FoodSnap.Shared;
