@@ -54,7 +54,7 @@ namespace FoodSnap.Domain.Restaurants
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException($"{nameof(Name)} must not be empty.");
+                    throw new ArgumentException("Name must not be empty.");
                 }
 
                 name = value;

@@ -8,7 +8,7 @@ namespace FoodSnap.Domain
         {
             if (amount < 0)
             {
-                throw new ArgumentException($"{nameof(amount)} can't be less than 0.");
+                throw new ArgumentException("Amount must not be less than 0.");
             }
 
             Amount = amount;

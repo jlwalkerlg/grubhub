@@ -13,7 +13,7 @@ namespace FoodSnap.Domain.Users
 
             if (string.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentException($"{nameof(password)} must not be empty.");
+                throw new ArgumentException("Password must not be empty.");
             }
 
             Id = id;
@@ -32,7 +32,7 @@ namespace FoodSnap.Domain.Users
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException($"{nameof(Name)} must not be empty.");
+                    throw new ArgumentException("Name must not be empty.");
                 }
 
                 name = value;

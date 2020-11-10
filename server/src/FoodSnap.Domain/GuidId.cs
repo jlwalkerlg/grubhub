@@ -8,7 +8,7 @@ namespace FoodSnap.Domain
         {
             if (value == Guid.Empty)
             {
-                throw new ArgumentException($"{nameof(value)} is be empty.");
+                throw new ArgumentException("Id must not be empty.");
             }
 
             Value = value;

@@ -11,12 +11,12 @@ namespace FoodSnap.Domain
         {
             if (latitude < -90 || latitude > 90)
             {
-                throw new ArgumentException($"{nameof(latitude)} out of range.");
+                throw new ArgumentException("Latitude out of range.");
             }
 
             if (longitude < -180 || longitude > 80)
             {
-                throw new ArgumentException($"{nameof(longitude)} out of range.");
+                throw new ArgumentException("Longitude out of range.");
             }
 
             Latitude = latitude;

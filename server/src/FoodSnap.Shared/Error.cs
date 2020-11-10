@@ -12,7 +12,7 @@ namespace FoodSnap.Shared
 
             if (string.IsNullOrWhiteSpace(message))
             {
-                throw new ArgumentException($"{nameof(message)} must not be empty.");
+                throw new ArgumentException("Message must not be empty.");
             }
         }
 

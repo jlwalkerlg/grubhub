@@ -10,7 +10,7 @@ namespace FoodSnap.Domain
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException($"{nameof(value)} must not be empty.");
+                throw new ArgumentException("Address must not be empty.");
             }
 
             Value = value;

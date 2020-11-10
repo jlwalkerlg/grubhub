@@ -16,12 +16,12 @@ namespace FoodSnap.Domain
         {
             if (string.IsNullOrWhiteSpace(address))
             {
-                throw new ArgumentException($"{nameof(address)} must not be empty.");
+                throw new ArgumentException("Address must not be empty.");
             }
 
             if (!regex.IsMatch(address))
             {
-                throw new ArgumentException($"{nameof(address)} not valid.");
+                throw new ArgumentException("Address invalid.");
             }
 
             Address = address;
