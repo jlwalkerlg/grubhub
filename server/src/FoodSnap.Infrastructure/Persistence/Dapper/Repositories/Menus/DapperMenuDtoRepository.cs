@@ -1,23 +1,21 @@
+using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
-using FoodSnap.Application;
-using FoodSnap.Shared;
-using FoodSnap.Infrastructure.Persistence;
+using FoodSnap.Application.Menus;
 
-namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
+namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Menus
 {
-    public class GetMenuByRestaurantIdHandler : IRequestHandler<GetMenuByRestaurantIdQuery, MenuDto>
+    public class DapperMenuDtoRepository : IMenuDtoRepository
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetMenuByRestaurantIdHandler(IDbConnectionFactory dbConnectionFactory)
+        public DapperMenuDtoRepository(IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<Result<MenuDto>> Handle(GetMenuByRestaurantIdQuery query, CancellationToken cancellationToken)
+        public async Task<MenuDto> GetByRestaurantId(Guid restaurantId)
         {
             var sql = @"
                 SELECT
@@ -67,9 +65,9 @@ namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
 
                         return null;
                     },
-                    new { RestaurantId = query.RestaurantId });
+                    new { RestaurantId = restaurantId });
 
-                return Result.Ok(menu);
+                return menu;
             }
         }
 

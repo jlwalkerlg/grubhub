@@ -5,9 +5,9 @@ using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
-using FoodSnap.Web.Actions.Menus;
 using FoodSnap.Web.Actions.Menus.AddMenuCategory;
 using Xunit;
+using FoodSnap.Application.Menus;
 
 namespace FoodSnap.WebTests.Integration.Menus.AddMenuCategory
 {

@@ -1,7 +1,6 @@
 using System;
-using FoodSnap.Application;
 
-namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
+namespace FoodSnap.Application.Menus.GetMenuByRestaurantId
 {
     public class GetMenuByRestaurantIdQuery : IRequest<MenuDto>
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using FoodSnap.Shared;
+using FoodSnap.Application.Menus;
+using FoodSnap.Application.Menus.GetMenuByRestaurantId;
 using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,12 +30,6 @@ namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
             if (!result.IsSuccess)
             {
                 return PresentError(result.Error);
-            }
-
-            // TODO: move to handler
-            if (result.Value == null)
-            {
-                return PresentError(Error.NotFound("Menu not found."));
             }
 
             return Ok(new DataEnvelope<MenuDto>

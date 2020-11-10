@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using FoodSnap.Application.Menus;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
-using FoodSnap.Web.Actions.Menus;
 using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Menus.RemoveMenuCategory

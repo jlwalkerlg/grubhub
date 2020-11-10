@@ -71,6 +71,8 @@ namespace FoodSnap.Web
                 .As<IDbConnectionFactory>()
                 .SingleInstance();
 
+            builder.AddDtoRepositories();
+
             builder.RegisterType<Hasher>()
                 .As<IHasher>()
                 .SingleInstance();
