@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using FoodSnap.Application;
 using FoodSnap.Application.Menus;
+using FoodSnap.Application.Restaurants;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
-using FoodSnap.Web.Actions.Restaurants;
 using FoodSnap.Web.Actions.Users;
 using Xunit;
 

@@ -1,24 +1,20 @@
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using Dapper;
-using FoodSnap.Application;
-using FoodSnap.Shared;
-using FoodSnap.Infrastructure.Persistence;
+using FoodSnap.Application.Restaurants;
 
-namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
+namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Restaurants
 {
-    public class GetRestaurantByIdHandler : IRequestHandler<GetRestaurantByIdQuery, RestaurantDto>
+    public class DPRestaurantDtoRepository : IRestaurantDtoRepository
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetRestaurantByIdHandler(IDbConnectionFactory dbConnectionFactory)
+        public DPRestaurantDtoRepository(IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<Result<RestaurantDto>> Handle(
-            GetRestaurantByIdQuery query,
-            CancellationToken cancellationToken)
+        public async Task<RestaurantDto> GetById(Guid id)
         {
             var sql = @"
                 SELECT
@@ -39,9 +35,9 @@ namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
             {
                 var restaurant = await connection.QueryFirstOrDefaultAsync<RestaurantDto>(
                     sql,
-                    new { Id = query.Id });
+                    new { Id = id });
 
-                return Result.Ok(restaurant);
+                return restaurant;
             }
         }
     }

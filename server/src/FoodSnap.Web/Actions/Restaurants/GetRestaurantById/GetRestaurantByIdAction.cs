@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FoodSnap.Shared;
+using FoodSnap.Application.Restaurants;
+using FoodSnap.Application.Restaurants.GetRestaurantById;
 
 namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
 {
@@ -29,11 +30,6 @@ namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
             if (!result.IsSuccess)
             {
                 return PresentError(result.Error);
-            }
-
-            if (result.Value == null)
-            {
-                return PresentError(Error.NotFound("Restaurant not found."));
             }
 
             return Ok(new DataEnvelope<RestaurantDto>

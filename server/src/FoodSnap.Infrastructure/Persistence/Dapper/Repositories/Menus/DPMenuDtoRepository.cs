@@ -6,11 +6,11 @@ using FoodSnap.Application.Menus;
 
 namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Menus
 {
-    public class DapperMenuDtoRepository : IMenuDtoRepository
+    public class DPMenuDtoRepository : IMenuDtoRepository
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public DapperMenuDtoRepository(IDbConnectionFactory dbConnectionFactory)
+        public DPMenuDtoRepository(IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
