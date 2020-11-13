@@ -4,7 +4,6 @@ import Axios, {
   AxiosResponse,
   Method,
 } from "axios";
-import { sleep } from "~/services/utils";
 
 interface DataEnvelope<T> {
   data: T;
@@ -85,9 +84,6 @@ class Api {
     config?: AxiosRequestConfig
   ) {
     try {
-      // TODO: remove
-      await sleep(500);
-
       const response = await this.client.request<DataEnvelope<T> | null>({
         ...config,
         url,
