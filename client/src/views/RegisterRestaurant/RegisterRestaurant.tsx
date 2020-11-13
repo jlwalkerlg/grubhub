@@ -1,11 +1,9 @@
 import { NextPage } from "next";
 import React from "react";
-
 import Layout from "~/components/Layout/Layout";
-
 import RegisterRestaurantFormController from "./RegisterRestaurantForm/RegisterRestaurantFormController";
 
-export const RegisterRestaurant: NextPage = () => {
+const RegisterRestaurant: NextPage = () => {
   return (
     <Layout title="Register Restaurant">
       <main>
@@ -27,3 +25,5 @@ export const RegisterRestaurant: NextPage = () => {
     </Layout>
   );
 };
+
+export default RegisterRestaurant;

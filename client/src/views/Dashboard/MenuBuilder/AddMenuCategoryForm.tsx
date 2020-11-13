@@ -1,23 +1,20 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { AddMenuCategoryRequest } from "~/api/restaurants/restaurantsApi";
+import useAddMenuCategory from "~/api/restaurants/useAddMenuCategory";
+import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
 import { combineRules, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
-import useRestaurants from "~/store/restaurants/useRestaurants";
-
-interface FormValues {
-  name: string;
-}
 
 const AddMenuCategoryForm: React.FC = () => {
-  const restaurants = useRestaurants();
-
   const [isOpen, setIsOpen] = React.useState(false);
-  const [error, setError] = React.useState(null);
 
-  const form = useForm<FormValues>({
+  const { user } = useAuth();
+
+  const [addMenuCategory, { isError, error, reset }] = useAddMenuCategory();
+
+  const form = useForm({
     defaultValues: {
       name: "",
     },
@@ -26,32 +23,29 @@ const AddMenuCategoryForm: React.FC = () => {
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
-    setError(null);
-
-    const request: AddMenuCategoryRequest = {
-      ...data,
-    };
-
-    const result = await restaurants.addMenuCategory(request);
-
-    if (!result.isSuccess) {
-      setError(result.error.message);
-
-      if (result.error.isValidationError) {
-        setFormErrors(result.error.errors, form);
+    await addMenuCategory(
+      {
+        restaurantId: user.restaurantId,
+        request: data,
+      },
+      {
+        onError: (error) => {
+          if (error.isValidationError) {
+            setFormErrors(error.errors, form);
+          }
+        },
+        onSuccess: () => {
+          setIsOpen(false);
+          form.reset();
+        },
       }
-
-      return;
-    }
-
-    setIsOpen(false);
-    form.reset();
+    );
   });
 
   const handleCancel = () => {
     setIsOpen(false);
     form.reset();
-    setError(null);
+    reset();
   };
 
   return (
@@ -67,9 +61,9 @@ const AddMenuCategoryForm: React.FC = () => {
 
       {isOpen && (
         <form onSubmit={onSubmit} className="px-4 pb-3">
-          {error && (
+          {isError && (
             <div className="my-3">
-              <ErrorAlert message={error} />
+              <ErrorAlert message={error.message} />
             </div>
           )}
 

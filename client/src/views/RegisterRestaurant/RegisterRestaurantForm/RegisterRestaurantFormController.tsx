@@ -1,28 +1,33 @@
+import Router from "next/router";
 import React from "react";
-import router from "next/router";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
-import { RegisterRestaurantCommand } from "~/api/restaurants/restaurantsApi";
-
+import useRegisterRestaurant, {
+  RegisterRestaurantCommand,
+} from "~/api/restaurants/useRegisterRestaurant";
+import useAuth from "~/api/users/useAuth";
 import useAddressSearch from "~/services/geolocation/useAddressSearch";
-
 import RegisterRestaurantForm, {
   StepOne,
   StepThree,
   StepTwo,
 } from "./RegisterRestaurantForm";
-import useAuth from "~/store/auth/useAuth";
-import { useForm } from "react-hook-form";
-import useRestaurants from "~/store/restaurants/useRestaurants";
 
 const MySwal = withReactContent(Swal);
 
 const RegisterRestaurantFormController: React.FC = () => {
-  const restaurants = useRestaurants();
-  const [error, setError] = React.useState<string>(null);
+  const { isLoggedIn } = useAuth();
 
-  const auth = useAuth();
+  if (isLoggedIn) {
+    Router.push("/");
+    return null;
+  }
+
+  const [
+    register,
+    { isError, error, isLoading, isSuccess },
+  ] = useRegisterRestaurant();
 
   const step1 = useForm<StepOne>({
     defaultValues: {
@@ -67,30 +72,16 @@ const RegisterRestaurantFormController: React.FC = () => {
     setStep(step - 1);
   };
 
-  const onSubmit = async () => {
-    if (step3.formState.isSubmitting) return;
+  React.useEffect(() => {
+    if (isLoading) return;
 
-    setError(null);
-
-    const command: RegisterRestaurantCommand = {
-      ...step1.getValues(),
-      ...step2.getValues(),
-      ...step3.getValues(),
-    };
-
-    const result = await restaurants.register(command);
-
-    if (!result.isSuccess) {
-      setError(result.error.message);
-
-      if (result.error.isValidationError) {
+    if (isError) {
+      if (error.isValidationError) {
         let invalidStep = 3;
 
-        for (const field in result.error.errors) {
-          if (
-            Object.prototype.hasOwnProperty.call(result.error.errors, field)
-          ) {
-            const message = result.error.errors[field];
+        for (const field in error.errors) {
+          if (Object.prototype.hasOwnProperty.call(error.errors, field)) {
+            const message = error.errors[field];
 
             if (Object.keys(step1.getValues()).includes(field)) {
               invalidStep = 1;
@@ -110,32 +101,32 @@ const RegisterRestaurantFormController: React.FC = () => {
           setStep(2);
         }
       }
-
-      return;
+    } else if (isSuccess) {
+      MySwal.fire({
+        title: <p>Thanks For Registering!</p>,
+        text:
+          "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
+        icon: "success",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: true,
+      }).then(() => {
+        Router.push("/login");
+      });
     }
+  }, [isLoading]);
 
-    try {
-      await Promise.all([
-        MySwal.fire({
-          title: <p>Thanks For Registering!</p>,
-          text:
-            "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
-          icon: "success",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          allowEnterKey: false,
-          showConfirmButton: true,
-        }),
-        auth.login({
-          email: command.managerEmail,
-          password: command.managerPassword,
-        }),
-      ]);
+  const onSubmit = async () => {
+    if (step3.formState.isSubmitting) return;
 
-      router.push("/dashboard");
-    } catch (e) {
-      router.push("/login");
-    }
+    const command: RegisterRestaurantCommand = {
+      ...step1.getValues(),
+      ...step2.getValues(),
+      ...step3.getValues(),
+    };
+
+    await register(command);
   };
 
   return (
@@ -149,7 +140,8 @@ const RegisterRestaurantFormController: React.FC = () => {
       advanceStep={advanceStep}
       backStep={backStep}
       onSubmit={onSubmit}
-      error={error}
+      isError={isError}
+      error={error?.message}
     />
   );
 };

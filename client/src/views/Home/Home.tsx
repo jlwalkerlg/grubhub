@@ -1,10 +1,9 @@
-import React from "react";
 import { NextPage } from "next";
-
-import Layout from "~/components/Layout/Layout";
+import React from "react";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
+import Layout from "~/components/Layout/Layout";
 
-export const Home: NextPage = () => {
+const Home: NextPage = () => {
   return (
     <Layout title="Home">
       <main>
@@ -40,3 +39,5 @@ export const Home: NextPage = () => {
     </Layout>
   );
 };
+
+export default Home;

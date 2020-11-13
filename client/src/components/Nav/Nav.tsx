@@ -1,28 +1,30 @@
-import React from "react";
 import Link from "next/link";
-
-import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
-import LogoutIcon from "~/components/Icons/LogoutIcon";
-import RegisterIcon from "~/components/Icons/RegisterIcon";
+import React from "react";
+import { toast } from "react-toastify";
+import useAuth from "~/api/users/useAuth";
+import useLogout from "~/api/users/useLogout";
 import CloseIcon from "~/components/Icons/CloseIcon";
+import LogoutIcon from "~/components/Icons/LogoutIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
-import useAuth from "~/store/auth/useAuth";
-import { useRouter } from "next/router";
+import RegisterIcon from "~/components/Icons/RegisterIcon";
+import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
 import DashboardIcon from "../Icons/DashboardIcon";
 
 const Nav: React.FC = () => {
-  const router = useRouter();
-  const { isLoggedIn, user, logout } = useAuth();
-
   const [isOpen, setIsOpen] = React.useState(false);
-
   const toggleNav = () => {
     setIsOpen(!isOpen);
   };
 
+  const { user, isLoggedIn, isLoading } = useAuth();
+  const [logout] = useLogout();
+
   const onLogout = async () => {
-    await logout();
-    router.push("/");
+    await logout(null, {
+      onError: (error) => {
+        toast.error(`Logout failed: ${error.message}`);
+      },
+    });
   };
 
   return (
@@ -48,26 +50,26 @@ const Nav: React.FC = () => {
             )}
           </button>
 
-          {isLoggedIn ? (
-            <>
-              <div className="hidden md:block ml-auto">
-                {user.role === "RestaurantManager" && (
-                  <Link href="/dashboard">
-                    <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                      Dashboard
-                    </a>
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary"
-                >
-                  Logout
-                </button>
-              </div>
-            </>
-          ) : (
+          {!isLoading && isLoggedIn && (
+            <div className="hidden md:block ml-auto">
+              {user.role === "RestaurantManager" && (
+                <Link href="/dashboard/restaurant-details">
+                  <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                    Dashboard
+                  </a>
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={onLogout}
+                className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+
+          {!isLoading && !isLoggedIn && (
             <>
               <Link href="/login">
                 <a className="hidden md:block ml-auto px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
@@ -95,28 +97,28 @@ const Nav: React.FC = () => {
         } fixed bottom-0 w-full h-full top-0 mt-16 left-0 bg-gray-100`}
       >
         <ul className="container mt-5">
-          {isLoggedIn ? (
-            <>
-              <li>
-                {user.role === "RestaurantManager" && (
-                  <Link href="/dashboard">
-                    <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                      <DashboardIcon className="w-6 h-6 inline" />
-                      <span className="ml-2 align-middle">Dashboard</span>
-                    </a>
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  className="block py-2 uppercase font-medium text-gray-900 hover:text-primary"
-                >
-                  <LogoutIcon className="w-6 h-6 inline" />
-                  <span className="ml-2 align-middle">Logout</span>
-                </button>
-              </li>
-            </>
-          ) : (
+          {!isLoading && isLoggedIn && (
+            <li>
+              {user.role === "RestaurantManager" && (
+                <Link href="/dashboard/restaurant-details">
+                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                    <DashboardIcon className="w-6 h-6 inline" />
+                    <span className="ml-2 align-middle">Dashboard</span>
+                  </a>
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={onLogout}
+                className="block py-2 uppercase font-medium text-gray-900 hover:text-primary"
+              >
+                <LogoutIcon className="w-6 h-6 inline" />
+                <span className="ml-2 align-middle">Logout</span>
+              </button>
+            </li>
+          )}
+
+          {!isLoading && !isLoggedIn && (
             <>
               <li>
                 <Link href="/login">

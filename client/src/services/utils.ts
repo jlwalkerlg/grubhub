@@ -1,13 +1,3 @@
-import { ServerResponse } from "http";
-
-export const redirect = (res: ServerResponse, location: string) => {
-  res
-    .writeHead(307, {
-      Location: location,
-    })
-    .end();
-};
-
 export const loadScript = (src: string): Promise<void> => {
   return new Promise((resolve) => {
     if (document.querySelector(`script[src="${src}"]`) !== null) {
@@ -21,3 +11,7 @@ export const loadScript = (src: string): Promise<void> => {
     document.body.appendChild(script);
   });
 };
+
+export async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

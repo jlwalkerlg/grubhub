@@ -5,6 +5,7 @@ import Axios, {
   Method,
 } from "axios";
 import { Error } from "~/services/Error";
+import { sleep } from "~/services/utils";
 
 class Api {
   private client: AxiosInstance = Axios.create({
@@ -56,6 +57,9 @@ class Api {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
+      // TODO: remove
+      await sleep(500);
+
       const response = await this.client.request({
         ...config,
         url,

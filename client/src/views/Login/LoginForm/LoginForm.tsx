@@ -1,58 +1,40 @@
+import Link from "next/link";
 import React from "react";
-import router from "next/router";
 import { useForm } from "react-hook-form";
-
+import useLogin, { LoginCommand } from "~/api/users/useLogin";
+import { ErrorAlert } from "~/components/Alert/Alert";
 import {
   combineRules,
-  RequiredRule,
   EmailRule,
   PasswordRule,
+  RequiredRule,
 } from "~/services/forms/Rule";
-import { ErrorAlert } from "~/components/Alert/Alert";
-import useAuth from "~/store/auth/useAuth";
-import { LoginCommand } from "~/api/users/userApi";
 import { setFormErrors } from "~/services/forms/setFormErrors";
 
 const LoginForm: React.FC = () => {
-  const auth = useAuth();
-
   const form = useForm<LoginCommand>({
     defaultValues: { email: "", password: "" },
   });
 
-  const [error, setError] = React.useState<string>(null);
+  const [login, { isError, error }] = useLogin();
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
-    setError(null);
-
-    const result = await auth.login(data);
-
-    if (result.isSuccess) {
-      const user = result.data;
-
-      if (user.role === "RestaurantManager") {
-        router.push("/dashboard");
-      } else {
-        router.push("/");
-      }
-
-      return;
-    }
-
-    setError(result.error.message);
-
-    if (result.error.isValidationError) {
-      setFormErrors(result.error.errors, form);
-    }
+    await login(data, {
+      onError: (error) => {
+        if (error.isValidationError) {
+          setFormErrors(error.errors, form);
+        }
+      },
+    });
   });
 
   return (
     <form onSubmit={onSubmit}>
-      {error && (
+      {isError && (
         <div className="my-6">
-          <ErrorAlert message={error} />
+          <ErrorAlert message={error.message} />
         </div>
       )}
 
@@ -96,9 +78,9 @@ const LoginForm: React.FC = () => {
 
       <div className="mt-2">
         <div className="text-right">
-          <a href="/forgot-password" className="text-sm text-blue-700">
-            Forgot Password?
-          </a>
+          <Link href="/forgot-password">
+            <a className="text-sm text-blue-700">Forgot Password?</a>
+          </Link>
         </div>
       </div>
 
@@ -115,9 +97,9 @@ const LoginForm: React.FC = () => {
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="/register" className="underline text-blue-700">
-            Sign up
-          </a>
+          <Link href="/register">
+            <a className="underline text-blue-700">Sign up</a>
+          </Link>
         </p>
       </div>
     </form>

@@ -1,30 +1,27 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { MenuCategoryDto } from "~/api/restaurants/MenuDto";
-import PlusIcon from "~/components/Icons/PlusIcon";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { combineRules, MinRule, RequiredRule } from "~/services/forms/Rule";
+import { MenuCategoryDto } from "~/api/menu/MenuDto";
+import useMenu from "~/api/menu/useMenu";
+import useAddMenuItem from "~/api/restaurants/useAddMenuItem";
+import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
-import useRestaurants from "~/store/restaurants/useRestaurants";
-import { AddMenuItemRequest } from "~/api/restaurants/restaurantsApi";
-
-interface FormValues {
-  itemName: string;
-  description: string;
-  price: number;
-}
+import PlusIcon from "~/components/Icons/PlusIcon";
+import { combineRules, MinRule, RequiredRule } from "~/services/forms/Rule";
+import { setFormErrors } from "~/services/forms/setFormErrors";
 
 interface Props {
   category: MenuCategoryDto;
 }
 
 const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
-  const restaurants = useRestaurants();
+  const { user } = useAuth();
+  const { data: menu } = useMenu(user.restaurantId);
 
   const [isOpen, setIsOpen] = React.useState(false);
-  const [error, setError] = React.useState(null);
 
-  const form = useForm<FormValues>({
+  const [addItem, { isError, error, reset }] = useAddMenuItem();
+
+  const form = useForm({
     defaultValues: {
       itemName: "",
       description: "",
@@ -35,34 +32,33 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
-    setError(null);
-
-    const request: AddMenuItemRequest = {
-      categoryName: category.name,
-      ...data,
-      price: +data.price,
-    };
-
-    const result = await restaurants.addMenuItem(request);
-
-    if (!result.isSuccess) {
-      setError(result.error.message);
-
-      if (result.error.isValidationError) {
-        setFormErrors(result.error.errors, form);
+    await addItem(
+      {
+        restaurantId: menu.restaurantId,
+        request: {
+          categoryName: category.name,
+          ...data,
+          price: +data.price,
+        },
+      },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+          form.reset();
+        },
+        onError: (error) => {
+          if (error.isValidationError) {
+            setFormErrors(error.errors, form);
+          }
+        },
       }
-
-      return;
-    }
-
-    setIsOpen(false);
-    form.reset();
+    );
   });
 
   const handleCancel = () => {
     setIsOpen(false);
     form.reset();
-    setError(null);
+    reset();
   };
 
   return (
@@ -78,9 +74,9 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
 
       {isOpen && (
         <form onSubmit={onSubmit} className="px-4 pb-3">
-          {error && (
+          {isError && (
             <div className="my-3">
-              <ErrorAlert message={error} />
+              <ErrorAlert message={error.message} />
             </div>
           )}
 

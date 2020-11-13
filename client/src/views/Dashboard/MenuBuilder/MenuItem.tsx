@@ -1,16 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { MenuCategoryDto, MenuItemDto } from "~/api/restaurants/MenuDto";
-import { UpdateMenuItemRequest } from "~/api/restaurants/restaurantsApi";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { MenuCategoryDto, MenuItemDto } from "~/api/menu/MenuDto";
+import useMenu from "~/api/menu/useMenu";
+import useRemoveMenuItem from "~/api/restaurants/useRemoveMenuItem";
+import useUpdateMenuItem from "~/api/restaurants/useUpdateMenuItem";
+import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
+import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { combineRules, MinRule, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
-import useRestaurants from "~/store/restaurants/useRestaurants";
-import Swal, { SweetAlertOptions } from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-import { toast } from "react-toastify";
 const MySwal = withReactContent(Swal);
 
 interface Props {
@@ -18,21 +21,15 @@ interface Props {
   item: MenuItemDto;
 }
 
-interface FormValues {
-  newItemName: string;
-  description: string;
-  price: number;
-}
-
 const MenuItem: React.FC<Props> = ({ category, item }) => {
-  const restaurants = useRestaurants();
+  const { user } = useAuth();
+  const { data: menu } = useMenu(user.restaurantId);
 
-  const [isEditFormOpen, setIsEditFormOpen] = React.useState(false);
-  const [error, setError] = React.useState(null);
+  const [isUpdateFormOpen, setIsUpdateFormOpen] = React.useState(false);
 
-  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [update, updateStatus] = useUpdateMenuItem();
 
-  const form = useForm<FormValues>({
+  const updateForm = useForm({
     defaultValues: {
       newItemName: item.name,
       description: item.description,
@@ -40,53 +37,48 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
     },
   });
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+  const onSubmit = updateForm.handleSubmit(async (data) => {
+    if (updateForm.formState.isSubmitting) return;
 
-    if (data.newItemName === item.name) {
-      setIsEditFormOpen(false);
-      form.reset(data);
-      return;
-    }
-
-    setError(null);
-
-    const request: UpdateMenuItemRequest = {
-      ...data,
-      price: +data.price,
-    };
-
-    const result = await restaurants.updateMenuItem(
-      category.name,
-      item.name,
-      request
-    );
-
-    if (!result.isSuccess) {
-      setError(result.error.message);
-
-      if (result.error.isValidationError) {
-        setFormErrors(result.error.errors, form);
+    await update(
+      {
+        restaurantId: menu.restaurantId,
+        category: category.name,
+        item: item.name,
+        request: {
+          ...data,
+          price: +data.price,
+        },
+      },
+      {
+        onSuccess: () => {
+          setIsUpdateFormOpen(false);
+        },
+        onError: (error) => {
+          if (error.isValidationError) {
+            setFormErrors(error.errors, updateForm);
+          }
+        },
       }
-
-      return;
-    }
+    );
   });
 
-  const handleOpenEditForm = () => {
-    setIsEditFormOpen(true);
+  const onEdit = () => {
+    setIsUpdateFormOpen(true);
   };
 
-  const handleCancelEdit = () => {
-    setIsEditFormOpen(false);
-    form.reset();
-    setError(null);
+  const onCancelEdit = () => {
+    setIsUpdateFormOpen(false);
+    updateForm.reset();
+    updateStatus.reset();
   };
 
-  const handleClickDelete = async () => {
-    if (isDeleting) return;
+  const [remove, removeStatus] = useRemoveMenuItem();
 
-    const options: SweetAlertOptions = {
+  const onRemove = async () => {
+    if (removeStatus.isLoading) return;
+
+    const confirmation = await MySwal.fire({
       title: (
         <p>
           Delete menu item {item.name} from category {category.name}?
@@ -97,57 +89,70 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
       confirmButtonText: "Delete",
       showCancelButton: true,
       cancelButtonColor: "#4a5568",
-    };
+    });
 
-    const dialogResult = await MySwal.fire(options);
-
-    if (!dialogResult.isConfirmed) {
+    if (!confirmation.isConfirmed) {
       return;
     }
 
-    setIsDeleting(true);
-
-    const result = await restaurants.deleteMenuItem(category.name, item.name);
-
-    if (!result.isSuccess) {
-      toast.error(result.error.message);
-      setIsDeleting(false);
-    }
+    await remove(
+      {
+        restaurantId: menu.restaurantId,
+        category: category.name,
+        item: item.name,
+      },
+      {
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      }
+    );
   };
+
+  if (removeStatus.isSuccess) {
+    return null;
+  }
 
   return (
     <div className="px-4 py-2">
       <div>
         <div className="flex items-center justify-between">
           <p className="font-semibold">{item.name}</p>
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              className="text-blue-700"
-              onClick={handleOpenEditForm}
-              disabled={form.formState.isSubmitting}
-            >
-              <PencilIcon className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="text-primary ml-2"
-              onClick={handleClickDelete}
-              disabled={isDeleting}
-            >
-              <CloseIcon className="w-5 h-5" />
-            </button>
-          </div>
+
+          {removeStatus.isLoading ? (
+            <div>
+              <SpinnerIcon className="w-4 h-4 animate-spin text-primary" />
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                className="text-blue-700"
+                onClick={onEdit}
+                disabled={updateForm.formState.isSubmitting}
+              >
+                <PencilIcon className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                className="text-primary ml-2"
+                onClick={onRemove}
+                disabled={removeStatus.isLoading}
+              >
+                <CloseIcon className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
         <p className="text-gray-800">{item.description}</p>
         <p className="mt-1 font-medium text-sm text-red-700">£{item.price}</p>
       </div>
 
-      {isEditFormOpen && (
+      {isUpdateFormOpen && (
         <form onSubmit={onSubmit} className="px-4 pb-3">
-          {error && (
+          {updateStatus.isError && (
             <div className="my-3">
-              <ErrorAlert message={error} />
+              <ErrorAlert message={updateStatus.error.message} />
             </div>
           )}
 
@@ -156,18 +161,18 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               Name <span className="text-primary">*</span>
             </label>
             <input
-              ref={form.register({
+              ref={updateForm.register({
                 validate: combineRules([new RequiredRule()]),
               })}
               className="input"
               type="text"
               name="newItemName"
               id="newItemName"
-              data-invalid={!!form.errors.newItemName}
+              data-invalid={!!updateForm.errors.newItemName}
             />
-            {form.errors.newItemName && (
+            {updateForm.errors.newItemName && (
               <p className="form-error mt-1">
-                {form.errors.newItemName.message}
+                {updateForm.errors.newItemName.message}
               </p>
             )}
           </div>
@@ -177,17 +182,17 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               Description <span className="text-primary">*</span>
             </label>
             <textarea
-              ref={form.register({
+              ref={updateForm.register({
                 validate: combineRules([new RequiredRule()]),
               })}
               className="input"
               name="description"
               id="description"
-              data-invalid={!!form.errors.description}
+              data-invalid={!!updateForm.errors.description}
             ></textarea>
-            {form.errors.description && (
+            {updateForm.errors.description && (
               <p className="form-error mt-1">
-                {form.errors.description.message}
+                {updateForm.errors.description.message}
               </p>
             )}
           </div>
@@ -197,7 +202,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               Price <span className="text-primary">*</span>
             </label>
             <input
-              ref={form.register({
+              ref={updateForm.register({
                 validate: combineRules([new RequiredRule(), new MinRule(0)]),
               })}
               className="input"
@@ -206,25 +211,27 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               step="0.01"
               name="price"
               id="price"
-              data-invalid={!!form.errors.price}
+              data-invalid={!!updateForm.errors.price}
             />
-            {form.errors.price && (
-              <p className="form-error mt-1">{form.errors.price.message}</p>
+            {updateForm.errors.price && (
+              <p className="form-error mt-1">
+                {updateForm.errors.price.message}
+              </p>
             )}
           </div>
 
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={updateForm.formState.isSubmitting}
               className="btn btn-sm btn-primary"
             >
               Update Item
             </button>
             <button
               type="button"
-              onClick={handleCancelEdit}
-              disabled={form.formState.isSubmitting}
+              onClick={onCancelEdit}
+              disabled={updateForm.formState.isSubmitting}
               className="btn btn-sm btn-outline-primary ml-2"
             >
               Cancel

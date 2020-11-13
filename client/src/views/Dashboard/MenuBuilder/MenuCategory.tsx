@@ -1,139 +1,150 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Swal, { SweetAlertOptions } from "sweetalert2";
+import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { MenuCategoryDto } from "~/api/restaurants/MenuDto";
-import { RenameMenuCategoryRequest } from "~/api/restaurants/restaurantsApi";
+import { MenuCategoryDto } from "~/api/menu/MenuDto";
+import useMenu from "~/api/menu/useMenu";
+import useRemoveMenuCategory from "~/api/restaurants/useRemoveMenuCategory";
+import useRenameMenuCategory from "~/api/restaurants/useRenameMenuCategory";
+import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
+import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { combineRules, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
-import useRestaurants from "~/store/restaurants/useRestaurants";
 import MenuItem from "./MenuItem";
 import NewMenuItemDropdown from "./NewMenuItemDropdown";
+
 const MySwal = withReactContent(Swal);
 
 interface Props {
   category: MenuCategoryDto;
 }
 
-interface FormValues {
-  newName: string;
-}
-
 const MenuCategory: React.FC<Props> = ({ category }) => {
-  const restaurants = useRestaurants();
+  const { user } = useAuth();
+  const { data: menu } = useMenu(user.restaurantId);
 
-  const [isEditFormOpen, setIsEditFormOpen] = React.useState(false);
-  const [error, setError] = React.useState(null);
+  const [isRenameFormOpen, setIsRenameFormOpen] = React.useState(false);
 
-  const form = useForm<FormValues>({
+  const [rename, renameStatus] = useRenameMenuCategory();
+
+  const renameForm = useForm({
     defaultValues: {
       newName: category.name,
     },
   });
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+  const onRename = renameForm.handleSubmit(async (data) => {
+    if (renameForm.formState.isSubmitting) return;
 
     if (data.newName === category.name) {
-      setIsEditFormOpen(false);
-      form.reset(data);
+      setIsRenameFormOpen(false);
+      renameForm.reset(data);
       return;
     }
 
-    setError(null);
-
-    const request: RenameMenuCategoryRequest = {
-      newName: data.newName,
-    };
-
-    console.log(request);
-
-    const result = await restaurants.renameMenuCategory(category.name, request);
-
-    if (!result.isSuccess) {
-      setError(result.error.message);
-
-      if (result.error.isValidationError) {
-        setFormErrors(result.error.errors, form);
+    await rename(
+      {
+        restaurantId: menu.restaurantId,
+        oldName: category.name,
+        request: {
+          newName: data.newName,
+        },
+      },
+      {
+        onError: (error) => {
+          if (error.isValidationError) {
+            setFormErrors(error.errors, renameForm);
+          }
+        },
       }
-
-      return;
-    }
+    );
   });
 
-  const handleOpenEditForm = () => {
-    setIsEditFormOpen(true);
+  const onEdit = () => {
+    setIsRenameFormOpen(true);
   };
 
-  const handleCancelEdit = () => {
-    setIsEditFormOpen(false);
-    form.reset();
-    setError(null);
+  const onCancelEdit = () => {
+    setIsRenameFormOpen(false);
+    renameForm.reset();
+    renameStatus.reset();
   };
 
-  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [remove, removeStatus] = useRemoveMenuCategory();
 
-  const handleClickDelete = async () => {
-    if (isDeleting) return;
+  const onDelete = async () => {
+    if (removeStatus.isLoading) return;
 
-    const options: SweetAlertOptions = {
+    const confirmation = await MySwal.fire({
       title: <p>Delete category {category.name} from the menu?</p>,
       icon: "warning",
       confirmButtonColor: "#c53030",
       confirmButtonText: "Delete",
       showCancelButton: true,
       cancelButtonColor: "#4a5568",
-    };
+    });
 
-    const dialogResult = await MySwal.fire(options);
-
-    if (!dialogResult.isConfirmed) {
+    if (!confirmation.isConfirmed) {
       return;
     }
 
-    setIsDeleting(true);
-
-    const result = await restaurants.removeMenuCategory(category.name);
-
-    if (!result.isSuccess) {
-      toast.error(result.error.message);
-      setIsDeleting(false);
-    }
+    await remove(
+      {
+        restaurantId: menu.restaurantId,
+        category: category.name,
+      },
+      {
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      }
+    );
   };
+
+  if (removeStatus.isSuccess) {
+    return null;
+  }
 
   return (
     <div className="mt-4">
       <div className="rounded bg-gray-100 px-4 py-3 shadow-sm text-primary font-medium flex items-center justify-between">
         <p>{category.name}</p>
-        <div className="flex items-center justify-between">
-          <button
-            type="button"
-            className="text-blue-700"
-            onClick={handleOpenEditForm}
-            disabled={form.formState.isSubmitting}
-          >
-            <PencilIcon className="w-5 h-5" />
-          </button>
-          <button
-            type="button"
-            className="text-primary ml-2"
-            onClick={handleClickDelete}
-            disabled={isDeleting}
-          >
-            <CloseIcon className="w-5 h-5" />
-          </button>
-        </div>
+
+        {removeStatus.isLoading ? (
+          <div>
+            <SpinnerIcon className="w-4 h-4 animate-spin" />
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              className="text-blue-700"
+              onClick={onEdit}
+              disabled={renameForm.formState.isSubmitting}
+            >
+              <PencilIcon className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="text-primary ml-2"
+              onClick={onDelete}
+              disabled={removeStatus.isLoading}
+            >
+              <CloseIcon className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
 
-      {isEditFormOpen && (
-        <form onSubmit={onSubmit} className="px-4 pb-3">
-          {error && (
+      {isRenameFormOpen && (
+        <form onSubmit={onRename} className="px-4 pb-3">
+          {renameStatus.isError && (
             <div className="my-3">
-              <ErrorAlert message={error} />
+              <ErrorAlert message={renameStatus.error.message} />
             </div>
           )}
 
@@ -142,32 +153,34 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
               Name <span className="text-primary">*</span>
             </label>
             <input
-              ref={form.register({
+              ref={renameForm.register({
                 validate: combineRules([new RequiredRule()]),
               })}
               className="input"
               type="text"
               name="newName"
               id="newName"
-              data-invalid={!!form.errors.newName}
+              data-invalid={!!renameForm.errors.newName}
             />
-            {form.errors.newName && (
-              <p className="form-error mt-1">{form.errors.newName.message}</p>
+            {renameForm.errors.newName && (
+              <p className="form-error mt-1">
+                {renameForm.errors.newName.message}
+              </p>
             )}
           </div>
 
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={renameForm.formState.isSubmitting}
               className="btn btn-sm btn-primary"
             >
               Rename
             </button>
             <button
               type="button"
-              onClick={handleCancelEdit}
-              disabled={form.formState.isSubmitting}
+              onClick={onCancelEdit}
+              disabled={renameForm.formState.isSubmitting}
               className="btn btn-sm btn-outline-primary ml-2"
             >
               Cancel

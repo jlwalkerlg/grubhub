@@ -1,10 +1,18 @@
-import React from "react";
 import { NextPage } from "next";
-
+import Router from "next/router";
+import React from "react";
+import useAuth from "~/api/users/useAuth";
 import Layout from "~/components/Layout/Layout";
 import LoginForm from "./LoginForm/LoginForm";
 
-export const Login: NextPage = () => {
+const Login: NextPage = () => {
+  const { isLoggedIn } = useAuth();
+
+  if (isLoggedIn) {
+    Router.push("/");
+    return null;
+  }
+
   return (
     <Layout title="Login">
       <main>
@@ -18,3 +26,5 @@ export const Login: NextPage = () => {
     </Layout>
   );
 };
+
+export default Login;

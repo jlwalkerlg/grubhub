@@ -1,23 +1,28 @@
 import { AppProps } from "next/app";
-
-import { Provider } from "react-redux";
-import { useStore } from "../store/store";
-
-import ErrorPage from "~/views/Error/ErrorPage";
-
+import { QueryCache, ReactQueryCacheProvider } from "react-query";
+import { Hydrate } from "react-query/hydration";
 import "react-toastify/dist/ReactToastify.css";
 import "~/styles/index.css";
+import ErrorPage from "~/views/Error/ErrorPage";
+
+const queryCache = new QueryCache({
+  defaultConfig: {
+    queries: {
+      staleTime: 120 * 1000,
+    },
+  },
+});
 
 export default function App({ Component, pageProps }: AppProps) {
   if (pageProps.error !== undefined) {
     return <ErrorPage code={pageProps.error} />;
   }
 
-  const store = useStore(pageProps.initialReduxState);
-
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+    <ReactQueryCacheProvider queryCache={queryCache}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <Component {...pageProps} />
+      </Hydrate>
+    </ReactQueryCacheProvider>
   );
 }

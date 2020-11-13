@@ -1,4 +1,4 @@
-import { loadScript } from "../helpers";
+import { loadScript } from "../utils";
 
 export interface AddressSearchResult {
   id: string;

@@ -1,10 +1,8 @@
 import React from "react";
-
-import { AddressSearchResult } from "~/services/geolocation/AddressSearcher";
-import Autocomplete from "~/components/Autocomplete/Autocomplete";
-import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { UseFormMethods } from "react-hook-form";
 import { ErrorAlert } from "~/components/Alert/Alert";
+import Autocomplete from "~/components/Autocomplete/Autocomplete";
+import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import {
   combineRules,
   EmailRule,
@@ -12,6 +10,7 @@ import {
   PhoneRule,
   RequiredRule,
 } from "~/services/forms/Rule";
+import { AddressSearchResult } from "~/services/geolocation/AddressSearcher";
 
 export interface StepOne {
   managerName: string;
@@ -33,6 +32,7 @@ export interface Props {
   step1: UseFormMethods<StepOne>;
   step2: UseFormMethods<StepTwo>;
   step3: UseFormMethods<StepThree>;
+  isError: boolean;
   error: string;
   addressSearchResults: AddressSearchResult[];
   onSelectAddress(id: string): void;
@@ -256,11 +256,11 @@ const LastStep: React.FC<Props> = ({
 };
 
 const RegisterRestaurantForm: React.FC<Props> = (props: Props) => {
-  const { step, error } = props;
+  const { step, isError, error } = props;
 
   return (
     <div>
-      {error && (
+      {isError && (
         <div className="my-6">
           <ErrorAlert message={error} />
         </div>
