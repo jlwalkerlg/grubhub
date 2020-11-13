@@ -21,7 +21,6 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Users
                     u.id,
                     u.name,
                     u.email,
-                    u.password,
                     u.role,
                     r.id as restaurant_id,
                     r.name as restaurant_name
@@ -33,11 +32,9 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Users
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
-                var user = await connection.QueryFirstOrDefaultAsync<UserDto>(
+                return await connection.QueryFirstOrDefaultAsync<UserDto>(
                     sql,
                     new { Id = id });
-
-                return user;
             }
         }
     }
