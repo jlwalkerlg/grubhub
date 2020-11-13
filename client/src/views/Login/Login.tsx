@@ -3,7 +3,7 @@ import Router from "next/router";
 import React from "react";
 import useAuth from "~/api/users/useAuth";
 import Layout from "~/components/Layout/Layout";
-import LoginForm from "./LoginForm/LoginForm";
+import LoginForm from "./LoginForm";
 
 const Login: NextPage = () => {
   const { isLoggedIn } = useAuth();

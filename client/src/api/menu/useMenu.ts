@@ -1,6 +1,5 @@
-import { useQuery } from "react-query";
-import { Error } from "~/services/Error";
-import Api from "../Api";
+import { QueryConfig, useQuery } from "react-query";
+import Api, { ApiError } from "../Api";
 import { MenuDto } from "./MenuDto";
 
 export function getMenuQueryKey(restaurantId: string) {
@@ -9,16 +8,16 @@ export function getMenuQueryKey(restaurantId: string) {
 
 async function getMenu(restaurantId: string) {
   const response = await Api.get<MenuDto>(`/restaurants/${restaurantId}/menu`);
-
-  if (!response.isSuccess) {
-    throw response.error;
-  }
-
   return response.data;
 }
 
-export default function useMenu(restaurantId: string) {
-  return useQuery<MenuDto, Error>(getMenuQueryKey(restaurantId), async () =>
-    getMenu(restaurantId)
+export default function useMenu(
+  restaurantId: string,
+  config?: QueryConfig<MenuDto, ApiError>
+) {
+  return useQuery<MenuDto, ApiError>(
+    getMenuQueryKey(restaurantId),
+    () => getMenu(restaurantId),
+    config
   );
 }

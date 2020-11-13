@@ -3,9 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useRestaurant from "~/api/restaurants/useRestaurant";
-import useUpdateRestaurantDetails, {
-  UpdateRestaurantDetailsRequest,
-} from "~/api/restaurants/useUpdateRestaurantDetails";
+import useUpdateRestaurantDetails from "~/api/restaurants/useUpdateRestaurantDetails";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
@@ -16,7 +14,7 @@ import { DashboardLayout } from "../DashboardLayout";
 const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
   restaurant,
 }) => {
-  const form = useForm<UpdateRestaurantDetailsRequest>({
+  const form = useForm({
     defaultValues: {
       name: restaurant.name,
       phoneNumber: restaurant.phoneNumber,
@@ -28,11 +26,14 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
     { isError, error, isSuccess },
   ] = useUpdateRestaurantDetails();
 
-  const onSubmit = async (request: UpdateRestaurantDetailsRequest) => {
+  const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
     await updateRestaurantDetails(
-      { id: restaurant.id, request },
+      {
+        id: restaurant.id,
+        ...data,
+      },
       {
         onError: (error) => {
           if (error.isValidationError) {
@@ -41,10 +42,10 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         },
       }
     );
-  };
+  });
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       {isError && (
         <div className="my-6">
           <ErrorAlert message={error.message} />

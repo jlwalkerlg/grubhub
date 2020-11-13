@@ -4,8 +4,42 @@ import Axios, {
   AxiosResponse,
   Method,
 } from "axios";
-import { Error } from "~/services/Error";
 import { sleep } from "~/services/utils";
+
+interface DataEnvelope<T> {
+  data: T;
+}
+
+interface ErrorEnvelope {
+  message: string;
+  errors: { [key: string]: string } | null;
+}
+
+export class ApiResult<T = void> {
+  readonly data?: T;
+  readonly statusCode: number;
+
+  public constructor(response: AxiosResponse<DataEnvelope<T> | null>) {
+    this.data = response.data.data;
+    this.statusCode = response.status;
+  }
+}
+
+export class ApiError {
+  readonly message: string;
+  readonly errors: { [key: string]: string };
+  readonly statusCode: number;
+
+  public constructor(response: AxiosResponse<ErrorEnvelope>) {
+    this.message = response.data.message;
+    this.errors = response.data.errors;
+    this.statusCode = response.status;
+  }
+
+  get isValidationError() {
+    return this.statusCode === 422;
+  }
+}
 
 class Api {
   private client: AxiosInstance = Axios.create({
@@ -13,19 +47,16 @@ class Api {
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   });
 
-  public async get<T = null>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
-    return this.request(url, "GET", config);
+  public async get<T = null>(url: string, config?: AxiosRequestConfig) {
+    return this.request<T>(url, "GET", config);
   }
 
   public async post<T = null>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
-    return this.request(url, "POST", {
+  ) {
+    return this.request<T>(url, "POST", {
       ...config,
       data,
     });
@@ -35,18 +66,15 @@ class Api {
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
-    return this.request(url, "PUT", {
+  ) {
+    return this.request<T>(url, "PUT", {
       ...config,
       data,
     });
   }
 
-  public async delete<T = null>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
-    return this.request(url, "DELETE", {
+  public async delete<T = null>(url: string, config?: AxiosRequestConfig) {
+    return this.request<T>(url, "DELETE", {
       ...config,
     });
   }
@@ -55,47 +83,20 @@ class Api {
     url: string,
     method: Method,
     config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
+  ) {
     try {
       // TODO: remove
       await sleep(500);
 
-      const response = await this.client.request({
+      const response = await this.client.request<DataEnvelope<T> | null>({
         ...config,
         url,
         method,
       });
 
-      return new ApiResponse<T>(response);
+      return new ApiResult<T>(response);
     } catch (e) {
-      return new ApiResponse<T>(e.response);
-    }
-  }
-}
-
-export class ApiResponse<TData = null> {
-  readonly data: TData = null;
-  readonly error: Error = null;
-  readonly statusCode: number;
-
-  get isSuccess() {
-    return this.isSuccessStatusCode(this.statusCode);
-  }
-
-  private isSuccessStatusCode(statusCode: number) {
-    return statusCode >= 200 && statusCode < 300;
-  }
-
-  public constructor(response: AxiosResponse) {
-    this.data = response.data?.data || null;
-    this.statusCode = response.status;
-
-    if (!this.isSuccessStatusCode(response.status)) {
-      this.error = new Error(
-        response.data?.message || response.statusText,
-        response.status,
-        response.data?.errors
-      );
+      throw new ApiError(e.response);
     }
   }
 }

@@ -43,12 +43,10 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
     await update(
       {
         restaurantId: menu.restaurantId,
-        category: category.name,
-        item: item.name,
-        request: {
-          ...data,
-          price: +data.price,
-        },
+        categoryName: category.name,
+        oldItemName: item.name,
+        ...data,
+        price: +data.price,
       },
       {
         onSuccess: () => {
@@ -98,8 +96,8 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
     await remove(
       {
         restaurantId: menu.restaurantId,
-        category: category.name,
-        item: item.name,
+        categoryName: category.name,
+        itemName: item.name,
       },
       {
         onError: (error) => {

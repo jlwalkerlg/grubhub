@@ -1,43 +1,30 @@
 import { useMutation, useQueryCache } from "react-query";
-import { Error } from "~/services/Error";
-import Api from "../Api";
+import Api, { ApiError } from "../Api";
 import { getMenuQueryKey } from "../menu/useMenu";
 
-export interface RenameMenuCategoryRequest {
+export interface RenameMenuCategoryCommand {
+  restaurantId: string;
+  oldName: string;
   newName: string;
 }
 
-async function renameMenuCategory(
-  restaurantId: string,
-  oldName: string,
-  request: RenameMenuCategoryRequest
-) {
-  const response = await Api.put(
+async function renameMenuCategory(command: RenameMenuCategoryCommand) {
+  const { restaurantId, oldName, ...data } = command;
+
+  await Api.put(
     `/restaurants/${restaurantId}/menu/categories/${oldName}`,
-    request
+    data
   );
-
-  if (!response.isSuccess) {
-    throw response.error;
-  }
-}
-
-interface Variables {
-  restaurantId: string;
-  oldName: string;
-  request: RenameMenuCategoryRequest;
 }
 
 export default function useRenameMenuCategory() {
   const queryCache = useQueryCache();
 
-  return useMutation<void, Error, Variables, null>(
-    async ({ restaurantId, oldName, request }) => {
-      await renameMenuCategory(restaurantId, oldName, request);
-    },
+  return useMutation<void, ApiError, RenameMenuCategoryCommand, null>(
+    renameMenuCategory,
     {
-      onSuccess: (_, { restaurantId }) => {
-        queryCache.invalidateQueries(getMenuQueryKey(restaurantId));
+      onSuccess: (_, command) => {
+        queryCache.invalidateQueries(getMenuQueryKey(command.restaurantId));
       },
     }
   );

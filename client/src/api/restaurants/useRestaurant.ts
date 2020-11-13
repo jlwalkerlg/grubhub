@@ -1,22 +1,23 @@
-import { useQuery } from "react-query";
-import { Error } from "~/services/Error";
-import api from "../Api";
+import { QueryConfig, useQuery } from "react-query";
+import api, { ApiError } from "../Api";
 import { RestaurantDto } from "./RestaurantDto";
 
-export const getRestaurantQueryKey = (id: string) => ["restaurants", id];
+export function getRestaurantQueryKey(id: string) {
+  return ["restaurants", id];
+}
 
-const getRestaurant = async (id: string) => {
+async function getRestaurant(id: string) {
   const response = await api.get(`/restaurants/${id}`);
-
-  if (!response.isSuccess) {
-    throw response.error;
-  }
-
   return response.data;
-};
+}
 
-export default function useRestaurant(id: string) {
-  return useQuery<RestaurantDto, Error>(getRestaurantQueryKey(id), () =>
-    getRestaurant(id)
+export default function useRestaurant(
+  id: string,
+  config?: QueryConfig<RestaurantDto, ApiError>
+) {
+  return useQuery<RestaurantDto, ApiError>(
+    getRestaurantQueryKey(id),
+    () => getRestaurant(id),
+    config
   );
 }

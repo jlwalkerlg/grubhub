@@ -1,59 +1,26 @@
 import { useMutation, useQueryCache } from "react-query";
-import { Error } from "~/services/Error";
-import Api from "../Api";
-import { MenuDto } from "../menu/MenuDto";
+import Api, { ApiError } from "../Api";
 import { getMenuQueryKey } from "../menu/useMenu";
 
-export interface AddMenuCategoryRequest {
+export interface AddMenuCategoryCommand {
+  restaurantId: string;
   name: string;
 }
 
-async function addMenuCategory(
-  restaurantId: string,
-  request: AddMenuCategoryRequest
-) {
-  const response = await Api.post(
-    `/restaurants/${restaurantId}/menu/categories`,
-    request
-  );
+async function addMenuCategory(command: AddMenuCategoryCommand) {
+  const { restaurantId, ...data } = command;
 
-  if (!response.isSuccess) {
-    throw response.error;
-  }
-}
-
-interface Variables {
-  restaurantId: string;
-  request: AddMenuCategoryRequest;
+  await Api.post(`/restaurants/${restaurantId}/menu/categories`, data);
 }
 
 export default function useAddMenuCategory() {
   const queryCache = useQueryCache();
 
-  return useMutation<void, Error, Variables, null>(
-    async ({ restaurantId, request }) => {
-      await addMenuCategory(restaurantId, request);
-    },
+  return useMutation<void, ApiError, AddMenuCategoryCommand, null>(
+    addMenuCategory,
     {
-      onSuccess: (_, { restaurantId, request }) => {
-        const menu = queryCache.getQueryData<MenuDto>(
-          getMenuQueryKey(restaurantId)
-        );
-
-        if (menu !== undefined) {
-          queryCache.setQueryData<MenuDto>(getMenuQueryKey(restaurantId), {
-            ...menu,
-            categories: [
-              ...menu.categories,
-              {
-                name: request.name,
-                items: [],
-              },
-            ],
-          });
-        }
-
-        queryCache.invalidateQueries(getMenuQueryKey(restaurantId));
+      onSuccess: (_, command) => {
+        queryCache.invalidateQueries(getMenuQueryKey(command.restaurantId));
       },
     }
   );

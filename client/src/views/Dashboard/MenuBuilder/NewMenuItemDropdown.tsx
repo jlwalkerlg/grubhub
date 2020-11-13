@@ -35,11 +35,9 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
     await addItem(
       {
         restaurantId: menu.restaurantId,
-        request: {
-          categoryName: category.name,
-          ...data,
-          price: +data.price,
-        },
+        categoryName: category.name,
+        ...data,
+        price: +data.price,
       },
       {
         onSuccess: () => {

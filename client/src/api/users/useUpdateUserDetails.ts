@@ -1,6 +1,5 @@
 import { useMutation, useQueryCache } from "react-query";
-import { Error } from "~/services/Error";
-import Api from "../Api";
+import Api, { ApiError } from "../Api";
 import useAuth, { getAuthUserQueryKey } from "./useAuth";
 import { UserDto } from "./UserDto";
 
@@ -10,11 +9,7 @@ export interface UpdateUserDetailsCommand {
 }
 
 async function updateUserDetails(command: UpdateUserDetailsCommand) {
-  const response = await Api.put("/auth/user", command);
-
-  if (!response.isSuccess) {
-    throw response.error;
-  }
+  await Api.put("/auth/user", command);
 }
 
 export default function useUpdateUserDetails() {
@@ -22,7 +17,7 @@ export default function useUpdateUserDetails() {
 
   const { user } = useAuth();
 
-  return useMutation<void, Error, UpdateUserDetailsCommand, null>(
+  return useMutation<void, ApiError, UpdateUserDetailsCommand, null>(
     updateUserDetails,
     {
       onSuccess: (_, command) => {

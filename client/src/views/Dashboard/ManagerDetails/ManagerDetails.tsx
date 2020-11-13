@@ -2,9 +2,7 @@ import { NextPage } from "next";
 import React from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "~/api/users/useAuth";
-import useUpdateUserDetails, {
-  UpdateUserDetailsCommand,
-} from "~/api/users/useUpdateUserDetails";
+import useUpdateUserDetails from "~/api/users/useUpdateUserDetails";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import { combineRules, EmailRule, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
@@ -13,7 +11,7 @@ import { DashboardLayout } from "../DashboardLayout";
 const UpdateManagerDetailsForm = () => {
   const { user } = useAuth();
 
-  const form = useForm<UpdateUserDetailsCommand>({
+  const form = useForm({
     defaultValues: {
       name: user.name,
       email: user.email,
@@ -25,20 +23,20 @@ const UpdateManagerDetailsForm = () => {
     { isError, error, isSuccess },
   ] = useUpdateUserDetails();
 
-  const onSubmit = async (command: UpdateUserDetailsCommand) => {
+  const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
-    await updateUserDetails(command, {
+    await updateUserDetails(data, {
       onError: (error) => {
         if (error.isValidationError) {
           setFormErrors(error.errors, form);
         }
       },
     });
-  };
+  });
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       {isError && (
         <div className="my-6">
           <ErrorAlert message={error.message} />

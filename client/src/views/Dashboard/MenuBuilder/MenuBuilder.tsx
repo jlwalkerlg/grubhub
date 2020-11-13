@@ -35,9 +35,9 @@ const MenuBuilder: React.FC = () => {
 const MenuBuilderWrapper: NextPage = () => {
   const { user, isLoggedIn, isLoading: isLoadingAuth } = useAuth();
 
-  const { isLoading: isLoadingMenu, isFetching } = useMenu(
-    isLoggedIn && user.restaurantId
-  );
+  const { isLoading: isLoadingMenu, isFetching } = useMenu(user?.restaurantId, {
+    enabled: isLoggedIn,
+  });
 
   if (!isLoggedIn && !isLoadingAuth) {
     Router.push("/login");

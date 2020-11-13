@@ -50,9 +50,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
       {
         restaurantId: menu.restaurantId,
         oldName: category.name,
-        request: {
-          newName: data.newName,
-        },
+        ...data,
       },
       {
         onError: (error) => {
@@ -95,7 +93,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
     await remove(
       {
         restaurantId: menu.restaurantId,
-        category: category.name,
+        categoryName: category.name,
       },
       {
         onError: (error) => {

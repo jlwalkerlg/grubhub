@@ -3,9 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import useRegisterRestaurant, {
-  RegisterRestaurantCommand,
-} from "~/api/restaurants/useRegisterRestaurant";
+import useRegisterRestaurant from "~/api/restaurants/useRegisterRestaurant";
 import useAuth from "~/api/users/useAuth";
 import useAddressSearch from "~/services/geolocation/useAddressSearch";
 import RegisterRestaurantForm, {
@@ -72,61 +70,59 @@ const RegisterRestaurantFormController: React.FC = () => {
     setStep(step - 1);
   };
 
-  React.useEffect(() => {
-    if (isLoading) return;
-
-    if (isError) {
-      if (error.isValidationError) {
-        let invalidStep = 3;
-
-        for (const field in error.errors) {
-          if (Object.prototype.hasOwnProperty.call(error.errors, field)) {
-            const message = error.errors[field];
-
-            if (Object.keys(step1.getValues()).includes(field)) {
-              invalidStep = 1;
-              step1.setError(field as keyof StepOne, { message });
-            } else if (Object.keys(step2.getValues()).includes(field)) {
-              invalidStep = Math.min(invalidStep, 2);
-              step2.setError(field as keyof StepTwo, { message });
-            } else if (Object.keys(step3.getValues()).includes(field)) {
-              step3.setError(field as keyof StepThree, { message });
-            }
-          }
-        }
-
-        if (invalidStep === 1) {
-          setStep(1);
-        } else if (invalidStep === 2) {
-          setStep(2);
-        }
-      }
-    } else if (isSuccess) {
-      MySwal.fire({
-        title: <p>Thanks For Registering!</p>,
-        text:
-          "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
-        icon: "success",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        showConfirmButton: true,
-      }).then(() => {
-        Router.push("/login");
-      });
-    }
-  }, [isLoading]);
-
   const onSubmit = async () => {
     if (step3.formState.isSubmitting) return;
 
-    const command: RegisterRestaurantCommand = {
-      ...step1.getValues(),
-      ...step2.getValues(),
-      ...step3.getValues(),
-    };
+    await register(
+      {
+        ...step1.getValues(),
+        ...step2.getValues(),
+        ...step3.getValues(),
+      },
+      {
+        onSuccess: () => {
+          MySwal.fire({
+            title: <p>Thanks For Registering!</p>,
+            text:
+              "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
+            icon: "success",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            showConfirmButton: true,
+          }).then(() => {
+            Router.push("/login");
+          });
+        },
+        onError: (error) => {
+          if (error.isValidationError) {
+            let invalidStep = 3;
 
-    await register(command);
+            for (const field in error.errors) {
+              if (Object.prototype.hasOwnProperty.call(error.errors, field)) {
+                const message = error.errors[field];
+
+                if (Object.keys(step1.getValues()).includes(field)) {
+                  invalidStep = 1;
+                  step1.setError(field as keyof StepOne, { message });
+                } else if (Object.keys(step2.getValues()).includes(field)) {
+                  invalidStep = Math.min(invalidStep, 2);
+                  step2.setError(field as keyof StepTwo, { message });
+                } else if (Object.keys(step3.getValues()).includes(field)) {
+                  step3.setError(field as keyof StepThree, { message });
+                }
+              }
+            }
+
+            if (invalidStep === 1) {
+              setStep(1);
+            } else if (invalidStep === 2) {
+              setStep(2);
+            }
+          }
+        },
+      }
+    );
   };
 
   return (

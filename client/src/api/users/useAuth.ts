@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
-import api from "~/api/Api";
-import { Error } from "~/services/Error";
+import api, { ApiError } from "~/api/Api";
 import { UserDto } from "./UserDto";
 
 export function getAuthUserQueryKey() {
@@ -8,21 +7,20 @@ export function getAuthUserQueryKey() {
 }
 
 export async function getAuthUser() {
-  const response = await api.get<UserDto>("/auth/user");
-
-  if (response.isSuccess) {
+  try {
+    const response = await api.get<UserDto>("/auth/user");
     return response.data;
-  }
+  } catch (e) {
+    if (e instanceof ApiError && e.statusCode === 401) {
+      return null;
+    }
 
-  if (response.error.statusCode === 401) {
-    return null;
+    throw e;
   }
-
-  throw response.error;
 }
 
 export function useAuthUser() {
-  return useQuery<UserDto, Error>(getAuthUserQueryKey(), getAuthUser);
+  return useQuery<UserDto, ApiError>(getAuthUserQueryKey(), getAuthUser);
 }
 
 export default function useAuth() {

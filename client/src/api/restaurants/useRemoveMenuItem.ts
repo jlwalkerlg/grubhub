@@ -1,38 +1,29 @@
 import { useMutation, useQueryCache } from "react-query";
-import { Error } from "~/services/Error";
-import Api from "../Api";
+import Api, { ApiError } from "../Api";
 import { getMenuQueryKey } from "../menu/useMenu";
 
-async function removeMenuItem(
-  restaurantId: string,
-  category: string,
-  item: string
-) {
-  const response = await Api.delete(
-    `/restaurants/${restaurantId}/menu/categories/${category}/items/${item}`
-  );
-
-  if (!response.isSuccess) {
-    throw response.error;
-  }
+interface RemoveMenuItemCommand {
+  restaurantId: string;
+  categoryName: string;
+  itemName: string;
 }
 
-interface Variables {
-  restaurantId: string;
-  category: string;
-  item: string;
+async function removeMenuItem(command: RemoveMenuItemCommand) {
+  const { restaurantId, categoryName, itemName } = command;
+
+  await Api.delete(
+    `/restaurants/${restaurantId}/menu/categories/${categoryName}/items/${itemName}`
+  );
 }
 
 export default function useRemoveMenuItem() {
   const queryCache = useQueryCache();
 
-  return useMutation<void, Error, Variables, null>(
-    async ({ restaurantId, category, item }) => {
-      await removeMenuItem(restaurantId, category, item);
-    },
+  return useMutation<void, ApiError, RemoveMenuItemCommand, null>(
+    removeMenuItem,
     {
-      onSuccess: (_, { restaurantId }) => {
-        queryCache.invalidateQueries(getMenuQueryKey(restaurantId));
+      onSuccess: (_, command) => {
+        queryCache.invalidateQueries(getMenuQueryKey(command.restaurantId));
       },
     }
   );

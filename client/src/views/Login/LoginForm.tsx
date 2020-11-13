@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
-import useLogin, { LoginCommand } from "~/api/users/useLogin";
+import useLogin from "~/api/users/useLogin";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import {
   combineRules,
@@ -12,7 +12,7 @@ import {
 import { setFormErrors } from "~/services/forms/setFormErrors";
 
 const LoginForm: React.FC = () => {
-  const form = useForm<LoginCommand>({
+  const form = useForm({
     defaultValues: { email: "", password: "" },
   });
 

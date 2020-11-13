@@ -1,47 +1,33 @@
 import { useMutation, useQueryCache } from "react-query";
-import { Error } from "~/services/Error";
-import Api from "../Api";
+import Api, { ApiError } from "../Api";
 import { getMenuQueryKey } from "../menu/useMenu";
 
-export interface UpdateMenuItemRequest {
+export interface UpdateMenuItemCommand {
+  restaurantId: string;
+  categoryName: string;
+  oldItemName: string;
   newItemName: string;
   description: string;
   price: number;
 }
 
-async function updateMenuItem(
-  restaurantId: string,
-  category: string,
-  item: string,
-  request: UpdateMenuItemRequest
-) {
-  const response = await Api.put(
-    `/restaurants/${restaurantId}/menu/categories/${category}/items/${item}`,
-    request
+async function updateMenuItem(command: UpdateMenuItemCommand) {
+  const { restaurantId, categoryName, oldItemName, ...data } = command;
+
+  await Api.put(
+    `/restaurants/${restaurantId}/menu/categories/${categoryName}/items/${oldItemName}`,
+    data
   );
-
-  if (!response.isSuccess) {
-    throw response.error;
-  }
-}
-
-interface Variables {
-  restaurantId: string;
-  category: string;
-  item: string;
-  request: UpdateMenuItemRequest;
 }
 
 export default function useUpdateMenuItem() {
   const queryCache = useQueryCache();
 
-  return useMutation<void, Error, Variables, null>(
-    async ({ restaurantId, category, item, request }) => {
-      await updateMenuItem(restaurantId, category, item, request);
-    },
+  return useMutation<void, ApiError, UpdateMenuItemCommand, null>(
+    updateMenuItem,
     {
-      onSuccess: (_, { restaurantId }) => {
-        queryCache.invalidateQueries(getMenuQueryKey(restaurantId));
+      onSuccess: (_, command) => {
+        queryCache.invalidateQueries(getMenuQueryKey(command.restaurantId));
       },
     }
   );

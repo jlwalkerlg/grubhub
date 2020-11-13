@@ -26,7 +26,7 @@ const AddMenuCategoryForm: React.FC = () => {
     await addMenuCategory(
       {
         restaurantId: user.restaurantId,
-        request: data,
+        ...data,
       },
       {
         onError: (error) => {

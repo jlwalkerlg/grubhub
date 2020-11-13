@@ -1,39 +1,29 @@
 import { useMutation, useQueryCache } from "react-query";
-import { Error } from "~/services/Error";
-import Api from "../Api";
+import Api, { ApiError } from "../Api";
 import { getRestaurantQueryKey } from "./useRestaurant";
 
-export interface UpdateRestaurantDetailsRequest {
+export interface UpdateRestaurantDetailsCommand {
+  id: string;
   name: string;
   phoneNumber: string;
 }
 
 async function updateRestaurantDetails(
-  id: string,
-  request: UpdateRestaurantDetailsRequest
+  command: UpdateRestaurantDetailsCommand
 ) {
-  const response = await Api.put(`/restaurants/${id}`, request);
+  const { id, ...data } = command;
 
-  if (!response.isSuccess) {
-    throw response.error;
-  }
-}
-
-interface Variables {
-  id: string;
-  request: UpdateRestaurantDetailsRequest;
+  await Api.put(`/restaurants/${id}`, data);
 }
 
 export default function useUpdateRestaurantDetails() {
   const queryCache = useQueryCache();
 
-  return useMutation<void, Error, Variables, null>(
-    async ({ id, request }) => {
-      await updateRestaurantDetails(id, request);
-    },
+  return useMutation<void, ApiError, UpdateRestaurantDetailsCommand, null>(
+    updateRestaurantDetails,
     {
-      onSuccess: (_, { id }) => {
-        queryCache.invalidateQueries(getRestaurantQueryKey(id));
+      onSuccess: (_, command) => {
+        queryCache.invalidateQueries(getRestaurantQueryKey(command.id));
       },
     }
   );
