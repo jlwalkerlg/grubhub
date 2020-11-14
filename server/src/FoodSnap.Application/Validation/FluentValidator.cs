@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentValidation;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 
 namespace FoodSnap.Application.Validation
 {

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 
 namespace FoodSnap.WebTests.Doubles
 {

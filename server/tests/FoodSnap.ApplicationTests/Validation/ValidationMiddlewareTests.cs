@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Validation;
 using Xunit;
 using MediatR;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 
 namespace FoodSnap.ApplicationTests.Validation
 {

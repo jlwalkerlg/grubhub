@@ -2,7 +2,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using System.IO;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 using System.Text.Json;
 using System.Linq;
 

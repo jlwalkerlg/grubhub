@@ -5,7 +5,7 @@ using FoodSnap.Application.Menus.RemoveMenuCategory;
 using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using Xunit;
-using static FoodSnap.Shared.Error;
+using static FoodSnap.Application.Error;
 using FoodSnap.Domain.Users;
 using FoodSnap.Domain;
 using FoodSnap.ApplicationTests.Services.Authentication;

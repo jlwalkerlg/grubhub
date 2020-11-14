@@ -9,7 +9,7 @@ using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Xunit;
-using static FoodSnap.Shared.Error;
+using static FoodSnap.Application.Error;
 
 namespace FoodSnap.ApplicationTests.Menus.RemoveMenuItem
 {

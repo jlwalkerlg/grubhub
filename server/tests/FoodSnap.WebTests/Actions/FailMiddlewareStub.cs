@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 using MediatR;
 
 namespace FoodSnap.WebTests.Actions

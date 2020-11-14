@@ -5,9 +5,9 @@ using MediatR;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain.Users;
 using FoodSnap.Domain;
-using static FoodSnap.Shared.Error;
+using static FoodSnap.Application.Error;
 using System;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 
 namespace FoodSnap.ApplicationTests.Services.Authentication
 {

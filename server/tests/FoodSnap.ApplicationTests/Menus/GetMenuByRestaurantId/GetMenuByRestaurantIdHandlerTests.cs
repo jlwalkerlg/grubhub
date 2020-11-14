@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus.GetMenuByRestaurantId;
 using Xunit;
-using static FoodSnap.Shared.Error;
+using static FoodSnap.Application.Error;
 using FoodSnap.Application.Menus;
 
 namespace FoodSnap.ApplicationTests.Menus.GetMenuByRestaurantId

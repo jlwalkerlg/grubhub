@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FoodSnap.Application.Validation;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 
 namespace FoodSnap.ApplicationTests.Validation
 {

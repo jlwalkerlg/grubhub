@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 using MediatR;
 
 namespace FoodSnap.Application.Validation

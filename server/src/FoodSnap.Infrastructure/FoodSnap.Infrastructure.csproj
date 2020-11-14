@@ -3,7 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="..\FoodSnap.Domain\FoodSnap.Domain.csproj" />
     <ProjectReference Include="..\FoodSnap.Application\FoodSnap.Application.csproj" />
-    <ProjectReference Include="..\FoodSnap.Shared\FoodSnap.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

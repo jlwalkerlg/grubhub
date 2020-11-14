@@ -1,21 +1,22 @@
 using System.Collections.Generic;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 using FoodSnap.Web.Envelopes;
 using Microsoft.AspNetCore.Mvc;
+using static FoodSnap.Application.Error;
 
 namespace FoodSnap.Web.Actions
 {
     [ApiController]
     public abstract class Action : ControllerBase
     {
-        private Dictionary<Error.ErrorType, int> codes = new()
+        private Dictionary<ErrorType, int> codes = new()
         {
-            { Shared.Error.ErrorType.BadRequest, 400 },
-            { Shared.Error.ErrorType.Unauthenticated, 401 },
-            { Shared.Error.ErrorType.Unauthorised, 403 },
-            { Shared.Error.ErrorType.NotFound, 404 },
-            { Shared.Error.ErrorType.ValidationError, 422 },
-            { Shared.Error.ErrorType.Internal, 500 },
+            { ErrorType.BadRequest, 400 },
+            { ErrorType.Unauthenticated, 401 },
+            { ErrorType.Unauthorised, 403 },
+            { ErrorType.NotFound, 404 },
+            { ErrorType.ValidationError, 422 },
+            { ErrorType.Internal, 500 },
         };
 
         protected IActionResult Error(Error error)

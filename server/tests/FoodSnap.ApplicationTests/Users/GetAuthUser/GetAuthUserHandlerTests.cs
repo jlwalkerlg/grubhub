@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Users;
 using FoodSnap.Application.Users.GetAuthUser;
 using Xunit;
-using static FoodSnap.Shared.Error;
+using static FoodSnap.Application.Error;
 using FoodSnap.ApplicationTests.Services.Authentication;
 using FoodSnap.Domain.Users;
 

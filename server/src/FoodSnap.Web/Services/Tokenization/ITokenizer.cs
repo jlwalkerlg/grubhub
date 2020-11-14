@@ -1,5 +1,5 @@
 using System;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 
 namespace FoodSnap.Web.Services.Tokenization
 {

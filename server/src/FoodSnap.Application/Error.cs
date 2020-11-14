@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FoodSnap.Shared
+namespace FoodSnap.Application
 {
     public class Error
     {

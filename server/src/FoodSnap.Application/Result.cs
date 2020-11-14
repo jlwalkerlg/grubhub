@@ -1,4 +1,4 @@
-namespace FoodSnap.Shared
+namespace FoodSnap.Application
 {
     public class Result
     {

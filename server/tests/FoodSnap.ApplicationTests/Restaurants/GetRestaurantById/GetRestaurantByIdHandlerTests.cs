@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Restaurants;
 using FoodSnap.Application.Restaurants.GetRestaurantById;
 using Xunit;
-using static FoodSnap.Shared.Error;
+using static FoodSnap.Application.Error;
 
 namespace FoodSnap.ApplicationTests.Restaurants.GetRestaurantById
 {

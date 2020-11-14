@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application;
-using FoodSnap.Shared;
 
 namespace FoodSnap.ApplicationTests
 {

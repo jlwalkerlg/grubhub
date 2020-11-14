@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using FoodSnap.Shared;
+using FoodSnap.Application;
 
 namespace FoodSnap.Application.Services.Geocoding
 {
