@@ -2,5 +2,5 @@ using System;
 
 namespace FoodSnap.Domain.Restaurants
 {
-    public record RestaurantId(Guid value) : GuidId(value);
+    public record RestaurantId(Guid Value) : GuidId(Value);
 }

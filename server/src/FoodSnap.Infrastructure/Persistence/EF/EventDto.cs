@@ -1,6 +1,6 @@
 using System;
+using System.Text.Json;
 using FoodSnap.Application.Events;
-using Newtonsoft.Json;
 
 namespace FoodSnap.Infrastructure.Persistence.EF
 {
@@ -14,13 +14,13 @@ namespace FoodSnap.Infrastructure.Persistence.EF
         public EventDto(Event ev)
         {
             EventType = ev.GetType().ToString();
-            Data = JsonConvert.SerializeObject(ev);
+            Data = JsonSerializer.Serialize(ev, ev.GetType());
             CreatedAt = ev.CreatedAt;
         }
 
         public TEvent ToEvent<TEvent>() where TEvent : Event
         {
-            return JsonConvert.DeserializeObject<TEvent>(Data);
+            return JsonSerializer.Deserialize<TEvent>(Data);
         }
 
         private EventDto() { }

@@ -2,5 +2,5 @@ using System;
 
 namespace FoodSnap.Domain.Users
 {
-    public record UserId(Guid value) : GuidId(value);
+    public record UserId(Guid Value) : GuidId(Value);
 }

@@ -6,6 +6,8 @@ using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Application.Users;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
+using FoodSnap.Infrastructure.Persistence.EF;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace FoodSnap.WebTests.Integration.Restaurants.RegisterRestaurant
@@ -47,6 +49,16 @@ namespace FoodSnap.WebTests.Integration.Restaurants.RegisterRestaurant
 
             var menu = await Get<MenuDto>($"/restaurants/{restaurant.Id}/menu");
             Assert.Empty(menu.Categories);
+
+            await fixture.ExecuteService<AppDbContext>(async db =>
+            {
+                var eventDto = await db.Events.SingleAsync();
+                Assert.Equal(typeof(RestaurantRegisteredEvent).ToString(), eventDto.EventType);
+
+                var @event = eventDto.ToEvent<RestaurantRegisteredEvent>();
+                Assert.Equal(user.Id, @event.ManagerId.Value);
+                Assert.Equal(restaurant.Id, @event.RestaurantId.Value);
+            });
         }
     }
 }
