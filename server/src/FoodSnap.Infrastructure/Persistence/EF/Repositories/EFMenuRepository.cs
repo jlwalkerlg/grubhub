@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using FoodSnap.Application.Menus;
 using FoodSnap.Domain.Menus;
@@ -25,7 +26,8 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
             return await context.Menus
                 .Include(x => x.Categories)
                 .ThenInclude(x => x.Items)
-                .FirstOrDefaultAsync(x => x.RestaurantId == id);
+                .OrderBy(x => x.RestaurantId) // needed to suppress ef core warning
+                .SingleOrDefaultAsync(x => x.RestaurantId == id);
         }
     }
 }

@@ -32,9 +32,10 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Users
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
-                return await connection.QueryFirstOrDefaultAsync<UserDto>(
-                    sql,
-                    new { Id = id });
+                return await connection
+                    .QuerySingleOrDefaultAsync<UserDto>(
+                        sql,
+                        new { Id = id });
             }
         }
     }

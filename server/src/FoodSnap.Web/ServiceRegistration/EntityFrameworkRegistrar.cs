@@ -10,8 +10,13 @@ namespace FoodSnap.Web.ServiceRegistration
         public static void AddEntityFramework(
             this IServiceCollection services, WebConfig config)
         {
-            services.AddDbContext<AppDbContext>(
-                options => options.UseNpgsql(config.DbConnectionString));
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(config.DbConnectionString, b =>
+                {
+                    b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                });
+            });
 
             services.AddScoped<IUnitOfWork, EFUnitOfWork>();
         }

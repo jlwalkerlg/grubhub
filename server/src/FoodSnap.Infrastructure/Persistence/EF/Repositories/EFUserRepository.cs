@@ -17,7 +17,8 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Repositories
 
         public async Task<User> GetByEmail(string email)
         {
-            return await context.Users.FirstOrDefaultAsync(x => x.Email.Address == email);
+            return await context.Users
+                .SingleOrDefaultAsync(x => x.Email.Address == email);
         }
 
         public async Task<User> GetById(UserId id)

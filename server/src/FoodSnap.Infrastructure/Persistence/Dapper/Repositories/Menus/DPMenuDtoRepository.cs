@@ -49,7 +49,8 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Menus
 
                         if (categoryEntry != null)
                         {
-                            var category = menu.Categories.FirstOrDefault(x => x.Name == categoryEntry.Name);
+                            var category = menu.Categories
+                                .SingleOrDefault(x => x.Name == categoryEntry.Name);
 
                             if (category == null)
                             {

@@ -33,11 +33,10 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Restaurants
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
-                var restaurant = await connection.QueryFirstOrDefaultAsync<RestaurantDto>(
-                    sql,
-                    new { Id = id });
-
-                return restaurant;
+                return await connection
+                    .QuerySingleOrDefaultAsync<RestaurantDto>(
+                        sql,
+                        new { Id = id });
             }
         }
     }
