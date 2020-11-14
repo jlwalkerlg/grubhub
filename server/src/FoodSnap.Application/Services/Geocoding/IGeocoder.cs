@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using FoodSnap.Application;
-
 namespace FoodSnap.Application.Services.Geocoding
 {
     public interface IGeocoder

@@ -7,8 +7,6 @@ using FoodSnap.Domain;
 using FoodSnap.Domain.Menus;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
-using FoodSnap.Application;
-
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand>

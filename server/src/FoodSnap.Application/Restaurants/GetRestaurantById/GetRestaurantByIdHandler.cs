@@ -1,7 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Application;
-
 namespace FoodSnap.Application.Restaurants.GetRestaurantById
 {
     public class GetRestaurantByIdHandler : IRequestHandler<GetRestaurantByIdQuery, RestaurantDto>

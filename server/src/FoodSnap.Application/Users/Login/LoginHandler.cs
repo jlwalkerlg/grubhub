@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Application.Services.Hashing;
-using FoodSnap.Application;
-
 namespace FoodSnap.Application.Users.Login
 {
     public class LoginHandler : IRequestHandler<LoginCommand>

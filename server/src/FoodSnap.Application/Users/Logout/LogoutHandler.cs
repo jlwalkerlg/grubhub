@@ -1,8 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
-using FoodSnap.Application;
-
 namespace FoodSnap.Application.Users.Logout
 {
     public class LogoutHandler : IRequestHandler<LogoutCommand>

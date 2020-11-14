@@ -2,7 +2,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using FoodSnap.Application;
 using MediatR;
 
 namespace FoodSnap.Application.Services.Authentication

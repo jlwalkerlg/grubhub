@@ -1,5 +1,3 @@
-using FoodSnap.Application;
-
 namespace FoodSnap.Application
 {
     public interface IRequestHandler<TRequest> : MediatR.IRequestHandler<TRequest, Result>

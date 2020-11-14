@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentValidation;
-using FoodSnap.Application;
-
 namespace FoodSnap.Application.Validation
 {
     public class FluentValidator<TRequest> : AbstractValidator<TRequest>, IValidator<TRequest>

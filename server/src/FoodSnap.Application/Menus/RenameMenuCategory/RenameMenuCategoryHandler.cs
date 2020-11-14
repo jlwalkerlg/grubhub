@@ -2,8 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain.Restaurants;
-using FoodSnap.Application;
-
 namespace FoodSnap.Application.Menus.RenameMenuCategory
 {
     public class RenameMenuCategoryHandler : IRequestHandler<RenameMenuCategoryCommand>
