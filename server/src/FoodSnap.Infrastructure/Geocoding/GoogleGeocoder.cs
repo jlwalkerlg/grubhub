@@ -2,8 +2,9 @@ using System.Net;
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using System.IO;
-using Newtonsoft.Json.Linq;
 using FoodSnap.Shared;
+using System.Text.Json;
+using System.Linq;
 
 namespace FoodSnap.Infrastructure.Geocoding
 {
@@ -20,23 +21,27 @@ namespace FoodSnap.Infrastructure.Geocoding
         {
             var response = await SendRequest(address);
             var json = ConvertResponseToJson(response);
+            var doc = JsonDocument.Parse(json);
 
-            var jobj = JObject.Parse(json);
-
-            var status = (string)jobj["status"];
+            var status = doc.RootElement.GetProperty("status").GetString();
 
             if (status != "OK")
             {
                 return Result<GeocodingResult>.Fail(Error.Internal(status));
             }
 
-            var result = jobj["results"][0];
+            var result = doc.RootElement
+                .GetProperty("results")
+                .EnumerateArray()
+                .First();
+
+            var location = result.GetProperty("geometry").GetProperty("location");
 
             return Result.Ok(new GeocodingResult
             {
-                FormattedAddress = (string)result["formatted_address"],
-                Latitude = (float)result["geometry"]["location"]["lat"],
-                Longitude = (float)result["geometry"]["location"]["lng"],
+                FormattedAddress = result.GetProperty("formatted_address").GetString(),
+                Latitude = (float)location.GetProperty("lat").GetDouble(),
+                Longitude = (float)location.GetProperty("lng").GetDouble(),
             });
         }
 
