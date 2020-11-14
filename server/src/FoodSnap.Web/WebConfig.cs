@@ -1,6 +1,6 @@
 namespace FoodSnap.Web
 {
-    public class WebConfig
+    public record WebConfig
     {
         public string DbConnectionString { get; set; }
         public string GoogleGeocodingApiKey { get; set; }
