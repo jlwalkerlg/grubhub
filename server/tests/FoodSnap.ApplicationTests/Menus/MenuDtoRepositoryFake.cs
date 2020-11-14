@@ -8,7 +8,7 @@ namespace FoodSnap.ApplicationTests.Menus
 {
     public class MenuDtoRepositoryFake : IMenuDtoRepository
     {
-        public List<MenuDto> Menus { get; } = new List<MenuDto>();
+        public List<MenuDto> Menus { get; } = new();
 
         public Task<MenuDto> GetByRestaurantId(Guid restaurantId)
         {

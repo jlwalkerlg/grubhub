@@ -2,9 +2,8 @@ using System.Collections.Generic;
 
 namespace FoodSnap.Web.Envelopes
 {
-    public class ErrorEnvelope
+    public record ErrorEnvelope(string Message)
     {
-        public string Message { get; set; }
-        public Dictionary<string, string> Errors { get; set; }
+        public Dictionary<string, string> Errors { get; init; }
     }
 }

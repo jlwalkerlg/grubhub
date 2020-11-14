@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FoodSnap.Application.Users;
 using FoodSnap.Application.Users.GetAuthUser;
 
 namespace FoodSnap.Web.Actions.Users.GetAuthUser
@@ -24,13 +22,10 @@ namespace FoodSnap.Web.Actions.Users.GetAuthUser
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
-            return Ok(new DataEnvelope<UserDto>
-            {
-                Data = result.Value
-            });
+            return Ok(result.Value);
         }
     }
 }

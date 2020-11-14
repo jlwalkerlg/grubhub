@@ -19,12 +19,16 @@ namespace FoodSnap.Web.Services.Cookies
 
         public void Add(string name, string value, CookieOptions options)
         {
-            httpContextAccessor.HttpContext.Response.Cookies.Append(name, value, options);
+            httpContextAccessor
+                .HttpContext
+                .Response
+                .Cookies
+                .Append(name, value, options);
         }
 
         public void Delete(string name)
         {
-            Delete(name, new CookieOptions());
+            Delete(name, new());
         }
 
         public void Delete(string name, CookieOptions options)

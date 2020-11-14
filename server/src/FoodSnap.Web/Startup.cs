@@ -4,7 +4,6 @@ using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Infrastructure.Hashing;
 using FoodSnap.Infrastructure.Persistence;
-using FoodSnap.Infrastructure.Persistence.EF;
 using FoodSnap.Web.ServiceRegistration;
 using FoodSnap.Web.Services.Authentication;
 using FoodSnap.Web.Services.Cookies;
@@ -25,7 +24,7 @@ namespace FoodSnap.Web
             configuration.Bind(WebConfig);
         }
 
-        public WebConfig WebConfig { get; } = new WebConfig();
+        public WebConfig WebConfig { get; } = new();
 
         public void ConfigureServices(IServiceCollection services)
         {

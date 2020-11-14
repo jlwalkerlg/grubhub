@@ -2,10 +2,5 @@ using System;
 
 namespace FoodSnap.Domain.Restaurants
 {
-    public class RestaurantId : GuidId
-    {
-        public RestaurantId(Guid value) : base(value)
-        {
-        }
-    }
+    public record RestaurantId(Guid value) : GuidId(value);
 }

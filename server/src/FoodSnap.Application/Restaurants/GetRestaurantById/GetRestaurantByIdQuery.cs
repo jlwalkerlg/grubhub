@@ -2,8 +2,8 @@ using System;
 
 namespace FoodSnap.Application.Restaurants.GetRestaurantById
 {
-    public class GetRestaurantByIdQuery : IRequest<RestaurantDto>
+    public record GetRestaurantByIdQuery : IRequest<RestaurantDto>
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
     }
 }

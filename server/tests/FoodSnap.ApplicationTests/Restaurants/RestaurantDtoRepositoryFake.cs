@@ -8,7 +8,7 @@ namespace FoodSnap.ApplicationTests.Restaurants
 {
     public class RestaurantDtoRepositoryFake : IRestaurantDtoRepository
     {
-        public List<RestaurantDto> Restaurants { get; } = new List<RestaurantDto>();
+        public List<RestaurantDto> Restaurants { get; } = new();
 
         public Task<RestaurantDto> GetById(Guid id)
         {

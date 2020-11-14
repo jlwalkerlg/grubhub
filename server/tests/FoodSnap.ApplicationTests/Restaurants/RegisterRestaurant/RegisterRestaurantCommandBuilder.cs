@@ -4,7 +4,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantCommandBuilder
     {
-        private RegisterRestaurantCommand command = new RegisterRestaurantCommand
+        private RegisterRestaurantCommand command = new()
         {
             ManagerName = "Jordan Walker",
             ManagerEmail = "walker.jlg@gmail.com",
@@ -16,37 +16,37 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
 
         public RegisterRestaurantCommandBuilder SetManagerName(string managerName)
         {
-            command.ManagerName = managerName;
+            command = command with { ManagerName = managerName };
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetManagerEmail(string managerEmail)
         {
-            command.ManagerEmail = managerEmail;
+            command = command with { ManagerEmail = managerEmail };
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetManagerPassword(string managerPassword)
         {
-            command.ManagerPassword = managerPassword;
+            command = command with { ManagerPassword = managerPassword };
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetRestaurantName(string restaurantName)
         {
-            command.RestaurantName = restaurantName;
+            command = command with { RestaurantName = restaurantName };
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetRestaurantPhoneNumber(string restaurantPhoneNumber)
         {
-            command.RestaurantPhoneNumber = restaurantPhoneNumber;
+            command = command with { RestaurantPhoneNumber = restaurantPhoneNumber };
             return this;
         }
 
         public RegisterRestaurantCommandBuilder SetAddress(string address)
         {
-            command.Address = address;
+            command = command with { Address = address };
             return this;
         }
 

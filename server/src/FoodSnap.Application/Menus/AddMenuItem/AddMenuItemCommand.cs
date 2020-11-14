@@ -4,12 +4,12 @@ using FoodSnap.Application.Services.Authentication;
 namespace FoodSnap.Application.Menus.AddMenuItem
 {
     [Authenticate]
-    public class AddMenuItemCommand : IRequest
+    public record AddMenuItemCommand : IRequest
     {
-        public Guid RestaurantId { get; set; }
-        public string CategoryName { get; set; }
-        public string ItemName { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public Guid RestaurantId { get; init; }
+        public string CategoryName { get; init; }
+        public string ItemName { get; init; }
+        public string Description { get; init; }
+        public decimal Price { get; init; }
     }
 }

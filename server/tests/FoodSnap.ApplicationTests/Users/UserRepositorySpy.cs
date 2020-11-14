@@ -8,7 +8,7 @@ namespace FoodSnap.ApplicationTests.Users
 {
     public class UserRepositorySpy : IUserRepository
     {
-        public List<User> Users { get; } = new List<User>();
+        public List<User> Users { get; } = new();
 
         public Task<User> GetByEmail(string email)
         {

@@ -4,9 +4,9 @@ using FoodSnap.Application.Services.Authentication;
 namespace FoodSnap.Application.Menus.AddMenuCategory
 {
     [Authenticate]
-    public class AddMenuCategoryCommand : IRequest
+    public record AddMenuCategoryCommand : IRequest
     {
-        public Guid RestaurantId { get; set; }
-        public string Name { get; set; }
+        public Guid RestaurantId { get; init; }
+        public string Name { get; init; }
     }
 }

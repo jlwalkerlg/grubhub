@@ -3,22 +3,22 @@ using System;
 
 namespace FoodSnap.Application.Menus
 {
-    public class MenuDto
+    public record MenuDto
     {
-        public Guid RestaurantId { get; set; }
-        public List<MenuCategoryDto> Categories { get; set; } = new List<MenuCategoryDto>();
+        public Guid RestaurantId { get; init; }
+        public List<MenuCategoryDto> Categories { get; init; } = new();
     }
 
-    public class MenuCategoryDto
+    public record MenuCategoryDto
     {
-        public string Name { get; set; }
-        public List<MenuItemDto> Items { get; set; } = new List<MenuItemDto>();
+        public string Name { get; init; }
+        public List<MenuItemDto> Items { get; init; } = new();
     }
 
-    public class MenuItemDto
+    public record MenuItemDto
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public decimal Price { get; init; }
     }
 }

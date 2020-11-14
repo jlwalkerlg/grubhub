@@ -30,7 +30,7 @@ namespace FoodSnap.Web.Actions.Menus.RemoveMenuCategory
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return StatusCode(204);

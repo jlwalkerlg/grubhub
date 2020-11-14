@@ -31,7 +31,7 @@ namespace FoodSnap.Web.Actions.Restaurants.UpdateRestaurantDetails
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return Ok();

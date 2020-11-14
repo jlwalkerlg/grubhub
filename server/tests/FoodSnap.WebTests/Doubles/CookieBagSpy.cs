@@ -6,11 +6,9 @@ namespace FoodSnap.WebTests.Doubles
 {
     public class CookieBagSpy : ICookieBag
     {
-        public Dictionary<string, CookieData> Cookies { get; }
-            = new Dictionary<string, CookieData>();
+        public Dictionary<string, CookieData> Cookies { get; } = new();
 
-        public Dictionary<string, CookieData> Deleted { get; }
-            = new Dictionary<string, CookieData>();
+        public Dictionary<string, CookieData> Deleted { get; } = new();
 
         public string Get(string name)
         {

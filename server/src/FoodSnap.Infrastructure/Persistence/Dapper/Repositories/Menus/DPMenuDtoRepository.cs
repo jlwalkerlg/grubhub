@@ -72,17 +72,17 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Menus
             }
         }
 
-        private class MenuEntry : MenuDto
+        private record MenuEntry : MenuDto
         {
             public int Id { get; set; }
         }
 
-        private class MenuCategoryEntry : MenuCategoryDto
+        private record MenuCategoryEntry : MenuCategoryDto
         {
             public int Id { get; set; }
         }
 
-        private class MenuItemEntry : MenuItemDto
+        private record MenuItemEntry : MenuItemDto
         {
             public int Id { get; set; }
         }

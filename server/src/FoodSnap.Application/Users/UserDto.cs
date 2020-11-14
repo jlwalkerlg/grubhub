@@ -2,13 +2,13 @@ using System;
 
 namespace FoodSnap.Application.Users
 {
-    public class UserDto
+    public record UserDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
-        public Guid? RestaurantId { get; set; }
-        public string RestaurantName { get; set; }
+        public Guid Id { get; init; }
+        public string Name { get; init; }
+        public string Email { get; init; }
+        public string Role { get; init; }
+        public Guid? RestaurantId { get; init; }
+        public string RestaurantName { get; init; }
     }
 }

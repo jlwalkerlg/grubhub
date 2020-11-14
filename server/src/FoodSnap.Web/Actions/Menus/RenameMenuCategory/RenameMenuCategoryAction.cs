@@ -32,7 +32,7 @@ namespace FoodSnap.Web.Actions.Menus.RenameMenuCategory
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return Ok();

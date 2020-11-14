@@ -2,7 +2,7 @@ using System;
 
 namespace FoodSnap.Domain
 {
-    public class GuidId : ValueObject<GuidId>
+    public record GuidId
     {
         public GuidId(Guid value)
         {
@@ -15,15 +15,5 @@ namespace FoodSnap.Domain
         }
 
         public Guid Value { get; }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        protected override bool IsEqual(GuidId other)
-        {
-            return Value == other.Value;
-        }
     }
 }

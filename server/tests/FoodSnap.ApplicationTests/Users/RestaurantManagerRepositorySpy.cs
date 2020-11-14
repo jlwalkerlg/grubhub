@@ -7,7 +7,7 @@ namespace FoodSnap.ApplicationTests.Users
 {
     public class RestaurantManagerRepositorySpy : IRestaurantManagerRepository
     {
-        public List<RestaurantManager> Managers = new List<RestaurantManager>();
+        public List<RestaurantManager> Managers = new();
 
         public Task Add(RestaurantManager manager)
         {

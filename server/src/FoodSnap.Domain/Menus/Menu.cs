@@ -19,7 +19,7 @@ namespace FoodSnap.Domain.Menus
 
         public RestaurantId RestaurantId { get; }
 
-        private List<MenuCategory> categories = new List<MenuCategory>();
+        private List<MenuCategory> categories = new();
         public IReadOnlyList<MenuCategory> Categories => categories;
 
         public void AddCategory(string name)

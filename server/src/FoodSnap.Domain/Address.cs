@@ -2,10 +2,8 @@ using System;
 
 namespace FoodSnap.Domain
 {
-    public class Address : ValueObject<Address>
+    public record Address
     {
-        public string Value { get; }
-
         public Address(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -16,17 +14,9 @@ namespace FoodSnap.Domain
             Value = value;
         }
 
-        // EF Core
+        public string Value { get; }
+
         private Address() { }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        protected override bool IsEqual(Address other)
-        {
-            return Value == other.Value;
-        }
+        // EF Core
     }
 }

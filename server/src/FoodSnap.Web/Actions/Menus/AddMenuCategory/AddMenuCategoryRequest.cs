@@ -1,7 +1,7 @@
 namespace FoodSnap.Web.Actions.Menus.AddMenuCategory
 {
-    public class AddMenuCategoryRequest
+    public record AddMenuCategoryRequest
     {
-        public string Name { get; set; }
+        public string Name { get; init; }
     }
 }

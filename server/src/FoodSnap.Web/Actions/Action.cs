@@ -8,22 +8,20 @@ namespace FoodSnap.Web.Actions
     [ApiController]
     public abstract class Action : ControllerBase
     {
-        private Dictionary<Error.ErrorType, int> codes
-            = new Dictionary<Error.ErrorType, int>
-            {
-                { Error.ErrorType.BadRequest, 400 },
-                { Error.ErrorType.Unauthenticated, 401 },
-                { Error.ErrorType.Unauthorised, 403 },
-                { Error.ErrorType.NotFound, 404 },
-                { Error.ErrorType.ValidationError, 422 },
-                { Error.ErrorType.Internal, 500 },
-            };
-
-        protected IActionResult PresentError(Error error)
+        private Dictionary<Error.ErrorType, int> codes = new()
         {
-            var envelope = new ErrorEnvelope
+            { Shared.Error.ErrorType.BadRequest, 400 },
+            { Shared.Error.ErrorType.Unauthenticated, 401 },
+            { Shared.Error.ErrorType.Unauthorised, 403 },
+            { Shared.Error.ErrorType.NotFound, 404 },
+            { Shared.Error.ErrorType.ValidationError, 422 },
+            { Shared.Error.ErrorType.Internal, 500 },
+        };
+
+        protected IActionResult Error(Error error)
+        {
+            var envelope = new ErrorEnvelope(error.Message)
             {
-                Message = error.Message,
                 Errors = error.Errors,
             };
 
@@ -37,6 +35,11 @@ namespace FoodSnap.Web.Actions
             {
                 StatusCode = code,
             };
+        }
+
+        protected OkObjectResult Ok<T>(T data)
+        {
+            return base.Ok(new DataEnvelope<T>(data));
         }
     }
 }

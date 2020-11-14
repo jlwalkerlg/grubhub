@@ -1,9 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FoodSnap.Application.Restaurants;
 using FoodSnap.Application.Restaurants.GetRestaurantById;
 
 namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
@@ -29,13 +27,10 @@ namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
-            return Ok(new DataEnvelope<RestaurantDto>
-            {
-                Data = result.Value
-            });
+            return Ok(result.Value);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace FoodSnap.Web.Actions.Menus.UpdateMenuItem
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return Ok();

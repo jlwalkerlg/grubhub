@@ -2,7 +2,7 @@ using System;
 
 namespace FoodSnap.Domain
 {
-    public class Money : ValueObject<Money>
+    public record Money
     {
         public Money(decimal amount)
         {
@@ -15,15 +15,5 @@ namespace FoodSnap.Domain
         }
 
         public decimal Amount { get; }
-
-        public override int GetHashCode()
-        {
-            return Amount.GetHashCode();
-        }
-
-        protected override bool IsEqual(Money other)
-        {
-            return Amount == other.Amount;
-        }
     }
 }

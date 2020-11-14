@@ -21,7 +21,7 @@ namespace FoodSnap.Web.Actions.Users.UpdateAuthUserDetails
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return Ok();

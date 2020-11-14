@@ -2,8 +2,8 @@
 
 namespace FoodSnap.Application.Events
 {
-    public abstract class Event
+    public abstract record Event
     {
-        public DateTime CreatedAt { get; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     }
 }

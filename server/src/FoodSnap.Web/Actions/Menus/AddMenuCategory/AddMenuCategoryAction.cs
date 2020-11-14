@@ -16,7 +16,9 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuCategory
         }
 
         [HttpPost("/restaurants/{restaurantId}/menu/categories")]
-        public async Task<IActionResult> Execute([FromRoute] Guid restaurantId, [FromBody] AddMenuCategoryRequest request)
+        public async Task<IActionResult> Execute(
+            [FromRoute] Guid restaurantId,
+            [FromBody] AddMenuCategoryRequest request)
         {
             var command = new AddMenuCategoryCommand
             {
@@ -28,7 +30,7 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuCategory
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return StatusCode(201);

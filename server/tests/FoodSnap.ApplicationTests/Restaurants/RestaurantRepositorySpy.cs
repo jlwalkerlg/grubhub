@@ -8,7 +8,7 @@ namespace FoodSnap.ApplicationTests.Restaurants
 {
     public class RestaurantRepositorySpy : IRestaurantRepository
     {
-        public List<Restaurant> Restaurants = new List<Restaurant>();
+        public List<Restaurant> Restaurants = new();
 
         public Task Add(Restaurant restaurant)
         {

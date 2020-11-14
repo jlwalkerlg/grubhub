@@ -6,7 +6,7 @@ namespace FoodSnap.Application.Validation
 {
     public static class ValidatorExtensions
     {
-        private static Regex phoneNumberRegex = new Regex(
+        private static Regex phoneNumberRegex = new(
             "^[0-9]{5} ?[0-9]{6}$",
             RegexOptions.Compiled,
             TimeSpan.FromMilliseconds(250));

@@ -1,12 +1,12 @@
 namespace FoodSnap.Application.Restaurants.RegisterRestaurant
 {
-    public class RegisterRestaurantCommand : IRequest
+    public record RegisterRestaurantCommand : IRequest
     {
-        public string ManagerName { get; set; }
-        public string ManagerEmail { get; set; }
-        public string ManagerPassword { get; set; }
-        public string RestaurantName { get; set; }
-        public string RestaurantPhoneNumber { get; set; }
-        public string Address { get; set; }
+        public string ManagerName { get; init; }
+        public string ManagerEmail { get; init; }
+        public string ManagerPassword { get; init; }
+        public string RestaurantName { get; init; }
+        public string RestaurantPhoneNumber { get; init; }
+        public string Address { get; init; }
     }
 }

@@ -1,10 +1,10 @@
 namespace FoodSnap.Web.Actions.Menus.AddMenuItem
 {
-    public class AddMenuItemRequest
+    public record AddMenuItemRequest
     {
-        public string CategoryName { get; set; }
-        public string ItemName { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public string CategoryName { get; init; }
+        public string ItemName { get; init; }
+        public string Description { get; init; }
+        public decimal Price { get; init; }
     }
 }

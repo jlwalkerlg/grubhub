@@ -1,8 +1,8 @@
 namespace FoodSnap.Web.Actions.Restaurants.UpdateRestaurantDetails
 {
-    public class UpdateRestaurantDetailsRequest
+    public record UpdateRestaurantDetailsRequest
     {
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
+        public string Name { get; init; }
+        public string PhoneNumber { get; init; }
     }
 }

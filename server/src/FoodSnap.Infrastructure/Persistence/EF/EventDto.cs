@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace FoodSnap.Infrastructure.Persistence.EF
 {
-    public class EventDto
+    public record EventDto
     {
         public long Id { get; }
         public string EventType { get; }

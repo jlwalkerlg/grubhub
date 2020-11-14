@@ -15,7 +15,7 @@ namespace FoodSnap.WebTests
 {
     public class WebAppTestFixture
     {
-        public virtual TestWebAppFactory Factory { get; } = new TestWebAppFactory();
+        public virtual TestWebAppFactory Factory { get; } = new();
 
         public async Task ExecuteScope(Func<IServiceScope, Task> action)
         {
@@ -37,7 +37,7 @@ namespace FoodSnap.WebTests
 
     public class TestWebAppFactory : WebApplicationFactory<Startup>
     {
-        protected virtual TestWebAppServiceProviderFactory ServiceProviderFactory { get; } = new TestWebAppServiceProviderFactory();
+        protected virtual TestWebAppServiceProviderFactory ServiceProviderFactory { get; } = new();
 
         protected override IHost CreateHost(IHostBuilder builder)
         {

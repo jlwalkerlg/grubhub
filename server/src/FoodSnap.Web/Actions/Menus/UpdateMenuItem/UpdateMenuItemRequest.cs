@@ -1,9 +1,9 @@
 namespace FoodSnap.Web.Actions.Menus.UpdateMenuItem
 {
-    public class UpdateMenuItemRequest
+    public record UpdateMenuItemRequest
     {
-        public string NewItemName { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public string NewItemName { get; init; }
+        public string Description { get; init; }
+        public decimal Price { get; init; }
     }
 }

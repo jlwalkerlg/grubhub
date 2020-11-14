@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using FoodSnap.Application.Menus;
 using FoodSnap.Application.Menus.GetMenuByRestaurantId;
-using FoodSnap.Web.Envelopes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,13 +27,10 @@ namespace FoodSnap.Web.Actions.Menus.GetMenuByRestaurantId
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
-            return Ok(new DataEnvelope<MenuDto>
-            {
-                Data = result.Value
-            });
+            return Ok(result.Value);
         }
     }
 }

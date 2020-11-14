@@ -21,7 +21,7 @@ namespace FoodSnap.Web.Actions.Users.Login
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return Ok();

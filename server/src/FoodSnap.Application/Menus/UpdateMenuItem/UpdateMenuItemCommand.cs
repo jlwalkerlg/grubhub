@@ -4,13 +4,13 @@ using FoodSnap.Application.Services.Authentication;
 namespace FoodSnap.Application.Menus.UpdateMenuItem
 {
     [Authenticate]
-    public class UpdateMenuItemCommand : IRequest
+    public record UpdateMenuItemCommand : IRequest
     {
-        public Guid RestaurantId { get; set; }
-        public string CategoryName { get; set; }
-        public string OldItemName { get; set; }
-        public string NewItemName { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public Guid RestaurantId { get; init; }
+        public string CategoryName { get; init; }
+        public string OldItemName { get; init; }
+        public string NewItemName { get; init; }
+        public string Description { get; init; }
+        public decimal Price { get; init; }
     }
 }

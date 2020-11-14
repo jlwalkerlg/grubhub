@@ -8,7 +8,7 @@ namespace FoodSnap.ApplicationTests.Users
 {
     public class UserDtoRepositoryFake : IUserDtoRepository
     {
-        public List<UserDto> Users { get; } = new List<UserDto>();
+        public List<UserDto> Users { get; } = new();
 
         public Task<UserDto> GetById(Guid id)
         {

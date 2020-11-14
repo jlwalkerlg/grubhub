@@ -2,7 +2,7 @@ using FoodSnap.Application;
 
 namespace FoodSnap.ApplicationTests
 {
-    public class DummyCommand : IRequest
+    public record DummyCommand : IRequest
     {
     }
 }

@@ -15,7 +15,7 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
             this.sender = sender;
         }
 
-        [HttpPost("/restaurants/{restaurantID}/menu/items")]
+        [HttpPost("/restaurants/{restaurantId}/menu/items")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromBody] AddMenuItemRequest request)
@@ -33,7 +33,7 @@ namespace FoodSnap.Web.Actions.Menus.AddMenuItem
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return StatusCode(201);

@@ -26,7 +26,7 @@ namespace FoodSnap.Domain.Menus
             }
         }
 
-        private List<MenuItem> items = new List<MenuItem>();
+        private List<MenuItem> items = new();
         public IReadOnlyList<MenuItem> Items => items;
 
         public void AddItem(string name, string description, Money price)
@@ -96,6 +96,5 @@ namespace FoodSnap.Domain.Menus
 
         // EF Core
         private MenuCategory() { }
-
     }
 }

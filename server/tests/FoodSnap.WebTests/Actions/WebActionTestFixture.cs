@@ -8,12 +8,12 @@ namespace FoodSnap.WebTests.Actions
 {
     public class WebActionTestFixture : WebAppTestFixture
     {
-        public override TestWebAppFactory Factory { get; } = new ActionTestWebAppFactory();
+        public override TestWebAppFactory Factory { get; } = new();
     }
 
     public class ActionTestWebAppFactory : TestWebAppFactory
     {
-        protected override TestWebAppServiceProviderFactory ServiceProviderFactory { get; } = new ActionTestWebAppServiceProviderFactory();
+        protected override TestWebAppServiceProviderFactory ServiceProviderFactory { get; } = new();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

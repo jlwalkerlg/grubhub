@@ -2,11 +2,8 @@ using System;
 
 namespace FoodSnap.Domain
 {
-    public class Coordinates : ValueObject<Coordinates>
+    public record Coordinates
     {
-        public float Latitude { get; }
-        public float Longitude { get; }
-
         public Coordinates(float latitude, float longitude)
         {
             if (latitude < -90 || latitude > 90)
@@ -23,16 +20,7 @@ namespace FoodSnap.Domain
             Longitude = longitude;
         }
 
-        protected override bool IsEqual(Coordinates other)
-        {
-            return Latitude == other.Latitude && Longitude == other.Longitude;
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = Latitude.GetHashCode();
-            hashCode = (hashCode * 397) ^ Longitude.GetHashCode();
-            return hashCode;
-        }
+        public float Latitude { get; }
+        public float Longitude { get; }
     }
 }

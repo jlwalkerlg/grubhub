@@ -9,7 +9,7 @@ namespace FoodSnap.ApplicationTests.Menus
 {
     public class MenuRepositorySpy : IMenuRepository
     {
-        public List<Menu> Menus { get; } = new List<Menu>();
+        public List<Menu> Menus { get; } = new();
 
         public Task Add(Menu menu)
         {

@@ -22,7 +22,7 @@ namespace FoodSnap.Web.Actions.Restaurants.RegisterRestaurant
 
             if (!result.IsSuccess)
             {
-                return PresentError(result.Error);
+                return Error(result.Error);
             }
 
             return StatusCode(201);
