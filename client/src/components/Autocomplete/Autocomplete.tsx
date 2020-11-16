@@ -1,5 +1,4 @@
 import React from "react";
-
 import useClickAwayListener from "~/services/click-away-listener/useClickAwayListener";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -95,42 +94,42 @@ const Autocomplete: React.FC<Props> = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    inputRef.current.addEventListener("keydown", onInputKeydownTab);
+    inputRef?.current?.addEventListener("keydown", onInputKeydownTab);
 
     return () => {
-      inputRef.current.removeEventListener("keydown", onInputKeydownTab);
+      inputRef?.current?.removeEventListener("keydown", onInputKeydownTab);
     };
   }, []);
 
   React.useEffect(() => {
     if (isOpen) {
-      inputRef.current.addEventListener("keydown", onInputKeydownEnter);
+      inputRef?.current?.addEventListener("keydown", onInputKeydownEnter);
     }
 
     return () => {
       if (isOpen) {
-        inputRef.current.removeEventListener("keydown", onInputKeydownEnter);
+        inputRef?.current?.removeEventListener("keydown", onInputKeydownEnter);
       }
     };
   }, [onInputKeydownEnter, isOpen]);
 
   React.useEffect(() => {
     if (isOpen) {
-      inputRef.current.addEventListener("keydown", onInputKeydownArrow);
+      inputRef?.current?.addEventListener("keydown", onInputKeydownArrow);
     }
 
     return () => {
       if (isOpen) {
-        inputRef.current.removeEventListener("keydown", onInputKeydownArrow);
+        inputRef?.current?.removeEventListener("keydown", onInputKeydownArrow);
       }
     };
   }, [selectedIndex, predictions.length, isOpen]);
 
   React.useEffect(() => {
-    inputRef.current.addEventListener("focus", onInputFocus);
+    inputRef?.current?.addEventListener("focus", onInputFocus);
 
     return () => {
-      inputRef.current.removeEventListener("focus", onInputFocus);
+      inputRef?.current?.removeEventListener("focus", onInputFocus);
     };
   }, [onInputFocus]);
 
