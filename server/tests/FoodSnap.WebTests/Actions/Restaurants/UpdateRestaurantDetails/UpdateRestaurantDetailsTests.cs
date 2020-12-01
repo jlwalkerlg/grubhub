@@ -18,6 +18,9 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
             {
                 Name = "Main Chow",
                 PhoneNumber = "09876543210",
+                MinimumDeliverySpend = 13m,
+                DeliveryFee = 3m,
+                EstimatedDeliveryTimeInMinutes = 40,
             };
 
             var response = await Put($"/restaurants/{Guid.NewGuid()}", request);
@@ -34,6 +37,9 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
             {
                 Name = "Main Chow",
                 PhoneNumber = "09876543210",
+                MinimumDeliverySpend = 13m,
+                DeliveryFee = 3m,
+                EstimatedDeliveryTimeInMinutes = 40,
             };
 
             var response = await Put($"/restaurants/{Guid.NewGuid()}", request);
@@ -50,6 +56,9 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
             {
                 Name = "",
                 PhoneNumber = "",
+                MinimumDeliverySpend = -1m,
+                DeliveryFee = -1m,
+                EstimatedDeliveryTimeInMinutes = -40,
             };
 
             var response = await Put($"/restaurants/{Guid.NewGuid()}", request);
@@ -59,6 +68,9 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
             var errors = await response.GetErrors();
             Assert.True(errors.ContainsKey("name"));
             Assert.True(errors.ContainsKey("phoneNumber"));
+            Assert.True(errors.ContainsKey("minimumDeliverySpend"));
+            Assert.True(errors.ContainsKey("deliveryFee"));
+            Assert.True(errors.ContainsKey("estimatedDeliveryTimeInMinutes"));
         }
     }
 }

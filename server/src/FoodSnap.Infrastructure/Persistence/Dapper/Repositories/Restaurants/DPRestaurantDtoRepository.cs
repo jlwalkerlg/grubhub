@@ -39,7 +39,10 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Restaurants
                     r.saturday_open,
                     r.saturday_close,
                     r.sunday_open,
-                    r.sunday_close
+                    r.sunday_close,
+                    r.delivery_fee,
+                    r.minimum_delivery_spend,
+                    r.estimated_delivery_time_in_minutes
                 FROM
                     restaurants r
                 WHERE
@@ -71,42 +74,50 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Restaurants
                     {
                         Monday = entry.MondayOpen.HasValue ? new OpeningHoursDto()
                         {
-                            Open = $"{entry.MondayOpen?.Hours.ToString().PadLeft(2, '0')}:{entry.MondayOpen?.Minutes.ToString().PadLeft(2, '0')}",
-                            Close = $"{entry.MondayClose?.Hours.ToString().PadLeft(2, '0')}:{entry.MondayClose?.Minutes.ToString().PadLeft(2, '0')}",
+                            Open = FormatTimeSpan(entry.MondayOpen.Value),
+                            Close = FormatTimeSpan(entry.MondayClose.Value),
                         } : null,
                         Tuesday = entry.TuesdayOpen.HasValue ? new OpeningHoursDto()
                         {
-                            Open = $"{entry.TuesdayOpen?.Hours.ToString().PadLeft(2, '0')}:{entry.TuesdayOpen?.Minutes.ToString().PadLeft(2, '0')}",
-                            Close = $"{entry.TuesdayClose?.Hours.ToString().PadLeft(2, '0')}:{entry.TuesdayClose?.Minutes.ToString().PadLeft(2, '0')}",
+                            Open = FormatTimeSpan(entry.TuesdayOpen.Value),
+                            Close = FormatTimeSpan(entry.TuesdayClose.Value),
                         } : null,
                         Wednesday = entry.WednesdayOpen.HasValue ? new OpeningHoursDto()
                         {
-                            Open = $"{entry.WednesdayOpen?.Hours.ToString().PadLeft(2, '0')}:{entry.WednesdayOpen?.Minutes.ToString().PadLeft(2, '0')}",
-                            Close = $"{entry.WednesdayClose?.Hours.ToString().PadLeft(2, '0')}:{entry.WednesdayClose?.Minutes.ToString().PadLeft(2, '0')}",
+                            Open = FormatTimeSpan(entry.WednesdayOpen.Value),
+                            Close = FormatTimeSpan(entry.WednesdayClose.Value),
                         } : null,
                         Thursday = entry.ThursdayOpen.HasValue ? new OpeningHoursDto()
                         {
-                            Open = $"{entry.ThursdayOpen?.Hours.ToString().PadLeft(2, '0')}:{entry.ThursdayOpen?.Minutes.ToString().PadLeft(2, '0')}",
-                            Close = $"{entry.ThursdayClose?.Hours.ToString().PadLeft(2, '0')}:{entry.ThursdayClose?.Minutes.ToString().PadLeft(2, '0')}",
+                            Open = FormatTimeSpan(entry.ThursdayOpen.Value),
+                            Close = FormatTimeSpan(entry.ThursdayClose.Value),
                         } : null,
                         Friday = entry.FridayOpen.HasValue ? new OpeningHoursDto()
                         {
-                            Open = $"{entry.FridayOpen?.Hours.ToString().PadLeft(2, '0')}:{entry.FridayOpen?.Minutes.ToString().PadLeft(2, '0')}",
-                            Close = $"{entry.FridayClose?.Hours.ToString().PadLeft(2, '0')}:{entry.FridayClose?.Minutes.ToString().PadLeft(2, '0')}",
+                            Open = FormatTimeSpan(entry.FridayOpen.Value),
+                            Close = FormatTimeSpan(entry.FridayClose.Value),
                         } : null,
                         Saturday = entry.SaturdayOpen.HasValue ? new OpeningHoursDto()
                         {
-                            Open = $"{entry.SaturdayOpen?.Hours.ToString().PadLeft(2, '0')}:{entry.SaturdayOpen?.Minutes.ToString().PadLeft(2, '0')}",
-                            Close = $"{entry.SaturdayClose?.Hours.ToString().PadLeft(2, '0')}:{entry.SaturdayClose?.Minutes.ToString().PadLeft(2, '0')}",
+                            Open = FormatTimeSpan(entry.SaturdayOpen.Value),
+                            Close = FormatTimeSpan(entry.SaturdayClose.Value),
                         } : null,
                         Sunday = entry.SundayOpen.HasValue ? new OpeningHoursDto()
                         {
-                            Open = $"{entry.SundayOpen?.Hours.ToString().PadLeft(2, '0')}:{entry.SundayOpen?.Minutes.ToString().PadLeft(2, '0')}",
-                            Close = $"{entry.SundayClose?.Hours.ToString().PadLeft(2, '0')}:{entry.SundayClose?.Minutes.ToString().PadLeft(2, '0')}",
+                            Open = FormatTimeSpan(entry.SundayOpen.Value),
+                            Close = FormatTimeSpan(entry.SundayClose.Value),
                         } : null,
                     },
+                    DeliveryFee = entry.DeliveryFee,
+                    MinimumDeliverySpend = entry.MinimumDeliverySpend,
+                    EstimatedDeliveryTimeInMinutes = entry.EstimatedDeliveryTimeInMinutes,
                 };
             }
+        }
+
+        private string FormatTimeSpan(TimeSpan t)
+        {
+            return $"{t.Hours.ToString().PadLeft(2, '0')}:{t.Minutes.ToString().PadLeft(2, '0')}";
         }
 
         private record RestaurantEntry
@@ -133,6 +144,9 @@ namespace FoodSnap.Infrastructure.Persistence.Dapper.Repositories.Restaurants
             public TimeSpan? SaturdayClose { get; init; }
             public TimeSpan? SundayOpen { get; init; }
             public TimeSpan? SundayClose { get; init; }
+            public decimal DeliveryFee { get; init; }
+            public decimal MinimumDeliverySpend { get; init; }
+            public int EstimatedDeliveryTimeInMinutes { get; init; }
         }
     }
 }

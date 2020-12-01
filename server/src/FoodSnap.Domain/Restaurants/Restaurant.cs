@@ -84,6 +84,51 @@ namespace FoodSnap.Domain.Restaurants
 
         public OpeningTimes OpeningTimes { get; set; } = new();
 
+        private Money minimumDeliverySpend = new(0);
+        public Money MinimumDeliverySpend
+        {
+            get => minimumDeliverySpend;
+            set
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(MinimumDeliverySpend));
+                }
+
+                minimumDeliverySpend = value;
+            }
+        }
+
+        private Money deliveryFee = new(0);
+        public Money DeliveryFee
+        {
+            get => deliveryFee;
+            set
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(DeliveryFee));
+                }
+
+                deliveryFee = value;
+            }
+        }
+
+        private int estimatedDeliveryTime = 30;
+        public int EstimatedDeliveryTimeInMinutes
+        {
+            get => estimatedDeliveryTime;
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("Delivery time must be greater than zero.");
+                }
+
+                estimatedDeliveryTime = value;
+            }
+        }
+
         public void Approve()
         {
             if (Status != RestaurantStatus.PendingApproval)

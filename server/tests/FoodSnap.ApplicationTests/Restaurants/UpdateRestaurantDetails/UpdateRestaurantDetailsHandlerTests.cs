@@ -48,9 +48,12 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
 
             var command = new UpdateRestaurantDetailsCommand
             {
-                Id = restaurant.Id.Value,
+                RestaurantId = restaurant.Id.Value,
                 Name = "Kung Flu",
-                PhoneNumber = "09876543210"
+                PhoneNumber = "09876543210",
+                MinimumDeliverySpend = 13m,
+                DeliveryFee = 3m,
+                EstimatedDeliveryTimeInMinutes = 40,
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
@@ -59,6 +62,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
 
             Assert.Equal(command.Name, restaurant.Name);
             Assert.Equal(command.PhoneNumber, restaurant.PhoneNumber.Number);
+            Assert.Equal(command.MinimumDeliverySpend, restaurant.MinimumDeliverySpend.Amount);
+            Assert.Equal(command.DeliveryFee, restaurant.DeliveryFee.Amount);
+            Assert.Equal(command.EstimatedDeliveryTimeInMinutes, restaurant.EstimatedDeliveryTimeInMinutes);
 
             Assert.True(unitOfWorkSpy.Commited);
         }
@@ -76,9 +82,12 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
 
             var command = new UpdateRestaurantDetailsCommand
             {
-                Id = Guid.NewGuid(),
+                RestaurantId = Guid.NewGuid(),
                 Name = "Kung Flu",
-                PhoneNumber = "09876543210"
+                PhoneNumber = "09876543210",
+                MinimumDeliverySpend = 13m,
+                DeliveryFee = 3m,
+                EstimatedDeliveryTimeInMinutes = 40,
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
@@ -102,9 +111,12 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
 
             var command = new UpdateRestaurantDetailsCommand
             {
-                Id = restaurant.Id.Value,
+                RestaurantId = restaurant.Id.Value,
                 Name = "Kung Flu",
-                PhoneNumber = "09876543210"
+                PhoneNumber = "09876543210",
+                MinimumDeliverySpend = 13m,
+                DeliveryFee = 3m,
+                EstimatedDeliveryTimeInMinutes = 40,
             };
 
             var result = await handler.Handle(command, CancellationToken.None);

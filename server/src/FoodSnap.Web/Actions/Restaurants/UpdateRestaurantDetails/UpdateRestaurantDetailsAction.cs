@@ -22,19 +22,17 @@ namespace FoodSnap.Web.Actions.Restaurants.UpdateRestaurantDetails
         {
             var command = new UpdateRestaurantDetailsCommand
             {
-                Id = id,
+                RestaurantId = id,
                 Name = request.Name,
                 PhoneNumber = request.PhoneNumber,
+                DeliveryFee = request.DeliveryFee,
+                MinimumDeliverySpend = request.MinimumDeliverySpend,
+                EstimatedDeliveryTimeInMinutes = request.EstimatedDeliveryTimeInMinutes,
             };
 
             var result = await sender.Send(command);
 
-            if (!result.IsSuccess)
-            {
-                return Error(result.Error);
-            }
-
-            return Ok();
+            return result.IsSuccess ? Ok() : Error(result.Error);
         }
     }
 }

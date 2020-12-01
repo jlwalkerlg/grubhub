@@ -20,7 +20,7 @@ namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
             UpdateRestaurantDetailsCommand command,
             CancellationToken cancellationToken)
         {
-            var id = new RestaurantId(command.Id);
+            var id = new RestaurantId(command.RestaurantId);
             var restaurant = await unitOfWork.Restaurants.GetById(id);
 
             if (restaurant == null)
@@ -35,6 +35,9 @@ namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
 
             restaurant.Name = command.Name;
             restaurant.PhoneNumber = new PhoneNumber(command.PhoneNumber);
+            restaurant.MinimumDeliverySpend = new Money(command.MinimumDeliverySpend);
+            restaurant.DeliveryFee = new Money(command.DeliveryFee);
+            restaurant.EstimatedDeliveryTimeInMinutes = command.EstimatedDeliveryTimeInMinutes;
 
             await unitOfWork.Commit();
 

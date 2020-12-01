@@ -42,6 +42,9 @@ namespace FoodSnap.WebTests.Integration.Restaurants.UpdateRestaurantDetails
             {
                 Name = "Main Chow",
                 PhoneNumber = "09876543210",
+                MinimumDeliverySpend = 13m,
+                DeliveryFee = 3m,
+                EstimatedDeliveryTimeInMinutes = 40,
             };
 
             var response = await Put($"/restaurants/{restaurant.Id.Value}", request);
@@ -51,6 +54,9 @@ namespace FoodSnap.WebTests.Integration.Restaurants.UpdateRestaurantDetails
             var restaurantDto = await Get<RestaurantDto>($"/restaurants/{restaurant.Id.Value}");
             Assert.Equal("Main Chow", restaurantDto.Name);
             Assert.Equal("09876543210", restaurantDto.PhoneNumber);
+            Assert.Equal(13m, restaurantDto.MinimumDeliverySpend);
+            Assert.Equal(3m, restaurantDto.DeliveryFee);
+            Assert.Equal(40, restaurantDto.EstimatedDeliveryTimeInMinutes);
         }
     }
 }

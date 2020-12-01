@@ -7,7 +7,12 @@ import useUpdateRestaurantDetails from "~/api/restaurants/useUpdateRestaurantDet
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import { combineRules, PhoneRule, RequiredRule } from "~/services/forms/Rule";
+import {
+  combineRules,
+  MinRule,
+  PhoneRule,
+  RequiredRule,
+} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
 import { DashboardLayout } from "../DashboardLayout";
 
@@ -18,6 +23,9 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
     defaultValues: {
       name: restaurant.name,
       phoneNumber: restaurant.phoneNumber,
+      deliveryFee: restaurant.deliveryFee,
+      minimumDeliverySpend: restaurant.minimumDeliverySpend,
+      estimatedDeliveryTimeInMinutes: restaurant.estimatedDeliveryTimeInMinutes,
     },
   });
 
@@ -93,6 +101,73 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         />
         {form.errors.phoneNumber && (
           <p className="form-error mt-1">{form.errors.phoneNumber.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="deliveryFee">
+          Delivery Fee <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+          })}
+          className="input"
+          type="number"
+          min="0"
+          step="0.01"
+          name="deliveryFee"
+          id="deliveryFee"
+          data-invalid={!!form.errors.deliveryFee}
+        />
+        {form.errors.deliveryFee && (
+          <p className="form-error mt-1">{form.errors.deliveryFee.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="minimumDeliverySpend">
+          Minimum Delivery Spend <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+          })}
+          className="input"
+          type="number"
+          min="0"
+          step="0.01"
+          name="minimumDeliverySpend"
+          id="minimumDeliverySpend"
+          data-invalid={!!form.errors.minimumDeliverySpend}
+        />
+        {form.errors.minimumDeliverySpend && (
+          <p className="form-error mt-1">
+            {form.errors.minimumDeliverySpend.message}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="estimatedDeliveryTimeInMinutes">
+          Estimated Delivery Time (mins) <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new MinRule(1)]),
+          })}
+          className="input"
+          type="number"
+          min="5"
+          step="5"
+          name="estimatedDeliveryTimeInMinutes"
+          id="estimatedDeliveryTimeInMinutes"
+          data-invalid={!!form.errors.estimatedDeliveryTimeInMinutes}
+        />
+        {form.errors.estimatedDeliveryTimeInMinutes && (
+          <p className="form-error mt-1">
+            {form.errors.estimatedDeliveryTimeInMinutes.message}
+          </p>
         )}
       </div>
 

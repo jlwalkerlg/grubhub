@@ -8,26 +8,43 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
     public class UpdateRestaurantDetailsValidatorTests
     {
         private readonly UpdateRestaurantDetailsValidator validator;
+        private readonly UpdateRestaurantDetailsCommand validCommand;
 
         public UpdateRestaurantDetailsValidatorTests()
         {
             validator = new UpdateRestaurantDetailsValidator();
+
+            validCommand = new UpdateRestaurantDetailsCommand
+            {
+                RestaurantId = Guid.NewGuid(),
+                Name = "Chow Main",
+                PhoneNumber = "01234567890",
+                MinimumDeliverySpend = 0,
+                DeliveryFee = 0,
+                EstimatedDeliveryTimeInMinutes = 5,
+            };
+        }
+
+        [Fact]
+        public async Task It_Passes()
+        {
+            var result = await validator.Validate(validCommand);
+
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
         public async Task Disallows_Empty_Ids()
         {
-            var command = new UpdateRestaurantDetailsCommand
+            var command = validCommand with
             {
-                Id = Guid.Empty,
-                Name = "Chow Main",
-                PhoneNumber = "01234567890",
+                RestaurantId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Id)));
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
         [Theory]
@@ -36,11 +53,9 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
         [InlineData(" ")]
         public async Task Disallows_Invalid_Names(string name)
         {
-            var command = new UpdateRestaurantDetailsCommand
+            var command = validCommand with
             {
-                Id = Guid.NewGuid(),
                 Name = name,
-                PhoneNumber = "01234567890",
             };
 
             var result = await validator.Validate(command);
@@ -56,10 +71,8 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
         [InlineData("1352314")]
         public async Task Disallows_Invalid_Phone_Numbers(string number)
         {
-            var command = new UpdateRestaurantDetailsCommand
+            var command = validCommand with
             {
-                Id = Guid.NewGuid(),
-                Name = "Chow Main",
                 PhoneNumber = number,
             };
 
@@ -67,6 +80,53 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
 
             Assert.False(result.IsSuccess);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.PhoneNumber)));
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        public async Task Disallows_Invalid_Delivery_Fees(decimal fee)
+        {
+            var command = validCommand with
+            {
+                DeliveryFee = fee,
+            };
+
+            var result = await validator.Validate(command);
+
+            Assert.False(result.IsSuccess);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.DeliveryFee)));
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        public async Task Disallows_Invalid_Minimum_Delivery_Spends(decimal spend)
+        {
+            var command = validCommand with
+            {
+                MinimumDeliverySpend = spend,
+            };
+
+            var result = await validator.Validate(command);
+
+            Assert.False(result.IsSuccess);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MinimumDeliverySpend)));
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(4)]
+        public async Task Disallows_Invalid_Estimated_Delivery_Times(int time)
+        {
+            var command = validCommand with
+            {
+                EstimatedDeliveryTimeInMinutes = time,
+            };
+
+            var result = await validator.Validate(command);
+
+            Assert.False(result.IsSuccess);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.EstimatedDeliveryTimeInMinutes)));
         }
     }
 }

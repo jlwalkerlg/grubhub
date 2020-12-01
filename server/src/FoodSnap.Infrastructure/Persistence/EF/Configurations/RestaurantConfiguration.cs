@@ -1,4 +1,3 @@
-using System;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Microsoft.EntityFrameworkCore;
@@ -91,6 +90,27 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
                     y.Property(z => z.Close).HasColumnName("sunday_close");
                 });
             });
+
+            builder.OwnsOne(x => x.DeliveryFee, x =>
+            {
+                x.Property(y => y.Amount)
+                    .IsRequired()
+                    .HasPrecision(4, 2)
+                    .HasColumnName("delivery_fee");
+            });
+
+            builder.OwnsOne(x => x.MinimumDeliverySpend, x =>
+            {
+                x.Property(y => y.Amount)
+                    .IsRequired()
+                    .HasPrecision(5, 2)
+                    .HasDefaultValue(0m)
+                    .HasColumnName("minimum_delivery_spend");
+            });
+
+            builder.Property(x => x.EstimatedDeliveryTimeInMinutes)
+                .IsRequired()
+                .HasColumnName("estimated_delivery_time_in_minutes");
         }
     }
 }

@@ -13,6 +13,9 @@ namespace FoodSnap.Application.Restaurants
         public float Longitude { get; init; }
         public string Status { get; init; }
         public OpeningTimesDto OpeningTimes { get; init; } = new();
+        public decimal DeliveryFee { get; init; }
+        public decimal MinimumDeliverySpend { get; init; }
+        public int EstimatedDeliveryTimeInMinutes { get; init; }
     }
 
     public record OpeningTimesDto

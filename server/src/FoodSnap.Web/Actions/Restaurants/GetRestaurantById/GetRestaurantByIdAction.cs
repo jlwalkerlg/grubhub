@@ -25,12 +25,7 @@ namespace FoodSnap.Web.Actions.Restaurants.GetRestaurantById
 
             var result = await sender.Send(query);
 
-            if (!result.IsSuccess)
-            {
-                return Error(result.Error);
-            }
-
-            return Ok(result.Value);
+            return result.IsSuccess ? Ok(result.Value) : Error(result.Error);
         }
     }
 }

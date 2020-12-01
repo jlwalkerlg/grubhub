@@ -8,6 +8,9 @@ export interface RestaurantDto {
   longitude: number;
   status: RestaurantStatus;
   openingTimes: OpeningTimes;
+  deliveryFee: number;
+  minimumDeliverySpend: number;
+  estimatedDeliveryTimeInMinutes: number;
 }
 
 type RestaurantStatus = "PendingApproval" | "Approved";

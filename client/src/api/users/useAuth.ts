@@ -20,7 +20,9 @@ export async function getAuthUser() {
 }
 
 export function useAuthUser() {
-  return useQuery<UserDto, ApiError>(getAuthUserQueryKey(), getAuthUser);
+  return useQuery<UserDto, ApiError>(getAuthUserQueryKey(), getAuthUser, {
+    retry: false,
+  });
 }
 
 export default function useAuth() {

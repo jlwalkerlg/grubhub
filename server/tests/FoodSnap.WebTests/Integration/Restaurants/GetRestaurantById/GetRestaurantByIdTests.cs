@@ -31,6 +31,13 @@ namespace FoodSnap.WebTests.Integration.Restaurants.GetRestaurantById
                 new PhoneNumber("01234567890"),
                 new Address("12 Maine Road, Madchester, MN12 1NM"),
                 new Coordinates(1, 2));
+            restaurant.OpeningTimes = new OpeningTimes()
+            {
+                Monday = new OpeningHours(new TimeSpan(10, 30, 0), new TimeSpan(16, 0, 0)),
+            };
+            restaurant.MinimumDeliverySpend = new Money(10m);
+            restaurant.DeliveryFee = new Money(1.5m);
+            restaurant.EstimatedDeliveryTimeInMinutes = 40;
 
             var menu = new Menu(restaurant.Id);
 
@@ -45,6 +52,11 @@ namespace FoodSnap.WebTests.Integration.Restaurants.GetRestaurantById
             Assert.Equal("12 Maine Road, Madchester, MN12 1NM", restaurantDto.Address);
             Assert.Equal(1, restaurantDto.Latitude);
             Assert.Equal(2, restaurantDto.Longitude);
+            Assert.Equal("10:30", restaurantDto.OpeningTimes.Monday.Open);
+            Assert.Equal("16:00", restaurantDto.OpeningTimes.Monday.Close);
+            Assert.Equal(1.5m, restaurantDto.DeliveryFee);
+            Assert.Equal(10m, restaurantDto.MinimumDeliverySpend);
+            Assert.Equal(40, restaurantDto.EstimatedDeliveryTimeInMinutes);
         }
     }
 }
