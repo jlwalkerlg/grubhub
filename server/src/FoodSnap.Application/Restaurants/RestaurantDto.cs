@@ -12,5 +12,23 @@ namespace FoodSnap.Application.Restaurants
         public float Latitude { get; init; }
         public float Longitude { get; init; }
         public string Status { get; init; }
+        public OpeningTimesDto OpeningTimes { get; init; } = new();
+    }
+
+    public record OpeningTimesDto
+    {
+        public OpeningHoursDto Monday { get; init; }
+        public OpeningHoursDto Tuesday { get; init; }
+        public OpeningHoursDto Wednesday { get; init; }
+        public OpeningHoursDto Thursday { get; init; }
+        public OpeningHoursDto Friday { get; init; }
+        public OpeningHoursDto Saturday { get; init; }
+        public OpeningHoursDto Sunday { get; init; }
+    }
+
+    public record OpeningHoursDto
+    {
+        public string Open { get; init; }
+        public string Close { get; init; }
     }
 }

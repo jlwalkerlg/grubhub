@@ -82,6 +82,8 @@ namespace FoodSnap.Domain.Restaurants
 
         public RestaurantStatus Status { get; private set; }
 
+        public OpeningTimes OpeningTimes { get; set; } = new();
+
         public void Approve()
         {
             if (Status != RestaurantStatus.PendingApproval)
@@ -94,7 +96,7 @@ namespace FoodSnap.Domain.Restaurants
 
         protected override bool IdentityEquals(Restaurant other)
         {
-            return Id == other.Id;
+            return Id.Equals(other.Id);
         }
 
         public override int GetHashCode()

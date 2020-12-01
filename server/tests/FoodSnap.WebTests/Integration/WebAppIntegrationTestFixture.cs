@@ -28,6 +28,7 @@ namespace FoodSnap.WebTests.Integration
 
             using (var db = factory.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
             {
+                db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
             }
 

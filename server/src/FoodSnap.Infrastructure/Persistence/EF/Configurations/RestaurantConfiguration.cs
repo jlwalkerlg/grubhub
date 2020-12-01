@@ -1,3 +1,4 @@
+using System;
 using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,45 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
                 .HasColumnName("status")
                 .HasConversion<string>()
                 .IsRequired();
+
+            builder.OwnsOne(x => x.OpeningTimes, x =>
+            {
+                x.OwnsOne(y => y.Monday, y =>
+                {
+                    y.Property(z => z.Open).HasColumnName("monday_open");
+                    y.Property(z => z.Close).HasColumnName("monday_close");
+                });
+                x.OwnsOne(y => y.Tuesday, y =>
+                {
+                    y.Property(z => z.Open).HasColumnName("tuesday_open");
+                    y.Property(z => z.Close).HasColumnName("tuesday_close");
+                });
+                x.OwnsOne(y => y.Wednesday, y =>
+                {
+                    y.Property(z => z.Open).HasColumnName("wednesday_open");
+                    y.Property(z => z.Close).HasColumnName("wednesday_close");
+                });
+                x.OwnsOne(y => y.Thursday, y =>
+                {
+                    y.Property(z => z.Open).HasColumnName("thursday_open");
+                    y.Property(z => z.Close).HasColumnName("thursday_close");
+                });
+                x.OwnsOne(y => y.Friday, y =>
+                {
+                    y.Property(z => z.Open).HasColumnName("friday_open");
+                    y.Property(z => z.Close).HasColumnName("friday_close");
+                });
+                x.OwnsOne(y => y.Saturday, y =>
+                {
+                    y.Property(z => z.Open).HasColumnName("saturday_open");
+                    y.Property(z => z.Close).HasColumnName("saturday_close");
+                });
+                x.OwnsOne(y => y.Sunday, y =>
+                {
+                    y.Property(z => z.Open).HasColumnName("sunday_open");
+                    y.Property(z => z.Close).HasColumnName("sunday_close");
+                });
+            });
         }
     }
 }

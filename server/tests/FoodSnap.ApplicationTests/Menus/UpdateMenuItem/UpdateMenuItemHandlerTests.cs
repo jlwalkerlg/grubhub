@@ -10,7 +10,6 @@ using FoodSnap.Domain.Restaurants;
 using FoodSnap.Domain.Users;
 using Xunit;
 using static FoodSnap.Application.Error;
-using Xunit.Abstractions;
 
 namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
 {
@@ -19,15 +18,13 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
         private readonly AuthenticatorSpy authenticatorSpy;
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly UpdateMenuItemHandler handler;
-        private readonly ITestOutputHelper output;
 
-        public UpdateMenuItemHandlerTests(ITestOutputHelper output)
+        public UpdateMenuItemHandlerTests()
         {
             authenticatorSpy = new AuthenticatorSpy();
             unitOfWorkSpy = new UnitOfWorkSpy();
 
             handler = new UpdateMenuItemHandler(authenticatorSpy, unitOfWorkSpy);
-            this.output = output;
         }
 
         [Fact]
@@ -229,7 +226,6 @@ namespace FoodSnap.ApplicationTests.Menus.UpdateMenuItem
             };
 
             var result = await handler.Handle(command, CancellationToken.None);
-            output.WriteLine(result.Error.Message);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);

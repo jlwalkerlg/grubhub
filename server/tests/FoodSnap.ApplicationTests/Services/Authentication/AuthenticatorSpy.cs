@@ -1,3 +1,4 @@
+using System;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain.Users;
 
@@ -14,9 +15,14 @@ namespace FoodSnap.ApplicationTests.Services.Authentication
             UserId = userId;
         }
 
+        public void SignIn(Guid userId)
+        {
+            SignIn(new UserId(userId));
+        }
+
         public void SignIn(User user)
         {
-            UserId = user.Id;
+            SignIn(user.Id);
         }
 
         public void SignOut()

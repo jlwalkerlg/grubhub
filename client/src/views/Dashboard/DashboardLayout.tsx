@@ -5,6 +5,7 @@ import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
 import ClipboardIcon from "~/components/Icons/ClipboardIcon";
+import ClockIcon from "~/components/Icons/ClockIcon";
 import IdentificationIcon from "~/components/Icons/IdentificationIcon";
 import InfoIcon from "~/components/Icons/InfoIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
@@ -18,14 +19,19 @@ interface DashboardRoute {
 
 const routes: DashboardRoute[] = [
   {
+    title: "Manager Details",
+    pathname: "/dashboard/manager-details",
+    icon: IdentificationIcon,
+  },
+  {
     title: "Restaurant Details",
     pathname: "/dashboard/restaurant-details",
     icon: BuildingIcon,
   },
   {
-    title: "Manager Details",
-    pathname: "/dashboard/manager-details",
-    icon: IdentificationIcon,
+    title: "Opening Times",
+    pathname: "/dashboard/opening-times",
+    icon: ClockIcon,
   },
   {
     title: "Menu Builder",
@@ -69,9 +75,9 @@ export const Dashboard: React.FC<Props> = ({ children, route }) => {
         </div>
       </div>
 
-      <div className="container mt-8">
-        <div className="flex items-start">
-          <div className="w-1/4 bg-white shadow-sm">
+      <div className="container mt-4 lg:mt-8">
+        <div className="lg:flex items-start">
+          <div className="lg:w-1/4 bg-white shadow-sm">
             <ul>
               {routes.map((x) => {
                 return (
@@ -95,7 +101,7 @@ export const Dashboard: React.FC<Props> = ({ children, route }) => {
             </ul>
           </div>
 
-          <div className="w-3/4 ml-4 bg-white p-8 shadow-sm border-t-2 border-solid border-gray-300">
+          <div className="lg:w-3/4 lg:ml-4 mt-4 lg:mt-0 bg-white p-8 shadow-sm border-t-2 border-solid border-gray-300">
             {children}
           </div>
         </div>
