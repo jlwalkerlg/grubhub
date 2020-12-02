@@ -17,7 +17,7 @@ const Login: NextPage = () => {
     <Layout title="Login">
       <main>
         <div className="container mt-8">
-          <div className="shadow-xs p-8 bg-white rounded-sm">
+          <div className="ring-1 ring-black ring-opacity-5 p-8 bg-white rounded-sm">
             <h2 className="text-center font-medium text-xl">Welcome Back</h2>
             <LoginForm />
           </div>

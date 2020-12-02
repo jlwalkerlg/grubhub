@@ -1,5 +1,7 @@
 const defaults = require("tailwindcss/defaultTheme");
 
+const red = defaults.colors.red;
+
 const green = {
   100: "#dbf5db",
   200: "#b7ebb7",
@@ -14,10 +16,6 @@ const green = {
 
 module.exports = {
   purge: ["./src/views/**/*.tsx", "./src/components/**/*.tsx"],
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
   theme: {
     container: {
       center: true,
@@ -29,9 +27,9 @@ module.exports = {
       },
       colors: {
         primary: {
-          ...defaults.colors.red,
-          default: defaults.colors.red["700"],
-          darker: defaults.colors.red["800"],
+          ...red,
+          DEFAULT: red["700"],
+          darker: red["800"],
           disabled: "rgba(197,48,48,0.58)",
         },
         secondary: green,
