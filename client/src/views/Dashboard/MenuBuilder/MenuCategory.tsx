@@ -109,37 +109,39 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
 
   return (
     <div className="mt-4">
-      <div className="rounded bg-gray-100 px-4 py-3 shadow-sm text-primary font-medium flex items-center justify-between">
+      <div className="rounded bg-gray-100 px-2 py-3 shadow-sm text-primary font-medium flex items-center justify-between">
         <p>{category.name}</p>
 
-        {removeStatus.isLoading ? (
-          <div>
-            <SpinnerIcon className="w-4 h-4 animate-spin" />
-          </div>
-        ) : (
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              className="text-blue-700"
-              onClick={onEdit}
-              disabled={renameForm.formState.isSubmitting}
-            >
-              <PencilIcon className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="text-primary ml-2"
-              onClick={onDelete}
-              disabled={removeStatus.isLoading}
-            >
-              <CloseIcon className="w-5 h-5" />
-            </button>
-          </div>
-        )}
+        <div className="ml-1">
+          {removeStatus.isLoading ? (
+            <div>
+              <SpinnerIcon className="w-4 h-4 animate-spin" />
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                className="text-blue-700"
+                onClick={onEdit}
+                disabled={renameForm.formState.isSubmitting}
+              >
+                <PencilIcon className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                className="text-primary ml-2"
+                onClick={onDelete}
+                disabled={removeStatus.isLoading}
+              >
+                <CloseIcon className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {isRenameFormOpen && (
-        <form onSubmit={onRename} className="px-4 pb-3">
+        <form onSubmit={onRename} className="px-2 pb-3">
           {renameStatus.isError && (
             <div className="my-3">
               <ErrorAlert message={renameStatus.error.message} />
@@ -171,7 +173,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
             <button
               type="submit"
               disabled={renameForm.formState.isSubmitting}
-              className="btn btn-sm btn-primary"
+              className="w-full lg:w-auto btn btn-sm btn-primary mt-3 lg:mt-0"
             >
               Rename
             </button>
@@ -179,7 +181,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
               type="button"
               onClick={onCancelEdit}
               disabled={renameForm.formState.isSubmitting}
-              className="btn btn-sm btn-outline-primary ml-2"
+              className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel
             </button>
@@ -187,7 +189,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
         </form>
       )}
 
-      <div className="p-2">
+      <div>
         {category.items.map((item) => (
           <MenuItem key={item.name} category={category} item={item} />
         ))}

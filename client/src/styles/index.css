@@ -17,7 +17,6 @@ body {
 
 .btn-sm {
   @apply px-3 text-sm;
-  transition: background-color 0.2s ease-in-out;
 }
 
 .btn-primary {

@@ -112,7 +112,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
   }
 
   return (
-    <div className="px-4 py-2">
+    <div className="px-2 py-1 lg:py-2">
       <div>
         <div className="flex items-center justify-between">
           <p className="font-semibold">{item.name}</p>
@@ -147,7 +147,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
       </div>
 
       {isUpdateFormOpen && (
-        <form onSubmit={onSubmit} className="px-4 pb-3">
+        <form onSubmit={onSubmit} className="px-2 pb-3">
           {updateStatus.isError && (
             <div className="my-3">
               <ErrorAlert message={updateStatus.error.message} />
@@ -222,7 +222,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
             <button
               type="submit"
               disabled={updateForm.formState.isSubmitting}
-              className="btn btn-sm btn-primary"
+              className="w-full lg:w-auto btn btn-sm btn-primary"
             >
               Update Item
             </button>
@@ -230,7 +230,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               type="button"
               onClick={onCancelEdit}
               disabled={updateForm.formState.isSubmitting}
-              className="btn btn-sm btn-outline-primary ml-2"
+              className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel
             </button>

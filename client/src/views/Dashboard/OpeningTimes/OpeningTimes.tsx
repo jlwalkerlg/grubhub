@@ -61,14 +61,17 @@ const OpeningTimesInput: React.FC<{
   const isOpen = form.watch(openingName) !== "";
 
   return (
-    <div className="mt-3">
-      <div className="flex items-center justify-center">
-        <label className="label w-1/5" htmlFor={openingName}>
+    <div className="mt-3 text-center">
+      <div className="lg:flex items-center justify-center">
+        <label
+          className="label lg:w-1/5 lg:text-left text-base text-gray-800 tracking-wide"
+          htmlFor={openingName}
+        >
           {day}
         </label>
 
-        <div className="mx-auto flex justify-center items-center">
-          {!isOpen && <div>Closed</div>}
+        <div className="mt-1 mx-auto flex justify-center items-center">
+          {!isOpen && <div className="italic tracking-wide">Closed</div>}
 
           <div className={isOpen ? undefined : "hidden"}>
             <div>
@@ -101,13 +104,21 @@ const OpeningTimesInput: React.FC<{
           </div>
         </div>
 
-        <div className="w-1/5 text-right">
+        <div className="lg:w-1/5 lg:text-right mt-1 lg:mt-0">
           {isOpen ? (
-            <button type="button" onClick={close} className="">
+            <button
+              type="button"
+              onClick={close}
+              className="underline text-red-700"
+            >
               Close
             </button>
           ) : (
-            <button type="button" onClick={open} className="">
+            <button
+              type="button"
+              onClick={open}
+              className="underline text-red-700"
+            >
               Open
             </button>
           )}
@@ -221,7 +232,7 @@ const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
         />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-8">
         <button
           type="submit"
           className="btn btn-primary font-semibold w-full"
@@ -246,8 +257,8 @@ const OpeningTimes: NextPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex items-center">
-        <h2 className="text-2xl font-semibold text-gray-800 tracking-wider">
+      <div className="flex items-center justify-center lg:justify-start">
+        <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 tracking-wider">
           Opening Times
         </h2>
         {!isLoading && isFetching && (
