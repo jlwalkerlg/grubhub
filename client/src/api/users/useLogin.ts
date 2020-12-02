@@ -13,7 +13,7 @@ async function login(command: LoginCommand) {
 }
 
 export default function useLogin() {
-  const queryCache = useQueryCache();
+  const cache = useQueryCache();
 
   return useMutation<void, ApiError, LoginCommand, null>(login, {
     onSuccess: async () => {
@@ -25,7 +25,7 @@ export default function useLogin() {
         path: "/",
       });
 
-      queryCache.refetchQueries(getAuthUserQueryKey());
+      cache.setQueryData(getAuthUserQueryKey(), user);
     },
   });
 }
