@@ -112,7 +112,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
   }
 
   return (
-    <div className="px-2 py-1 lg:py-2">
+    <div className="py-1 mt-2">
       <div>
         <div className="flex items-center justify-between">
           <p className="font-semibold">{item.name}</p>

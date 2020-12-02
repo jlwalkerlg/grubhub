@@ -41,8 +41,8 @@ const routes: DashboardRoute[] = [
   },
 ];
 
-const routeButtonLinkSize = 43;
-const menuHeight = routeButtonLinkSize * routes.length;
+const menuLinkSize = 41;
+const menuHeight = menuLinkSize * routes.length;
 
 interface Props {
   route: DashboardRoute;
@@ -115,23 +115,22 @@ export const Dashboard: React.FC<Props> = ({ children, route }) => {
             <div className="block lg:hidden">
               <button
                 type="button"
-                className="w-full flex items-center justify-center hover:text-primary py-3 px-6 border-b border-gray-200 border-solid hover:shadow-sm"
+                className="w-full flex items-center justify-center text-primary py-3 px-6 border-b border-gray-200 border-solid hover:shadow-sm"
                 onClick={toggleMenu}
               >
+                <span>Menu</span>
                 <ChevronIcon
                   className={
-                    "w-5 h-5 transition-transform duration-150 ease-out" +
+                    "w-4 h-4 ml-2 transition-transform duration-150 ease-out" +
                     (isMenuOpen ? " transform rotate-180" : "")
                   }
                 />
               </button>
               <ul
-                className="overflow-hidden"
+                className="overflow-hidden ease-out duration-300"
                 style={{
                   height: isMenuOpen ? menuHeight : 0,
                   transitionProperty: "height",
-                  transitionDuration: "300ms",
-                  transitionTimingFunction: isMenuOpen ? "ease-in" : "ease-out",
                 }}
               >
                 <MenuLinks route={route} />

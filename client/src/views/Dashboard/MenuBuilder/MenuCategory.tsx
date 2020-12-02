@@ -109,7 +109,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
 
   return (
     <div className="mt-4">
-      <div className="rounded bg-gray-100 px-2 py-3 shadow-sm text-primary font-medium flex items-center justify-between">
+      <div className="rounded bg-gray-100 px-4 py-3 shadow-sm text-primary font-medium flex items-center justify-between">
         <p>{category.name}</p>
 
         <div className="ml-1">
@@ -189,7 +189,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
         </form>
       )}
 
-      <div>
+      <div className="px-2 mt-2">
         {category.items.map((item) => (
           <MenuItem key={item.name} category={category} item={item} />
         ))}
