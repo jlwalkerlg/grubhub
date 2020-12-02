@@ -104,21 +104,13 @@ const OpeningTimesInput: React.FC<{
           </div>
         </div>
 
-        <div className="lg:w-1/5 lg:text-right mt-1 lg:mt-0">
+        <div className="lg:w-1/5 lg:text-right mt-1">
           {isOpen ? (
-            <button
-              type="button"
-              onClick={close}
-              className="underline text-red-700"
-            >
+            <button type="button" onClick={close} className="text-red-700">
               Close
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={open}
-              className="underline text-red-700"
-            >
+            <button type="button" onClick={open} className="text-red-700">
               Open
             </button>
           )}
