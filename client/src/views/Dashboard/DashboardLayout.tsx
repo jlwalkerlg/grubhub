@@ -20,11 +20,6 @@ interface DashboardRoute {
 
 const routes: DashboardRoute[] = [
   {
-    title: "Manager Details",
-    pathname: "/dashboard/manager-details",
-    icon: IdentificationIcon,
-  },
-  {
     title: "Restaurant Details",
     pathname: "/dashboard/restaurant-details",
     icon: BuildingIcon,
@@ -38,6 +33,11 @@ const routes: DashboardRoute[] = [
     title: "Menu Builder",
     pathname: "/dashboard/menu-builder",
     icon: ClipboardIcon,
+  },
+  {
+    title: "Manager Details",
+    pathname: "/dashboard/manager-details",
+    icon: IdentificationIcon,
   },
 ];
 

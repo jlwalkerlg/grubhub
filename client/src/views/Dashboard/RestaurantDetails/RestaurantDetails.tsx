@@ -171,7 +171,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         )}
       </div>
 
-      <div className="mt-4">
+      <div className="mt-5">
         <button
           type="submit"
           disabled={form.formState.isSubmitting}
