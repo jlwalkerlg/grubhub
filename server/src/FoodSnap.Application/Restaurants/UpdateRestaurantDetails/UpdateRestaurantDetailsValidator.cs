@@ -29,6 +29,9 @@ namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
             CascadeRuleFor(x => x.MinimumDeliverySpend)
                 .Min(0);
 
+            CascadeRuleFor(x => x.MaxDeliveryDistanceInKm)
+                .Min(0);
+
             CascadeRuleFor(x => x.EstimatedDeliveryTimeInMinutes)
                 .Min(5);
         }

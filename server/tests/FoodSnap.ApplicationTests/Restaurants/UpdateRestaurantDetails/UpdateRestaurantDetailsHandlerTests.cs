@@ -53,6 +53,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = "09876543210",
                 MinimumDeliverySpend = 13m,
                 DeliveryFee = 3m,
+                MaxDeliveryDistanceInKm = 10,
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
@@ -64,6 +65,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
             Assert.Equal(command.PhoneNumber, restaurant.PhoneNumber.Number);
             Assert.Equal(command.MinimumDeliverySpend, restaurant.MinimumDeliverySpend.Amount);
             Assert.Equal(command.DeliveryFee, restaurant.DeliveryFee.Amount);
+            Assert.Equal(command.MaxDeliveryDistanceInKm, restaurant.MaxDeliveryDistanceInKm);
             Assert.Equal(command.EstimatedDeliveryTimeInMinutes, restaurant.EstimatedDeliveryTimeInMinutes);
 
             Assert.True(unitOfWorkSpy.Commited);
@@ -87,6 +89,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = "09876543210",
                 MinimumDeliverySpend = 13m,
                 DeliveryFee = 3m,
+                MaxDeliveryDistanceInKm = 10,
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
@@ -116,6 +119,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = "09876543210",
                 MinimumDeliverySpend = 13m,
                 DeliveryFee = 3m,
+                MaxDeliveryDistanceInKm = 10,
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 

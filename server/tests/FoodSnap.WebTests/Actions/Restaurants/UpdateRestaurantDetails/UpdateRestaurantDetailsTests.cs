@@ -20,6 +20,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = "09876543210",
                 MinimumDeliverySpend = 13m,
                 DeliveryFee = 3m,
+                MaxDeliveryDistanceInKm = 10,
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
@@ -39,6 +40,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = "09876543210",
                 MinimumDeliverySpend = 13m,
                 DeliveryFee = 3m,
+                MaxDeliveryDistanceInKm = 10,
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
@@ -58,6 +60,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = "",
                 MinimumDeliverySpend = -1m,
                 DeliveryFee = -1m,
+                MaxDeliveryDistanceInKm = -10,
                 EstimatedDeliveryTimeInMinutes = -40,
             };
 
@@ -70,6 +73,7 @@ namespace FoodSnap.WebTests.Actions.Restaurants.UpdateRestaurantDetails
             Assert.True(errors.ContainsKey("phoneNumber"));
             Assert.True(errors.ContainsKey("minimumDeliverySpend"));
             Assert.True(errors.ContainsKey("deliveryFee"));
+            Assert.True(errors.ContainsKey("maxDeliveryDistanceInKm"));
             Assert.True(errors.ContainsKey("estimatedDeliveryTimeInMinutes"));
         }
     }

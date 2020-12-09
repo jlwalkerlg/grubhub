@@ -25,6 +25,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
       phoneNumber: restaurant.phoneNumber,
       deliveryFee: restaurant.deliveryFee,
       minimumDeliverySpend: restaurant.minimumDeliverySpend,
+      maxDeliveryDistanceInKm: restaurant.maxDeliveryDistanceInKm,
       estimatedDeliveryTimeInMinutes: restaurant.estimatedDeliveryTimeInMinutes,
     },
   });
@@ -144,6 +145,29 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         {form.errors.minimumDeliverySpend && (
           <p className="form-error mt-1">
             {form.errors.minimumDeliverySpend.message}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="maxDeliveryDistanceInKm">
+          Max Delivery Distance (km) <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+          })}
+          className="input"
+          type="number"
+          min="0"
+          step="1"
+          name="maxDeliveryDistanceInKm"
+          id="maxDeliveryDistanceInKm"
+          data-invalid={!!form.errors.maxDeliveryDistanceInKm}
+        />
+        {form.errors.maxDeliveryDistanceInKm && (
+          <p className="form-error mt-1">
+            {form.errors.maxDeliveryDistanceInKm.message}
           </p>
         )}
       </div>

@@ -27,6 +27,7 @@ namespace FoodSnap.Web.Actions.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = request.PhoneNumber,
                 DeliveryFee = request.DeliveryFee,
                 MinimumDeliverySpend = request.MinimumDeliverySpend,
+                MaxDeliveryDistanceInKm = request.MaxDeliveryDistanceInKm,
                 EstimatedDeliveryTimeInMinutes = request.EstimatedDeliveryTimeInMinutes,
             };
 

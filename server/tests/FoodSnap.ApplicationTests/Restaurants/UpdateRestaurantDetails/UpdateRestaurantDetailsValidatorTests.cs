@@ -21,6 +21,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
                 PhoneNumber = "01234567890",
                 MinimumDeliverySpend = 0,
                 DeliveryFee = 0,
+                MaxDeliveryDistanceInKm = 10,
                 EstimatedDeliveryTimeInMinutes = 5,
             };
         }
@@ -110,6 +111,21 @@ namespace FoodSnap.ApplicationTests.Restaurants.UpdateRestaurantDetails
 
             Assert.False(result.IsSuccess);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MinimumDeliverySpend)));
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        public async Task Disallows_Invalid_Max_Delivery_Distance_In_Km(int distance)
+        {
+            var command = validCommand with
+            {
+                MaxDeliveryDistanceInKm = distance,
+            };
+
+            var result = await validator.Validate(command);
+
+            Assert.False(result.IsSuccess);
+            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MaxDeliveryDistanceInKm)));
         }
 
         [Theory]

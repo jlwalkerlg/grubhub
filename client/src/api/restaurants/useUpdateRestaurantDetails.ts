@@ -6,6 +6,10 @@ export interface UpdateRestaurantDetailsCommand {
   id: string;
   name: string;
   phoneNumber: string;
+  deliveryFee: number;
+  minimumDeliverySpend: number;
+  maxDeliveryDistanceInKm: number;
+  estimatedDeliveryTimeInMinutes: number;
 }
 
 async function updateRestaurantDetails(

@@ -114,7 +114,20 @@ namespace FoodSnap.Domain.Restaurants
             }
         }
 
-        public int MaxDeliveryDistanceInKm { get; set; } = 5;
+        public int maxDeliveryDistanceInKm;
+        public int MaxDeliveryDistanceInKm
+        {
+            get => maxDeliveryDistanceInKm;
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(MaxDeliveryDistanceInKm));
+                }
+
+                maxDeliveryDistanceInKm = value;
+            }
+        }
 
         private int estimatedDeliveryTime = 30;
         public int EstimatedDeliveryTimeInMinutes

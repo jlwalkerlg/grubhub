@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FoodSnap.Application.Services.Authentication;
 using FoodSnap.Domain;
 using FoodSnap.Domain.Restaurants;
+
 namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
 {
     public class UpdateRestaurantDetailsHandler : IRequestHandler<UpdateRestaurantDetailsCommand>
@@ -37,6 +38,7 @@ namespace FoodSnap.Application.Restaurants.UpdateRestaurantDetails
             restaurant.PhoneNumber = new PhoneNumber(command.PhoneNumber);
             restaurant.MinimumDeliverySpend = new Money(command.MinimumDeliverySpend);
             restaurant.DeliveryFee = new Money(command.DeliveryFee);
+            restaurant.MaxDeliveryDistanceInKm = command.MaxDeliveryDistanceInKm;
             restaurant.EstimatedDeliveryTimeInMinutes = command.EstimatedDeliveryTimeInMinutes;
 
             await unitOfWork.Commit();
