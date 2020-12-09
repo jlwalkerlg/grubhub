@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import { QueryCache, ReactQueryCacheProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import "react-toastify/dist/ReactToastify.css";
+import useIsAppMounted from "~/services/useIsAppMounted";
 import "~/styles/index.css";
 import ErrorPage from "~/views/Error/ErrorPage";
 
@@ -13,15 +14,21 @@ const queryCache = new QueryCache({
   },
 });
 
-export default function App({ Component, pageProps }: AppProps) {
-  if (pageProps.error !== undefined) {
-    return <ErrorPage code={pageProps.error} />;
+function Wrapper({ Component, pageProps }: AppProps) {
+  useIsAppMounted();
+
+  return <Component {...pageProps} />;
+}
+
+export default function App(props: AppProps) {
+  if (props.pageProps.error !== undefined) {
+    return <ErrorPage code={props.pageProps.error} />;
   }
 
   return (
     <ReactQueryCacheProvider queryCache={queryCache}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <Component {...pageProps} />
+      <Hydrate state={props.pageProps.dehydratedState}>
+        <Wrapper {...props} />
       </Hydrate>
     </ReactQueryCacheProvider>
   );

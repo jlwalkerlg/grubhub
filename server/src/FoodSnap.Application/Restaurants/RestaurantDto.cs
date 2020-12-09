@@ -15,6 +15,7 @@ namespace FoodSnap.Application.Restaurants
         public OpeningTimesDto OpeningTimes { get; init; } = new();
         public decimal DeliveryFee { get; init; }
         public decimal MinimumDeliverySpend { get; init; }
+        public int MaxDeliveryDistanceInKm { get; init; }
         public int EstimatedDeliveryTimeInMinutes { get; init; }
     }
 

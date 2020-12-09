@@ -73,6 +73,23 @@ class AddressSearcher {
       });
     });
   }
+
+  public getPostcodeByLocation(lat: number, lng: number) {
+    const request: google.maps.GeocoderRequest = {
+      location: { lat, lng },
+    };
+
+    return new Promise((resolve: (address: string) => void) => {
+      this.geocoder.geocode(request, (results) => {
+        const postcode =
+          results[0]?.address_components.filter(
+            (x) => x.types.length === 1 && x.types[0] === "postal_code"
+          )[0]?.long_name ?? null;
+
+        resolve(postcode);
+      });
+    });
+  }
 }
 
 export default new AddressSearcher();

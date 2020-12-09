@@ -1,14 +1,15 @@
 using System.Threading.Tasks;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Application;
+using FoodSnap.Domain;
 
 namespace FoodSnap.WebTests.Doubles
 {
     public class GeocoderStub : IGeocoder
     {
         public static string Address { get; } = "1 Maine Road, Manchester, MN121NM, UK";
-        public static int Latitude { get; } = 1;
-        public static int Longitude { get; } = 2;
+        public static int Latitude { get; } = 54;
+        public static int Longitude { get; } = -2;
 
         public static string InvalidAddress { get; } = "12 Invalid Street";
 
@@ -24,8 +25,7 @@ namespace FoodSnap.WebTests.Doubles
             return Task.FromResult(Result.Ok(new GeocodingResult
             {
                 FormattedAddress = Address,
-                Latitude = Latitude,
-                Longitude = Longitude,
+                Coordinates = new Coordinates(Latitude, Longitude),
             }));
         }
     }

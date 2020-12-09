@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FoodSnap.Application.Services;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.Web;
 using FoodSnap.WebTests.Doubles;
@@ -84,6 +85,11 @@ namespace FoodSnap.WebTests
             builder
                 .RegisterType<GeocoderStub>()
                 .As<IGeocoder>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<ClockStub>()
+                .As<IClock>()
                 .SingleInstance();
         }
     }

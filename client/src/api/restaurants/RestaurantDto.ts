@@ -10,6 +10,7 @@ export interface RestaurantDto {
   openingTimes: OpeningTimes;
   deliveryFee: number;
   minimumDeliverySpend: number;
+  maxDeliveryDistanceInKm: number;
   estimatedDeliveryTimeInMinutes: number;
 }
 

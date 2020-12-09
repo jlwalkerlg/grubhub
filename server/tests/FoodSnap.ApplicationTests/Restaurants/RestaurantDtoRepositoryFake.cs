@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FoodSnap.Application;
 using FoodSnap.Application.Restaurants;
+using FoodSnap.Domain;
 
 namespace FoodSnap.ApplicationTests.Restaurants
 {
@@ -13,6 +15,14 @@ namespace FoodSnap.ApplicationTests.Restaurants
         public Task<RestaurantDto> GetById(Guid id)
         {
             return Task.FromResult(Restaurants.FirstOrDefault(x => x.Id == id));
+        }
+
+        public Coordinates SearchCoordinates { get; private set; }
+
+        public Task<List<RestaurantDto>> Search(Coordinates coordinates)
+        {
+            SearchCoordinates = coordinates;
+            return Task.FromResult(Restaurants);
         }
     }
 }

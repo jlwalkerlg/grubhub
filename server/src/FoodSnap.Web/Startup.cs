@@ -1,10 +1,9 @@
 using System.Text.Json;
 using Autofac;
-using FoodSnap.Application.Services.Authentication;
-using FoodSnap.Application.Services.Hashing;
 using FoodSnap.Infrastructure.Hashing;
 using FoodSnap.Infrastructure.Persistence;
 using FoodSnap.Web.ServiceRegistration;
+using FoodSnap.Web.Services;
 using FoodSnap.Web.Services.Authentication;
 using FoodSnap.Web.Services.Cookies;
 using FoodSnap.Web.Services.Tokenization;
@@ -67,26 +66,30 @@ namespace FoodSnap.Web
             builder.AddMiddleware();
 
             builder.Register(ctx => new DbConnectionFactory(WebConfig.DbConnectionString))
-                .As<IDbConnectionFactory>()
+                .AsImplementedInterfaces()
                 .SingleInstance();
 
             builder.AddDtoRepositories();
 
             builder.RegisterType<Hasher>()
-                .As<IHasher>()
+                .AsImplementedInterfaces()
                 .SingleInstance();
 
             builder.Register(ctx => new JWTTokenizer(WebConfig.JWTSecret))
-                .As<ITokenizer>()
+                .AsImplementedInterfaces()
                 .SingleInstance();
 
             builder.RegisterType<CookieBag>()
-                .As<ICookieBag>()
+                .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<Authenticator>()
-                .As<IAuthenticator>()
+                .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<Clock>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

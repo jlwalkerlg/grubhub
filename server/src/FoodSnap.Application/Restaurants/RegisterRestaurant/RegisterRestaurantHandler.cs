@@ -43,7 +43,7 @@ namespace FoodSnap.Application.Restaurants.RegisterRestaurant
                 command.RestaurantName,
                 new PhoneNumber(command.RestaurantPhoneNumber),
                 new Address(geocodingResult.Value.FormattedAddress),
-                new Coordinates(geocodingResult.Value.Latitude, geocodingResult.Value.Longitude));
+                geocodingResult.Value.Coordinates);
 
             var menu = new Menu(restaurant.Id);
 

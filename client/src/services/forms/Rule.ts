@@ -39,6 +39,18 @@ export class EmailRule implements Rule {
   }
 }
 
+export class PostcodeRule implements Rule {
+  private static regex = /^[A-Za-z]{2}\d{1,2} ?\d[A-Za-z]{2}$/;
+
+  constructor(readonly message: string = "Must be a valid postcode.") {}
+
+  validate(value: string): string | null {
+    if (!PostcodeRule.regex.test(value)) return this.message;
+
+    return null;
+  }
+}
+
 export class PasswordRule implements Rule {
   constructor(
     readonly message: string = "Password must be at least 8 characters long."

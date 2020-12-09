@@ -108,6 +108,10 @@ namespace FoodSnap.Infrastructure.Persistence.EF.Configurations
                     .HasColumnName("minimum_delivery_spend");
             });
 
+            builder.Property(x => x.MaxDeliveryDistanceInKm)
+                .IsRequired()
+                .HasColumnName("max_delivery_distance_in_km");
+
             builder.Property(x => x.EstimatedDeliveryTimeInMinutes)
                 .IsRequired()
                 .HasColumnName("estimated_delivery_time_in_minutes");

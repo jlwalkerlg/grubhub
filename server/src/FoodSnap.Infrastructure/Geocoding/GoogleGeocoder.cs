@@ -5,6 +5,7 @@ using System.IO;
 using FoodSnap.Application;
 using System.Text.Json;
 using System.Linq;
+using FoodSnap.Domain;
 
 namespace FoodSnap.Infrastructure.Geocoding
 {
@@ -40,8 +41,9 @@ namespace FoodSnap.Infrastructure.Geocoding
             return Result.Ok(new GeocodingResult
             {
                 FormattedAddress = result.GetProperty("formatted_address").GetString(),
-                Latitude = (float)location.GetProperty("lat").GetDouble(),
-                Longitude = (float)location.GetProperty("lng").GetDouble(),
+                Coordinates = new Coordinates(
+                    (float)location.GetProperty("lat").GetDouble(),
+                    (float)location.GetProperty("lng").GetDouble()),
             });
         }
 

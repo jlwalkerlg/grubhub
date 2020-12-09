@@ -114,6 +114,8 @@ namespace FoodSnap.Domain.Restaurants
             }
         }
 
+        public int MaxDeliveryDistanceInKm { get; set; } = 5;
+
         private int estimatedDeliveryTime = 30;
         public int EstimatedDeliveryTimeInMinutes
         {

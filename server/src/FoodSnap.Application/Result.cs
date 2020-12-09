@@ -42,6 +42,8 @@ namespace FoodSnap.Application
         {
             return new Result(error);
         }
+
+        public static implicit operator Result(Error error) => new(error);
     }
 
     public class Result<T> : Result
@@ -79,5 +81,7 @@ namespace FoodSnap.Application
         {
             return new Result<T>(error);
         }
+
+        public static implicit operator Result<T>(Error error) => new(error);
     }
 }

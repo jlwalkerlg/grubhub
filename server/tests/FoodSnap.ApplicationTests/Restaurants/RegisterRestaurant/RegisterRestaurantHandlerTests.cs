@@ -1,12 +1,14 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FoodSnap.Application;
 using FoodSnap.Application.Restaurants.RegisterRestaurant;
 using FoodSnap.Application.Services.Geocoding;
 using FoodSnap.ApplicationTests.Events;
 using FoodSnap.ApplicationTests.Services.Geocoding;
 using FoodSnap.ApplicationTests.Services.Hashing;
 using FoodSnap.ApplicationTests.Users;
+using FoodSnap.Domain;
 using Xunit;
 
 namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
@@ -41,12 +43,11 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_A_New_Restaurant()
         {
-            geocoderSpy.Data = new GeocodingResult
+            geocoderSpy.Result = Result.Ok(new GeocodingResult
             {
                 FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
-                Latitude = 1,
-                Longitude = 1,
-            };
+                Coordinates = new Coordinates(1, 1),
+            });
 
             var command = new RegisterRestaurantCommand
             {
@@ -71,7 +72,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
             Assert.Equal(command.RestaurantName, restaurant.Name);
             Assert.Equal(command.RestaurantPhoneNumber, restaurant.PhoneNumber.Number);
             Assert.Equal(command.Address, geocoderSpy.SearchAddress);
-            Assert.Equal(restaurant.Address.Value, geocoderSpy.Data.FormattedAddress);
+            Assert.Equal(restaurant.Address.Value, geocoderSpy.Result.Value.FormattedAddress);
 
             var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy
                 .Events
@@ -85,12 +86,11 @@ namespace FoodSnap.ApplicationTests.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Creates_An_Empty_Restaurant_Menu()
         {
-            geocoderSpy.Data = new GeocodingResult
+            geocoderSpy.Result = Result.Ok(new GeocodingResult
             {
                 FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
-                Latitude = 1,
-                Longitude = 1,
-            };
+                Coordinates = new Coordinates(1, 1),
+            });
 
             var command = new RegisterRestaurantCommand
             {
