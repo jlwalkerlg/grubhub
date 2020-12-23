@@ -5,21 +5,21 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4DFAFCCE-6338-4232-9C05-66E30D0EE9E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.Domain", "src\FoodSnap.Domain\FoodSnap.Domain.csproj", "{39A56BC3-9919-403C-9B91-E5651E7F2686}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{39A56BC3-9919-403C-9B91-E5651E7F2686}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C669181E-B7FF-4DA5-A79F-10D88BCE5D74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.Application", "src\FoodSnap.Application\FoodSnap.Application.csproj", "{77210956-5BD6-4577-8342-FA4D16E62241}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{77210956-5BD6-4577-8342-FA4D16E62241}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.ApplicationTests", "tests\FoodSnap.ApplicationTests\FoodSnap.ApplicationTests.csproj", "{4519E5E2-36D2-439A-BC6E-AF0F273E29AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationTests", "tests\ApplicationTests\ApplicationTests.csproj", "{4519E5E2-36D2-439A-BC6E-AF0F273E29AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.Infrastructure", "src\FoodSnap.Infrastructure\FoodSnap.Infrastructure.csproj", "{6BEF84A4-95B8-4651-99A6-2BBB5F4D32B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{6BEF84A4-95B8-4651-99A6-2BBB5F4D32B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.InfrstructureTests", "tests\FoodSnap.InfrastructureTests\FoodSnap.InfrstructureTests.csproj", "{3616C161-7396-4E05-822E-EA4AF1664050}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrstructureTests", "tests\InfrastructureTests\InfrstructureTests.csproj", "{3616C161-7396-4E05-822E-EA4AF1664050}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.Web", "src\FoodSnap.Web\FoodSnap.Web.csproj", "{1CEA5356-04E4-40E4-B389-3A2F7E1D91E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "src\Web\Web.csproj", "{1CEA5356-04E4-40E4-B389-3A2F7E1D91E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodSnap.WebTests", "tests\FoodSnap.WebTests\FoodSnap.WebTests.csproj", "{950C6EBF-F077-4086-A413-E309CD860D44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTests", "tests\WebTests\WebTests.csproj", "{950C6EBF-F077-4086-A413-E309CD860D44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
