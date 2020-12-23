@@ -85,7 +85,7 @@ namespace FoodSnap.ApplicationTests.Restaurants.SearchRestaurants
             Assert.True(result.IsSuccess);
             Assert.Equal(53, restaurantDtoRepositoryFake.SearchCoordinates.Latitude);
             Assert.Equal(-2, restaurantDtoRepositoryFake.SearchCoordinates.Longitude);
-            Assert.Equal(1, result.Value.Count);
+            Assert.Single(result.Value);
             Assert.Same(restaurantDtoRepositoryFake.Restaurants[0], result.Value[0]);
         }
     }
