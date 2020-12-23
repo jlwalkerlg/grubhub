@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Infrastructure.Geocoding;
 using Xunit;
 
-namespace InfrastructureTests.Geocoding
+namespace InfrastructureTests.External.Geocoding
 {
     public class GoogleGeocoderTests
     {
@@ -10,12 +10,10 @@ namespace InfrastructureTests.Geocoding
 
         public GoogleGeocoderTests()
         {
-            var config = ConfigurationFactory.Make();
-            geocoder = new GoogleGeocoder(config["GoogleGeocodingApiKey"]);
+            geocoder = new GoogleGeocoder(Config.GoogleGeocodingApiKey);
         }
 
         [Fact]
-        [Trait("Category", "ExternalService")]
         public async Task It_Converts_An_Address_Into_Coordinates()
         {
             var result = await geocoder.Geocode("1 Maine Road, Manchester, UK");
@@ -27,7 +25,6 @@ namespace InfrastructureTests.Geocoding
         }
 
         [Fact]
-        [Trait("Category", "ExternalService")]
         public async Task It_Returns_An_Error_If_Geocoding_Fails()
         {
             var coordinatesResult = await geocoder.Geocode("random");
