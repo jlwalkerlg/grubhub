@@ -1,49 +1,31 @@
 import { useQuery } from "react-query";
-import AddressSearcher from "./AddressSearcher";
+import AddressSearcher, { Coordinates } from "./AddressSearcher";
 
-export default function usePostcodeLookup() {
-  const { isFetching, refetch, data } = useQuery<string, Error>(
-    "postcode",
+export function getPostcodeLookupQueryKey(postcode: string) {
+  return postcode.trim().replace(" ", "");
+}
+
+export default function usePostcodeLookup(postcode: string) {
+  return useQuery<Coordinates, Error>(
+    getPostcodeLookupQueryKey(postcode),
     () => {
-      if (!navigator.geolocation) {
-        throw new Error("Geolocation is not supported by this browser.");
-      }
+      return new Promise(async (resolve, reject) => {
+        try {
+          const coords = await AddressSearcher.getCoordinatesByPostcode(
+            postcode
+          );
 
-      return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-          async ({ coords: { latitude, longitude } }) => {
-            try {
-              const postcode = await AddressSearcher.getPostcodeByLocation(
-                latitude,
-                longitude
-              );
-
-              if (postcode !== null) {
-                return resolve(postcode);
-              }
-            } catch (e) {}
-
-            return reject("Failed to retrieve postcode.");
+          if (coords !== null) {
+            return resolve(coords);
           }
-        );
+        } catch (e) {}
+
+        return reject("Failed to retrieve coordinates.");
       });
     },
     {
       staleTime: Infinity,
       retry: false,
-      enabled: false,
     }
   );
-
-  const lookup = async () => {
-    return await refetch({
-      throwOnError: true,
-    });
-  };
-
-  return {
-    postcode: data,
-    isLoading: isFetching,
-    lookup,
-  };
 }

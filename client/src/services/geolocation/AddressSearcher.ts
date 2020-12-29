@@ -1,11 +1,16 @@
 import { loadScript } from "../utils";
 
+const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+
 export interface AddressSearchResult {
   id: string;
   description: string;
 }
 
-const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
 
 class AddressSearcher {
   private client: google.maps.places.AutocompleteService;
@@ -74,7 +79,7 @@ class AddressSearcher {
     });
   }
 
-  public getPostcodeByLocation(lat: number, lng: number) {
+  public getPostcodeByCoordinates(lat: number, lng: number) {
     const request: google.maps.GeocoderRequest = {
       location: { lat, lng },
     };
@@ -87,6 +92,27 @@ class AddressSearcher {
           )[0]?.long_name ?? null;
 
         resolve(postcode);
+      });
+    });
+  }
+
+  public getCoordinatesByPostcode(postcode: string) {
+    const request: google.maps.GeocoderRequest = {
+      address: postcode,
+    };
+
+    return new Promise((resolve: (address: Coordinates) => void, reject) => {
+      this.geocoder.geocode(request, (results) => {
+        const location = results[0]?.geometry.location;
+
+        if (location) {
+          resolve({
+            latitude: location.lat(),
+            longitude: location.lng(),
+          });
+        } else {
+          reject("Failed to retrieve postcode location.");
+        }
       });
     });
   }

@@ -21,7 +21,9 @@ export async function getAuthUser() {
 
 export function useAuthUser() {
   return useQuery<UserDto, ApiError>(getAuthUserQueryKey(), getAuthUser, {
+    staleTime: Infinity,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 }
 

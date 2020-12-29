@@ -11,14 +11,14 @@ import {
   PostcodeRule,
   RequiredRule,
 } from "~/services/forms/Rule";
-import usePostcodeLookup from "~/services/geolocation/usePostcodeLookup";
+import useCurrentLocation from "~/services/geolocation/useCurrentLocation";
 
 const Home: NextPage = () => {
   const {
     postcode,
+    isLoading: isLoadingLocation,
     lookup,
-    isLoading: isLoadingPostcode,
-  } = usePostcodeLookup();
+  } = useCurrentLocation();
 
   const form = useForm({
     defaultValues: {
@@ -30,14 +30,12 @@ const Home: NextPage = () => {
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
 
-    Router.push(
-      `/restaurants?postcode=${data.postcode.trim().replace(" ", "")}`
-    );
+    Router.push(`/restaurants?postcode=${data.postcode}`);
   });
 
   const onClickLocation = async () => {
     try {
-      const postcode = await lookup();
+      const { postcode } = await lookup();
       form.setValue("postcode", postcode);
     } catch (error) {
       toast.error(error.message);
@@ -70,7 +68,7 @@ const Home: NextPage = () => {
                 onClick={onClickLocation}
                 className="absolute right-1 top-1 p-1"
               >
-                {isLoadingPostcode ? (
+                {isLoadingLocation ? (
                   <SpinnerIcon className="w-6 h-6 animate-spin text-green-500" />
                 ) : (
                   <GeolocationIcon className="w-6 h-6 cursor-pointer text-green-500" />
