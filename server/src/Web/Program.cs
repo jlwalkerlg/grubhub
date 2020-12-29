@@ -1,9 +1,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using Application.Services.Hashing;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Infrastructure.Persistence.EF;
+using Autofac.Features.ResolveAnything;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,7 @@ namespace Web
                 }
                 catch (System.Exception e)
                 {
-                    System.Console.WriteLine(e.ToString());
+                    System.Console.WriteLine(e);
                 }
             }
             else
@@ -36,7 +37,10 @@ namespace Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory(builder =>
+                {
+                    builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+                }))
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     var env = hostingContext.HostingEnvironment;
@@ -55,10 +59,7 @@ namespace Web
             {
                 var sp = scope.ServiceProvider;
 
-                var context = sp.GetService<AppDbContext>();
-                var hasher = sp.GetService<IHasher>();
-
-                var seeder = new DbSeeder(context, hasher);
+                var seeder = sp.GetRequiredService<DbSeeder>();
                 seeder.Seed().Wait();
             }
         }

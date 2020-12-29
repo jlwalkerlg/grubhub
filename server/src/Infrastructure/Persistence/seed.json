@@ -1,0 +1,100 @@
+{
+  "users": [
+    {
+      "id": "979a79d6-7b7c-4c21-88c9-8f918be90d01",
+      "name": "Jordan Walker",
+      "email": "walker.jlg@gmail.com",
+      "role": "RestaurantManager",
+      "restaurant": {
+        "id": "015caf13-8252-476b-9e7f-c43767998c01",
+        "manager_id": "979a79d6-7b7c-4c21-88c9-8f918be90d01",
+        "name": "Chow Main",
+        "phone_number": "01234567890",
+        "address": "19 Bodmin Ave, Shipley BD18 1LT, UK",
+        "latitude": 53.830975,
+        "longitude": -1.75002,
+        "status": "Approved",
+        "monday_open": "00:00:00",
+        "monday_close": "23:45:00",
+        "tuesday_open": "00:00:00",
+        "tuesday_close": "23:45:00",
+        "wednesday_open": "00:00:00",
+        "wednesday_close": "23:45:00",
+        "thursday_open": "00:00:00",
+        "thursday_close": "23:45:00",
+        "friday_open": "00:00:00",
+        "friday_close": "23:45:00",
+        "saturday_open": "00:00:00",
+        "saturday_close": "23:45:00",
+        "sunday_open": "00:00:00",
+        "sunday_close": "23:45:00",
+        "minimum_delivery_spend": 10.0,
+        "delivery_fee": 1.5,
+        "max_delivery_distance_in_km": 5,
+        "estimated_delivery_time_in_minutes": 40,
+        "menu": {
+          "id": 1,
+          "categories": [
+            {
+              "name": "Pizza",
+              "items": [
+                {
+                  "name": "Margherita",
+                  "description": "Cheese & tomato",
+                  "price": 9.99
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "979a79d6-7b7c-4c21-88c9-8f918be90d02",
+      "name": "Bruno",
+      "email": "bruno@gmail.com",
+      "role": "RestaurantManager",
+      "restaurant": {
+        "id": "015caf13-8252-476b-9e7f-c43767998c02",
+        "name": "Bruno's Kitchen",
+        "phone_number": "01234567890",
+        "address": "27 Lavell Mews, Bradford BD2 3HW, UK",
+        "latitude": 53.814545,
+        "longitude": -1.7230635,
+        "status": "Approved",
+        "monday_open": "00:00:00",
+        "monday_close": "23:45:00",
+        "tuesday_open": "00:00:00",
+        "tuesday_close": "23:45:00",
+        "wednesday_open": "00:00:00",
+        "wednesday_close": "23:45:00",
+        "thursday_open": "00:00:00",
+        "thursday_close": "23:45:00",
+        "friday_open": "00:00:00",
+        "friday_close": "23:45:00",
+        "saturday_open": "00:00:00",
+        "saturday_close": "23:45:00",
+        "sunday_open": "00:00:00",
+        "sunday_close": "23:45:00",
+        "minimum_delivery_spend": 10.0,
+        "delivery_fee": 1.5,
+        "max_delivery_distance_in_km": 5,
+        "estimated_delivery_time_in_minutes": 40,
+        "menu": {
+          "categories": [
+            {
+              "name": "Thai",
+              "items": [
+                {
+                  "name": "Khao Soi",
+                  "description": "Noodle curry with crispy noodles",
+                  "price": 7.99
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
