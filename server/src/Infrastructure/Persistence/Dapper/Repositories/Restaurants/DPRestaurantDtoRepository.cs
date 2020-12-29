@@ -148,38 +148,38 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
                 {
                     Monday = entry.MondayOpen.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.MondayOpen.Value),
-                        Close = FormatTimeSpan(entry.MondayClose.Value),
+                        Open = FormatTimeSpan(entry.MondayOpen),
+                        Close = FormatTimeSpan(entry.MondayClose),
                     } : null,
                     Tuesday = entry.TuesdayOpen.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.TuesdayOpen.Value),
-                        Close = FormatTimeSpan(entry.TuesdayClose.Value),
+                        Open = FormatTimeSpan(entry.TuesdayOpen),
+                        Close = FormatTimeSpan(entry.TuesdayClose),
                     } : null,
                     Wednesday = entry.WednesdayOpen.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.WednesdayOpen.Value),
-                        Close = FormatTimeSpan(entry.WednesdayClose.Value),
+                        Open = FormatTimeSpan(entry.WednesdayOpen),
+                        Close = FormatTimeSpan(entry.WednesdayClose),
                     } : null,
                     Thursday = entry.ThursdayOpen.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.ThursdayOpen.Value),
-                        Close = FormatTimeSpan(entry.ThursdayClose.Value),
+                        Open = FormatTimeSpan(entry.ThursdayOpen),
+                        Close = FormatTimeSpan(entry.ThursdayClose),
                     } : null,
                     Friday = entry.FridayOpen.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.FridayOpen.Value),
-                        Close = FormatTimeSpan(entry.FridayClose.Value),
+                        Open = FormatTimeSpan(entry.FridayOpen),
+                        Close = FormatTimeSpan(entry.FridayClose),
                     } : null,
                     Saturday = entry.SaturdayOpen.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.SaturdayOpen.Value),
-                        Close = FormatTimeSpan(entry.SaturdayClose.Value),
+                        Open = FormatTimeSpan(entry.SaturdayOpen),
+                        Close = FormatTimeSpan(entry.SaturdayClose),
                     } : null,
                     Sunday = entry.SundayOpen.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.SundayOpen.Value),
-                        Close = FormatTimeSpan(entry.SundayClose.Value),
+                        Open = FormatTimeSpan(entry.SundayOpen),
+                        Close = FormatTimeSpan(entry.SundayClose),
                     } : null,
                 },
                 DeliveryFee = entry.DeliveryFee,
@@ -189,9 +189,14 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
             };
         }
 
-        private string FormatTimeSpan(TimeSpan t)
+        private string FormatTimeSpan(TimeSpan? t)
         {
-            return $"{t.Hours.ToString().PadLeft(2, '0')}:{t.Minutes.ToString().PadLeft(2, '0')}";
+            if (!t.HasValue)
+            {
+                return null;
+            }
+
+            return $"{t?.Hours.ToString().PadLeft(2, '0')}:{t?.Minutes.ToString().PadLeft(2, '0')}";
         }
 
         private record RestaurantEntry

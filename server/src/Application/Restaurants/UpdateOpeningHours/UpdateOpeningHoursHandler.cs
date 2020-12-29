@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Services.Authentication;
@@ -33,13 +32,13 @@ namespace Application.Restaurants.UpdateOpeningHours
 
             restaurant.OpeningTimes = new OpeningTimes()
             {
-                Monday = command.MondayOpen == null ? null : new OpeningHours(TimeSpan.Parse(command.MondayOpen), TimeSpan.Parse(command.MondayClose)),
-                Tuesday = command.TuesdayOpen == null ? null : new OpeningHours(TimeSpan.Parse(command.TuesdayOpen), TimeSpan.Parse(command.TuesdayClose)),
-                Wednesday = command.WednesdayOpen == null ? null : new OpeningHours(TimeSpan.Parse(command.WednesdayOpen), TimeSpan.Parse(command.WednesdayClose)),
-                Thursday = command.ThursdayOpen == null ? null : new OpeningHours(TimeSpan.Parse(command.ThursdayOpen), TimeSpan.Parse(command.ThursdayClose)),
-                Friday = command.FridayOpen == null ? null : new OpeningHours(TimeSpan.Parse(command.FridayOpen), TimeSpan.Parse(command.FridayClose)),
-                Saturday = command.SaturdayOpen == null ? null : new OpeningHours(TimeSpan.Parse(command.SaturdayOpen), TimeSpan.Parse(command.SaturdayClose)),
-                Sunday = command.SundayOpen == null ? null : new OpeningHours(TimeSpan.Parse(command.SundayOpen), TimeSpan.Parse(command.SundayClose)),
+                Monday = OpeningHours.Parse(command.MondayOpen, command.MondayClose),
+                Tuesday = OpeningHours.Parse(command.TuesdayOpen, command.TuesdayClose),
+                Wednesday = OpeningHours.Parse(command.WednesdayOpen, command.WednesdayClose),
+                Thursday = OpeningHours.Parse(command.ThursdayOpen, command.ThursdayClose),
+                Friday = OpeningHours.Parse(command.FridayOpen, command.FridayClose),
+                Saturday = OpeningHours.Parse(command.SaturdayOpen, command.SaturdayClose),
+                Sunday = OpeningHours.Parse(command.SundayOpen, command.SundayClose),
             };
 
             await unitOfWork.Commit();

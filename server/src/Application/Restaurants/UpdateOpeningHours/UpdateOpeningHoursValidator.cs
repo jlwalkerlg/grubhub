@@ -32,19 +32,27 @@ namespace Application.Restaurants.UpdateOpeningHours
             Expression<Func<UpdateOpeningHoursCommand, string>> closingTimeSelector)
         {
             var compiledOpeningTimeSelector = openingTimeSelector.Compile();
+            var compiledClosingTimeSelector = closingTimeSelector.Compile();
 
-            When(x => compiledOpeningTimeSelector(x) != null, () =>
+            When(x => !string.IsNullOrWhiteSpace(compiledOpeningTimeSelector(x)), () =>
             {
                 CascadeRuleFor(openingTimeSelector)
                     .Must(HaveValidFormat).WithMessage("Must have format hh:mm.")
-                    .Must(BeWithinOpeningTimeRange).WithMessage("Must be within range.");
+                    .Must(BeWithinOpeningTimeRange).WithMessage("Must be between 00:00 and 23:59.");
 
-                CascadeRuleFor(closingTimeSelector)
-                    .NotEmpty().WithMessage("Must not be empty when opening time is provided.")
-                    .Must(HaveValidFormat).WithMessage("Must have format hh:mm.")
-                    .Must(BeWithinClosingTimeRange).WithMessage("Must be within range.")
-                    .Must((x, closingTime) => BeLaterThanClosingTime(compiledOpeningTimeSelector(x), closingTime)).WithMessage("Must be later than closing time.");
+                When(x => !string.IsNullOrWhiteSpace(compiledClosingTimeSelector(x)), () =>
+                {
+                    CascadeRuleFor(closingTimeSelector)
+                        .Must(HaveValidFormat).WithMessage("Must have format hh:mm.")
+                        .Must(BeWithinClosingTimeRange).WithMessage("Must be between 00:01 and 23:59 .")
+                        .Must((x, closingTime) => BeLaterThanClosingTime(compiledOpeningTimeSelector(x), closingTime)).WithMessage("Must be later than closing time.");
+                });
             });
+        }
+
+        private bool HaveValidFormat(string time)
+        {
+            return regex.IsMatch(time);
         }
 
         private bool BeLaterThanClosingTime(string openingTime, string closingTime)
@@ -89,7 +97,7 @@ namespace Application.Restaurants.UpdateOpeningHours
             var split = time.Split(':');
 
             var hour = int.Parse(split[0]);
-            if (hour < 0 || hour > 24)
+            if (hour < 0 || hour > 23)
             {
                 return false;
             }
@@ -105,17 +113,7 @@ namespace Application.Restaurants.UpdateOpeningHours
                 return false;
             }
 
-            if (hour == 24 && minute > 0)
-            {
-                return false;
-            }
-
             return true;
-        }
-
-        private bool HaveValidFormat(string time)
-        {
-            return regex.IsMatch(time);
         }
     }
 }

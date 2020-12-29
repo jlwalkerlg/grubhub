@@ -49,8 +49,7 @@ namespace ApplicationTests.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayClose)));
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
@@ -59,7 +58,7 @@ namespace ApplicationTests.Restaurants.UpdateOpeningHours
             var command = new UpdateOpeningHoursCommand()
             {
                 RestaurantId = Guid.NewGuid(),
-                MondayOpen = "",
+                MondayOpen = "invalid",
                 MondayClose = "invalid",
             };
 
@@ -74,13 +73,12 @@ namespace ApplicationTests.Restaurants.UpdateOpeningHours
         [InlineData("44:00")]
         [InlineData("24:00")]
         [InlineData("24:15")]
-        public async Task Opening_Times_Must_Within_Range(string time)
+        public async Task Opening_Times_Must_Be_Within_Range(string time)
         {
             var command = new UpdateOpeningHoursCommand()
             {
                 RestaurantId = Guid.NewGuid(),
                 MondayOpen = time,
-                MondayClose = "24:00",
             };
 
             var result = await validator.Validate(command);
@@ -91,8 +89,8 @@ namespace ApplicationTests.Restaurants.UpdateOpeningHours
 
         [Theory]
         [InlineData("00:00")]
-        [InlineData("24:15")]
-        public async Task Closing_Times_Must_Within_Range(string time)
+        [InlineData("24:00")]
+        public async Task Closing_Times_Must_Be_Within_Range(string time)
         {
             var command = new UpdateOpeningHoursCommand()
             {

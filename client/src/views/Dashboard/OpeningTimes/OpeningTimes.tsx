@@ -22,7 +22,7 @@ const openingTimes = flatten(
   )
 );
 
-const closingTimes = [...openingTimes.slice(1), "24:00"];
+const closingTimes = openingTimes.slice(1);
 
 const OpeningTimesInput: React.FC<{
   form: UseFormMethods<UpdateOpeningTimesCommand>;
@@ -37,11 +37,16 @@ const OpeningTimesInput: React.FC<{
 
   const open = () => {
     form.setValue(openingName, "00:00");
-    form.setValue(closingName, "00:15");
+    form.setValue(closingName, "");
   };
 
   const changeOpeningTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const time = e.target.value;
+
+    if (time === "23:45") {
+      form.setValue(closingName, "");
+    }
+
     const index = openingTimes.indexOf(time);
     if (
       index > Math.max(0, closingTimes.indexOf(form.getValues(closingName)))
@@ -52,6 +57,9 @@ const OpeningTimesInput: React.FC<{
 
   const changeClosingTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const time = e.target.value;
+
+    if (!time) return;
+
     const index = closingTimes.indexOf(time);
     if (index < openingTimes.indexOf(form.getValues(openingName))) {
       form.setValue(openingName, openingTimes[index]);
@@ -99,6 +107,7 @@ const OpeningTimesInput: React.FC<{
                     {time}
                   </option>
                 ))}
+                <option value="">Midnight</option>
               </select>
             </div>
           </div>

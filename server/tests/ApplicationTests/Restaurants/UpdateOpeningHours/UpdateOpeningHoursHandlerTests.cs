@@ -73,8 +73,8 @@ namespace ApplicationTests.Restaurants.UpdateOpeningHours
             Assert.Null(restaurant.OpeningTimes.Sunday);
             Assert.Equal(16, restaurant.OpeningTimes.Monday.Open.Hours);
             Assert.Equal(0, restaurant.OpeningTimes.Monday.Open.Minutes);
-            Assert.Equal(23, restaurant.OpeningTimes.Monday.Close.Hours);
-            Assert.Equal(30, restaurant.OpeningTimes.Monday.Close.Minutes);
+            Assert.Equal(23, restaurant.OpeningTimes.Monday.Close?.Hours);
+            Assert.Equal(30, restaurant.OpeningTimes.Monday.Close?.Minutes);
         }
 
         [Fact]
