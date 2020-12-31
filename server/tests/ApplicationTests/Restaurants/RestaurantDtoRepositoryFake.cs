@@ -19,7 +19,9 @@ namespace ApplicationTests.Restaurants
 
         public Coordinates SearchCoordinates { get; private set; }
 
-        public Task<List<RestaurantDto>> Search(Coordinates coordinates)
+        public Task<List<RestaurantDto>> Search(
+            Coordinates coordinates,
+            RestaurantSearchOptions options = null)
         {
             SearchCoordinates = coordinates;
             return Task.FromResult(Restaurants);

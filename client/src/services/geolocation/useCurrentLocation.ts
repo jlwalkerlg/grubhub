@@ -35,8 +35,9 @@ export default function useCurrentLocation() {
               }
             } catch (e) {}
 
-            return reject("Failed to retrieve postcode.");
-          }
+            return reject(new Error("Failed to retrieve postcode."));
+          },
+          (e) => reject(new Error("Geolocation services unavailable."))
         );
       });
     },

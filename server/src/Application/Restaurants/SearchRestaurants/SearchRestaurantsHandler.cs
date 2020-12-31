@@ -37,7 +37,9 @@ namespace Application.Restaurants.SearchRestaurants
                 return Error.BadRequest("Sorry, we don't recognise that postcode.");
             }
 
-            var restaurants = await repository.Search(geocodingResult.Value.Coordinates);
+            var restaurants = await repository.Search(
+                geocodingResult.Value.Coordinates,
+                query.Options);
 
             return Result.Ok(restaurants);
         }

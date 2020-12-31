@@ -20,7 +20,7 @@ export default function usePostcodeLookup(postcode: string) {
           }
         } catch (e) {}
 
-        return reject("Failed to retrieve coordinates.");
+        return reject(new Error("Failed to retrieve coordinates."));
       });
     },
     {

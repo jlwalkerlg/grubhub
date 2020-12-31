@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Restaurants;
 using Domain;
-using Domain.Menus;
 using Domain.Restaurants;
 using Domain.Users;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Integration.Restaurants.SearchRestaurants
@@ -18,86 +16,57 @@ namespace WebTests.Integration.Restaurants.SearchRestaurants
         }
 
         [Fact]
-        public async Task It_Returns_Open_Approved_Restaurants_Only()
+        public async Task It_Returns_Sorted_Restaurants()
         {
-            var now = ClockStub.Now;
+            var r1 = await AddRestaurant(54.0f, -2.15f);
+            var r2 = await AddRestaurant(54.0f, -2.0f);
+            var r3 = await AddRestaurant(54.0f, -2.1f);
 
-            // not open
-            var r1 = await InsertRestaurant(54, -2, 10, new OpeningTimes(), true);
+            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=MN121NM&sort_by=distance");
 
-            // not approved
-            var r2 = await InsertRestaurant(54, -2, 10, OpeningTimes.FromDays(new()
-            {
-                { now.DayOfWeek, new OpeningHours(TimeSpan.Zero, TimeSpan.FromHours(24)) }
-            }), false);
-
-            // open and approved
-            var r3 = await InsertRestaurant(54, -2, 10, OpeningTimes.FromDays(new()
-            {
-                { now.DayOfWeek, new OpeningHours(TimeSpan.Zero, TimeSpan.FromHours(24)) }
-            }), true);
-
-            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=MN121NM");
-
-            Assert.Single(restaurants);
-            Assert.Equal(r3.Id.Value, restaurants[0].Id);
+            Assert.Equal(3, restaurants.Count);
+            r2.AssertEqual(restaurants[0]);
+            r3.AssertEqual(restaurants[1]);
+            r1.AssertEqual(restaurants[2]);
         }
 
-        [Fact]
-        public async Task It_Returns_Restaurants_Within_Max_Delivery_Distance_Only()
-        {
-            var now = ClockStub.Now;
-
-            // 54 lat, -2.1 lng is 6.54 km away from 54 lat, -2 lng
-            var r1 = await InsertRestaurant(54, -2.1f, 5, OpeningTimes.FromDays(new()
-            {
-                { now.DayOfWeek, new OpeningHours(TimeSpan.Zero, TimeSpan.FromHours(24)) },
-            }), true);
-            var r2 = await InsertRestaurant(54, -2.1f, 10, OpeningTimes.FromDays(new()
-            {
-                { now.DayOfWeek, new OpeningHours(TimeSpan.Zero, TimeSpan.FromHours(24)) },
-            }), true);
-
-            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=MN121NM");
-
-            Assert.Single(restaurants);
-            Assert.Equal(r2.Id.Value, restaurants[0].Id);
-        }
-
-        private async Task<Restaurant> InsertRestaurant(
-            float lat,
-            float lng,
-            int maxDeliveryDistanceInKm,
-            OpeningTimes openingTimes,
-            bool approved)
+        private async Task<Restaurant> AddRestaurant(float latitude, float longitude)
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email($"{Guid.NewGuid()}@gmail.com"),
-                "password123");
+                Guid.NewGuid().ToString(),
+                new Email(Guid.NewGuid() + "@gmail.com"),
+                Guid.NewGuid().ToString()
+            );
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
                 manager.Id,
-                "Chow Main",
+                Guid.NewGuid().ToString(),
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(lat, lng));
-            restaurant.OpeningTimes = openingTimes;
-            restaurant.MinimumDeliverySpend = new Money(10m);
-            restaurant.DeliveryFee = new Money(1.5m);
-            restaurant.MaxDeliveryDistanceInKm = maxDeliveryDistanceInKm;
-            restaurant.EstimatedDeliveryTimeInMinutes = 40;
-
-            if (approved)
+                new Address("12 Maine Road, Manchester, MN12 1NM"),
+                new Coordinates(latitude, longitude)
+            )
             {
-                restaurant.Approve();
-            }
+                OpeningTimes = new OpeningTimes()
+                {
+                    Monday = OpeningHours.Parse("00:00", null),
+                    Tuesday = OpeningHours.Parse("00:00", null),
+                    Wednesday = OpeningHours.Parse("00:00", null),
+                    Thursday = OpeningHours.Parse("00:00", null),
+                    Friday = OpeningHours.Parse("00:00", null),
+                    Saturday = OpeningHours.Parse("00:00", null),
+                    Sunday = OpeningHours.Parse("00:00", null),
+                },
+                MaxDeliveryDistanceInKm = 10,
+                MinimumDeliverySpend = new Money(0),
+                DeliveryFee = new Money(1.50m),
+                EstimatedDeliveryTimeInMinutes = 40,
+            };
 
-            var menu = new Menu(restaurant.Id);
+            restaurant.Approve();
 
-            await fixture.InsertDb(manager, restaurant, menu);
+            await fixture.InsertDb(manager, restaurant);
 
             return restaurant;
         }

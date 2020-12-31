@@ -12,7 +12,7 @@ namespace WebTests.Actions.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            var response = await Get("/restaurants?postcode=MN121NM&maxDistanceInKm=10");
+            var response = await Get("/restaurants?postcode=MN121NM");
 
             Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
         }

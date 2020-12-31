@@ -73,7 +73,9 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
             }
         }
 
-        public async Task<List<RestaurantDto>> Search(Coordinates coordinates)
+        public async Task<List<RestaurantDto>> Search(
+            Coordinates coordinates,
+            RestaurantSearchOptions options = null)
         {
             var sql = @"
                 SELECT
@@ -111,9 +113,26 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
             var now = clock.UtcNow;
             var day = now.DayOfWeek.ToString().ToLower();
 
-            sql += $" AND {day}_open < @Now AND {day}_close > @Now";
+            sql += $" AND {day}_open < @Now AND ({day}_close IS NULL OR {day}_close > @Now)";
 
             sql += " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
+
+            if (options?.SortBy == "distance")
+            {
+                sql += " ORDER BY (FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000) ASC";
+            }
+            else if (options?.SortBy == "min_order")
+            {
+                sql += " ORDER BY r.minimum_delivery_spend ASC";
+            }
+            else if (options?.SortBy == "delivery_fee")
+            {
+                sql += " ORDER BY r.delivery_fee ASC";
+            }
+            else if (options?.SortBy == "time")
+            {
+                sql += " ORDER BY r.estimated_delivery_time_in_minutes ASC";
+            }
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {

@@ -2,7 +2,8 @@ import { MutableRefObject, useEffect } from "react";
 
 export default function useClickAwayListener(
   ref: MutableRefObject<HTMLElement>,
-  callback: () => void
+  callback: () => any,
+  deps: Array<any> = []
 ) {
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -11,9 +12,9 @@ export default function useClickAwayListener(
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
-  }, [ref]);
+  }, [ref, ...deps]);
 }

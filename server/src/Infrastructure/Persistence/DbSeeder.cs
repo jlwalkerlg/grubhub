@@ -77,34 +77,34 @@ namespace Infrastructure.Persistence
 
                     restaurant.OpeningTimes = new OpeningTimes()
                     {
-                        Monday = new OpeningHours(
-                            TimeSpan.Parse(restaurantEl.GetProperty("monday_open").GetString()),
-                            TimeSpan.Parse(restaurantEl.GetProperty("monday_close").GetString())
+                        Monday = OpeningHours.Parse(
+                            restaurantEl.GetProperty("monday_open").GetString(),
+                            restaurantEl.GetProperty("monday_close").GetString()
                         ),
-                        Tuesday = new OpeningHours(
-                            TimeSpan.Parse(restaurantEl.GetProperty("tuesday_open").GetString()),
-                            TimeSpan.Parse(restaurantEl.GetProperty("tuesday_close").GetString())
+                        Tuesday = OpeningHours.Parse(
+                            restaurantEl.GetProperty("tuesday_open").GetString(),
+                            restaurantEl.GetProperty("tuesday_close").GetString()
                         ),
-                        Wednesday = new OpeningHours(
-                            TimeSpan.Parse(restaurantEl.GetProperty("wednesday_open").GetString()),
-                            TimeSpan.Parse(restaurantEl.GetProperty("wednesday_close").GetString())
+                        Wednesday = OpeningHours.Parse(
+                            restaurantEl.GetProperty("wednesday_open").GetString(),
+                            restaurantEl.GetProperty("wednesday_close").GetString()
                         ),
-                        Thursday = new OpeningHours(
-                            TimeSpan.Parse(restaurantEl.GetProperty("thursday_open").GetString()),
-                            TimeSpan.Parse(restaurantEl.GetProperty("thursday_close").GetString())
+                        Thursday = OpeningHours.Parse(
+                            restaurantEl.GetProperty("thursday_open").GetString(),
+                            restaurantEl.GetProperty("thursday_close").GetString()
                         ),
-                        Friday = new OpeningHours(
-                            TimeSpan.Parse(restaurantEl.GetProperty("friday_open").GetString()),
-                            TimeSpan.Parse(restaurantEl.GetProperty("friday_close").GetString())
+                        Friday = OpeningHours.Parse(
+                            restaurantEl.GetProperty("friday_open").GetString(),
+                            restaurantEl.GetProperty("friday_close").GetString()
                         ),
-                        Saturday = new OpeningHours(
-                            TimeSpan.Parse(restaurantEl.GetProperty("saturday_open").GetString()),
-                            TimeSpan.Parse(restaurantEl.GetProperty("saturday_close").GetString())
+                        Saturday = OpeningHours.Parse(
+                            restaurantEl.GetProperty("saturday_open").GetString(),
+                            restaurantEl.GetProperty("saturday_close").GetString()
                         ),
-                        Sunday = new OpeningHours(
-                            TimeSpan.Parse(restaurantEl.GetProperty("sunday_open").GetString()),
-                            TimeSpan.Parse(restaurantEl.GetProperty("sunday_close").GetString())
-                        )
+                        Sunday = OpeningHours.Parse(
+                            restaurantEl.GetProperty("sunday_open").GetString(),
+                            restaurantEl.GetProperty("sunday_close").GetString()
+                        ),
                     };
 
                     var menuEl = restaurantEl.GetProperty("menu");

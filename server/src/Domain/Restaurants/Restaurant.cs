@@ -82,7 +82,7 @@ namespace Domain.Restaurants
 
         public RestaurantStatus Status { get; private set; }
 
-        public OpeningTimes OpeningTimes { get; set; } = new();
+        public OpeningTimes OpeningTimes { get; set; }
 
         private Money minimumDeliverySpend = new(0);
         public Money MinimumDeliverySpend

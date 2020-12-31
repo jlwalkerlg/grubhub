@@ -1,24 +1,39 @@
 import { useQuery } from "react-query";
+import { sleep } from "~/services/utils";
 import Api, { ApiError } from "../Api";
 import { RestaurantDto } from "./RestaurantDto";
 
-async function searchRestaurants(postcode: string) {
+interface SearchRestaurantsQuery {
+  postcode: string;
+  sort_by?: string;
+}
+
+async function searchRestaurants(query: SearchRestaurantsQuery) {
+  await sleep(1000);
+
+  const params = Object.keys(query)
+    .map((key) => `${key}=${query[key]}`)
+    .join("&");
   const response = await Api.get<Array<RestaurantDto>>(
-    `/restaurants?postcode=${postcode}`
+    `/restaurants?${params}`
   );
   return response.data;
 }
 
-function getSearchRestaurantsQueryKey(postcode: string) {
-  return `restaurants.${postcode}`;
+function getSearchRestaurantsQueryKey(query: SearchRestaurantsQuery) {
+  const params = Object.keys(query)
+    .map((key) => `${key}=${query[key]}`)
+    .join("&");
+  return `restaurants?${params}`;
 }
 
-export default function useSearchRestaurants(postcode: string) {
+export default function useSearchRestaurants(query: SearchRestaurantsQuery) {
   return useQuery<Array<RestaurantDto>, ApiError>(
-    getSearchRestaurantsQueryKey(postcode),
-    () => searchRestaurants(postcode),
+    getSearchRestaurantsQueryKey(query),
+    () => searchRestaurants(query),
     {
       staleTime: 0,
+      cacheTime: 0,
       refetchOnMount: false,
       refetchOnReconnect: true,
       refetchOnWindowFocus: false,

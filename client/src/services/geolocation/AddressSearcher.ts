@@ -13,30 +13,54 @@ export interface Coordinates {
 }
 
 class AddressSearcher {
+  private error: boolean = false;
+
   private client: google.maps.places.AutocompleteService;
   private geocoder: google.maps.Geocoder;
   private sessionToken: google.maps.places.AutocompleteSessionToken;
 
   public constructor() {
+    this.ensureInitialized = this.ensureInitialized.bind(this);
+
     if (typeof window !== "undefined") {
       if (!window.google) {
         loadScript(
           `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`
-        ).then(this.init.bind(this));
+        )
+          .then(this.init.bind(this))
+          .catch((error) => {
+            this.error = true;
+          });
       } else {
         this.init();
       }
     }
   }
 
-  private init(): void {
+  private init() {
     this.client = new window.google.maps.places.AutocompleteService();
     this.geocoder = new window.google.maps.Geocoder();
 
     this.sessionToken = new google.maps.places.AutocompleteSessionToken();
   }
 
-  public search(query: string): Promise<AddressSearchResult[]> {
+  private ensureInitialized() {
+    return new Promise<void>((resolve, reject) => {
+      if (this.client) {
+        return resolve();
+      }
+
+      if (this.error) {
+        return reject(new Error("Failed to load geolocation services."));
+      }
+
+      setTimeout(this.ensureInitialized, 200);
+    });
+  }
+
+  public async search(query: string) {
+    await this.ensureInitialized();
+
     const request: google.maps.places.AutocompletionRequest = {
       input: query,
       componentRestrictions: {
@@ -67,7 +91,9 @@ class AddressSearcher {
     );
   }
 
-  public getAddress(id: string): Promise<string> {
+  public async getAddress(id: string) {
+    await this.ensureInitialized();
+
     const request: google.maps.GeocoderRequest = {
       placeId: id,
     };
@@ -79,7 +105,9 @@ class AddressSearcher {
     });
   }
 
-  public getPostcodeByCoordinates(lat: number, lng: number) {
+  public async getPostcodeByCoordinates(lat: number, lng: number) {
+    await this.ensureInitialized();
+
     const request: google.maps.GeocoderRequest = {
       location: { lat, lng },
     };
@@ -96,7 +124,9 @@ class AddressSearcher {
     });
   }
 
-  public getCoordinatesByPostcode(postcode: string) {
+  public async getCoordinatesByPostcode(postcode: string) {
+    await this.ensureInitialized();
+
     const request: google.maps.GeocoderRequest = {
       address: postcode,
     };
@@ -111,7 +141,7 @@ class AddressSearcher {
             longitude: location.lng(),
           });
         } else {
-          reject("Failed to retrieve postcode location.");
+          reject(new Error("Failed to retrieve postcode location."));
         }
       });
     });
