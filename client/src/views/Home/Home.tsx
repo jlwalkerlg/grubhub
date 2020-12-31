@@ -22,13 +22,18 @@ const Home: NextPage = () => {
 
   const form = useForm({
     defaultValues: {
-      postcode: postcode ?? "",
+      postcode:
+        postcode ?? typeof window === "undefined"
+          ? ""
+          : window.localStorage.getItem("postcode") ?? "",
     },
     reValidateMode: "onSubmit",
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
+
+    localStorage.setItem("postcode", data.postcode);
 
     Router.push(`/restaurants?postcode=${data.postcode}`);
   });
