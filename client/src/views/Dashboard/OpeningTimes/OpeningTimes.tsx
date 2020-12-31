@@ -47,6 +47,10 @@ const OpeningTimesInput: React.FC<{
       form.setValue(closingName, "");
     }
 
+    if (!form.getValues(closingName)) {
+      return;
+    }
+
     const index = openingTimes.indexOf(time);
     if (
       index > Math.max(0, closingTimes.indexOf(form.getValues(closingName)))
