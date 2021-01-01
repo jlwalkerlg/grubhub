@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Application.Services;
 using Domain.Restaurants;
 
 namespace Application.Restaurants.ApproveRestaurant
@@ -7,10 +8,12 @@ namespace Application.Restaurants.ApproveRestaurant
     public class ApproveRestaurantHandler : IRequestHandler<ApproveRestaurantCommand>
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IClock clock;
 
-        public ApproveRestaurantHandler(IUnitOfWork unitOfWork)
+        public ApproveRestaurantHandler(IUnitOfWork unitOfWork, IClock clock)
         {
             this.unitOfWork = unitOfWork;
+            this.clock = clock;
         }
 
         public async Task<Result> Handle(
@@ -27,7 +30,7 @@ namespace Application.Restaurants.ApproveRestaurant
 
             restaurant.Approve();
 
-            var @event = new RestaurantApprovedEvent(restaurant.Id);
+            var @event = new RestaurantApprovedEvent(restaurant.Id, clock.UtcNow);
             await unitOfWork.Events.Add(@event);
 
             await unitOfWork.Commit();

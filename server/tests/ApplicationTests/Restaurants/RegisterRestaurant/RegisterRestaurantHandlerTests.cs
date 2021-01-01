@@ -9,6 +9,7 @@ using ApplicationTests.Services.Geocoding;
 using ApplicationTests.Services.Hashing;
 using ApplicationTests.Users;
 using Domain;
+using SharedTests.Doubles;
 using Xunit;
 
 namespace ApplicationTests.Restaurants.RegisterRestaurant
@@ -37,7 +38,11 @@ namespace ApplicationTests.Restaurants.RegisterRestaurant
 
             geocoderSpy = new GeocoderSpy();
 
-            handler = new RegisterRestaurantHandler(hasherFake, unitOfWorkSpy, geocoderSpy);
+            handler = new RegisterRestaurantHandler(
+                hasherFake,
+                unitOfWorkSpy,
+                geocoderSpy,
+                new ClockStub());
         }
 
         [Fact]

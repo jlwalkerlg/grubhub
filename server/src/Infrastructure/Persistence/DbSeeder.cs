@@ -129,7 +129,7 @@ namespace Infrastructure.Persistence
                     }
 
                     var eventDto = new EventDto(
-                        new RestaurantRegisteredEvent(restaurant.Id, user.Id)
+                        new RestaurantRegisteredEvent(restaurant.Id, user.Id, DateTime.UtcNow)
                     );
 
                     await context.AddRangeAsync(user, restaurant, menu, eventDto);

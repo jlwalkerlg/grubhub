@@ -8,6 +8,7 @@ using Domain;
 using System.Linq;
 using Application.Restaurants;
 using Domain.Users;
+using SharedTests.Doubles;
 
 namespace ApplicationTests.Restaurants.ApproveRestaurant
 {
@@ -20,7 +21,7 @@ namespace ApplicationTests.Restaurants.ApproveRestaurant
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            handler = new ApproveRestaurantHandler(unitOfWorkSpy);
+            handler = new ApproveRestaurantHandler(unitOfWorkSpy, new ClockStub());
         }
 
         [Fact]

@@ -2,8 +2,5 @@
 
 namespace Application.Events
 {
-    public abstract record Event
-    {
-        public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
-    }
+    public abstract record Event(DateTime CreatedAt);
 }

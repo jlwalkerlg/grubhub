@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Services;
 using Application.Services.Geocoding;
 using Application.Services.Hashing;
 using Domain;
@@ -14,12 +15,18 @@ namespace Application.Restaurants.RegisterRestaurant
         private readonly IHasher hasher;
         private readonly IUnitOfWork unitOfWork;
         private readonly IGeocoder geocoder;
+        private readonly IClock clock;
 
-        public RegisterRestaurantHandler(IHasher hasher, IUnitOfWork unitOfWork, IGeocoder geocoder)
+        public RegisterRestaurantHandler(
+            IHasher hasher,
+            IUnitOfWork unitOfWork,
+            IGeocoder geocoder,
+            IClock clock)
         {
             this.hasher = hasher;
             this.unitOfWork = unitOfWork;
             this.geocoder = geocoder;
+            this.clock = clock;
         }
 
         public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
@@ -47,7 +54,7 @@ namespace Application.Restaurants.RegisterRestaurant
 
             var menu = new Menu(restaurant.Id);
 
-            var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id);
+            var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id, clock.UtcNow);
 
             await unitOfWork.RestaurantManagers.Add(manager);
             await unitOfWork.Restaurants.Add(restaurant);
