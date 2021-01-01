@@ -26,9 +26,9 @@ namespace WebTests.Actions.Restaurants.SearchRestaurants
             var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=BD181LT&sort_by=distance");
 
             Assert.Equal(3, restaurants.Count);
-            r2.AssertEqual(restaurants[0]);
-            r3.AssertEqual(restaurants[1]);
-            r1.AssertEqual(restaurants[2]);
+            Assert.True(r2.IsEqual(restaurants[0]));
+            Assert.True(r3.IsEqual(restaurants[1]));
+            Assert.True(r1.IsEqual(restaurants[2]));
         }
 
         private async Task<Restaurant> AddRestaurant(float latitude, float longitude)
