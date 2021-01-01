@@ -1,9 +1,7 @@
-import React from "react";
 import Head from "next/head";
-
-import { ToastContainer } from "react-toastify";
-
+import React from "react";
 import Nav from "~/components/Nav/Nav";
+import Toaster from "../Toaster/Toaster";
 
 interface Props {
   title: string;
@@ -18,17 +16,7 @@ const Layout: React.FC<Props> = ({ title, children }) => {
       </Head>
       <Nav />
       {children}
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <Toaster />
     </div>
   );
 };

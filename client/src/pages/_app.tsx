@@ -1,7 +1,7 @@
 import { AppProps } from "next/app";
 import { QueryCache, ReactQueryCacheProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastProvider } from "~/components/Toaster/Toaster";
 import useIsAppMounted from "~/services/useIsAppMounted";
 import "~/styles/index.css";
 import ErrorPage from "~/views/Error/ErrorPage";
@@ -26,10 +26,12 @@ export default function App(props: AppProps) {
   }
 
   return (
-    <ReactQueryCacheProvider queryCache={queryCache}>
-      <Hydrate state={props.pageProps.dehydratedState}>
-        <Wrapper {...props} />
-      </Hydrate>
-    </ReactQueryCacheProvider>
+    <ToastProvider>
+      <ReactQueryCacheProvider queryCache={queryCache}>
+        <Hydrate state={props.pageProps.dehydratedState}>
+          <Wrapper {...props} />
+        </Hydrate>
+      </ReactQueryCacheProvider>
+    </ToastProvider>
   );
 }

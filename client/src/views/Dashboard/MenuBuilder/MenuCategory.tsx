@@ -1,6 +1,5 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { MenuCategoryDto } from "~/api/menu/MenuDto";
@@ -12,6 +11,7 @@ import { ErrorAlert } from "~/components/Alert/Alert";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
+import { useToasts } from "~/components/Toaster/Toaster";
 import { combineRules, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
 import MenuItem from "./MenuItem";
@@ -24,6 +24,8 @@ interface Props {
 }
 
 const MenuCategory: React.FC<Props> = ({ category }) => {
+  const { addToast } = useToasts();
+
   const { user } = useAuth();
   const { data: menu } = useMenu(user.restaurantId);
 
@@ -97,7 +99,7 @@ const MenuCategory: React.FC<Props> = ({ category }) => {
       },
       {
         onError: (error) => {
-          toast.error(error.message);
+          addToast(error.message);
         },
       }
     );

@@ -2,10 +2,10 @@ import { NextPage } from "next";
 import Router from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import GeolocationIcon from "~/components/Icons/GeolocationIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
+import { useToasts } from "~/components/Toaster/Toaster";
 import {
   combineRules,
   PostcodeRule,
@@ -14,6 +14,8 @@ import {
 import useCurrentLocation from "~/services/geolocation/useCurrentLocation";
 
 const Home: NextPage = () => {
+  const { addToast } = useToasts();
+
   const {
     postcode,
     isLoading: isLoadingLocation,
@@ -43,7 +45,7 @@ const Home: NextPage = () => {
       const { postcode } = await lookup();
       form.setValue("postcode", postcode);
     } catch (error) {
-      toast.error(error.message);
+      addToast(error.message);
     }
   };
 

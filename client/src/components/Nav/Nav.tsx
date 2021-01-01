@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import { toast } from "react-toastify";
 import useAuth from "~/api/users/useAuth";
 import useLogout from "~/api/users/useLogout";
 import CloseIcon from "~/components/Icons/CloseIcon";
@@ -9,8 +8,11 @@ import MenuIcon from "~/components/Icons/MenuIcon";
 import RegisterIcon from "~/components/Icons/RegisterIcon";
 import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
 import DashboardIcon from "../Icons/DashboardIcon";
+import { useToasts } from "../Toaster/Toaster";
 
 const Nav: React.FC = () => {
+  const { addToast } = useToasts();
+
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleNav = () => {
     setIsOpen(!isOpen);
@@ -22,7 +24,7 @@ const Nav: React.FC = () => {
   const onLogout = async () => {
     await logout(null, {
       onError: (error) => {
-        toast.error(`Logout failed: ${error.message}`);
+        addToast(`Logout failed: ${error.message}`);
       },
     });
   };
