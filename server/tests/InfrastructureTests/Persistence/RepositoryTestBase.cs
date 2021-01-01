@@ -2,6 +2,7 @@ using Infrastructure.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Respawn;
+using SharedTests;
 using Xunit;
 
 namespace InfrastructureTests.Persistence
@@ -17,7 +18,7 @@ namespace InfrastructureTests.Persistence
         static RepositoryTestBase()
         {
             dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseNpgsql(Config.TestDbConnectionString)
+                .UseNpgsql(Config.InfrastructureTestDbConnectionString)
                 .Options;
 
             using (var context = new AppDbContext(dbContextOptions))
@@ -38,14 +39,14 @@ namespace InfrastructureTests.Persistence
 
         public RepositoryTestBase()
         {
-            using (var conn = new NpgsqlConnection(Config.TestDbConnectionString))
+            using (var conn = new NpgsqlConnection(Config.InfrastructureTestDbConnectionString))
             {
                 conn.Open();
                 checkpoint.Reset(conn).Wait();
             }
 
             context = new AppDbContext(dbContextOptions);
-            dbConnectionFactory = new TestDbConnectionFactory(Config.TestDbConnectionString);
+            dbConnectionFactory = new TestDbConnectionFactory(Config.InfrastructureTestDbConnectionString);
         }
     }
 

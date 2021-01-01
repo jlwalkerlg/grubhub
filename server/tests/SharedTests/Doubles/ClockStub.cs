@@ -1,7 +1,7 @@
 using System;
 using Application.Services;
 
-namespace InfrastructureTests
+namespace SharedTests.Doubles
 {
     public class ClockStub : IClock
     {

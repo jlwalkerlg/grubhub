@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Infrastructure.Geocoding;
+using SharedTests;
 using Xunit;
 
 namespace InfrastructureTests.External.Geocoding

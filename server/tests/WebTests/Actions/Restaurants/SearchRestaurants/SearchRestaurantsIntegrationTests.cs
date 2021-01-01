@@ -5,6 +5,7 @@ using Application.Restaurants;
 using Domain;
 using Domain.Restaurants;
 using Domain.Users;
+using SharedTests;
 using Xunit;
 
 namespace WebTests.Actions.Restaurants.SearchRestaurants
@@ -22,7 +23,7 @@ namespace WebTests.Actions.Restaurants.SearchRestaurants
             var r2 = await AddRestaurant(54.0f, -2.0f);
             var r3 = await AddRestaurant(54.0f, -2.1f);
 
-            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=MN121NM&sort_by=distance");
+            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=BD181LT&sort_by=distance");
 
             Assert.Equal(3, restaurants.Count);
             r2.AssertEqual(restaurants[0]);

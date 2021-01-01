@@ -4,6 +4,8 @@ using Domain;
 using Domain.Restaurants;
 using Domain.Users;
 using Infrastructure.Persistence.Dapper.Repositories.Restaurants;
+using SharedTests;
+using SharedTests.Doubles;
 using Xunit;
 
 namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
@@ -18,7 +20,7 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
             clock = new ClockStub();
 
             repository = new DPRestaurantDtoRepository(
-                new TestDbConnectionFactory(Config.TestDbConnectionString),
+                new TestDbConnectionFactory(Config.InfrastructureTestDbConnectionString),
                 clock
             );
         }

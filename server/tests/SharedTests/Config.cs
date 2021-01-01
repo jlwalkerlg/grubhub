@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace InfrastructureTests.External
+namespace SharedTests
 {
     public class Config
     {
@@ -14,5 +14,11 @@ namespace InfrastructureTests.External
         }
 
         public static string GoogleGeocodingApiKey => config["GoogleGeocodingApiKey"];
+
+        public static string InfrastructureTestDbConnectionString =>
+            config["InfrastructureTestDbConnectionString"];
+
+        public static string WebTestDbConnectionString =>
+            config["WebTestDbConnectionString"];
     }
 }

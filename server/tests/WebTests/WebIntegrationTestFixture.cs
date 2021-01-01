@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
 using Xunit;
+using SharedTests;
 
 namespace WebTests.Actions
 {
@@ -74,7 +75,7 @@ namespace WebTests.Actions
                 var sp = services.BuildServiceProvider();
 
                 var config = sp.GetRequiredService<WebConfig>();
-                config.DbConnectionString = ctx.Configuration["TestDbConnectionString"];
+                config.DbConnectionString = Config.WebTestDbConnectionString;
             });
         }
     }

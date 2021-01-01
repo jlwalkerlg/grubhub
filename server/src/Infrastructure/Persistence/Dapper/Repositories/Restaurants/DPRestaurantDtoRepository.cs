@@ -113,7 +113,7 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
             var now = clock.UtcNow;
             var day = now.DayOfWeek.ToString().ToLower();
 
-            sql += $" AND {day}_open < @Now AND ({day}_close IS NULL OR {day}_close > @Now)";
+            sql += $" AND {day}_open <= @Now AND ({day}_close IS NULL OR {day}_close > @Now)";
 
             sql += " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
 
@@ -142,7 +142,7 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
                         new
                         {
                             Status = RestaurantStatus.Approved.ToString(),
-                            Now = new TimeSpan(now.Hour, now.Minute, 0),
+                            Now = now.TimeOfDay,
                             OriginLatitude = coordinates.Latitude,
                             OriginLongitude = coordinates.Longitude,
                         });

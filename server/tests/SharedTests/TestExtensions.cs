@@ -2,7 +2,7 @@ using Application.Restaurants;
 using Domain.Restaurants;
 using Xunit;
 
-namespace WebTests
+namespace SharedTests
 {
     public static class TestExtensions
     {
