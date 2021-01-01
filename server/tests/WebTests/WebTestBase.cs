@@ -12,11 +12,11 @@ namespace WebTests
 {
     public abstract class WebTestBase
     {
-        private readonly WebAppTestFixture fixture;
+        private readonly WebTestFixture fixture;
         protected HttpClient client;
         private string authToken;
 
-        public WebTestBase(WebAppTestFixture fixture)
+        public WebTestBase(WebTestFixture fixture)
         {
             this.fixture = fixture;
 
