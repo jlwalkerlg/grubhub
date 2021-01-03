@@ -36,15 +36,15 @@ export function haversine(p1: Coordinates, p2: Coordinates) {
 }
 
 const days = [
+  "sunday",
   "monday",
   "tuesday",
   "wednesday",
   "thursday",
   "friday",
   "saturday",
-  "sunday",
 ];
 
 export function getCurrentDayOfWeek() {
-  return days[new Date().getDay() - 1];
+  return days[new Date().getDay()];
 }
