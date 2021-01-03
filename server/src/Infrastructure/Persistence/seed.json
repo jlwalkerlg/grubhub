@@ -1,4 +1,5 @@
 {
+  "cuisines": ["Italian", "Indian", "Thai"],
   "users": [
     {
       "id": "979a79d6-7b7c-4c21-88c9-8f918be90d01",
@@ -46,7 +47,8 @@
               ]
             }
           ]
-        }
+        },
+        "cuisines": ["Italian"]
       }
     },
     {
@@ -93,7 +95,8 @@
               ]
             }
           ]
-        }
+        },
+        "cuisines": ["Thai"]
       }
     }
   ]

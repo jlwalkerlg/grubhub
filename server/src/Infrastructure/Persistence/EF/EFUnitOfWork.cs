@@ -22,6 +22,7 @@ namespace Infrastructure.Persistence.EF
         public IRestaurantManagerRepository RestaurantManagers => new EFRestaurantManagerRepository(context);
         public IUserRepository Users => new EFUserRepository(context);
         public IEventRepository Events => new EFEventRepository(context);
+        public ICuisineRepository Cuisines => new EFCuisineRepository(context);
 
         public async Task Commit()
         {

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Domain.Users;
 
 namespace Domain.Restaurants
@@ -142,6 +144,20 @@ namespace Domain.Restaurants
 
                 estimatedDeliveryTime = value;
             }
+        }
+
+        private List<Cuisine> _cuisines = new();
+        public IReadOnlyList<Cuisine> Cuisines => _cuisines;
+
+        public void SetCuisines(params Cuisine[] cuisines)
+        {
+            _cuisines.RemoveAll(x => !cuisines.Contains(x));
+            _cuisines.AddRange(cuisines.Where(x => !_cuisines.Contains(x)));
+        }
+
+        public void SetCuisines(IEnumerable<Cuisine> cuisines)
+        {
+            SetCuisines(cuisines.ToArray());
         }
 
         public void Approve()

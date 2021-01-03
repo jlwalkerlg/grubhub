@@ -1,5 +1,4 @@
 import { QueryConfig, useQuery } from "react-query";
-import { sleep } from "~/services/utils";
 import api, { ApiError } from "../Api";
 import { RestaurantDto } from "./RestaurantDto";
 
@@ -8,7 +7,6 @@ export function getRestaurantQueryKey(id: string) {
 }
 
 async function getRestaurant(id: string) {
-  await sleep(1000);
   const response = await api.get(`/restaurants/${id}`);
   return response.data;
 }

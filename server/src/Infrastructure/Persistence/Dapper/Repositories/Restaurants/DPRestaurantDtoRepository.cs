@@ -7,6 +7,7 @@ using Application.Restaurants;
 using Application.Services;
 using Domain;
 using Domain.Restaurants;
+using System.Text.Json;
 
 namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
 {
@@ -69,7 +70,27 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
                     return null;
                 }
 
-                return EntryToDto(entry);
+                var restaurant = EntryToDto(entry);
+
+                var cuisines = await connection
+                    .QueryAsync<RestaurantCuisine>(
+                        @"SELECT
+                            rc.restaurant_id,
+                            rc.cuisine_name
+                        FROM
+                            restaurant_cuisines rc
+                        WHERE
+                            rc.restaurant_id = @RestaurantId",
+                        new
+                        {
+                            RestaurantId = restaurant.Id,
+                        });
+
+                restaurant.Cuisines.AddRange(
+                    cuisines.Select(x => new CuisineDto() { Name = x.cuisine_name })
+                );
+
+                return restaurant;
             }
         }
 
@@ -147,7 +168,38 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
                             OriginLongitude = coordinates.Longitude,
                         });
 
-                return entries.Select(EntryToDto).ToList();
+                var restaurants = entries.Select(EntryToDto).ToList();
+
+                var cuisines = await connection
+                    .QueryAsync<RestaurantCuisine>(
+                        @"SELECT
+                            rc.restaurant_id,
+                            rc.cuisine_name
+                        FROM
+                            restaurant_cuisines rc
+                        WHERE
+                            rc.restaurant_id = ANY(@RestaurantIds)",
+                        new
+                        {
+                            RestaurantIds = restaurants
+                                .Select(x => x.Id)
+                                .ToArray(),
+                        });
+
+                if (cuisines.Count() > 0)
+                {
+                    var map = restaurants.ToDictionary(x => x.Id);
+                    foreach (var cuisine in cuisines)
+                    {
+                        map[cuisine.restaurant_id].Cuisines.Add(
+                            new CuisineDto()
+                            {
+                                Name = cuisine.cuisine_name,
+                            });
+                    }
+                }
+
+                return restaurants;
             }
         }
 
@@ -155,56 +207,56 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
         {
             return new RestaurantDto()
             {
-                Id = entry.Id,
-                ManagerId = entry.ManagerId,
-                Name = entry.Name,
-                PhoneNumber = entry.PhoneNumber,
-                Address = entry.Address,
-                Latitude = entry.Latitude,
-                Longitude = entry.Longitude,
-                Status = entry.Status,
+                Id = entry.id,
+                ManagerId = entry.manager_id,
+                Name = entry.name,
+                PhoneNumber = entry.phone_number,
+                Address = entry.address,
+                Latitude = entry.latitude,
+                Longitude = entry.longitude,
+                Status = entry.status,
                 OpeningTimes = new OpeningTimesDto()
                 {
-                    Monday = entry.MondayOpen.HasValue ? new OpeningHoursDto()
+                    Monday = entry.monday_open.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.MondayOpen),
-                        Close = FormatTimeSpan(entry.MondayClose),
+                        Open = FormatTimeSpan(entry.monday_open),
+                        Close = FormatTimeSpan(entry.monday_close),
                     } : null,
-                    Tuesday = entry.TuesdayOpen.HasValue ? new OpeningHoursDto()
+                    Tuesday = entry.tuesday_open.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.TuesdayOpen),
-                        Close = FormatTimeSpan(entry.TuesdayClose),
+                        Open = FormatTimeSpan(entry.tuesday_open),
+                        Close = FormatTimeSpan(entry.tuesday_close),
                     } : null,
-                    Wednesday = entry.WednesdayOpen.HasValue ? new OpeningHoursDto()
+                    Wednesday = entry.wednesday_open.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.WednesdayOpen),
-                        Close = FormatTimeSpan(entry.WednesdayClose),
+                        Open = FormatTimeSpan(entry.wednesday_open),
+                        Close = FormatTimeSpan(entry.wednesday_close),
                     } : null,
-                    Thursday = entry.ThursdayOpen.HasValue ? new OpeningHoursDto()
+                    Thursday = entry.thursday_open.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.ThursdayOpen),
-                        Close = FormatTimeSpan(entry.ThursdayClose),
+                        Open = FormatTimeSpan(entry.thursday_open),
+                        Close = FormatTimeSpan(entry.thursday_close),
                     } : null,
-                    Friday = entry.FridayOpen.HasValue ? new OpeningHoursDto()
+                    Friday = entry.friday_open.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.FridayOpen),
-                        Close = FormatTimeSpan(entry.FridayClose),
+                        Open = FormatTimeSpan(entry.friday_open),
+                        Close = FormatTimeSpan(entry.friday_close),
                     } : null,
-                    Saturday = entry.SaturdayOpen.HasValue ? new OpeningHoursDto()
+                    Saturday = entry.saturday_open.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.SaturdayOpen),
-                        Close = FormatTimeSpan(entry.SaturdayClose),
+                        Open = FormatTimeSpan(entry.saturday_open),
+                        Close = FormatTimeSpan(entry.saturday_close),
                     } : null,
-                    Sunday = entry.SundayOpen.HasValue ? new OpeningHoursDto()
+                    Sunday = entry.sunday_open.HasValue ? new OpeningHoursDto()
                     {
-                        Open = FormatTimeSpan(entry.SundayOpen),
-                        Close = FormatTimeSpan(entry.SundayClose),
+                        Open = FormatTimeSpan(entry.sunday_open),
+                        Close = FormatTimeSpan(entry.sunday_close),
                     } : null,
                 },
-                DeliveryFee = entry.DeliveryFee,
-                MinimumDeliverySpend = entry.MinimumDeliverySpend,
-                MaxDeliveryDistanceInKm = entry.MaxDeliveryDistanceInKm,
-                EstimatedDeliveryTimeInMinutes = entry.EstimatedDeliveryTimeInMinutes,
+                DeliveryFee = entry.delivery_fee,
+                MinimumDeliverySpend = entry.minimum_delivery_spend,
+                MaxDeliveryDistanceInKm = entry.max_delivery_distance_in_km,
+                EstimatedDeliveryTimeInMinutes = entry.estimated_delivery_time_in_minutes,
             };
         }
 
@@ -220,32 +272,38 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
 
         private record RestaurantEntry
         {
-            public Guid Id { get; init; }
-            public Guid ManagerId { get; init; }
-            public string Name { get; init; }
-            public string PhoneNumber { get; init; }
-            public string Address { get; init; }
-            public float Latitude { get; init; }
-            public float Longitude { get; init; }
-            public string Status { get; init; }
-            public TimeSpan? MondayOpen { get; init; }
-            public TimeSpan? MondayClose { get; init; }
-            public TimeSpan? TuesdayOpen { get; init; }
-            public TimeSpan? TuesdayClose { get; init; }
-            public TimeSpan? WednesdayOpen { get; init; }
-            public TimeSpan? WednesdayClose { get; init; }
-            public TimeSpan? ThursdayOpen { get; init; }
-            public TimeSpan? ThursdayClose { get; init; }
-            public TimeSpan? FridayOpen { get; init; }
-            public TimeSpan? FridayClose { get; init; }
-            public TimeSpan? SaturdayOpen { get; init; }
-            public TimeSpan? SaturdayClose { get; init; }
-            public TimeSpan? SundayOpen { get; init; }
-            public TimeSpan? SundayClose { get; init; }
-            public decimal DeliveryFee { get; init; }
-            public decimal MinimumDeliverySpend { get; init; }
-            public int MaxDeliveryDistanceInKm { get; init; }
-            public int EstimatedDeliveryTimeInMinutes { get; init; }
+            public Guid id { get; init; }
+            public Guid manager_id { get; init; }
+            public string name { get; init; }
+            public string phone_number { get; init; }
+            public string address { get; init; }
+            public float latitude { get; init; }
+            public float longitude { get; init; }
+            public string status { get; init; }
+            public TimeSpan? monday_open { get; init; }
+            public TimeSpan? monday_close { get; init; }
+            public TimeSpan? tuesday_open { get; init; }
+            public TimeSpan? tuesday_close { get; init; }
+            public TimeSpan? wednesday_open { get; init; }
+            public TimeSpan? wednesday_close { get; init; }
+            public TimeSpan? thursday_open { get; init; }
+            public TimeSpan? thursday_close { get; init; }
+            public TimeSpan? friday_open { get; init; }
+            public TimeSpan? friday_close { get; init; }
+            public TimeSpan? saturday_open { get; init; }
+            public TimeSpan? saturday_close { get; init; }
+            public TimeSpan? sunday_open { get; init; }
+            public TimeSpan? sunday_close { get; init; }
+            public decimal delivery_fee { get; init; }
+            public decimal minimum_delivery_spend { get; init; }
+            public int max_delivery_distance_in_km { get; init; }
+            public int estimated_delivery_time_in_minutes { get; init; }
+        }
+
+        private record RestaurantCuisine
+        {
+            public Guid restaurant_id { get; init; }
+            public string cuisine_name { get; init; }
         }
     }
 }

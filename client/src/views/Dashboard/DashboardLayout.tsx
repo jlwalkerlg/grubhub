@@ -4,6 +4,7 @@ import React from "react";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
+import CakeIcon from "~/components/Icons/CakeIcon";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
 import ClipboardIcon from "~/components/Icons/ClipboardIcon";
 import ClockIcon from "~/components/Icons/ClockIcon";
@@ -28,6 +29,11 @@ const routes: DashboardRoute[] = [
     title: "Opening Times",
     pathname: "/dashboard/opening-times",
     icon: ClockIcon,
+  },
+  {
+    title: "Update Cuisines",
+    pathname: "/dashboard/cuisines",
+    icon: CakeIcon,
   },
   {
     title: "Menu Builder",

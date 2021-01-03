@@ -78,7 +78,7 @@ namespace ApplicationTests.Restaurants.UpdateOpeningHours
         }
 
         [Fact]
-        public async Task It_Requires_Authentication()
+        public async Task It_Requires_Authorisation()
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),

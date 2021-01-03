@@ -26,6 +26,20 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
         }
 
         [Fact]
+        public async Task It_Gets_A_Restaurant_By_Id()
+        {
+            var restaurant = await AddRestaurant();
+
+            var cuisine = new Cuisine("Pizza");
+
+            await context.AddAsync(cuisine);
+            await context.SaveChangesAsync();
+
+            var found = await repository.GetById(restaurant.Id.Value);
+            Assert.True(restaurant.IsEqual(found));
+        }
+
+        [Fact]
         public async Task It_Retrieves_Open_Restaurants_Within_Range()
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
@@ -71,10 +85,16 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
                 },
                 approved: true);
 
+            var cuisine = new Cuisine("Pizza");
+            r4.SetCuisines(cuisine);
+
+            await context.AddAsync(cuisine);
+            await context.SaveChangesAsync();
+
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f));
 
             Assert.Single(restaurants);
-            r4.AssertEqual(restaurants[0]);
+            Assert.True(r4.IsEqual(restaurants[0]));
         }
 
         [Fact]
@@ -92,15 +112,17 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
                 latitude: 54.0f,
                 longitude: -2.1f);
 
+            await context.SaveChangesAsync();
+
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
             {
                 SortBy = "distance",
             });
 
             Assert.Equal(3, restaurants.Count);
-            r2.AssertEqual(restaurants[0]);
-            r3.AssertEqual(restaurants[1]);
-            r1.AssertEqual(restaurants[2]);
+            Assert.True(r2.IsEqual(restaurants[0]));
+            Assert.True(r3.IsEqual(restaurants[1]));
+            Assert.True(r1.IsEqual(restaurants[2]));
         }
 
         [Fact]
@@ -112,15 +134,17 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
             var r2 = await AddRestaurant(minDeliverySpend: 6.00m);
             var r3 = await AddRestaurant(minDeliverySpend: 10.00m);
 
+            await context.SaveChangesAsync();
+
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
             {
                 SortBy = "min_order",
             });
 
             Assert.Equal(3, restaurants.Count);
-            r2.AssertEqual(restaurants[0]);
-            r3.AssertEqual(restaurants[1]);
-            r1.AssertEqual(restaurants[2]);
+            Assert.True(r2.IsEqual(restaurants[0]));
+            Assert.True(r3.IsEqual(restaurants[1]));
+            Assert.True(r1.IsEqual(restaurants[2]));
         }
 
         [Fact]
@@ -132,15 +156,17 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
             var r2 = await AddRestaurant(deliveryFee: 0);
             var r3 = await AddRestaurant(deliveryFee: 1.50m);
 
+            await context.SaveChangesAsync();
+
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
             {
                 SortBy = "delivery_fee",
             });
 
             Assert.Equal(3, restaurants.Count);
-            r2.AssertEqual(restaurants[0]);
-            r3.AssertEqual(restaurants[1]);
-            r1.AssertEqual(restaurants[2]);
+            Assert.True(r2.IsEqual(restaurants[0]));
+            Assert.True(r3.IsEqual(restaurants[1]));
+            Assert.True(r1.IsEqual(restaurants[2]));
         }
 
         [Fact]
@@ -152,15 +178,17 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
             var r2 = await AddRestaurant(deliveryTime: 30);
             var r3 = await AddRestaurant(deliveryTime: 40);
 
+            await context.SaveChangesAsync();
+
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
             {
                 SortBy = "time",
             });
 
             Assert.Equal(3, restaurants.Count);
-            r2.AssertEqual(restaurants[0]);
-            r3.AssertEqual(restaurants[1]);
-            r1.AssertEqual(restaurants[2]);
+            Assert.True(r2.IsEqual(restaurants[0]));
+            Assert.True(r3.IsEqual(restaurants[1]));
+            Assert.True(r1.IsEqual(restaurants[2]));
         }
 
         private async Task<Restaurant> AddRestaurant(
@@ -216,7 +244,6 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
             }
 
             await context.AddRangeAsync(manager, restaurant);
-            await context.SaveChangesAsync();
 
             return restaurant;
         }

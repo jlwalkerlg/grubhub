@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Application.Restaurants
 {
@@ -17,6 +18,7 @@ namespace Application.Restaurants
         public decimal MinimumDeliverySpend { get; init; }
         public int MaxDeliveryDistanceInKm { get; init; }
         public int EstimatedDeliveryTimeInMinutes { get; init; }
+        public List<CuisineDto> Cuisines { get; init; } = new();
     }
 
     public record OpeningTimesDto

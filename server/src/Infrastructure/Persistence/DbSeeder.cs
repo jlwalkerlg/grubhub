@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Application.Restaurants.RegisterRestaurant;
@@ -36,6 +37,13 @@ namespace Infrastructure.Persistence
                 "seed.json");
             var json = await File.ReadAllTextAsync(path);
             var jdoc = JsonDocument.Parse(json);
+
+            var cuisines = jdoc.RootElement
+                .GetProperty("cuisines")
+                .EnumerateArray()
+                .Select(x => new Cuisine(x.GetString()));
+
+            await context.AddRangeAsync(cuisines);
 
             foreach (var userEl in jdoc.RootElement.GetProperty("users").EnumerateArray())
             {
@@ -128,13 +136,25 @@ namespace Infrastructure.Persistence
                         }
                     }
 
+                    foreach (var cuisineEl in restaurantEl.GetProperty("cuisines").EnumerateArray())
+                    {
+                        var restaurantCuisine = new RestaurantCuisine()
+                        {
+                            RestaurantId = restaurant.Id,
+                            CuisineName = cuisineEl.GetString(),
+                        };
+
+                        await context.AddAsync(restaurantCuisine);
+                    }
+
                     var eventDto = new EventDto(
                         new RestaurantRegisteredEvent(restaurant.Id, user.Id, DateTime.UtcNow)
                     );
 
                     await context.AddRangeAsync(user, restaurant, menu, eventDto);
-                    await context.SaveChangesAsync();
                 }
+
+                await context.SaveChangesAsync();
             }
         }
     }

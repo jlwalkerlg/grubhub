@@ -1,3 +1,4 @@
+using System.Linq;
 using Application.Restaurants;
 using Domain.Restaurants;
 
@@ -7,7 +8,17 @@ namespace SharedTests
     {
         public static bool IsEqual(this Restaurant restaurant, RestaurantDto restaurantDto)
         {
-            return restaurant.Id.Value == restaurantDto.Id;
+            if (restaurant.Id.Value != restaurantDto.Id) return false;
+
+            foreach (var cuisine in restaurant.Cuisines)
+            {
+                if (!restaurantDto.Cuisines.Any(x => x.Name == cuisine.Name))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

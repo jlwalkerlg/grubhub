@@ -13,6 +13,7 @@ namespace Application
         IRestaurantManagerRepository RestaurantManagers { get; }
         IUserRepository Users { get; }
         IEventRepository Events { get; }
+        ICuisineRepository Cuisines { get; }
 
         Task Commit();
     }

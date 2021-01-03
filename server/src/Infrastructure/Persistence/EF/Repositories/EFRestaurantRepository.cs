@@ -20,7 +20,17 @@ namespace Infrastructure.Persistence.EF.Repositories
 
         public async Task<Restaurant> GetById(RestaurantId id)
         {
-            return await context.Restaurants.FindAsync(id);
+            var restaurant = await context.Restaurants.FindAsync(id);
+
+            if (restaurant != null)
+            {
+                await context
+                    .Entry(restaurant)
+                    .Collection(x => x.Cuisines)
+                    .LoadAsync();
+            }
+
+            return restaurant;
         }
     }
 }

@@ -30,6 +30,9 @@ namespace ApplicationTests
 
         public bool Commited { get; private set; } = false;
 
+        public ICuisineRepository Cuisines => CuisineRepositorySpy;
+        public CuisineRepositorySpy CuisineRepositorySpy { get; } = new();
+
         public Task Commit()
         {
             Commited = true;

@@ -1,3 +1,5 @@
+import { CuisineDto } from "./CuisineDto";
+
 export interface RestaurantDto {
   id: string;
   managerId: string;
@@ -12,6 +14,7 @@ export interface RestaurantDto {
   minimumDeliverySpend: number;
   maxDeliveryDistanceInKm: number;
   estimatedDeliveryTimeInMinutes: number;
+  cuisines: CuisineDto[];
 }
 
 type RestaurantStatus = "PendingApproval" | "Approved";

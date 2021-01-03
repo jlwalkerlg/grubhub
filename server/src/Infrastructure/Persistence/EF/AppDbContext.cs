@@ -17,6 +17,7 @@ namespace Infrastructure.Persistence.EF
         public DbSet<EventDto> Events { get; protected set; }
         public DbSet<RestaurantManager> RestaurantManagers { get; protected set; }
         public DbSet<User> Users { get; protected set; }
+        public DbSet<Cuisine> Cuisines { get; protected set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
