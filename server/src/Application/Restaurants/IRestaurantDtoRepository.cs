@@ -17,5 +17,6 @@ namespace Application.Restaurants
     public record RestaurantSearchOptions
     {
         public string SortBy { get; set; }
+        public List<string> Cuisines { get; set; } = new();
     }
 }

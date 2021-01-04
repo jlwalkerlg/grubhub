@@ -3,25 +3,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Application.Restaurants;
-using Application.Services;
 
 namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
 {
     public class DPCuisineDtoRepository : ICuisineDtoRepository
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
-        private readonly IClock clock;
 
         public DPCuisineDtoRepository(
-            IDbConnectionFactory dbConnectionFactory, IClock clock)
+            IDbConnectionFactory dbConnectionFactory)
         {
             this.dbConnectionFactory = dbConnectionFactory;
-            this.clock = clock;
         }
 
         public async Task<List<CuisineDto>> All()
         {
-            var sql = "SELECT c.name FROM cuisines c";
+            var sql = "SELECT c.name FROM cuisines c ORDER BY c.name ASC";
 
             using (var connection = await dbConnectionFactory.OpenConnection())
             {

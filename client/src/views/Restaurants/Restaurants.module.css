@@ -1,3 +1,45 @@
 .restaurant-section:hover .restaurant-name {
   text-decoration: underline;
 }
+
+.cuisine-name {
+  transition: transform ease-in-out 150ms;
+  transform: translateX(0);
+}
+
+.cuisine-link:hover,
+.cuisine-link.selected {
+  @apply text-primary transition-colors;
+}
+
+.cuisine-link:hover > .cuisine-name,
+.cuisine-link.selected > .cuisine-name {
+  @apply font-semibold block;
+  transform: translateX(1.5rem);
+}
+
+.cuisine-check {
+  position: absolute;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 50ms;
+  opacity: 0;
+}
+
+.cuisine-link:hover > .cuisine-check,
+.cuisine-link.selected > .cuisine-check {
+  opacity: 1;
+}
+
+.cuisine-link:hover > .cuisine-check {
+  transition-delay: 50ms;
+}
+
+.cuisine-link.selected > .cuisine-check {
+  transition-delay: 0;
+}
+
+.cuisine-link.selected:hover > .cuisine-check {
+  opacity: 0.3;
+  transition-delay: 0;
+}

@@ -6,6 +6,7 @@ import { RestaurantDto } from "./RestaurantDto";
 interface SearchRestaurantsQuery {
   postcode: string;
   sort_by?: string;
+  cuisines?: string;
 }
 
 async function searchRestaurants(query: SearchRestaurantsQuery) {

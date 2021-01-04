@@ -48,3 +48,20 @@ const days = [
 export function getCurrentDayOfWeek() {
   return days[new Date().getDay()];
 }
+
+export function url(
+  path: string,
+  params: { [key: string]: string | string[] } = {}
+) {
+  if (Object.keys(params).length === 0) {
+    return path;
+  }
+
+  return (
+    path +
+    "?" +
+    Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join("&")
+  );
+}

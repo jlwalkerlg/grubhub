@@ -138,6 +138,18 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
 
             sql += " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
 
+            if (options?.Cuisines.Count > 0)
+            {
+                sql += @" AND r.id = ANY(
+                    SELECT DISTINCT
+                        rc.restaurant_id
+                    FROM
+                        restaurant_cuisines rc
+                        INNER JOIN cuisines c ON c.name = rc.cuisine_name
+                    WHERE
+                        c.name = ANY(@Cuisines))";
+            }
+
             if (options?.SortBy == "distance")
             {
                 sql += " ORDER BY (FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000) ASC";
@@ -166,6 +178,7 @@ namespace Infrastructure.Persistence.Dapper.Repositories.Restaurants
                             Now = now.TimeOfDay,
                             OriginLatitude = coordinates.Latitude,
                             OriginLongitude = coordinates.Longitude,
+                            Cuisines = options?.Cuisines,
                         });
 
                 var restaurants = entries.Select(EntryToDto).ToList();

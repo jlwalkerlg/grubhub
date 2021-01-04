@@ -3,17 +3,20 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import useIsRouterReady from "useIsRouterReady";
+import useCuisines from "~/api/restaurants/useCuisines";
 import useSearchRestaurants from "~/api/restaurants/useSearchRestaurants";
 import CashIcon from "~/components/Icons/CashIcon";
+import CheckIcon from "~/components/Icons/CheckIcon";
 import ClockIcon from "~/components/Icons/ClockIcon";
 import CreditCardIcon from "~/components/Icons/CreditCardIcon";
+import CutleryIcon from "~/components/Icons/CutleryIcon";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
 import ThumbsUpIcon from "~/components/Icons/ThumbsUpIcon";
 import Layout from "~/components/Layout/Layout";
 import useClickAwayListener from "~/services/click-away-listener/useClickAwayListener";
 import usePostcodeLookup from "~/services/geolocation/usePostcodeLookup";
-import { getCurrentDayOfWeek, haversine } from "~/services/utils";
+import { getCurrentDayOfWeek, haversine, url } from "~/services/utils";
 import styles from "./Restaurants.module.css";
 
 const sortByWhitelist = ["delivery_fee", "time", "min_order", "distance"];
@@ -89,25 +92,112 @@ const RestaurantsSearch: React.FC = () => {
       return router.pathname;
     }
 
-    return (
-      router.pathname +
-      "?" +
-      Object.keys(params)
-        .map((key) => `${key}=${params[key]}`)
-        .join("&")
-    );
+    return url(router.pathname, params);
   };
 
   const sortedBy = sortByWhitelist.includes(router.query.sort_by?.toString())
     ? router.query.sort_by
     : null;
 
+  const {
+    data: cuisines,
+    isLoading: isLoadingCuisines,
+    isError: isErrorCuisines,
+  } = useCuisines();
+
+  const filteredCuisines = router.query.cuisines?.toString().split(",") ?? [];
+
+  const routeWithCuisine = (cuisine: string) => {
+    const params = {
+      ...router.query,
+      cuisines: [...filteredCuisines, cuisine].sort().join(","),
+    };
+
+    return url(router.pathname, params);
+  };
+
+  const routeWithoutCuisine = (cuisine: string) => {
+    const params = {
+      ...router.query,
+      cuisines: filteredCuisines.filter((x) => x !== cuisine).join(","),
+    };
+
+    if (!params.cuisines) {
+      delete params.cuisines;
+    }
+
+    return url(router.pathname, params);
+  };
+
+  const routeWithoutCuisines = () => {
+    const params = { ...router.query };
+
+    if (params.cuisines) {
+      delete params.cuisines;
+    }
+
+    return url(router.pathname, params);
+  };
+
   return (
     <Layout title="Restaurants">
       <main>
         <div className="container">
           <div className="mt-6 flex">
-            <div className="flex-1">
+            <div className="w-1/5 self-start p-4 hidden md:block">
+              <p className="font-bold flex items-center px-2">
+                <CutleryIcon className="w-4 h-4" />
+                <span className="ml-2">Cuisines</span>
+                <Link href={routeWithoutCuisines()}>
+                  <a className="ml-auto text-primary text-sm font-medium">
+                    Reset
+                  </a>
+                </Link>
+              </p>
+
+              {isLoadingCuisines && <p>Loading cuisines...</p>}
+
+              {!isLoadingCuisines && isErrorCuisines && (
+                <p>Error loading cuisines.</p>
+              )}
+
+              {!isLoadingCuisines && !isErrorCuisines && (
+                <ul className="mt-2">
+                  {cuisines.map((cuisine) => {
+                    const isCuisineFiltered = filteredCuisines.includes(
+                      cuisine.name
+                    );
+
+                    return (
+                      <li key={cuisine.name}>
+                        <Link
+                          href={
+                            isCuisineFiltered
+                              ? routeWithoutCuisine(cuisine.name)
+                              : routeWithCuisine(cuisine.name)
+                          }
+                        >
+                          <a
+                            className={`flex items-center py-1 px-2 mt-2 bg-white rounded shadow ${
+                              styles["cuisine-link"]
+                            } ${isCuisineFiltered ? styles["selected"] : ""}`}
+                          >
+                            <CheckIcon
+                              className={`w-5 h-5 ${styles["cuisine-check"]}`}
+                            />
+                            <span className={styles["cuisine-name"]}>
+                              {cuisine.name}
+                            </span>
+                          </a>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+
+            <div className="flex-1 ml-6">
               {(isLoadingRestaurants || isLoadingCoords) && (
                 <p>Loading restaurants...</p>
               )}
@@ -149,7 +239,7 @@ const RestaurantsSearch: React.FC = () => {
                               <Link href={routeWithSortByParam(null)}>
                                 <a
                                   onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
                                     sortedBy === null ? "text-primary" : ""
                                   }`}
                                 >
@@ -164,7 +254,7 @@ const RestaurantsSearch: React.FC = () => {
                               <Link href={routeWithSortByParam("distance")}>
                                 <a
                                   onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
                                     sortedBy === "distance"
                                       ? "text-primary"
                                       : ""
@@ -181,7 +271,7 @@ const RestaurantsSearch: React.FC = () => {
                               <Link href={routeWithSortByParam("delivery_fee")}>
                                 <a
                                   onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
                                     sortedBy === "delivery_fee"
                                       ? "text-primary"
                                       : ""
@@ -198,7 +288,7 @@ const RestaurantsSearch: React.FC = () => {
                               <Link href={routeWithSortByParam("min_order")}>
                                 <a
                                   onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
                                     sortedBy === "min_order"
                                       ? "text-primary"
                                       : ""
@@ -215,7 +305,7 @@ const RestaurantsSearch: React.FC = () => {
                               <Link href={routeWithSortByParam("time")}>
                                 <a
                                   onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
                                     sortedBy === "time" ? "text-primary" : ""
                                   }`}
                                 >
@@ -322,13 +412,14 @@ const RestaurantsSearch: React.FC = () => {
                 )}
             </div>
 
-            <div className="hidden lg:block w-1/5 self-start bg-white p-4 ml-6 rounded-sm">
+            <div className="hidden lg:block w-1/5 self-start bg-white p-4 ml-6 rounded-sm shadow-sm">
               <p className="font-bold">Sort By</p>
+
               <ul className="mt-2">
                 <li>
                   <Link href={routeWithSortByParam(null)}>
                     <a
-                      className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                      className={`flex items-center py-1 hover:text-primary transition-colors ${
                         sortedBy === null ? "text-primary" : ""
                       }`}
                     >
@@ -340,7 +431,7 @@ const RestaurantsSearch: React.FC = () => {
                 <li>
                   <Link href={routeWithSortByParam("distance")}>
                     <a
-                      className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                      className={`flex items-center py-1 hover:text-primary transition-colors ${
                         sortedBy === "distance" ? "text-primary" : ""
                       }`}
                     >
@@ -352,7 +443,7 @@ const RestaurantsSearch: React.FC = () => {
                 <li>
                   <Link href={routeWithSortByParam("delivery_fee")}>
                     <a
-                      className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                      className={`flex items-center py-1 hover:text-primary transition-colors ${
                         sortedBy === "delivery_fee" ? "text-primary" : ""
                       }`}
                     >
@@ -364,7 +455,7 @@ const RestaurantsSearch: React.FC = () => {
                 <li>
                   <Link href={routeWithSortByParam("min_order")}>
                     <a
-                      className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                      className={`flex items-center py-1 hover:text-primary transition-colors ${
                         sortedBy === "min_order" ? "text-primary" : ""
                       }`}
                     >
@@ -376,7 +467,7 @@ const RestaurantsSearch: React.FC = () => {
                 <li>
                   <Link href={routeWithSortByParam("time")}>
                     <a
-                      className={`flex items-center py-1 hover:text-primary transition-colors trans ${
+                      className={`flex items-center py-1 hover:text-primary transition-colors ${
                         sortedBy === "time" ? "text-primary" : ""
                       }`}
                     >

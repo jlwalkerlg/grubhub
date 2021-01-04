@@ -191,6 +191,35 @@ namespace InfrastructureTests.Persistence.Dapper.Repositories.Restaurants
             Assert.True(r1.IsEqual(restaurants[2]));
         }
 
+        [Fact]
+        public async Task It_Filters_Restaurants_By_Cuisine()
+        {
+            clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+
+            var r1 = await AddRestaurant();
+            var r2 = await AddRestaurant();
+            var r3 = await AddRestaurant();
+
+            var thai = new Cuisine("Thai");
+            var italian = new Cuisine("Italian");
+            var indian = new Cuisine("Indian");
+
+            r1.SetCuisines(thai, italian);
+            r2.SetCuisines(thai);
+            r3.SetCuisines(indian);
+
+            await context.SaveChangesAsync();
+
+            var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
+            {
+                Cuisines = new() { "Thai", "Italian" }
+            });
+
+            Assert.Equal(2, restaurants.Count);
+            Assert.Single(restaurants, dto => r1.IsEqual(dto));
+            Assert.Single(restaurants, dto => r2.IsEqual(dto));
+        }
+
         private async Task<Restaurant> AddRestaurant(
             float latitude = 54.0f,
             float longitude = -2.0f,

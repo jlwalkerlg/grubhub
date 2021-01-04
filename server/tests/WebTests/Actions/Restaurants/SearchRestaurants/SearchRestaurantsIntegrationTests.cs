@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Application.Restaurants;
 using Domain;
@@ -17,21 +18,23 @@ namespace WebTests.Actions.Restaurants.SearchRestaurants
         }
 
         [Fact]
-        public async Task It_Returns_Sorted_Restaurants()
+        public async Task It_Returns_The_Restaurants()
         {
-            var r1 = await AddRestaurant(54.0f, -2.15f);
-            var r2 = await AddRestaurant(54.0f, -2.0f);
-            var r3 = await AddRestaurant(54.0f, -2.1f);
+            var r1 = await AddRestaurant(54.0f, -2.15f, new() { "Thai" });
+            var r2 = await AddRestaurant(54.0f, -2.0f, new() { "Italian", "Greek" });
+            var r3 = await AddRestaurant(54.0f, -2.1f, new() { "Indian" });
 
-            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=BD181LT&sort_by=distance");
+            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=BD181LT&sort_by=distance&cuisines=Thai,Greek");
 
-            Assert.Equal(3, restaurants.Count);
+            Assert.Equal(2, restaurants.Count);
             Assert.True(r2.IsEqual(restaurants[0]));
-            Assert.True(r3.IsEqual(restaurants[1]));
-            Assert.True(r1.IsEqual(restaurants[2]));
+            Assert.True(r1.IsEqual(restaurants[1]));
         }
 
-        private async Task<Restaurant> AddRestaurant(float latitude, float longitude)
+        private async Task<Restaurant> AddRestaurant(
+            float latitude,
+            float longitude,
+            List<string> cuisines)
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
@@ -67,7 +70,9 @@ namespace WebTests.Actions.Restaurants.SearchRestaurants
 
             restaurant.Approve();
 
-            await fixture.InsertDb(manager, restaurant);
+            restaurant.SetCuisines(cuisines.Select(x => new Cuisine(x)));
+
+            await fixture.InsertDb(restaurant, manager);
 
             return restaurant;
         }
