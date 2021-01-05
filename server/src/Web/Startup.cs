@@ -20,14 +20,14 @@ namespace Web
     {
         public Startup(IConfiguration configuration)
         {
-            configuration.Bind(WebConfig);
+            configuration.Bind(Config);
         }
 
-        public Config WebConfig { get; } = new();
+        public Config Config { get; } = new();
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(WebConfig);
+            services.AddSingleton(Config);
 
             services
                 .AddControllers()
@@ -42,7 +42,7 @@ namespace Web
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins(WebConfig.CorsOrigins)
+                        .WithOrigins(Config.CorsOrigins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -51,7 +51,7 @@ namespace Web
 
             services.AddHttpContextAccessor();
 
-            services.AddEntityFramework(WebConfig);
+            services.AddEntityFramework(Config);
 
             services.AddMediatR(typeof(Startup).Assembly);
 
@@ -60,10 +60,10 @@ namespace Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.AddGeocoder(WebConfig);
+            builder.AddGeocoder(Config);
             builder.AddMiddleware();
 
-            builder.Register(ctx => new DbConnectionFactory(WebConfig.DbConnectionString))
+            builder.Register(ctx => new DbConnectionFactory(Config.DbConnectionString))
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
@@ -73,7 +73,7 @@ namespace Web
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
-            builder.Register(ctx => new JWTTokenizer(WebConfig.JWTSecret))
+            builder.Register(ctx => new JWTTokenizer(Config.JWTSecret))
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
@@ -95,13 +95,6 @@ namespace Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
-                // using (var scope = app.ApplicationServices.CreateScope())
-                // using (var context = scope.ServiceProvider.GetService<AppDbContext>())
-                // {
-                //     context.Database.EnsureDeleted();
-                //     context.Database.EnsureCreated();
-                // }
             }
 
             app.UseCors();
