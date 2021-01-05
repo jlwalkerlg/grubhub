@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Web.Services.Geocoding;
 using Web;
 
-namespace WebTests.Services.Geocoding
+namespace WebTests.Doubles
 {
     public class GeocoderSpy : IGeocoder
     {

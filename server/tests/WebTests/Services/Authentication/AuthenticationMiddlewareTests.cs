@@ -1,13 +1,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using MediatR;
 using Web.Services.Authentication;
 using Web.Domain.Users;
 using Web.Domain;
 using static Web.Error;
 using System;
 using Web;
+using WebTests.Doubles;
 
 namespace WebTests.Services.Authentication
 {
@@ -34,12 +34,11 @@ namespace WebTests.Services.Authentication
             authenticatorSpy.SignIn(user);
 
             var handlerResult = Result.Ok();
-            RequestHandlerDelegate<Result> next = () => Task.FromResult(handlerResult);
 
             var result = await middleware.Handle(
                 new RequireAuthenticationCommand(),
                 CancellationToken.None,
-                next);
+                () => Task.FromResult(handlerResult));
 
             Assert.True(result.IsSuccess);
             Assert.Same(handlerResult, result);
@@ -50,15 +49,18 @@ namespace WebTests.Services.Authentication
         {
             authenticatorSpy.SignOut();
 
-            RequestHandlerDelegate<Result> next = () => Task.FromResult(Result.Ok());
-
             var result = await middleware.Handle(
                 new RequireAuthenticationCommand(),
                 CancellationToken.None,
-                next);
+                () => Task.FromResult(Result.Ok()));
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.Unauthenticated, result.Error.Type);
+        }
+
+        [Authenticate]
+        public class RequireAuthenticationCommand : IRequest
+        {
         }
     }
 }

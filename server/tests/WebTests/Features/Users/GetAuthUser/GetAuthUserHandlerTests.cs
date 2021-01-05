@@ -5,8 +5,8 @@ using Web.Features.Users;
 using Web.Features.Users.GetAuthUser;
 using Xunit;
 using static Web.Error;
-using WebTests.Services.Authentication;
 using Web.Domain.Users;
+using WebTests.Doubles;
 
 namespace WebTests.Features.Users.GetAuthUser
 {

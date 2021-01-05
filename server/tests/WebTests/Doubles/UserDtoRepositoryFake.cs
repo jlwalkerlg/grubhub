@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Features.Users;
 
-namespace WebTests.Features.Users
+namespace WebTests.Doubles
 {
     public class UserDtoRepositoryFake : IUserDtoRepository
     {

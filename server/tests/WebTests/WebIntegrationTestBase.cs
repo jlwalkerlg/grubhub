@@ -38,14 +38,14 @@ namespace WebTests
     public class WebIntegrationTestFixture : WebTestFixture
     {
         private readonly WebIntegrationTestAppFactory factory;
-        private readonly WebConfig config;
+        private readonly Config config;
         private readonly Checkpoint checkpoint;
 
         public WebIntegrationTestFixture()
         {
             factory = new WebIntegrationTestAppFactory();
 
-            config = factory.Services.GetRequiredService<WebConfig>();
+            config = factory.Services.GetRequiredService<Config>();
 
             using (var db = factory.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
             {
@@ -94,7 +94,7 @@ namespace WebTests
             {
                 var sp = services.BuildServiceProvider();
 
-                var config = sp.GetRequiredService<WebConfig>();
+                var config = sp.GetRequiredService<Config>();
                 config.DbConnectionString = TestConfig.WebTestDbConnectionString;
             });
         }

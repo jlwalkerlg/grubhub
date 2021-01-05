@@ -1,6 +1,6 @@
 using Web.Services.Hashing;
 
-namespace WebTests.Services.Hashing
+namespace WebTests.Doubles
 {
     public class HasherFake : IHasher
     {

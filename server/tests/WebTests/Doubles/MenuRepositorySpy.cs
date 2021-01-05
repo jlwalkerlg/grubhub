@@ -5,7 +5,7 @@ using Web.Features.Menus;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 
-namespace WebTests.Features.Menus
+namespace WebTests.Doubles
 {
     public class MenuRepositorySpy : IMenuRepository
     {

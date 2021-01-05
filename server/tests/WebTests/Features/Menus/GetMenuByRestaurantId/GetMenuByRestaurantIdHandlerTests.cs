@@ -5,6 +5,7 @@ using Web.Features.Menus.GetMenuByRestaurantId;
 using Xunit;
 using static Web.Error;
 using Web.Features.Menus;
+using WebTests.Doubles;
 
 namespace WebTests.Features.Menus.GetMenuByRestaurantId
 {

@@ -2,10 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Features.Users.Logout;
-using WebTests.Services.Authentication;
 using Web.Domain;
 using Web.Domain.Users;
 using Xunit;
+using WebTests.Doubles;
 
 namespace WebTests.Features.Users.Logout
 {

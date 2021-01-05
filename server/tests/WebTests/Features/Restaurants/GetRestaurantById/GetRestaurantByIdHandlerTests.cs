@@ -5,6 +5,7 @@ using Web.Features.Restaurants;
 using Web.Features.Restaurants.GetRestaurantById;
 using Xunit;
 using static Web.Error;
+using WebTests.Doubles;
 
 namespace WebTests.Features.Restaurants.GetRestaurantById
 {

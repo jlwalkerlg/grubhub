@@ -1,6 +1,6 @@
 namespace Web
 {
-    public record WebConfig
+    public record Config
     {
         public string DbConnectionString { get; set; }
         public string GoogleGeocodingApiKey { get; set; }

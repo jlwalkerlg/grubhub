@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Features.Events;
 
-namespace WebTests.Features.Events
+namespace WebTests.Doubles
 {
     public class EventRepositorySpy : IEventRepository
     {

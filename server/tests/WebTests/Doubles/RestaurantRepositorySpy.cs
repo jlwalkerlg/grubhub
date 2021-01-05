@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Web.Features.Restaurants;
 using Web.Domain.Restaurants;
 
-namespace WebTests.Features.Restaurants
+namespace WebTests.Doubles
 {
     public class RestaurantRepositorySpy : IRestaurantRepository
     {

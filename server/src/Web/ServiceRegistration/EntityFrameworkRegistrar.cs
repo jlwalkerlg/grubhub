@@ -7,7 +7,7 @@ namespace Web.ServiceRegistration
     public static class EntityFrameworkRegistrar
     {
         public static void AddEntityFramework(
-            this IServiceCollection services, WebConfig config)
+            this IServiceCollection services, Config config)
         {
             services.AddDbContext<AppDbContext>(options =>
             {

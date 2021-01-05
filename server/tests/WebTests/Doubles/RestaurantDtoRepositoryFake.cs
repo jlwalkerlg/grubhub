@@ -6,7 +6,7 @@ using Web;
 using Web.Features.Restaurants;
 using Web.Domain;
 
-namespace WebTests.Features.Restaurants
+namespace WebTests.Doubles
 {
     public class RestaurantDtoRepositoryFake : IRestaurantDtoRepository
     {

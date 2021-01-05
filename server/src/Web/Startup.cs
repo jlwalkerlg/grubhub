@@ -23,7 +23,7 @@ namespace Web
             configuration.Bind(WebConfig);
         }
 
-        public WebConfig WebConfig { get; } = new();
+        public Config WebConfig { get; } = new();
 
         public void ConfigureServices(IServiceCollection services)
         {

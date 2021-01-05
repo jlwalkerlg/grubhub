@@ -9,6 +9,7 @@ using WebTests.Services.Geocoding;
 using Web.Domain;
 using Xunit;
 using static Web.Error;
+using WebTests.Doubles;
 
 namespace WebTests.Features.Restaurants.SearchRestaurants
 {

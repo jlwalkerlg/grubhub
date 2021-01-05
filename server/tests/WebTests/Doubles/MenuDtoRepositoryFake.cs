@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Features.Menus;
 
-namespace WebTests.Features.Menus
+namespace WebTests.Doubles
 {
     public class MenuDtoRepositoryFake : IMenuDtoRepository
     {

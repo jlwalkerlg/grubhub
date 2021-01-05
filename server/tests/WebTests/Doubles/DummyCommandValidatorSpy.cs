@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Web.Services.Validation;
 using Web;
-using WebTests.Doubles;
 
-namespace WebTests.Services.Validation
+namespace WebTests.Doubles
 {
     public class DummyCommandValidatorSpy : IValidator<DummyCommand>
     {

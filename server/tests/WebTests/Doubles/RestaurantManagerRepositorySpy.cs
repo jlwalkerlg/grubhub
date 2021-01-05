@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Web.Features.Users;
 using Web.Domain.Users;
 
-namespace WebTests.Features.Users
+namespace WebTests.Doubles
 {
     public class RestaurantManagerRepositorySpy : IRestaurantManagerRepository
     {

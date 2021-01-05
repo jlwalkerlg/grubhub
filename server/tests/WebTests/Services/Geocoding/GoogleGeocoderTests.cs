@@ -20,8 +20,8 @@ namespace WebTests.Services.Geocoding
 
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value.FormattedAddress);
-            Assert.NotEqual(default(float), result.Value.Coordinates.Latitude);
-            Assert.NotEqual(default(float), result.Value.Coordinates.Longitude);
+            Assert.NotEqual(default, result.Value.Coordinates.Latitude);
+            Assert.NotEqual(default, result.Value.Coordinates.Longitude);
         }
 
         [Fact]

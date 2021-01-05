@@ -4,10 +4,6 @@ using Web.Features.Events;
 using Web.Features.Menus;
 using Web.Features.Restaurants;
 using Web.Features.Users;
-using WebTests.Features.Events;
-using WebTests.Features.Menus;
-using WebTests.Features.Restaurants;
-using WebTests.Features.Users;
 
 namespace WebTests.Doubles
 {

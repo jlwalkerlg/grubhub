@@ -2,7 +2,7 @@ using System;
 using Web.Services.Authentication;
 using Web.Domain.Users;
 
-namespace WebTests.Services.Authentication
+namespace WebTests.Doubles
 {
     public class AuthenticatorSpy : IAuthenticator
     {
