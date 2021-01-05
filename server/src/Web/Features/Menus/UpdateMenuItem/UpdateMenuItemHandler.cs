@@ -22,31 +22,31 @@ namespace Web.Features.Menus.UpdateMenuItem
 
             if (menu == null)
             {
-                return Result.Fail(Error.NotFound("Menu not found."));
+                return Error.NotFound("Menu not found.");
             }
 
             var restaurant = await unitOfWork.Restaurants.GetById(menu.RestaurantId);
 
             if (restaurant.ManagerId != authenticator.UserId)
             {
-                return Result.Fail(Error.Unauthorised("Only the restaurant owner can update the menu."));
+                return Error.Unauthorised("Only the restaurant owner can update the menu.");
             }
 
             if (!menu.ContainsCategory(command.CategoryName))
             {
-                return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
+                return Error.NotFound($"Category {command.CategoryName} not found.");
             }
 
             var category = menu.GetCategory(command.CategoryName);
 
             if (!category.ContainsItem(command.OldItemName))
             {
-                return Result.Fail(Error.NotFound($"Item {command.OldItemName} not found for category {command.CategoryName}."));
+                return Error.NotFound($"Item {command.OldItemName} not found for category {command.CategoryName}.");
             }
 
             if (command.OldItemName != command.NewItemName && category.ContainsItem(command.NewItemName))
             {
-                return Result.Fail(Error.BadRequest($"Item {command.NewItemName} already exists for category {command.CategoryName}."));
+                return Error.BadRequest($"Item {command.NewItemName} already exists for category {command.CategoryName}.");
             }
 
             var item = category.GetItem(command.OldItemName);

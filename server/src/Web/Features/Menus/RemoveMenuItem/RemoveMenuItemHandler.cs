@@ -21,26 +21,26 @@ namespace Web.Features.Menus.RemoveMenuItem
 
             if (menu == null)
             {
-                return Result.Fail(Error.NotFound("Menu not found."));
+                return Error.NotFound("Menu not found.");
             }
 
             var restaurant = await unitOfWork.Restaurants.GetById(menu.RestaurantId);
 
             if (restaurant.ManagerId != authenticator.UserId)
             {
-                return Result.Fail(Error.Unauthorised("Only the restaurant owner can update the menu."));
+                return Error.Unauthorised("Only the restaurant owner can update the menu.");
             }
 
             if (!menu.ContainsCategory(command.CategoryName))
             {
-                return Result.Fail(Error.NotFound($"Category {command.CategoryName} not found."));
+                return Error.NotFound($"Category {command.CategoryName} not found.");
             }
 
             var category = menu.GetCategory(command.CategoryName);
 
             if (!category.ContainsItem(command.ItemName))
             {
-                return Result.Fail(Error.NotFound($"Item {command.ItemName} not found for category {command.CategoryName}."));
+                return Error.NotFound($"Item {command.ItemName} not found for category {command.CategoryName}.");
             }
 
             category.RemoveItem(command.ItemName);

@@ -25,7 +25,7 @@ namespace Web.Features.Restaurants.ApproveRestaurant
 
             if (restaurant is null)
             {
-                return Result.Fail(Error.NotFound("Restaurant not found."));
+                return Error.NotFound("Restaurant not found.");
             }
 
             restaurant.Approve();

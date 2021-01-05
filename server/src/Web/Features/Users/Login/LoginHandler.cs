@@ -26,12 +26,12 @@ namespace Web.Features.Users.Login
 
             if (user == null)
             {
-                return Result.Fail(Error.BadRequest("Invalid credentials."));
+                return Error.BadRequest("Invalid credentials.");
             }
 
             if (!hasher.CheckMatch(command.Password, user.Password))
             {
-                return Result.Fail(Error.BadRequest("Invalid credentials."));
+                return Error.BadRequest("Invalid credentials.");
             }
 
             authenticator.SignIn(user);

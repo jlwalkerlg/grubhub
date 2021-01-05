@@ -21,19 +21,19 @@ namespace Web.Features.Menus.RemoveMenuCategory
 
             if (menu == null)
             {
-                return Result.Fail(Error.NotFound("Menu not found."));
+                return Error.NotFound("Menu not found.");
             }
 
             var restaurant = await unitOfWork.Restaurants.GetById(new RestaurantId(command.RestaurantId));
 
             if (restaurant.ManagerId != authenticator.UserId)
             {
-                return Result.Fail(Error.Unauthorised("Only the restaurant manager can update the menu."));
+                return Error.Unauthorised("Only the restaurant manager can update the menu.");
             }
 
             if (!menu.ContainsCategory(command.CategoryName))
             {
-                return Result.Fail(Error.NotFound($"Category {command.CategoryName} doesn't exist for this menu."));
+                return Error.NotFound($"Category {command.CategoryName} doesn't exist for this menu.");
             }
 
             menu.RemoveCategory(command.CategoryName);

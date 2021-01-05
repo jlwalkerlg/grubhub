@@ -25,8 +25,7 @@ namespace Web
                 Errors = error.Errors,
             };
 
-            int code;
-            if (!codes.TryGetValue(error.Type, out code))
+            if (!codes.TryGetValue(error.Type, out var code))
             {
                 code = 500;
             }

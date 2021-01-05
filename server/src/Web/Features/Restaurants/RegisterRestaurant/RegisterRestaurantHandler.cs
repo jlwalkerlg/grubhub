@@ -35,7 +35,7 @@ namespace Web.Features.Restaurants.RegisterRestaurant
 
             if (!geocodingResult.IsSuccess)
             {
-                return Result.Fail(Error.BadRequest("Address is not a valid postal address."));
+                return Error.BadRequest("Address is not a valid postal address.");
             }
 
             var manager = new RestaurantManager(

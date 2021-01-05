@@ -28,7 +28,7 @@ namespace Web.Services.Validation
                 errors.Add(error.PropertyName, error.ErrorMessage);
             }
 
-            return Result.Fail(Error.ValidationError(errors));
+            return Error.ValidationError(errors);
         }
     }
 }

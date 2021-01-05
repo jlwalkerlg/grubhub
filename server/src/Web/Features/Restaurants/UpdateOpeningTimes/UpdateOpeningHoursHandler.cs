@@ -22,12 +22,12 @@ namespace Web.Features.Restaurants.UpdateOpeningHours
 
             if (restaurant == null)
             {
-                return Result.Fail(Error.NotFound("Restaurant not found."));
+                return Error.NotFound("Restaurant not found.");
             }
 
             if (restaurant.ManagerId != authenticator.UserId)
             {
-                return Result.Fail(Error.Unauthorised());
+                return Error.Unauthorised();
             }
 
             restaurant.OpeningTimes = new OpeningTimes()

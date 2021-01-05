@@ -26,12 +26,12 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
 
             if (restaurant == null)
             {
-                return Result.Fail(Error.NotFound("Restaurant not found."));
+                return Error.NotFound("Restaurant not found.");
             }
 
             if (authenticator.UserId != restaurant.ManagerId)
             {
-                return Result.Fail(Error.Unauthorised());
+                return Error.Unauthorised();
             }
 
             restaurant.Name = command.Name;

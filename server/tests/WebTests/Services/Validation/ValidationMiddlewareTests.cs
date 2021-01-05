@@ -31,7 +31,7 @@ namespace WebTests.Services.Validation
         public async Task It_Returns_A_Validation_Error_If_Validation_Fails()
         {
             var error = Error.ValidationError(new Dictionary<string, string>());
-            validatorSpy.Result = Result.Fail(error);
+            validatorSpy.Result = error;
 
             RequestHandlerDelegate<Result> next = () => Task.FromResult(Result.Ok());
 

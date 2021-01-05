@@ -32,7 +32,7 @@ namespace Web.Features.Restaurants.UpdateCuisines
 
             if (restaurant.ManagerId != authenticator.UserId)
             {
-                return Result.Fail(Error.Unauthorised());
+                return Error.Unauthorised();
             }
 
             var cuisines = (await unitOfWork.Cuisines.All())
