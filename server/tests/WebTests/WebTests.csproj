@@ -24,7 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Web\Web.csproj" />
-    <ProjectReference Include="..\SharedTests\SharedTests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\config.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>
