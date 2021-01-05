@@ -1,5 +1,5 @@
 using System;
-using Application;
+using Web;
 using Web.Services.Tokenization;
 
 namespace WebTests.Doubles

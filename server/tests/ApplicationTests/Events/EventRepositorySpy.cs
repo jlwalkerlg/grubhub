@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Events;
+using Web.Features.Events;
 
 namespace ApplicationTests.Events
 {

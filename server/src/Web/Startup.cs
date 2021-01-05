@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Autofac;
-using Infrastructure.Hashing;
-using Infrastructure.Persistence;
+using Web.Services.Hashing;
+using Web.Data;
 using Web.ServiceRegistration;
 using Web.Services;
 using Web.Services.Authentication;
@@ -53,9 +53,7 @@ namespace Web
 
             services.AddEntityFramework(WebConfig);
 
-            services.AddMediatR(
-                typeof(Application.IRequest).Assembly,
-                typeof(Startup).Assembly);
+            services.AddMediatR(typeof(Startup).Assembly);
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

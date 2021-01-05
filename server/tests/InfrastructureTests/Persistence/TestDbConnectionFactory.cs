@@ -1,6 +1,6 @@
 using System.Data;
 using System.Threading.Tasks;
-using Infrastructure.Persistence;
+using Web.Data;
 using Npgsql;
 
 namespace InfrastructureTests.Persistence

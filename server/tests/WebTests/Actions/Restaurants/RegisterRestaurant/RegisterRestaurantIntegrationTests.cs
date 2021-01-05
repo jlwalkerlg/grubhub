@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
-using Application;
-using Application.Menus;
-using Application.Restaurants;
-using Application.Restaurants.RegisterRestaurant;
-using Application.Users;
-using Domain.Restaurants;
-using Domain.Users;
-using Infrastructure.Persistence.EF;
+using Web;
+using Web.Features.Menus;
+using Web.Features.Restaurants;
+using Web.Features.Restaurants.RegisterRestaurant;
+using Web.Features.Users;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
+using Web.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

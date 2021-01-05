@@ -1,6 +1,6 @@
 using System;
-using Application.Services.Authentication;
-using Domain.Users;
+using Web.Services.Authentication;
+using Web.Domain.Users;
 
 namespace ApplicationTests.Services.Authentication
 {

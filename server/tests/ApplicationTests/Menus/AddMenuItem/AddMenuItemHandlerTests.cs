@@ -2,14 +2,14 @@ using System.Linq;
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using Application.Menus.AddMenuItem;
+using Web.Features.Menus.AddMenuItem;
 using ApplicationTests.Services.Authentication;
-using Domain;
-using Domain.Menus;
-using Domain.Restaurants;
-using Domain.Users;
+using Web.Domain;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
 using Xunit;
-using static Application.Error;
+using static Web.Error;
 
 namespace ApplicationTests.Menus.AddMenuItem
 {

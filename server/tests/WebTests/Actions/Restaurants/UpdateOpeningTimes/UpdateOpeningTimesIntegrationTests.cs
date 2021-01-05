@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using Application.Restaurants;
-using Domain;
-using Domain.Menus;
-using Domain.Restaurants;
-using Domain.Users;
-using Web.Actions.Restaurants.UpdateOpeningTimes;
+using Web.Features.Restaurants;
+using Web.Domain;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
+using Web.Features.Restaurants.UpdateOpeningTimes;
 using Xunit;
 
 namespace WebTests.Actions.Restaurants.UpdateOpeningTimes

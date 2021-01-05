@@ -1,5 +1,5 @@
 using Autofac;
-using Infrastructure.Persistence.Dapper.Repositories.Menus;
+using Web.Data.Dapper.Repositories.Menus;
 
 namespace Web.ServiceRegistration
 {

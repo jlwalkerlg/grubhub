@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Application.Restaurants.UpdateRestaurantDetails;
+using Web.Features.Restaurants.UpdateRestaurantDetails;
 using Xunit;
 
 namespace ApplicationTests.Restaurants.UpdateRestaurantDetails

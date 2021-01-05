@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Application.Restaurants;
-using Domain.Restaurants;
+using Web.Features.Restaurants;
+using Web.Domain.Restaurants;
 
 namespace ApplicationTests.Restaurants
 {

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Application.Services.Geocoding;
-using Application;
+using Web.Services.Geocoding;
+using Web;
 
 namespace ApplicationTests.Services.Geocoding
 {

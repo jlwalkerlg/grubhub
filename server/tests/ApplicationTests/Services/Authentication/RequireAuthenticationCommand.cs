@@ -1,5 +1,5 @@
-using Application;
-using Application.Services.Authentication;
+using Web;
+using Web.Services.Authentication;
 
 namespace ApplicationTests.Services.Authentication
 {

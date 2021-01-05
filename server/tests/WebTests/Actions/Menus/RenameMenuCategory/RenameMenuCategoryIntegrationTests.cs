@@ -1,13 +1,13 @@
 using System.Linq;
 using System;
 using System.Threading.Tasks;
-using Domain;
-using Domain.Menus;
-using Domain.Restaurants;
-using Domain.Users;
-using Web.Actions.Menus.RenameMenuCategory;
+using Web.Domain;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
+using Web.Features.Menus.RenameMenuCategory;
 using Xunit;
-using Application.Menus;
+using Web.Features.Menus;
 
 namespace WebTests.Actions.Menus.RenameMenuCategory
 {

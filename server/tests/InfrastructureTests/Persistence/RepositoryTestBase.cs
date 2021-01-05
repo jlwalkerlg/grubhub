@@ -1,4 +1,4 @@
-using Infrastructure.Persistence.EF;
+using Web.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Respawn;

@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Application.Menus.RemoveMenuItem;
+using Web.Features.Menus.RemoveMenuItem;
 using Xunit;
 
 namespace ApplicationTests.Menus.RemoveMenuItem

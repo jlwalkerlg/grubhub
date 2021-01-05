@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Users.Login;
+using Web.Features.Users.Login;
 using ApplicationTests.Services.Authentication;
 using ApplicationTests.Services.Hashing;
-using Domain;
-using Domain.Users;
+using Web.Domain;
+using Web.Domain.Users;
 using Xunit;
 
 namespace ApplicationTests.Users.Login

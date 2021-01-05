@@ -1,4 +1,4 @@
-using Application.Restaurants.RegisterRestaurant;
+using Web.Features.Restaurants.RegisterRestaurant;
 
 namespace ApplicationTests.Restaurants.RegisterRestaurant
 {

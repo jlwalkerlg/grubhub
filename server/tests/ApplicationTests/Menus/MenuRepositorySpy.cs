@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Menus;
-using Domain.Menus;
-using Domain.Restaurants;
+using Web.Features.Menus;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
 
 namespace ApplicationTests.Menus
 {

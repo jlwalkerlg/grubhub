@@ -1,4 +1,4 @@
-using Infrastructure.Hashing;
+using Web.Services.Hashing;
 using Xunit;
 
 namespace InfrastructureTests.Hashing

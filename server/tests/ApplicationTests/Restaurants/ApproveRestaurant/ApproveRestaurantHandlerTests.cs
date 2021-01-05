@@ -1,13 +1,13 @@
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using Application.Restaurants.ApproveRestaurant;
+using Web.Features.Restaurants.ApproveRestaurant;
 using Xunit;
-using Domain.Restaurants;
-using Domain;
+using Web.Domain.Restaurants;
+using Web.Domain;
 using System.Linq;
-using Application.Restaurants;
-using Domain.Users;
+using Web.Features.Restaurants;
+using Web.Domain.Users;
 using SharedTests.Doubles;
 
 namespace ApplicationTests.Restaurants.ApproveRestaurant

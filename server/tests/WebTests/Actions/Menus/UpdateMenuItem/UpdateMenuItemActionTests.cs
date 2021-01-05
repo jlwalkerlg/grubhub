@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Web.Actions.Menus.UpdateMenuItem;
+using Web.Features.Menus.UpdateMenuItem;
 using Xunit;
 
 namespace WebTests.Actions.Menus.UpdateMenuItem

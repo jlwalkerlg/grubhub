@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using Application.Restaurants;
-using Domain;
-using Domain.Menus;
-using Domain.Restaurants;
-using Domain.Users;
+using Web.Features.Restaurants;
+using Web.Domain;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
 using SharedTests;
-using Web.Actions.Restaurants.UpdateCuisines;
+using Web.Features.Restaurants.UpdateCuisines;
 using Xunit;
 
 namespace WebTests.Actions.Restaurants.UpdateCuisines

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Application.Users.Login;
+using Web.Features.Users.Login;
 using Xunit;
 
 namespace WebTests.Actions.Users.Login

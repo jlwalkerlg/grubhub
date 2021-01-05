@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using Application.Services.Hashing;
-using Application.Users.Login;
-using Domain;
-using Domain.Menus;
-using Domain.Restaurants;
-using Domain.Users;
+using Web.Services.Hashing;
+using Web.Features.Users.Login;
+using Web.Domain;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
 using Xunit;
 
 namespace WebTests.Actions.Users.Login

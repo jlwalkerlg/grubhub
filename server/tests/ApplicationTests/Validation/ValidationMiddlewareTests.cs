@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Validation;
+using Web.Services.Validation;
 using Xunit;
 using MediatR;
-using Application;
+using Web;
 
 namespace ApplicationTests.Validation
 {

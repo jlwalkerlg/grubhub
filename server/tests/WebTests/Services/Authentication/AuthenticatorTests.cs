@@ -1,8 +1,7 @@
 using System;
-using Application.Services.Authentication;
-using Domain;
-using Domain.Users;
 using Web.Services.Authentication;
+using Web.Domain;
+using Web.Domain.Users;
 using WebTests.Doubles;
 using Xunit;
 

@@ -2,7 +2,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Users;
+using Web.Features.Users;
 
 namespace ApplicationTests.Users
 {

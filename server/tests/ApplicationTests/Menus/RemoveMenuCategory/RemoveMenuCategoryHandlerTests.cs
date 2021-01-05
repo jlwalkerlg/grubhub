@@ -1,13 +1,13 @@
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using Application.Menus.RemoveMenuCategory;
-using Domain.Menus;
-using Domain.Restaurants;
+using Web.Features.Menus.RemoveMenuCategory;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
 using Xunit;
-using static Application.Error;
-using Domain.Users;
-using Domain;
+using static Web.Error;
+using Web.Domain.Users;
+using Web.Domain;
 using ApplicationTests.Services.Authentication;
 
 namespace ApplicationTests.Menus.RemoveMenuCategory

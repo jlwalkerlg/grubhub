@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Web.Actions.Menus.RenameMenuCategory;
+using Web.Features.Menus.RenameMenuCategory;
 using Xunit;
 
 namespace WebTests.Actions.Menus.RenameMenuCategory

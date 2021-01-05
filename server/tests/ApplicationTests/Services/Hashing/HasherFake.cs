@@ -1,4 +1,4 @@
-using Application.Services.Hashing;
+using Web.Services.Hashing;
 
 namespace ApplicationTests.Services.Hashing
 {

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Application.Services.Geocoding;
-using Application;
-using Domain;
+using Web.Services.Geocoding;
+using Web;
+using Web.Domain;
 
 namespace WebTests.Doubles
 {

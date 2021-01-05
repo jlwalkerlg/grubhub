@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Application;
+using Web;
 using MediatR;
 
 namespace WebTests

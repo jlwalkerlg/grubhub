@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Application.Restaurants.RegisterRestaurant;
+using Web.Features.Restaurants.RegisterRestaurant;
 using Xunit;
 
 namespace WebTests.Actions.Restaurants.RegisterRestaurant

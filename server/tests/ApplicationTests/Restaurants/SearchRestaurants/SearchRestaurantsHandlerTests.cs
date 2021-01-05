@@ -1,14 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application;
-using Application.Restaurants;
-using Application.Restaurants.SearchRestaurants;
-using Application.Services.Geocoding;
+using Web;
+using Web.Features.Restaurants;
+using Web.Features.Restaurants.SearchRestaurants;
+using Web.Services.Geocoding;
 using ApplicationTests.Services.Geocoding;
-using Domain;
+using Web.Domain;
 using Xunit;
-using static Application.Error;
+using static Web.Error;
 
 namespace ApplicationTests.Restaurants.SearchRestaurants
 {

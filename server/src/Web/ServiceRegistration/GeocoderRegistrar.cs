@@ -1,6 +1,5 @@
 using Autofac;
-using Application.Services.Geocoding;
-using Infrastructure.Geocoding;
+using Web.Services.Geocoding;
 
 namespace Web.ServiceRegistration
 {

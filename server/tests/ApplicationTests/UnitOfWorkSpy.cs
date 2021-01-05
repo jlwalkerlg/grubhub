@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using Application;
-using Application.Events;
-using Application.Menus;
-using Application.Restaurants;
-using Application.Users;
+using Web;
+using Web.Features.Events;
+using Web.Features.Menus;
+using Web.Features.Restaurants;
+using Web.Features.Users;
 using ApplicationTests.Events;
 using ApplicationTests.Menus;
 using ApplicationTests.Restaurants;

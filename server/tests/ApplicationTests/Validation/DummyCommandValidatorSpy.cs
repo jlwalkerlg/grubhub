@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Application.Validation;
-using Application;
+using Web.Services.Validation;
+using Web;
 
 namespace ApplicationTests.Validation
 {

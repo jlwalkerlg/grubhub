@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Web.Actions.Restaurants.UpdateOpeningTimes;
+using Web.Features.Restaurants.UpdateOpeningTimes;
 using Xunit;
 
 namespace WebTests.Actions.Restaurants.UpdateOpeningTimes

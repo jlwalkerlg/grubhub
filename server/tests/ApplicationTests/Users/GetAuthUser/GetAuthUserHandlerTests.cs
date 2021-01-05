@@ -1,12 +1,12 @@
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using Application.Users;
-using Application.Users.GetAuthUser;
+using Web.Features.Users;
+using Web.Features.Users.GetAuthUser;
 using Xunit;
-using static Application.Error;
+using static Web.Error;
 using ApplicationTests.Services.Authentication;
-using Domain.Users;
+using Web.Domain.Users;
 
 namespace ApplicationTests.Users.GetAuthUser
 {

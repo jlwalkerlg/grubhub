@@ -2,14 +2,14 @@ using System.Linq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Menus.UpdateMenuItem;
+using Web.Features.Menus.UpdateMenuItem;
 using ApplicationTests.Services.Authentication;
-using Domain;
-using Domain.Menus;
-using Domain.Restaurants;
-using Domain.Users;
+using Web.Domain;
+using Web.Domain.Menus;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
 using Xunit;
-using static Application.Error;
+using static Web.Error;
 
 namespace ApplicationTests.Menus.UpdateMenuItem
 {

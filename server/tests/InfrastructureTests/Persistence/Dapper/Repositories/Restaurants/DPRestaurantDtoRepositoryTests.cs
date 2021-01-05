@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Domain;
-using Domain.Restaurants;
-using Domain.Users;
-using Infrastructure.Persistence.Dapper.Repositories.Restaurants;
+using Web.Domain;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
+using Web.Data.Dapper.Repositories.Restaurants;
 using SharedTests;
 using SharedTests.Doubles;
 using Xunit;

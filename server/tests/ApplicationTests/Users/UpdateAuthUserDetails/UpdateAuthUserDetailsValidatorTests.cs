@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Application.Users.UpdateAuthUserDetails;
+using Web.Features.Users.UpdateAuthUserDetails;
 using ApplicationTests.Services.Authentication;
-using Domain;
-using Domain.Users;
+using Web.Domain;
+using Web.Domain.Users;
 using Xunit;
 
 namespace ApplicationTests.Users.UpdateAuthUserDetails

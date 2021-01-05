@@ -2,12 +2,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using MediatR;
-using Application.Services.Authentication;
-using Domain.Users;
-using Domain;
-using static Application.Error;
+using Web.Services.Authentication;
+using Web.Domain.Users;
+using Web.Domain;
+using static Web.Error;
 using System;
-using Application;
+using Web;
 
 namespace ApplicationTests.Services.Authentication
 {

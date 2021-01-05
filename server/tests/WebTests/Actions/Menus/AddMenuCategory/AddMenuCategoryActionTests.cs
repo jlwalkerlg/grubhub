@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Web.Actions.Menus.AddMenuCategory;
+using Web.Features.Menus.AddMenuCategory;
 using Xunit;
 
 namespace WebTests.Actions.Menus.AddMenuCategory

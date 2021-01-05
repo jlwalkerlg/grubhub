@@ -1,6 +1,6 @@
 using System.Linq;
-using Application.Restaurants;
-using Domain.Restaurants;
+using Web.Features.Restaurants;
+using Web.Domain.Restaurants;
 
 namespace SharedTests
 {

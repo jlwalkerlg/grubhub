@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Application.Restaurants.RegisterRestaurant;
-using Domain;
-using Domain.Users;
+using Web.Features.Restaurants.RegisterRestaurant;
+using Web.Domain;
+using Web.Domain.Users;
 using Xunit;
 
 namespace ApplicationTests.Restaurants.RegisterRestaurant

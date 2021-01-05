@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Users;
-using Domain.Users;
+using Web.Features.Users;
+using Web.Domain.Users;
 
 namespace ApplicationTests.Users
 {

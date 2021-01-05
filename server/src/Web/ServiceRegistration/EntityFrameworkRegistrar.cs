@@ -1,5 +1,4 @@
-using Application;
-using Infrastructure.Persistence.EF;
+using Web.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using Application.Restaurants.UpdateCuisines;
+using Web.Features.Restaurants.UpdateCuisines;
 using ApplicationTests.Services.Authentication;
-using Domain;
-using Domain.Restaurants;
-using Domain.Users;
+using Web.Domain;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
 using Xunit;
-using static Application.Error;
+using static Web.Error;
 
 namespace ApplicationTests.Restaurants.UpdateCuisines
 {

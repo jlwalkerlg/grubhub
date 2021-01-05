@@ -1,10 +1,10 @@
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using Application.Menus.GetMenuByRestaurantId;
+using Web.Features.Menus.GetMenuByRestaurantId;
 using Xunit;
-using static Application.Error;
-using Application.Menus;
+using static Web.Error;
+using Web.Features.Menus;
 
 namespace ApplicationTests.Menus.GetMenuByRestaurantId
 {

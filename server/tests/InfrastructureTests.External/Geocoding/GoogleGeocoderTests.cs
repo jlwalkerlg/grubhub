@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Infrastructure.Geocoding;
+using Web.Services.Geocoding;
 using SharedTests;
 using Xunit;
 

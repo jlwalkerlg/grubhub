@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Restaurants.UpdateCuisines;
+using Web.Features.Restaurants.UpdateCuisines;
 using Xunit;
 
 namespace ApplicationTests.Restaurants.UpdateCuisines

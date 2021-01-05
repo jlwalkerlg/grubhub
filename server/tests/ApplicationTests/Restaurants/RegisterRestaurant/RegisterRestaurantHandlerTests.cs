@@ -1,14 +1,14 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application;
-using Application.Restaurants.RegisterRestaurant;
-using Application.Services.Geocoding;
+using Web;
+using Web.Features.Restaurants.RegisterRestaurant;
+using Web.Services.Geocoding;
 using ApplicationTests.Events;
 using ApplicationTests.Services.Geocoding;
 using ApplicationTests.Services.Hashing;
 using ApplicationTests.Users;
-using Domain;
+using Web.Domain;
 using SharedTests.Doubles;
 using Xunit;
 

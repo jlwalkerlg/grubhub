@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Application.Restaurants.Login;
-using Application.Users.Login;
+using Web.Features.Restaurants.Login;
+using Web.Features.Users.Login;
 using Xunit;
 
 namespace ApplicationTests.Users.Login

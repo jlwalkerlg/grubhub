@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Application;
-using Application.Restaurants;
-using Domain;
+using Web;
+using Web.Features.Restaurants;
+using Web.Domain;
 
 namespace ApplicationTests.Restaurants
 {

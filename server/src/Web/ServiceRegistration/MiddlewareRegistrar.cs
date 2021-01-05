@@ -1,7 +1,6 @@
 using Autofac;
-using Application;
-using Application.Services.Authentication;
-using Application.Validation;
+using Web.Services.Authentication;
+using Web.Services.Validation;
 
 namespace Web.ServiceRegistration
 {

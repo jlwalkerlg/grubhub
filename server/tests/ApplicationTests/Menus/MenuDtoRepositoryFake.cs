@@ -2,7 +2,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Menus;
+using Web.Features.Menus;
 
 namespace ApplicationTests.Menus
 {
