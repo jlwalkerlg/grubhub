@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import useIsRouterReady from "useIsRouterReady";
 import useCuisines from "~/api/restaurants/useCuisines";
 import useSearchRestaurants from "~/api/restaurants/useSearchRestaurants";
 import CashIcon from "~/components/Icons/CashIcon";
@@ -16,6 +15,7 @@ import ThumbsUpIcon from "~/components/Icons/ThumbsUpIcon";
 import Layout from "~/components/Layout/Layout";
 import useClickAwayListener from "~/services/click-away-listener/useClickAwayListener";
 import usePostcodeLookup from "~/services/geolocation/usePostcodeLookup";
+import useIsRouterReady from "~/services/useIsRouterReady";
 import { getCurrentDayOfWeek, haversine, url } from "~/services/utils";
 import styles from "./Restaurants.module.css";
 
