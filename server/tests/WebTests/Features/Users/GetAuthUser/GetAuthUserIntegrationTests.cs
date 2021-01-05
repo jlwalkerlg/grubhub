@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Web.Features.Users;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Users;
 using Xunit;
 
 namespace WebTests.Features.Users.GetAuthUser

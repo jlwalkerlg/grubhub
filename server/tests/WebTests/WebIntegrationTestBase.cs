@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using Web.Data.EF;
-using Web;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
+using System.Threading.Tasks;
+using Web;
+using Web.Data.EF;
 using Xunit;
 
 namespace WebTests

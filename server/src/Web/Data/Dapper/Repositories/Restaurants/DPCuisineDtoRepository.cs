@@ -1,7 +1,7 @@
+using Dapper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using Web.Features.Restaurants;
 
 namespace Web.Data.Dapper.Repositories.Restaurants

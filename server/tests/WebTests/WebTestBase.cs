@@ -1,23 +1,23 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Web;
 using Web.Domain.Users;
 using Web.Envelopes;
-using Web.Services.Tokenization;
-using System.Linq;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Web.Services;
 using Web.Services.Geocoding;
-using Web;
+using Web.Services.Tokenization;
 using WebTests.Doubles;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace WebTests
 {

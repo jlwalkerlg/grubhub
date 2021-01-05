@@ -1,11 +1,11 @@
-using System.Threading;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Web.Services.Validation;
-using Xunit;
 using MediatR;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Web;
+using Web.Services.Validation;
 using WebTests.Doubles;
+using Xunit;
 
 namespace WebTests.Services.Validation
 {

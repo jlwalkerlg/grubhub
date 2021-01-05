@@ -26,7 +26,7 @@ namespace Web.Domain.Menus
             }
         }
 
-        private List<MenuItem> items = new();
+        private readonly List<MenuItem> items = new();
         public IReadOnlyList<MenuItem> Items => items;
 
         public void AddItem(string name, string description, Money price)

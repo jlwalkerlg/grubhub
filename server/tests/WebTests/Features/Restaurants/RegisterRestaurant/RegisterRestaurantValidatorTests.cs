@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Domain;
 using Web.Domain.Users;
-using Xunit;
+using Web.Features.Restaurants.RegisterRestaurant;
 using WebTests.Doubles;
+using Xunit;
 
 namespace WebTests.Features.Restaurants.RegisterRestaurant
 {

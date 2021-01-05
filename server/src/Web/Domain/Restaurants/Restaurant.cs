@@ -146,7 +146,7 @@ namespace Web.Domain.Restaurants
             }
         }
 
-        private List<Cuisine> _cuisines = new();
+        private readonly List<Cuisine> _cuisines = new();
         public IReadOnlyList<Cuisine> Cuisines => _cuisines;
 
         public void SetCuisines(params Cuisine[] cuisines)

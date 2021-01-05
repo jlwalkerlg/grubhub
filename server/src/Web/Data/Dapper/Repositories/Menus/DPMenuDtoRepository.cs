@@ -1,7 +1,7 @@
+using Dapper;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using Web.Features.Menus;
 
 namespace Web.Data.Dapper.Repositories.Menus

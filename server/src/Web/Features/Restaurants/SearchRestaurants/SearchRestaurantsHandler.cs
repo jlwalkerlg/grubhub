@@ -9,7 +9,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
 {
     public class SearchRestaurantsHandler : IRequestHandler<SearchRestaurantsQuery, List<RestaurantDto>>
     {
-        private static Regex regex = new Regex(
+        private static readonly Regex regex = new Regex(
             @"[A-Z]{2}\d{1,2} ?\d[A-Z]{2}",
             RegexOptions.Compiled | RegexOptions.IgnoreCase,
             TimeSpan.FromMilliseconds(250));

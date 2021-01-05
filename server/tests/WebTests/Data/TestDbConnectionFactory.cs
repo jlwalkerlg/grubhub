@@ -1,7 +1,7 @@
+using Npgsql;
 using System.Data;
 using System.Threading.Tasks;
 using Web.Data;
-using Npgsql;
 
 namespace WebTests.Data
 {

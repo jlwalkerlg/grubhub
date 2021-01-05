@@ -1,16 +1,15 @@
-using System.Linq;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Features.Menus.RemoveMenuItem;
-using WebTests.Services.Authentication;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Menus.RemoveMenuItem;
+using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
-using WebTests.Doubles;
 
 namespace WebTests.Features.Menus.RemoveMenuItem
 {

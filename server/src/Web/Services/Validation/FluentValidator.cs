@@ -1,8 +1,8 @@
-﻿using System;
+﻿using FluentValidation;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using FluentValidation;
 namespace Web.Services.Validation
 {
     public class FluentValidator<TRequest> : AbstractValidator<TRequest>, IValidator<TRequest>
@@ -12,7 +12,7 @@ namespace Web.Services.Validation
             return RuleFor(expression).Cascade(CascadeMode.Stop);
         }
 
-        public async new Task<Result> Validate(TRequest request)
+        public new async Task<Result> Validate(TRequest request)
         {
             var result = await base.ValidateAsync(request);
 

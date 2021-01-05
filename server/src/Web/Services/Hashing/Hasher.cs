@@ -1,6 +1,5 @@
-using System;
 using BCrypt.Net;
-using Web.Services.Hashing;
+using System;
 
 namespace Web.Services.Hashing
 {

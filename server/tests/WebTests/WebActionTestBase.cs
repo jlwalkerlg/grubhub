@@ -1,10 +1,10 @@
 ﻿using Autofac;
-using Web.Data.EF;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
+using Web.Data.EF;
 using WebTests.Doubles;
+using Xunit;
 
 namespace WebTests
 {

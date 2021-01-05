@@ -1,6 +1,6 @@
 using System;
-using Web.Services.Authentication;
 using Web.Domain.Users;
+using Web.Services.Authentication;
 
 namespace WebTests.Doubles
 {

@@ -1,12 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Features.Users.UpdateAuthUserDetails;
-using WebTests.Services.Authentication;
 using Web.Domain;
 using Web.Domain.Users;
-using Xunit;
+using Web.Features.Users.UpdateAuthUserDetails;
 using WebTests.Doubles;
+using Xunit;
 
 namespace WebTests.Features.Users.UpdateAuthUserDetails
 {

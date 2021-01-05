@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Web.Features.Users.GetAuthUser;
+using System.Threading.Tasks;
 
 namespace Web.Features.Users.GetAuthUser
 {

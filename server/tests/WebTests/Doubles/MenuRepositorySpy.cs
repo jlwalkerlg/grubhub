@@ -1,9 +1,9 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Web.Features.Menus;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
+using Web.Features.Menus;
 
 namespace WebTests.Doubles
 {

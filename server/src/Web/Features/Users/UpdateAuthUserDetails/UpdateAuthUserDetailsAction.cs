@@ -1,7 +1,6 @@
-using System.Threading.Tasks;
-using Web.Features.Users.UpdateAuthUserDetails;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Web.Features.Users.UpdateAuthUserDetails
 {

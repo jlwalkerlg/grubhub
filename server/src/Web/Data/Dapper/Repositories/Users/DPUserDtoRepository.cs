@@ -1,6 +1,6 @@
+using Dapper;
 using System;
 using System.Threading.Tasks;
-using Dapper;
 using Web.Features.Users;
 
 namespace Web.Data.Dapper.Repositories.Users

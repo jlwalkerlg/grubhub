@@ -1,6 +1,6 @@
-using Web.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Web.Data.EF;
 
 namespace Web.ServiceRegistration
 {

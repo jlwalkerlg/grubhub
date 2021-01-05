@@ -5,7 +5,7 @@ namespace Web.Domain
 {
     public record PhoneNumber
     {
-        private static Regex regex = new(
+        private static readonly Regex regex = new(
             "^[0-9]{5} ?[0-9]{6}$",
             RegexOptions.Compiled,
             TimeSpan.FromMilliseconds(250));

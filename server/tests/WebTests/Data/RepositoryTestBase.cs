@@ -1,7 +1,7 @@
-using Web.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Respawn;
+using Web.Data.EF;
 using Xunit;
 
 namespace WebTests.Data

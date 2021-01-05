@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services.Authentication;
 using Web.Domain;
 using Web.Domain.Restaurants;
+using Web.Services.Authentication;
 namespace Web.Features.Menus.UpdateMenuItem
 {
     public class UpdateMenuItemHandler : IRequestHandler<UpdateMenuItemCommand>

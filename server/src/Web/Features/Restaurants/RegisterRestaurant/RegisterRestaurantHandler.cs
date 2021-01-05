@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services;
-using Web.Services.Geocoding;
-using Web.Services.Hashing;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Services;
+using Web.Services.Geocoding;
+using Web.Services.Hashing;
 namespace Web.Features.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand>

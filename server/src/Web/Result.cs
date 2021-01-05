@@ -77,7 +77,7 @@ namespace Web
             return new Result<T>(value);
         }
 
-        public new static Result<T> Fail(Error error)
+        public static new Result<T> Fail(Error error)
         {
             return new Result<T>(error);
         }

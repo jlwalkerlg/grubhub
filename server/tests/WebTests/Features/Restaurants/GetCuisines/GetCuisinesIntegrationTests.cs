@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Features.Restaurants;
 using Web.Domain.Restaurants;
+using Web.Features.Restaurants;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.GetCuisines

@@ -1,8 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Web.Features.Restaurants.GetRestaurantById;
+using System;
+using System.Threading.Tasks;
 
 namespace Web.Features.Restaurants.GetRestaurantById
 {

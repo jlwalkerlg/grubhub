@@ -1,13 +1,13 @@
-using System.Linq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Menus;
 using Web.Features.Menus.AddMenuCategory;
 using Xunit;
-using Web.Features.Menus;
 
 namespace WebTests.Features.Menus.AddMenuCategory
 {

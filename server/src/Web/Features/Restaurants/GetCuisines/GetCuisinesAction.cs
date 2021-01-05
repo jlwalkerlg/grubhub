@@ -1,7 +1,6 @@
-using System.Threading.Tasks;
-using Web.Features.Restaurants.GetCuisines;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Web.Features.Restaurants.GetCuisines
 {

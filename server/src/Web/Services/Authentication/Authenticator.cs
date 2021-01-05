@@ -1,9 +1,8 @@
+using Microsoft.AspNetCore.Http;
 using System;
-using Web.Services.Authentication;
 using Web.Domain.Users;
 using Web.Services.Cookies;
 using Web.Services.Tokenization;
-using Microsoft.AspNetCore.Http;
 
 namespace Web.Services.Authentication
 {

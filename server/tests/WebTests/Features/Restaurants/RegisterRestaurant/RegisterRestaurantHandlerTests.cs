@@ -2,9 +2,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Web;
+using Web.Domain;
 using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Services.Geocoding;
-using Web.Domain;
 using WebTests.Doubles;
 using Xunit;
 

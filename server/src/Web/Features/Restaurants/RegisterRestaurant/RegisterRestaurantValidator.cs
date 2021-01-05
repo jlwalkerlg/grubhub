@@ -1,6 +1,6 @@
+using FluentValidation;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using Web.Services.Validation;
 
 namespace Web.Features.Restaurants.RegisterRestaurant

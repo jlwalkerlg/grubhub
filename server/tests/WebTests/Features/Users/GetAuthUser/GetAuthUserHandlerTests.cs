@@ -1,12 +1,12 @@
-using System.Threading;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Web.Domain.Users;
 using Web.Features.Users;
 using Web.Features.Users.GetAuthUser;
+using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
-using Web.Domain.Users;
-using WebTests.Doubles;
 
 namespace WebTests.Features.Users.GetAuthUser
 {

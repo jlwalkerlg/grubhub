@@ -1,14 +1,14 @@
-using System;
-using System.IO;
-using System.Linq;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Features.ResolveAnything;
-using Web.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Linq;
+using Web.Data;
 
 namespace Web
 {

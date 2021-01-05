@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Microsoft.EntityFrameworkCore;
 
 namespace Web.Data.EF
 {

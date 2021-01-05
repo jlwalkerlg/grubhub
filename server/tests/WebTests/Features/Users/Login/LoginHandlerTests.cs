@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Features.Users.Login;
-using WebTests.Services.Authentication;
-using WebTests.Services.Hashing;
 using Web.Domain;
 using Web.Domain.Users;
-using Xunit;
+using Web.Features.Users.Login;
 using WebTests.Doubles;
+using Xunit;
 
 namespace WebTests.Features.Users.Login
 {

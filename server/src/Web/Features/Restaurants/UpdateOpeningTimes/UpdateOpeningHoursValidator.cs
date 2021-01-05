@@ -1,14 +1,14 @@
+using FluentValidation;
 using System;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using FluentValidation;
 using Web.Services.Validation;
 
 namespace Web.Features.Restaurants.UpdateOpeningHours
 {
     public class UpdateOpeningHoursValidator : FluentValidator<UpdateOpeningHoursCommand>
     {
-        private static Regex regex = new(
+        private static readonly Regex regex = new(
             @"^\d{2}:\d{2}$",
             RegexOptions.Compiled,
             TimeSpan.FromMilliseconds(250));

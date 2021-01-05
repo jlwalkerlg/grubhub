@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Web.Services.Validation;
 using Web;
+using Web.Services.Validation;
 
 namespace WebTests.Doubles
 {

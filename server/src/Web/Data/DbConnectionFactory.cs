@@ -1,6 +1,6 @@
+using Npgsql;
 using System.Data;
 using System.Threading.Tasks;
-using Npgsql;
 
 namespace Web.Data
 {

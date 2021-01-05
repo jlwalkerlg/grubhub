@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Web.Features.Restaurants;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Restaurants;
 using Web.Features.Restaurants.UpdateOpeningTimes;
 using Xunit;
 

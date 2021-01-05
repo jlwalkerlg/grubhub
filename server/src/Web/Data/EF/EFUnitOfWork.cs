@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
+using Web.Data.EF.Repositories;
 using Web.Features.Events;
 using Web.Features.Menus;
 using Web.Features.Restaurants;
 using Web.Features.Users;
-using Web.Data.EF.Repositories;
 
 namespace Web.Data.EF
 {

@@ -4,7 +4,7 @@ namespace WebTests
 {
     public class TestConfig
     {
-        static IConfigurationRoot config;
+        private static readonly IConfigurationRoot config;
 
         static TestConfig()
         {

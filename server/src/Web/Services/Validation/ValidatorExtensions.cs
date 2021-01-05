@@ -1,12 +1,12 @@
+using FluentValidation;
 using System;
 using System.Text.RegularExpressions;
-using FluentValidation;
 
 namespace Web.Services.Validation
 {
     public static class ValidatorExtensions
     {
-        private static Regex phoneNumberRegex = new(
+        private static readonly Regex phoneNumberRegex = new(
             "^[0-9]{5} ?[0-9]{6}$",
             RegexOptions.Compiled,
             TimeSpan.FromMilliseconds(250));

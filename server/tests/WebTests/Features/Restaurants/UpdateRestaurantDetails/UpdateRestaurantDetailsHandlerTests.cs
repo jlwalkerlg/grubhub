@@ -1,14 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Features.Restaurants.UpdateRestaurantDetails;
-using WebTests.Services.Authentication;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Restaurants.UpdateRestaurantDetails;
+using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
-using WebTests.Doubles;
 
 namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 {

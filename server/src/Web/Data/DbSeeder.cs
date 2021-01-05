@@ -3,13 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Web.Features.Restaurants.RegisterRestaurant;
-using Web.Services.Hashing;
+using Web.Data.EF;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Web.Data.EF;
+using Web.Features.Restaurants.RegisterRestaurant;
+using Web.Services.Hashing;
 
 namespace Web.Data
 {

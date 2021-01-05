@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Features.Restaurants;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Restaurants;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.SearchRestaurants

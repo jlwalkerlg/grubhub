@@ -1,8 +1,7 @@
-using System;
-using System.Threading.Tasks;
-using Web.Features.Menus.RemoveMenuItem;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace Web.Features.Menus.RemoveMenuItem
 {

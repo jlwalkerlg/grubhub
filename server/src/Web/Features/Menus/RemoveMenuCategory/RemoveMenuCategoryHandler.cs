@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services.Authentication;
 using Web.Domain.Restaurants;
+using Web.Services.Authentication;
 namespace Web.Features.Menus.RemoveMenuCategory
 {
     public class RemoveMenuCategoryHandler : IRequestHandler<RemoveMenuCategoryCommand>

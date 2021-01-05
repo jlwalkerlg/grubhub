@@ -1,15 +1,14 @@
-using System.Threading;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Web.Features.Menus.RenameMenuCategory;
-using WebTests.Services.Authentication;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Menus.RenameMenuCategory;
+using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
-using WebTests.Doubles;
 
 namespace WebTests.Features.Menus.RenameMenuCategory
 {

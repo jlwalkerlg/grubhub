@@ -1,13 +1,12 @@
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using Web.Features.Restaurants;
-using Web.Services;
 using Web.Domain;
 using Web.Domain.Restaurants;
-using System.Text.Json;
+using Web.Features.Restaurants;
+using Web.Services;
 
 namespace Web.Data.Dapper.Repositories.Restaurants
 {

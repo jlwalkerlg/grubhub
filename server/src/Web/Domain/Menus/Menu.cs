@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Web.Domain.Restaurants;
 
@@ -19,7 +19,7 @@ namespace Web.Domain.Menus
 
         public RestaurantId RestaurantId { get; }
 
-        private List<MenuCategory> categories = new();
+        private readonly List<MenuCategory> categories = new();
         public IReadOnlyList<MenuCategory> Categories => categories;
 
         public void AddCategory(string name)

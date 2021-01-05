@@ -1,8 +1,8 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Web.Features.Restaurants.UpdateOpeningHours;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Features.Restaurants.UpdateOpeningTimes
 {

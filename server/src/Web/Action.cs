@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Web.Envelopes;
-using Microsoft.AspNetCore.Mvc;
 using static Web.Error;
 
 namespace Web
@@ -8,7 +8,7 @@ namespace Web
     [ApiController]
     public abstract class Action : ControllerBase
     {
-        private Dictionary<ErrorType, int> codes = new()
+        private readonly Dictionary<ErrorType, int> codes = new()
         {
             { ErrorType.BadRequest, 400 },
             { ErrorType.Unauthenticated, 401 },

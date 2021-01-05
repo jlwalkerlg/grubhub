@@ -1,10 +1,8 @@
-using System.Linq;
-using System.Threading.Tasks;
-using Web.Features.Restaurants;
-using Web.Features.Restaurants.SearchRestaurants;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Web.Features.Restaurants.SearchRestaurants
 {

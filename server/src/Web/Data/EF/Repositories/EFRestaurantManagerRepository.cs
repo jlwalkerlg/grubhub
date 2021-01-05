@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Web.Features.Users;
 using Web.Domain.Users;
+using Web.Features.Users;
 
 namespace Web.Data.EF.Repositories
 {

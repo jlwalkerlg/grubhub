@@ -1,15 +1,14 @@
-using System.Threading;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Web.Features.Menus.RemoveMenuCategory;
+using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
+using Web.Domain.Users;
+using Web.Features.Menus.RemoveMenuCategory;
+using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
-using Web.Domain.Users;
-using Web.Domain;
-using WebTests.Services.Authentication;
-using WebTests.Doubles;
 
 namespace WebTests.Features.Menus.RemoveMenuCategory
 {

@@ -1,7 +1,7 @@
+using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Web;
-using MediatR;
 
 namespace WebTests.Doubles
 {

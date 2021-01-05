@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Features.Restaurants;
 using Web.Domain.Restaurants;
-using Microsoft.EntityFrameworkCore;
+using Web.Features.Restaurants;
 
 namespace Web.Data.EF.Repositories
 {

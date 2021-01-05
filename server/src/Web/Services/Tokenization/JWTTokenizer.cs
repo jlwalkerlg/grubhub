@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System;
 using JWT.Algorithms;
 using JWT.Builder;
+using System;
+using System.Collections.Generic;
 
 namespace Web.Services.Tokenization
 {

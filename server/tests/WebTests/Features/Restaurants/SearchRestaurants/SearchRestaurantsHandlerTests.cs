@@ -2,14 +2,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Web;
+using Web.Domain;
 using Web.Features.Restaurants;
 using Web.Features.Restaurants.SearchRestaurants;
 using Web.Services.Geocoding;
-using WebTests.Services.Geocoding;
-using Web.Domain;
+using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
-using WebTests.Doubles;
 
 namespace WebTests.Features.Restaurants.SearchRestaurants
 {

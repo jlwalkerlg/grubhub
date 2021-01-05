@@ -1,13 +1,13 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Xunit;
-using Web.Services.Authentication;
-using Web.Domain.Users;
-using Web.Domain;
-using static Web.Error;
-using System;
 using Web;
+using Web.Domain;
+using Web.Domain.Users;
+using Web.Services.Authentication;
 using WebTests.Doubles;
+using Xunit;
+using static Web.Error;
 
 namespace WebTests.Services.Authentication
 {

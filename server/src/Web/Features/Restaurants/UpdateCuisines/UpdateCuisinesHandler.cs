@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services.Authentication;
 using Web.Domain.Restaurants;
+using Web.Services.Authentication;
 
 namespace Web.Features.Restaurants.UpdateCuisines
 {

@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Web.Features.Menus;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Menus;
 using Xunit;
 
 namespace WebTests.Features.Menus.RemoveMenuCategory

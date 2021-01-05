@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Web.Data.Dapper.Repositories.Restaurants;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Web.Data.Dapper.Repositories.Restaurants;
-using Xunit;
 using WebTests.Doubles;
+using Xunit;
 
 namespace WebTests.Data.Dapper.Repositories.Restaurants
 {

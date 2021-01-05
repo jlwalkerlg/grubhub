@@ -1,6 +1,6 @@
+using FluentValidation;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using Web.Services.Authentication;
 using Web.Services.Validation;
 

@@ -6,7 +6,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
 {
     public class UpdateRestaurantDetailsValidator : FluentValidator<UpdateRestaurantDetailsCommand>
     {
-        private static Regex regex = new(
+        private static readonly Regex regex = new(
             @"^\d{2}:\d{2}$",
             RegexOptions.Compiled,
             TimeSpan.FromMilliseconds(250));

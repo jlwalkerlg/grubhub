@@ -1,7 +1,7 @@
 using System;
-using Web.Features.Events;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Features.Events;
 
 namespace Web.Features.Restaurants.RegisterRestaurant
 {

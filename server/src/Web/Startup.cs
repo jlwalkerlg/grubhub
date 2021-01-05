@@ -1,18 +1,18 @@
-using System.Text.Json;
 using Autofac;
-using Web.Services.Hashing;
-using Web.Data;
-using Web.ServiceRegistration;
-using Web.Services;
-using Web.Services.Authentication;
-using Web.Services.Cookies;
-using Web.Services.Tokenization;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json;
+using Web.Data;
+using Web.ServiceRegistration;
+using Web.Services;
+using Web.Services.Authentication;
+using Web.Services.Cookies;
+using Web.Services.Hashing;
+using Web.Services.Tokenization;
 
 namespace Web
 {
