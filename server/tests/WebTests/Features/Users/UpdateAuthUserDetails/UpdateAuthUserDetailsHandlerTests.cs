@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Users;
@@ -40,7 +39,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
                 Email = "new@email.com"
             };
 
-            var result = await handler.Handle(command, default(CancellationToken));
+            var result = await handler.Handle(command, default);
 
             Assert.True(result.IsSuccess);
 

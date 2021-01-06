@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Menus;
@@ -59,7 +58,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "Curry",
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.True(result.IsSuccess);
             Assert.False(menu.ContainsCategory("Pizza"));
@@ -76,7 +75,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "Curry",
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
@@ -114,7 +113,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "Curry",
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
@@ -154,7 +153,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "Curry",
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);
@@ -193,7 +192,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "Curry",
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.Unauthorised, result.Error.Type);

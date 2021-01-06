@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Features.Menus;
 using Web.Features.Menus.GetMenuByRestaurantId;
@@ -31,7 +30,7 @@ namespace WebTests.Features.Menus.GetMenuByRestaurantId
             menuDtoRepositoryFake.Menus.Add(menu);
 
             var query = new GetMenuByRestaurantIdQuery { RestaurantId = menu.RestaurantId };
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.True(result.IsSuccess);
             Assert.Same(menu, result.Value);
@@ -41,7 +40,7 @@ namespace WebTests.Features.Menus.GetMenuByRestaurantId
         public async Task It_Fails_If_Menu_Not_Found()
         {
             var query = new GetMenuByRestaurantIdQuery { RestaurantId = Guid.NewGuid() };
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);

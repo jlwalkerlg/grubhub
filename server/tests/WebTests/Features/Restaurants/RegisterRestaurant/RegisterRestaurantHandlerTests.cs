@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Web;
 using Web.Domain;
@@ -60,7 +59,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 Address = "1 Maine Road, Manchester, UK"
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             var manager = restaurantManagerRepositorySpy.Managers.Single();
             var hashedPassword = hasherFake.Hash(command.ManagerPassword);
@@ -102,7 +101,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 RestaurantPhoneNumber = "01234567890",
                 Address = "1 Maine Road, Manchester, UK"
             };
-            await handler.Handle(command, CancellationToken.None);
+            await handler.Handle(command, default);
 
             var restaurant = restaurantRepositorySpy.Restaurants.Single();
             var menu = unitOfWorkSpy.MenuRepositorySpy.Menus.First();

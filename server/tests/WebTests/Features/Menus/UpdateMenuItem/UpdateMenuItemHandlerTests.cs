@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Menus;
@@ -63,7 +62,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.True(result.IsSuccess);
             Assert.True(unitOfWorkSpy.Commited);
@@ -98,7 +97,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
@@ -139,7 +138,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
@@ -181,7 +180,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
@@ -225,7 +224,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);

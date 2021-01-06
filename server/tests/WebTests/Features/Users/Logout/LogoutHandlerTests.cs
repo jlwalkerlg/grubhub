@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Users;
@@ -31,7 +30,7 @@ namespace WebTests.Features.Users.Logout
                 "password123");
             authenticatorSpy.SignIn(user);
 
-            var result = await handler.Handle(new LogoutCommand(), default(CancellationToken));
+            var result = await handler.Handle(new LogoutCommand(), default);
 
             Assert.True(result.IsSuccess);
             Assert.False(authenticatorSpy.IsAuthenticated);

@@ -1,6 +1,5 @@
 using MediatR;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Web;
 using Web.Services.Validation;
@@ -37,7 +36,7 @@ namespace WebTests.Services.Validation
 
             var result = await middleware.Handle(
                 new DummyCommand(),
-                default(CancellationToken),
+                default,
                 next);
 
             Assert.False(result.IsSuccess);
@@ -54,7 +53,7 @@ namespace WebTests.Services.Validation
 
             var result = await middleware.Handle(
                 new DummyCommand(),
-                default(CancellationToken),
+                default,
                 next);
 
             Assert.True(result.IsSuccess);

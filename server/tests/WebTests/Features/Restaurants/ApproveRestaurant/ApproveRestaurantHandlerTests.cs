@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Restaurants;
@@ -41,7 +40,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
             {
                 RestaurantId = restaurant.Id.Value,
             };
-            var result = await handler.Handle(command, default(CancellationToken));
+            var result = await handler.Handle(command, default);
 
             Assert.True(result.IsSuccess);
             Assert.Equal(RestaurantStatus.Approved, restaurant.Status);
@@ -65,7 +64,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
             {
                 RestaurantId = restaurant.Id.Value,
             };
-            var result = await handler.Handle(command, default(CancellationToken));
+            var result = await handler.Handle(command, default);
 
             var @event = (await unitOfWorkSpy.EventRepositorySpy.All())
                 .OfType<RestaurantApprovedEvent>()
@@ -81,7 +80,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
             {
                 RestaurantId = Guid.NewGuid()
             };
-            var result = await handler.Handle(command, default(CancellationToken));
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
         }

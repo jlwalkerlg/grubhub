@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Users;
@@ -44,7 +43,7 @@ namespace WebTests.Features.Users.Login
                 Email = "walker.jlg@gmail.com",
                 Password = "password123",
             };
-            var result = await handler.Handle(command, default(CancellationToken));
+            var result = await handler.Handle(command, default);
 
             Assert.Same(user.Id, authenticatorSpy.UserId);
             Assert.True(result.IsSuccess);
@@ -58,7 +57,7 @@ namespace WebTests.Features.Users.Login
                 Email = "walker.jlg@gmail.com",
                 Password = "password123",
             };
-            var result = await handler.Handle(command, default(CancellationToken));
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
         }
@@ -79,7 +78,7 @@ namespace WebTests.Features.Users.Login
                 Email = "walker.jlg@gmail.com",
                 Password = "wrong_password",
             };
-            var result = await handler.Handle(command, default(CancellationToken));
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
         }

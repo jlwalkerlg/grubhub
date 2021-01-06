@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web;
 using Web.Domain;
@@ -37,7 +36,7 @@ namespace WebTests.Services.Authentication
 
             var result = await middleware.Handle(
                 new RequireAuthenticationCommand(),
-                CancellationToken.None,
+                default,
                 () => Task.FromResult(handlerResult));
 
             Assert.True(result.IsSuccess);
@@ -51,7 +50,7 @@ namespace WebTests.Services.Authentication
 
             var result = await middleware.Handle(
                 new RequireAuthenticationCommand(),
-                CancellationToken.None,
+                default,
                 () => Task.FromResult(Result.Ok()));
 
             Assert.False(result.IsSuccess);

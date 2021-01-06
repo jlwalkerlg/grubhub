@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Users;
 using Web.Features.Users;
@@ -33,7 +32,7 @@ namespace WebTests.Features.Users.GetAuthUser
             authenticatorSpy.SignIn(new UserId(user.Id));
 
             var query = new GetAuthUserQuery();
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.True(result.IsSuccess);
             Assert.Same(user, result.Value);
@@ -46,7 +45,7 @@ namespace WebTests.Features.Users.GetAuthUser
             authenticatorSpy.SignIn(new UserId(user.Id));
 
             var query = new GetAuthUserQuery();
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);

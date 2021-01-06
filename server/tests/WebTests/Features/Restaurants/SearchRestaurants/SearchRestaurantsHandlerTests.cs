@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web;
 using Web.Domain;
@@ -39,7 +38,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Postcode = postcode,
             };
 
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);
@@ -55,7 +54,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Postcode = "MN12 1NM",
             };
 
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);
@@ -80,7 +79,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Postcode = "MN12 1NM"
             };
 
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.True(result.IsSuccess);
             Assert.Equal(53, restaurantDtoRepositoryFake.SearchCoordinates.Latitude);

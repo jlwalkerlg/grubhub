@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Features.Restaurants;
 using Web.Features.Restaurants.GetRestaurantById;
@@ -31,7 +30,7 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             restaurantDtoRepositoryFake.Restaurants.Add(restaurant);
 
             var query = new GetRestaurantByIdQuery { Id = restaurant.Id };
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.True(result.IsSuccess);
             Assert.Same(restaurant, result.Value);
@@ -41,7 +40,7 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
         public async Task It_Fails_If_Restaurant_Not_Found()
         {
             var query = new GetRestaurantByIdQuery { Id = Guid.NewGuid() };
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await handler.Handle(query, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);

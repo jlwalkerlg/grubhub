@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Restaurants;
@@ -57,7 +56,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
                 MondayClose = "23:30",
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.True(result.IsSuccess);
 
@@ -104,7 +103,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
                 RestaurantId = restaurant.Id.Value,
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
@@ -118,7 +117,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
                 RestaurantId = Guid.NewGuid(),
             };
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, default);
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
