@@ -15,6 +15,7 @@ import ThumbsUpIcon from "~/components/Icons/ThumbsUpIcon";
 import Layout from "~/components/Layout/Layout";
 import useClickAwayListener from "~/services/click-away-listener/useClickAwayListener";
 import usePostcodeLookup from "~/services/geolocation/usePostcodeLookup";
+import useFocusTrap from "~/services/useFocusTrap";
 import useIsRouterReady from "~/services/useIsRouterReady";
 import { getCurrentDayOfWeek, haversine, url } from "~/services/utils";
 import styles from "./Restaurants.module.css";
@@ -49,6 +50,7 @@ const RestaurantsSearch: React.FC = () => {
   }, [isSortMenuOpen, setIsSortMenuOpen]);
 
   const sortByMobileMenuRef = useRef<HTMLDivElement>();
+
   useClickAwayListener(
     sortByMobileMenuRef,
     () => {
@@ -58,6 +60,41 @@ const RestaurantsSearch: React.FC = () => {
     },
     [isSortMenuOpen, setIsSortMenuOpen]
   );
+
+  const onClickSortButton = () => {
+    setIsSortMenuOpen(!isSortMenuOpen);
+  };
+
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const filterMenuRef = useRef<HTMLDivElement>();
+
+  const openFilterMenu = () => {
+    setIsFilterMenuOpen(true);
+    setShowFilterMenu(true);
+  };
+
+  const closeFilterMenu = () => {
+    setShowFilterMenu(false);
+  };
+
+  useEffect(() => {
+    const listener = () => {
+      if (!showFilterMenu) {
+        setIsFilterMenuOpen(false);
+      }
+    };
+
+    filterMenuRef.current?.addEventListener("animationend", listener);
+
+    return () => {
+      filterMenuRef.current?.removeEventListener("animationend", listener);
+    };
+  }, [showFilterMenu]);
+
+  const filterMenuStartRef = useRef<HTMLButtonElement>();
+  const filterMenuEndRef = useRef<HTMLButtonElement>();
+  useFocusTrap(isFilterMenuOpen, filterMenuStartRef, filterMenuEndRef);
 
   const postcode = router.query.postcode.toString();
 
@@ -74,10 +111,6 @@ const RestaurantsSearch: React.FC = () => {
     isError: isPostcodeLookupError,
     error: postcodeLookupError,
   } = usePostcodeLookup(postcode);
-
-  const onClickSortButton = () => {
-    setIsSortMenuOpen(!isSortMenuOpen);
-  };
 
   const day = getCurrentDayOfWeek();
 
@@ -144,7 +177,7 @@ const RestaurantsSearch: React.FC = () => {
       <main>
         <div className="container">
           <div className="mt-6 flex">
-            <div className="w-1/5 self-start p-4 hidden md:block">
+            <div className="w-1/5 self-start px-4 pb-4 hidden lg:block">
               <p className="font-bold flex items-center px-2">
                 <CutleryIcon className="w-4 h-4" />
                 <span className="ml-2">Cuisines</span>
@@ -178,7 +211,7 @@ const RestaurantsSearch: React.FC = () => {
                           }
                         >
                           <a
-                            className={`flex items-center py-1 px-2 mt-2 bg-white rounded shadow ${
+                            className={`flex items-center py-2 px-3 mt-3 bg-white rounded-lg border border-gray-300 hover:border-gray-400 ${
                               styles["cuisine-link"]
                             } ${isCuisineFiltered ? styles["selected"] : ""}`}
                           >
@@ -197,129 +230,218 @@ const RestaurantsSearch: React.FC = () => {
               )}
             </div>
 
-            <div className="flex-1 ml-6">
+            <div className="flex-1 lg:ml-6">
+              <div className="lg:hidden flex justify-between items-center relative">
+                <button
+                  className="flex items-center cursor-pointer hover:text-primary"
+                  onClick={onClickSortButton}
+                >
+                  <MenuIcon className="w-4 h-4" alt={3} />
+                  <span className="ml-1">Sort</span>
+                </button>
+
+                <button
+                  className="flex items-center cursor-pointer hover:text-primary"
+                  onClick={openFilterMenu}
+                >
+                  <MenuIcon className="w-4 h-4" alt={3} />
+                  <span className="ml-1">Filter</span>
+                </button>
+
+                {isSortMenuOpen && (
+                  <div
+                    ref={sortByMobileMenuRef}
+                    className="absolute left-0 top-100 mt-2 bg-white p-4 rounded-sm shadow"
+                  >
+                    <p className="font-bold text-left">Sort By</p>
+                    <ul className="mt-2">
+                      <li>
+                        <Link href={routeWithSortByParam(null)}>
+                          <a
+                            onClick={onClickSortLink}
+                            className={`flex items-center py-1 hover:text-primary transition-colors ${
+                              sortedBy === null ? "text-primary" : ""
+                            }`}
+                          >
+                            <ThumbsUpIcon className="w-5 h-5" />
+                            <span className="ml-2 font-light">Default</span>
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href={routeWithSortByParam("distance")}>
+                          <a
+                            onClick={onClickSortLink}
+                            className={`flex items-center py-1 hover:text-primary transition-colors ${
+                              sortedBy === "distance" ? "text-primary" : ""
+                            }`}
+                          >
+                            <LocationMarkerIcon className="w-5 h-5" />
+                            <span className="ml-2 font-light">Distance</span>
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href={routeWithSortByParam("delivery_fee")}>
+                          <a
+                            onClick={onClickSortLink}
+                            className={`flex items-center py-1 hover:text-primary transition-colors ${
+                              sortedBy === "delivery_fee" ? "text-primary" : ""
+                            }`}
+                          >
+                            <CashIcon className="w-5 h-5" />
+                            <span className="ml-2 font-light">
+                              Delivery fee
+                            </span>
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href={routeWithSortByParam("min_order")}>
+                          <a
+                            onClick={onClickSortLink}
+                            className={`flex items-center py-1 hover:text-primary transition-colors ${
+                              sortedBy === "min_order" ? "text-primary" : ""
+                            }`}
+                          >
+                            <CreditCardIcon className="w-5 h-5" />
+                            <span className="ml-2 font-light">
+                              Minimum order
+                            </span>
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href={routeWithSortByParam("time")}>
+                          <a
+                            onClick={onClickSortLink}
+                            className={`flex items-center py-1 hover:text-primary transition-colors ${
+                              sortedBy === "time" ? "text-primary" : ""
+                            }`}
+                          >
+                            <ClockIcon className="w-5 h-5" />
+                            <span className="ml-2 font-light">
+                              Fastest delivery
+                            </span>
+                          </a>
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {isFilterMenuOpen && (
+                  <div
+                    ref={filterMenuRef}
+                    className={`fixed top-0 left-0 w-screen h-screen z-50 bg-gray-100 flex flex-col transform transition-transform ${
+                      showFilterMenu ? styles["slide-up"] : styles["slide-down"]
+                    }`}
+                  >
+                    <div className="flex-0 bg-white shadow-md p-3 flex justify-between items-center">
+                      <button
+                        ref={filterMenuStartRef}
+                        className="text-primary text-sm font-medium"
+                        onClick={closeFilterMenu}
+                      >
+                        Cancel
+                      </button>
+
+                      <p className="font-semibold">Filters</p>
+
+                      <Link href={routeWithoutCuisines()}>
+                        <a
+                          className="text-primary text-sm font-medium"
+                          onClick={closeFilterMenu}
+                        >
+                          Reset
+                        </a>
+                      </Link>
+                    </div>
+
+                    <div className="flex-1 overflow-y-scroll p-3">
+                      <p className="mt-1 ml-3 font-semibold">Cuisines</p>
+
+                      {isLoadingCuisines && <p>Loading cuisines...</p>}
+
+                      {!isLoadingCuisines && isErrorCuisines && (
+                        <p>Error loading cuisines.</p>
+                      )}
+
+                      {!isLoadingCuisines && !isErrorCuisines && (
+                        <ul className="text-gray-700">
+                          {cuisines.map((cuisine) => {
+                            const isCuisineFiltered = filteredCuisines.includes(
+                              cuisine.name
+                            );
+
+                            return (
+                              <li key={cuisine.name}>
+                                <Link
+                                  href={
+                                    isCuisineFiltered
+                                      ? routeWithoutCuisine(cuisine.name)
+                                      : routeWithCuisine(cuisine.name)
+                                  }
+                                >
+                                  <a
+                                    className={`flex items-center py-2 px-3 mt-3 bg-white rounded-lg border border-gray-300 hover:border-gray-400 ${
+                                      styles["cuisine-link"]
+                                    } ${
+                                      isCuisineFiltered
+                                        ? styles["selected"]
+                                        : ""
+                                    }`}
+                                  >
+                                    <CheckIcon
+                                      className={`w-5 h-5 ${styles["cuisine-check"]}`}
+                                    />
+                                    <span className={styles["cuisine-name"]}>
+                                      {cuisine.name}
+                                    </span>
+                                  </a>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </div>
+
+                    <div className="flex-0 bg-white shadow-md p-3">
+                      <button
+                        ref={filterMenuEndRef}
+                        className="btn btn-primary w-full"
+                        onClick={closeFilterMenu}
+                      >
+                        View Restaurants
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {(isLoadingRestaurants || isLoadingCoords) && (
-                <p>Loading restaurants...</p>
+                <p className="mt-2 lg:mt-0">Loading restaurants...</p>
               )}
 
               {(isSearchError || isPostcodeLookupError) &&
                 !isLoadingRestaurants &&
                 !isLoadingCoords && (
-                  <p>{(searchError || postcodeLookupError).message}</p>
+                  <p className="mt-2 lg:mt-0">
+                    {(searchError || postcodeLookupError).message}
+                  </p>
                 )}
 
               {!isLoadingRestaurants &&
                 !isLoadingCoords &&
                 !isSearchError &&
                 !isPostcodeLookupError && (
-                  <div>
-                    <div className="relative flex items-end justify-between">
-                      <h1 className="font-bold text-lg">
-                        {restaurants.length} restaurant
-                        {restaurants.length > 1 && "s"} delivering to{" "}
-                        <span className="whitespace-nowrap">{postcode}</span>
-                      </h1>
-
-                      <button
-                        className="lg:hidden flex items-center cursor-pointer flex-0 ml-3 hover:text-primary"
-                        onClick={onClickSortButton}
-                      >
-                        <MenuIcon className="w-4 h-4" alt={3} />
-                        <span className="ml-1">Sort</span>
-                      </button>
-
-                      {isSortMenuOpen && (
-                        <div
-                          ref={sortByMobileMenuRef}
-                          className="absolute right-0 top-100 mt-2 lg:hidden bg-white p-4 rounded-sm shadow"
-                        >
-                          <p className="font-bold text-left">Sort By</p>
-                          <ul className="mt-2">
-                            <li>
-                              <Link href={routeWithSortByParam(null)}>
-                                <a
-                                  onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
-                                    sortedBy === null ? "text-primary" : ""
-                                  }`}
-                                >
-                                  <ThumbsUpIcon className="w-5 h-5" />
-                                  <span className="ml-2 font-light">
-                                    Default
-                                  </span>
-                                </a>
-                              </Link>
-                            </li>
-                            <li>
-                              <Link href={routeWithSortByParam("distance")}>
-                                <a
-                                  onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
-                                    sortedBy === "distance"
-                                      ? "text-primary"
-                                      : ""
-                                  }`}
-                                >
-                                  <LocationMarkerIcon className="w-5 h-5" />
-                                  <span className="ml-2 font-light">
-                                    Distance
-                                  </span>
-                                </a>
-                              </Link>
-                            </li>
-                            <li>
-                              <Link href={routeWithSortByParam("delivery_fee")}>
-                                <a
-                                  onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
-                                    sortedBy === "delivery_fee"
-                                      ? "text-primary"
-                                      : ""
-                                  }`}
-                                >
-                                  <CashIcon className="w-5 h-5" />
-                                  <span className="ml-2 font-light">
-                                    Delivery fee
-                                  </span>
-                                </a>
-                              </Link>
-                            </li>
-                            <li>
-                              <Link href={routeWithSortByParam("min_order")}>
-                                <a
-                                  onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
-                                    sortedBy === "min_order"
-                                      ? "text-primary"
-                                      : ""
-                                  }`}
-                                >
-                                  <CreditCardIcon className="w-5 h-5" />
-                                  <span className="ml-2 font-light">
-                                    Minimum order
-                                  </span>
-                                </a>
-                              </Link>
-                            </li>
-                            <li>
-                              <Link href={routeWithSortByParam("time")}>
-                                <a
-                                  onClick={onClickSortLink}
-                                  className={`flex items-center py-1 hover:text-primary transition-colors ${
-                                    sortedBy === "time" ? "text-primary" : ""
-                                  }`}
-                                >
-                                  <ClockIcon className="w-5 h-5" />
-                                  <span className="ml-2 font-light">
-                                    Fastest delivery
-                                  </span>
-                                </a>
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                  <div className="mt-2 lg:mt-0">
+                    <h1 className="font-bold text-lg">
+                      {restaurants.length} restaurant
+                      {restaurants.length > 1 && "s"} delivering to{" "}
+                      <span className="whitespace-nowrap">{postcode}</span>
+                    </h1>
 
                     <div className="mt-3">
                       {restaurants.map((restaurant) => {
