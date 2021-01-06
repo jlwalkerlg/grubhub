@@ -18,7 +18,7 @@ namespace Web.Features.Users.Login
         {
             var result = await sender.Send(command);
 
-            if (!result.IsSuccess)
+            if (!result)
             {
                 return Error(result.Error);
             }

@@ -18,7 +18,7 @@ namespace Web.Features.Users.UpdateAuthUserDetails
         {
             var result = await sender.Send(command);
 
-            if (!result.IsSuccess)
+            if (!result)
             {
                 return Error(result.Error);
             }

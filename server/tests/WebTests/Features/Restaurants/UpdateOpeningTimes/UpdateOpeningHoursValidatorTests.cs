@@ -21,7 +21,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
@@ -35,7 +35,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayOpen)));
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayClose)));
         }
@@ -83,7 +83,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayOpen)));
         }
 
@@ -101,7 +101,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayClose)));
         }
 
@@ -119,7 +119,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.False(result.Error.Errors.ContainsKey(nameof(command.MondayOpen)));
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayClose)));
         }

@@ -31,7 +31,7 @@ namespace Web.Services.Validation
                 .First()
                 .Validate(request);
 
-            if (!validationResult.IsSuccess)
+            if (!validationResult)
             {
                 var result = new TResponse();
                 result.Error = validationResult.Error;

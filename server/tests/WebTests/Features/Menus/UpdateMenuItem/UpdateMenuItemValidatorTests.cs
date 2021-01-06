@@ -36,7 +36,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
@@ -64,7 +64,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.CategoryName)));
         }
 
@@ -92,7 +92,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.OldItemName)));
         }
 
@@ -120,7 +120,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.NewItemName)));
         }
 
@@ -146,7 +146,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Price)));
         }
     }

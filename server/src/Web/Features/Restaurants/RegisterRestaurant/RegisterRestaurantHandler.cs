@@ -33,7 +33,7 @@ namespace Web.Features.Restaurants.RegisterRestaurant
         {
             var geocodingResult = await geocoder.Geocode(command.Address);
 
-            if (!geocodingResult.IsSuccess)
+            if (!geocodingResult)
             {
                 return Error.BadRequest("Address is not a valid postal address.");
             }

@@ -7,10 +7,7 @@ namespace Web
         private Error error;
         public virtual Error Error
         {
-            get
-            {
-                return error;
-            }
+            get => error;
             set
             {
                 IsSuccess = false;
@@ -43,6 +40,7 @@ namespace Web
             return new Result(error);
         }
 
+        public static implicit operator bool(Result result) => result.IsSuccess;
         public static implicit operator Result(Error error) => new(error);
     }
 
@@ -82,6 +80,7 @@ namespace Web
             return new Result<T>(error);
         }
 
+        public static implicit operator bool(Result<T> result) => result.IsSuccess;
         public static implicit operator Result<T>(Error error) => new(error);
     }
 }

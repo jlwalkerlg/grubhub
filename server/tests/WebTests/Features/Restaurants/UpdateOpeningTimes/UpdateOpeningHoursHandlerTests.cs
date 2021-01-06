@@ -58,7 +58,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await handler.Handle(command, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
 
             Assert.True(unitOfWorkSpy.Commited);
 
@@ -105,7 +105,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
         }
 
@@ -119,7 +119,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
         }
     }

@@ -32,7 +32,7 @@ namespace WebTests.Features.Menus.GetMenuByRestaurantId
             var query = new GetMenuByRestaurantIdQuery { RestaurantId = menu.RestaurantId };
             var result = await handler.Handle(query, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.Same(menu, result.Value);
         }
 
@@ -42,7 +42,7 @@ namespace WebTests.Features.Menus.GetMenuByRestaurantId
             var query = new GetMenuByRestaurantIdQuery { RestaurantId = Guid.NewGuid() };
             var result = await handler.Handle(query, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
         }
     }

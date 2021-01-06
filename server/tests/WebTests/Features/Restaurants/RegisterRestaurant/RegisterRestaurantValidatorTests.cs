@@ -32,7 +32,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerName)));
         }
 
@@ -49,7 +49,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerEmail)));
         }
 
@@ -70,7 +70,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerEmail)));
         }
 
@@ -87,7 +87,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerPassword)));
         }
 
@@ -103,7 +103,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantName)));
         }
 
@@ -120,7 +120,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantPhoneNumber)));
         }
 
@@ -136,7 +136,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Address)));
         }
     }

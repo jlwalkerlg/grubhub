@@ -33,7 +33,7 @@ namespace Web.Features.Menus.UpdateMenuItem
 
             var result = await sender.Send(command);
 
-            if (!result.IsSuccess)
+            if (!result)
             {
                 return Error(result.Error);
             }

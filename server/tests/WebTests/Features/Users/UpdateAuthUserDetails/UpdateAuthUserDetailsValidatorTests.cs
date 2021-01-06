@@ -44,7 +44,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Name)));
         }
 
@@ -71,7 +71,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Email)));
         }
 
@@ -103,7 +103,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Email)));
         }
     }

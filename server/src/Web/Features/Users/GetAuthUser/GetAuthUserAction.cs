@@ -19,7 +19,7 @@ namespace Web.Features.Users.GetAuthUser
             var query = new GetAuthUserQuery();
             var result = await sender.Send(new GetAuthUserQuery());
 
-            if (!result.IsSuccess)
+            if (!result)
             {
                 return Error(result.Error);
             }

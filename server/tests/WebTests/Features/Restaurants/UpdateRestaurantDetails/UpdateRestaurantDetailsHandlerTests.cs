@@ -58,7 +58,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await handler.Handle(command, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
 
             Assert.Equal(command.Name, restaurant.Name);
             Assert.Equal(command.PhoneNumber, restaurant.PhoneNumber.Number);
@@ -94,7 +94,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
         }
 
@@ -124,7 +124,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
         }
     }

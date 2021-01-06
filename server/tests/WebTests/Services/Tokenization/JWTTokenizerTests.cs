@@ -27,7 +27,7 @@ namespace WebTests.Services.Tokenization
         {
             var token = "some random token";
 
-            Assert.False(tokenizer.Decode(token).IsSuccess);
+            Assert.False(tokenizer.Decode(token));
         }
     }
 }

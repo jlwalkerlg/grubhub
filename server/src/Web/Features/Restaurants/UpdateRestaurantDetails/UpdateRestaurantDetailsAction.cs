@@ -32,7 +32,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await sender.Send(command);
 
-            return result.IsSuccess ? Ok() : Error(result.Error);
+            return result ? Ok() : Error(result.Error);
         }
     }
 }

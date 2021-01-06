@@ -42,7 +42,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
             };
             var result = await handler.Handle(command, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.Equal(RestaurantStatus.Approved, restaurant.Status);
             Assert.True(unitOfWorkSpy.Commited);
         }
@@ -82,7 +82,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
             };
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
         }
     }
 }

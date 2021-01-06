@@ -34,7 +34,7 @@ namespace WebTests.Features.Users.GetAuthUser
             var query = new GetAuthUserQuery();
             var result = await handler.Handle(query, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.Same(user, result.Value);
         }
 
@@ -47,7 +47,7 @@ namespace WebTests.Features.Users.GetAuthUser
             var query = new GetAuthUserQuery();
             var result = await handler.Handle(query, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
         }
     }

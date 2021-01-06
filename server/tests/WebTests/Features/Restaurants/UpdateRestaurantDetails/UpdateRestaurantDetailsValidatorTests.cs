@@ -31,7 +31,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         {
             var result = await validator.Validate(validCommand);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
@@ -61,7 +61,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Name)));
         }
 
@@ -79,7 +79,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.PhoneNumber)));
         }
 
@@ -94,7 +94,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.DeliveryFee)));
         }
 
@@ -109,7 +109,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MinimumDeliverySpend)));
         }
 
@@ -124,7 +124,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.MaxDeliveryDistanceInKm)));
         }
 
@@ -141,7 +141,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.EstimatedDeliveryTimeInMinutes)));
         }
     }

@@ -39,7 +39,7 @@ namespace WebTests.Services.Validation
                 default,
                 next);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Same(error, result.Error);
         }
 
@@ -56,7 +56,7 @@ namespace WebTests.Services.Validation
                 default,
                 next);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.Same(handlerResult, result);
         }
     }

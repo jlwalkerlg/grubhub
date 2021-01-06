@@ -46,7 +46,7 @@ namespace WebTests.Features.Users.Login
             var result = await handler.Handle(command, default);
 
             Assert.Same(user.Id, authenticatorSpy.UserId);
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace WebTests.Features.Users.Login
             };
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace WebTests.Features.Users.Login
             };
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace WebTests.Features.Users.Login
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Email)));
         }
 
@@ -47,7 +47,7 @@ namespace WebTests.Features.Users.Login
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.Password)));
         }
     }

@@ -40,7 +40,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var result = await handler.Handle(query, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);
         }
 
@@ -56,7 +56,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var result = await handler.Handle(query, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);
         }
 
@@ -81,7 +81,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var result = await handler.Handle(query, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.Equal(53, restaurantDtoRepositoryFake.SearchCoordinates.Latitude);
             Assert.Equal(-2, restaurantDtoRepositoryFake.SearchCoordinates.Longitude);
             Assert.Single(result.Value);

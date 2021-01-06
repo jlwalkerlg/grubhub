@@ -25,7 +25,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
         }
 
@@ -43,7 +43,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
 
             var result = await validator.Validate(command);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.True(result.Error.Errors.ContainsKey(nameof(command.CategoryName)));
         }
     }

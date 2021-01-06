@@ -32,7 +32,7 @@ namespace WebTests.Features.Users.Logout
 
             var result = await handler.Handle(new LogoutCommand(), default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.False(authenticatorSpy.IsAuthenticated);
         }
     }

@@ -32,7 +32,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             var geocodingResult = await geocoder.Geocode(query.Postcode);
 
-            if (!geocodingResult.IsSuccess)
+            if (!geocodingResult)
             {
                 return Error.BadRequest("Sorry, we don't recognise that postcode.");
             }

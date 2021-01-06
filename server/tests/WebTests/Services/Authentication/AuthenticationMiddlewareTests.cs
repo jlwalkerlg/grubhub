@@ -39,7 +39,7 @@ namespace WebTests.Services.Authentication
                 default,
                 () => Task.FromResult(handlerResult));
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.Same(handlerResult, result);
         }
 
@@ -53,7 +53,7 @@ namespace WebTests.Services.Authentication
                 default,
                 () => Task.FromResult(Result.Ok()));
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.Unauthenticated, result.Error.Type);
         }
 

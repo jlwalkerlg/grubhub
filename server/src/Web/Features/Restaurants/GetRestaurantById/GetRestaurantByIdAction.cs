@@ -24,7 +24,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
 
             var result = await sender.Send(query);
 
-            return result.IsSuccess ? Ok(result.Value) : Error(result.Error);
+            return result ? Ok(result.Value) : Error(result.Error);
         }
     }
 }

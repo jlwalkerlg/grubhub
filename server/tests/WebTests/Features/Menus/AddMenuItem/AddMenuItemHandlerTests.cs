@@ -60,7 +60,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
 
             var category = menu.Categories.Single();
 
@@ -103,7 +103,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
         }
 
@@ -140,7 +140,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.NotFound, result.Error.Type);
         }
 
@@ -179,7 +179,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.BadRequest, result.Error.Type);
         }
 
@@ -217,7 +217,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result);
             Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
         }
     }

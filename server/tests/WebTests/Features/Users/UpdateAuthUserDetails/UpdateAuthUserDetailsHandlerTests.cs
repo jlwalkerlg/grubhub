@@ -41,7 +41,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             var result = await handler.Handle(command, default);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
 
             Assert.Equal(command.Name, authUser.Name);
             Assert.Equal(command.Email, authUser.Email.Address);

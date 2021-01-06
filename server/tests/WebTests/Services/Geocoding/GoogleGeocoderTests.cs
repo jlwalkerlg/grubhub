@@ -18,7 +18,7 @@ namespace WebTests.Services.Geocoding
         {
             var result = await geocoder.Geocode("1 Maine Road, Manchester, UK");
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result);
             Assert.NotNull(result.Value.FormattedAddress);
             Assert.NotEqual(default, result.Value.Coordinates.Latitude);
             Assert.NotEqual(default, result.Value.Coordinates.Longitude);
@@ -29,7 +29,7 @@ namespace WebTests.Services.Geocoding
         {
             var coordinatesResult = await geocoder.Geocode("random");
 
-            Assert.False(coordinatesResult.IsSuccess);
+            Assert.False(coordinatesResult);
         }
     }
 }

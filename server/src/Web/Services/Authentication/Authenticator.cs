@@ -44,7 +44,7 @@ namespace Web.Services.Authentication
             }
 
             var result = tokenizer.Decode(token);
-            if (!result.IsSuccess)
+            if (!result)
             {
                 return Guid.Empty;
             }
