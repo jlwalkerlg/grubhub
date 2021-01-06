@@ -182,7 +182,7 @@ const RestaurantsSearch: React.FC = () => {
                 <CutleryIcon className="w-4 h-4" />
                 <span className="ml-2">Cuisines</span>
                 <Link href={routeWithoutCuisines()}>
-                  <a className="ml-auto text-primary text-sm font-medium">
+                  <a className="ml-auto text-primary text-sm font-medium hover:underline">
                     Reset
                   </a>
                 </Link>
@@ -340,7 +340,7 @@ const RestaurantsSearch: React.FC = () => {
                     <div className="flex-0 bg-white shadow-md p-3 flex justify-between items-center">
                       <button
                         ref={filterMenuStartRef}
-                        className="text-primary text-sm font-medium"
+                        className="text-primary text-sm font-medium hover:underline"
                         onClick={closeFilterMenu}
                       >
                         Cancel
@@ -350,7 +350,7 @@ const RestaurantsSearch: React.FC = () => {
 
                       <Link href={routeWithoutCuisines()}>
                         <a
-                          className="text-primary text-sm font-medium"
+                          className="text-primary text-sm font-medium hover:underline"
                           onClick={closeFilterMenu}
                         >
                           Reset
