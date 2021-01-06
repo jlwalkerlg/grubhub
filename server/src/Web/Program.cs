@@ -1,6 +1,4 @@
-using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Autofac.Features.ResolveAnything;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,12 +14,14 @@ namespace Web
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            var hostBuilder = CreateHostBuilder(args);
 
             if (args.Contains("--seed"))
             {
                 try
                 {
+                    hostBuilder.ConfigureServices(services => services.AddTransient<DbSeeder>());
+                    var host = hostBuilder.Build();
                     Seed(host);
                 }
                 catch (System.Exception e)
@@ -31,16 +31,13 @@ namespace Web
             }
             else
             {
-                host.Run();
+                hostBuilder.Build().Run();
             }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory(builder =>
-                {
-                    builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-                }))
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     var env = hostingContext.HostingEnvironment;
