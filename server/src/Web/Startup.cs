@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Web.Data;
 using Web.ServiceRegistration;
@@ -28,6 +29,13 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Config);
+
+            services.AddLogging(builder =>
+            {
+                builder.AddFilter("Default", LogLevel.Information);
+                builder.AddFilter("Microsoft", LogLevel.Warning);
+                builder.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
+            });
 
             services
                 .AddControllers()

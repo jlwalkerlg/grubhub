@@ -150,9 +150,6 @@ namespace WebTests
         {
             builder.ConfigureServices((ctx, services) =>
             {
-                // Suppress info log.
-                services.Configure<ConsoleLifetimeOptions>(options =>
-                options.SuppressStatusMessages = true);
             });
         }
 
