@@ -4,10 +4,10 @@ import React from "react";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
-import CakeIcon from "~/components/Icons/CakeIcon";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
 import ClipboardIcon from "~/components/Icons/ClipboardIcon";
 import ClockIcon from "~/components/Icons/ClockIcon";
+import CutleryIcon from "~/components/Icons/CutleryIcon";
 import IdentificationIcon from "~/components/Icons/IdentificationIcon";
 import InfoIcon from "~/components/Icons/InfoIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
@@ -33,7 +33,7 @@ const routes: DashboardRoute[] = [
   {
     title: "Update Cuisines",
     pathname: "/dashboard/cuisines",
-    icon: CakeIcon,
+    icon: CutleryIcon,
   },
   {
     title: "Menu Builder",

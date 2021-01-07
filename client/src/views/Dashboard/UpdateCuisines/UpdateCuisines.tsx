@@ -7,6 +7,7 @@ import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import CheckIcon from "~/components/Icons/CheckIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { DashboardLayout } from "../DashboardLayout";
+import styles from "./UpdateCuisines.module.css";
 
 const UpdateCuisinesForm: FC = () => {
   const { user } = useAuth();
@@ -60,12 +61,12 @@ const UpdateCuisinesForm: FC = () => {
                 key={cuisine.name}
                 type="button"
                 onClick={() => onClick(cuisine.name)}
-                className={`flex items-center justify-start w-full rounded shadow py-2 px-4 ${
-                  isSelected ? "text-primary font-semibold" : ""
-                }`}
+                className={`flex items-center w-full py-2 px-3 mt-3 bg-white rounded-lg border border-gray-300 hover:border-gray-400 ${
+                  styles["cuisine-link"]
+                } ${isSelected ? styles["selected"] : ""}`}
               >
-                <span>{cuisine.name}</span>
-                {isSelected && <CheckIcon className="w-6 h-6 ml-auto" />}
+                <CheckIcon className={`w-5 h-5 ${styles["cuisine-check"]}`} />
+                <span className={styles["cuisine-name"]}>{cuisine.name}</span>
               </button>
             </li>
           );
