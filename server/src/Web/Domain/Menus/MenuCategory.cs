@@ -29,14 +29,18 @@ namespace Web.Domain.Menus
         private readonly List<MenuItem> items = new();
         public IReadOnlyList<MenuItem> Items => items;
 
-        public void AddItem(string name, string description, Money price)
+        public MenuItem AddItem(string name, string description, Money price)
         {
             if (ContainsItem(name))
             {
                 throw new InvalidOperationException($"Item {name} already exists for this category.");
             }
 
-            items.Add(new MenuItem(name, description, price));
+            var item = new MenuItem(name, description, price);
+
+            items.Add(item);
+
+            return item;
         }
 
         public bool ContainsItem(string name)

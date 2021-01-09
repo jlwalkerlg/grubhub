@@ -1,79 +1,87 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
+using Shouldly;
 using Web.Features.Restaurants;
+using WebTests.Doubles;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.SearchRestaurants
 {
-    public class SearchRestaurantsIntegrationTests : WebIntegrationTestBase
+    public class SearchRestaurantsIntegrationTests : IntegrationTestBase
     {
-        public SearchRestaurantsIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public SearchRestaurantsIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Returns_The_Restaurants()
         {
-            var r1 = await AddRestaurant(54.0f, -2.15f, new() { "Thai" });
-            var r2 = await AddRestaurant(54.0f, -2.0f, new() { "Italian", "Greek" });
-            var r3 = await AddRestaurant(54.0f, -2.1f, new() { "Indian" });
+            var m1 = new User();
+            var m2 = new User();
+            var m3 = new User();
 
-            var restaurants = await Get<List<RestaurantDto>>("/restaurants?postcode=BD181LT&sort_by=distance&cuisines=Thai,Greek");
+            var italian = new Cuisine() { Name = "Italian" };
+            var thai = new Cuisine() { Name = "Thai" };
+            var greek = new Cuisine() { Name = "Greek" };
+            var indian = new Cuisine() { Name = "Indian" };
 
-            Assert.Equal(2, restaurants.Count);
-            Assert.True(r2.IsEqual(restaurants[0]));
-            Assert.True(r1.IsEqual(restaurants[1]));
-        }
-
-        private async Task<Restaurant> AddRestaurant(
-            float latitude,
-            float longitude,
-            List<string> cuisines)
-        {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                Guid.NewGuid().ToString(),
-                new Email(Guid.NewGuid() + "@gmail.com"),
-                Guid.NewGuid().ToString()
-            );
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                Guid.NewGuid().ToString(),
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, MN12 1NM"),
-                new Coordinates(latitude, longitude)
-            )
+            var r1 = new Restaurant()
             {
-                OpeningTimes = new OpeningTimes()
-                {
-                    Monday = OpeningHours.Parse("00:00", null),
-                    Tuesday = OpeningHours.Parse("00:00", null),
-                    Wednesday = OpeningHours.Parse("00:00", null),
-                    Thursday = OpeningHours.Parse("00:00", null),
-                    Friday = OpeningHours.Parse("00:00", null),
-                    Saturday = OpeningHours.Parse("00:00", null),
-                    Sunday = OpeningHours.Parse("00:00", null),
-                },
-                MaxDeliveryDistanceInKm = 10,
-                MinimumDeliverySpend = new Money(0),
-                DeliveryFee = new Money(1.50m),
-                EstimatedDeliveryTimeInMinutes = 40,
+                ManagerId = m1.Id,
+                Latitude = GeocoderStub.Latitude,
+                Longitude = GeocoderStub.Longitude - 0.05f,
+                MondayOpen = TimeSpan.Zero,
+                TuesdayOpen = TimeSpan.Zero,
+                WednesdayOpen = TimeSpan.Zero,
+                ThursdayOpen = TimeSpan.Zero,
+                FridayOpen = TimeSpan.Zero,
+                SaturdayOpen = TimeSpan.Zero,
+                SundayOpen = TimeSpan.Zero,
+                Cuisines = new() { thai },
             };
 
-            restaurant.Approve();
+            var r2 = new Restaurant()
+            {
+                ManagerId = m2.Id,
+                Latitude = GeocoderStub.Latitude,
+                Longitude = GeocoderStub.Longitude,
+                MondayOpen = TimeSpan.Zero,
+                TuesdayOpen = TimeSpan.Zero,
+                WednesdayOpen = TimeSpan.Zero,
+                ThursdayOpen = TimeSpan.Zero,
+                FridayOpen = TimeSpan.Zero,
+                SaturdayOpen = TimeSpan.Zero,
+                SundayOpen = TimeSpan.Zero,
+                Cuisines = new() { italian, greek },
+            };
 
-            restaurant.SetCuisines(cuisines.Select(x => new Cuisine(x)));
+            var r3 = new Restaurant()
+            {
+                ManagerId = m3.Id,
+                Latitude = GeocoderStub.Latitude,
+                Longitude = GeocoderStub.Longitude - 0.1f,
+                MondayOpen = TimeSpan.Zero,
+                TuesdayOpen = TimeSpan.Zero,
+                WednesdayOpen = TimeSpan.Zero,
+                ThursdayOpen = TimeSpan.Zero,
+                FridayOpen = TimeSpan.Zero,
+                SaturdayOpen = TimeSpan.Zero,
+                SundayOpen = TimeSpan.Zero,
+                Cuisines = new() { indian },
+            };
 
-            await fixture.InsertDb(restaurant, manager);
+            fixture.Insert(m1, m2, m3, r1, r2, r3, italian, thai, greek, indian);
 
-            return restaurant;
+            var response = await fixture.GetClient().Get(
+                "/restaurants?postcode=BD181LT&sort_by=distance&cuisines=Thai,Greek");
+
+            var restaurants = await response.GetData<List<RestaurantDto>>();
+
+            restaurants.Count.ShouldBe(2);
+            restaurants[0].Id.ShouldBe(r2.Id);
+            restaurants[1].Id.ShouldBe(r1.Id);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Menus.RenameMenuCategory;
 using Xunit;
 
@@ -7,27 +8,20 @@ namespace WebTests.Features.Menus.RenameMenuCategory
 {
     public class RenameMenuCategoryValidatorTests
     {
-        private readonly RenameMenuCategoryValidator validator;
-
-        public RenameMenuCategoryValidatorTests()
-        {
-            validator = new RenameMenuCategoryValidator();
-        }
+        private readonly RenameMenuCategoryValidator validator = new();
 
         [Fact]
         public async Task RestaurantId_Cant_Be_Empty()
         {
-            var command = new RenameMenuCategoryCommand
+            var command = new RenameMenuCategoryCommand()
             {
                 RestaurantId = Guid.Empty,
-                OldName = "Pizza",
-                NewName = "Curry",
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Theory]
@@ -36,17 +30,15 @@ namespace WebTests.Features.Menus.RenameMenuCategory
         [InlineData(" ")]
         public async Task OldName_Cant_Be_Empty(string oldName)
         {
-            var command = new RenameMenuCategoryCommand
+            var command = new RenameMenuCategoryCommand()
             {
-                RestaurantId = Guid.NewGuid(),
                 OldName = oldName,
-                NewName = "Curry",
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.OldName)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.OldName));
         }
 
         [Theory]
@@ -55,17 +47,15 @@ namespace WebTests.Features.Menus.RenameMenuCategory
         [InlineData(" ")]
         public async Task NewName_Cant_Be_Empty(string newName)
         {
-            var command = new RenameMenuCategoryCommand
+            var command = new RenameMenuCategoryCommand()
             {
-                RestaurantId = Guid.NewGuid(),
-                OldName = "Pizza",
                 NewName = newName,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.NewName)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.NewName));
         }
     }
 }

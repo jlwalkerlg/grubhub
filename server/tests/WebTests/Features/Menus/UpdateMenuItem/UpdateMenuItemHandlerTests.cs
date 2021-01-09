@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -27,67 +28,19 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         }
 
         [Fact]
-        public async Task It_Updates_A_Menu_Item()
+        public async Task It_Fails_If_The_Menu_Is_Not_Found()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
-                new Coordinates(1, 1));
-            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
 
-            var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
-            menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
-            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
+            authenticatorSpy.SignIn(manager);
 
-            authenticatorSpy.SignIn(authUser);
-
-            var command = new UpdateMenuItemCommand
-            {
-                RestaurantId = menu.RestaurantId.Value,
-                CategoryName = "Pizza",
-                OldItemName = "Margherita",
-                NewItemName = "Hawaiian",
-                Description = "Ham & pineapple",
-                Price = 11.99m,
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.True(result);
-            Assert.True(unitOfWorkSpy.Commited);
-
-            var category = menu.Categories.Single();
-            var item = category.Items.Single();
-
-            Assert.Equal("Hawaiian", item.Name);
-            Assert.Equal("Ham & pineapple", item.Description);
-            Assert.Equal(new Money(11.99m), item.Price);
-        }
-
-        [Fact]
-        public async Task It_Fails_If_Menu_Not_Found()
-        {
-            var authUser = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
-
-            authenticatorSpy.SignIn(authUser);
-
-            var command = new UpdateMenuItemCommand
+            var command = new UpdateMenuItemCommand()
             {
                 RestaurantId = Guid.NewGuid(),
                 CategoryName = "Pizza",
@@ -99,14 +52,14 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
         }
 
         [Fact]
-        public async Task It_Fails_If_Category_Not_Found()
+        public async Task It_Fails_If_The_Category_Doesnt_Exist()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
@@ -114,7 +67,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
@@ -122,15 +75,15 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var menu = new Menu(restaurant.Id);
 
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(authUser);
+            authenticatorSpy.SignIn(manager);
 
-            var command = new UpdateMenuItemCommand
+            var command = new UpdateMenuItemCommand()
             {
-                RestaurantId = menu.RestaurantId.Value,
+                RestaurantId = menu.RestaurantId,
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",
@@ -140,14 +93,14 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
 
         [Fact]
-        public async Task It_Fails_If_Item_Not_Found()
+        public async Task It_Fails_If_The_Item_Doesnt_Exist()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
@@ -155,7 +108,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
@@ -164,15 +117,15 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
 
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(authUser);
+            authenticatorSpy.SignIn(manager);
 
             var command = new UpdateMenuItemCommand
             {
-                RestaurantId = menu.RestaurantId.Value,
+                RestaurantId = menu.RestaurantId,
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",
@@ -182,14 +135,14 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
 
         [Fact]
-        public async Task It_Fails_If_Item_Already_Exists()
+        public async Task It_Fails_If_The_Item_Already_Exists()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
@@ -197,7 +150,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
@@ -208,15 +161,15 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
             menu.Categories.Single().AddItem("Hawaiian", "Ham & pineapple", new Money(11.99m));
 
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(authUser);
+            authenticatorSpy.SignIn(manager);
 
-            var command = new UpdateMenuItemCommand
+            var command = new UpdateMenuItemCommand()
             {
-                RestaurantId = menu.RestaurantId.Value,
+                RestaurantId = menu.RestaurantId,
                 CategoryName = "Pizza",
                 OldItemName = "Margherita",
                 NewItemName = "Hawaiian",
@@ -226,8 +179,8 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
     }
 }

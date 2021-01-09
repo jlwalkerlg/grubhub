@@ -26,7 +26,7 @@ namespace Web.Services.Geocoding
 
             if (status != "OK")
             {
-                return Result<GeocodingResult>.Fail(Error.Internal(status));
+                return Error.Internal(status);
             }
 
             var result = doc.RootElement

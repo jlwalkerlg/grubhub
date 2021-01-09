@@ -1,36 +1,20 @@
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Restaurants.RegisterRestaurant;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.RegisterRestaurant
 {
-    public class RegisterRestaurantActionTests : WebActionTestBase
+    public class RegisterRestaurantActionTests : HttpTestBase
     {
-        public RegisterRestaurantActionTests(WebActionTestFixture fixture) : base(fixture)
+        public RegisterRestaurantActionTests(HttpTestFixture fixture) : base(fixture)
         {
-        }
-
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            var response = await Post("/restaurants/register", new RegisterRestaurantCommand
-            {
-                ManagerName = "Jordan Walker",
-                ManagerEmail = "walker.jlg@gmail.com",
-                ManagerPassword = "password123",
-                RestaurantName = "Chow Main",
-                RestaurantPhoneNumber = "01234567890",
-                Address = "12 Maine Road, Madchester, MN12 1NM",
-            });
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            var command = new RegisterRestaurantCommand
+            var command = new RegisterRestaurantCommand()
             {
                 ManagerName = "",
                 ManagerEmail = "",
@@ -39,17 +23,42 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 RestaurantPhoneNumber = "",
                 Address = ""
             };
-            var response = await Post("/restaurants/register", command);
 
-            Assert.Equal(422, (int)response.StatusCode);
+            var response = await fixture.GetClient().Post(
+                "/restaurants/register",
+                command);
+
+            response.StatusCode.ShouldBe(422);
 
             var errors = (await response.GetErrors());
-            Assert.True(errors.ContainsKey("managerName"));
-            Assert.True(errors.ContainsKey("managerEmail"));
-            Assert.True(errors.ContainsKey("managerPassword"));
-            Assert.True(errors.ContainsKey("restaurantName"));
-            Assert.True(errors.ContainsKey("restaurantPhoneNumber"));
-            Assert.True(errors.ContainsKey("address"));
+
+            errors.ShouldContainKey("managerName");
+            errors.ShouldContainKey("managerEmail");
+            errors.ShouldContainKey("managerPassword");
+            errors.ShouldContainKey("restaurantName");
+            errors.ShouldContainKey("restaurantPhoneNumber");
+            errors.ShouldContainKey("address");
+        }
+
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            var command = new RegisterRestaurantCommand()
+            {
+                ManagerName = "Jordan Walker",
+                ManagerEmail = "walker.jlg@gmail.com",
+                ManagerPassword = "password123",
+                RestaurantName = "Chow Main",
+                RestaurantPhoneNumber = "01234567890",
+                Address = "12 Maine Road, Madchester, MN12 1NM",
+            };
+
+            var response = await fixture.GetClient().Post(
+                "/restaurants/register",
+                command);
+
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

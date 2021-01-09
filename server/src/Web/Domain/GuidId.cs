@@ -15,5 +15,7 @@ namespace Web.Domain
         }
 
         public Guid Value { get; }
+
+        public static implicit operator Guid(GuidId id) => id.Value;
     }
 }

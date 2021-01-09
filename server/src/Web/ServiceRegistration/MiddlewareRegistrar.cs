@@ -14,7 +14,7 @@ namespace Web.ServiceRegistration
                 .InstancePerLifetimeScope();
 
             builder
-                .RegisterAssemblyTypes(typeof(IRequest).Assembly, typeof(Startup).Assembly)
+                .RegisterAssemblyTypes(typeof(Startup).Assembly)
                 .AsClosedTypesOf(typeof(IValidator<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();

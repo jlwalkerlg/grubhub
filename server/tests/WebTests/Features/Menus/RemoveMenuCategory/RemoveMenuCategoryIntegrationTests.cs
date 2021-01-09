@@ -1,49 +1,48 @@
-using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
-using Web.Features.Menus;
+using Shouldly;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Menus.RemoveMenuCategory
 {
-    public class RemoveMenuCategoryIntegrationTests : WebIntegrationTestBase
+    public class RemoveMenuCategoryIntegrationTests : IntegrationTestBase
     {
-        public RemoveMenuCategoryIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public RemoveMenuCategoryIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
-        public async Task It_Removes_A_Category_The_Menu()
+        public async Task It_Removes_A_Category_From_The_Menu()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var manager = new User();
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
+            var restaurant = new Restaurant()
+            {
+                ManagerId = manager.Id,
+            };
 
-            var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
+            var category = new MenuCategory()
+            {
+                Name = "Pizza",
+            };
 
-            await fixture.InsertDb(manager, restaurant, menu);
-            await Login(manager);
+            var menu = new Menu()
+            {
+                RestaurantId = restaurant.Id,
+                Categories = new() { category },
+            };
 
-            var response = await Delete($"/restaurants/{restaurant.Id.Value}/menu/categories/Pizza");
+            fixture.Insert(manager, restaurant, menu);
 
-            Assert.Equal(204, (int)response.StatusCode);
+            var response = await fixture.GetAuthenticatedClient(manager.Id).Delete(
+                $"/restaurants/{restaurant.Id}/menu/categories/Pizza");
 
-            var menuDto = await Get<MenuDto>($"/restaurants/{restaurant.Id.Value}/menu");
-            Assert.Empty(menuDto.Categories);
+            response.StatusCode.ShouldBe(204);
+
+            var found = fixture.UseTestDbContext(db => db.MenuCategories.ToList());
+
+            found.ShouldBeEmpty();
         }
     }
 }

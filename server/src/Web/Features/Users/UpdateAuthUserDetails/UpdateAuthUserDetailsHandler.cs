@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
@@ -18,6 +19,17 @@ namespace Web.Features.Users.UpdateAuthUserDetails
         public async Task<Result> Handle(UpdateAuthUserDetailsCommand command, CancellationToken cancellationToken)
         {
             var user = await unitOfWork.Users.GetById(authenticator.UserId);
+
+            if (command.Email != user.Email.Address)
+            {
+                if (await unitOfWork.Users.EmailExists(command.Email))
+                {
+                    return Error.ValidationError(new Dictionary<string, string>()
+                    {
+                        { nameof(command.Email), "Email already taken." }
+                    });
+                }
+            }
 
             user.Name = command.Name;
             user.Email = new Email(command.Email);

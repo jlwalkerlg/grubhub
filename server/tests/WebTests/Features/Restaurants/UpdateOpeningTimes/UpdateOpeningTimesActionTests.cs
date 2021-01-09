@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Restaurants.UpdateOpeningTimes;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 {
-    public class UpdateOpeningTimesActionTests : WebActionTestBase
+    public class UpdateOpeningTimesActionTests : HttpTestBase
     {
-        public UpdateOpeningTimesActionTests(WebActionTestFixture fixture) : base(fixture)
+        public UpdateOpeningTimesActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
@@ -17,39 +17,40 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
         {
             var request = new UpdateOpeningTimesRequest();
 
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/opening-times", request);
+            var response = await fixture.GetClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/opening-times",
+                request);
 
-            Assert.Equal(401, (int)response.StatusCode);
-        }
-
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            await Login();
-
-            var request = new UpdateOpeningTimesRequest();
-
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/opening-times", request);
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(401);
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            await Login();
-
             var request = new UpdateOpeningTimesRequest()
             {
                 MondayOpen = "45:00",
             };
 
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/opening-times", request);
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/opening-times",
+                request);
 
-            Assert.Equal(422, (int)response.StatusCode);
+            response.StatusCode.ShouldBe(422);
+            response.GetErrors().Result.ShouldContainKey("mondayOpen");
+        }
 
-            var errors = await response.GetErrors();
-            Assert.True(errors.ContainsKey("mondayOpen"));
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            var request = new UpdateOpeningTimesRequest();
+
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/opening-times",
+                request);
+
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

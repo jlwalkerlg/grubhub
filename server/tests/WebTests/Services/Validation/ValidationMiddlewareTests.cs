@@ -1,4 +1,4 @@
-using MediatR;
+using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web;
@@ -20,7 +20,7 @@ namespace WebTests.Services.Validation
 
             validators = new List<IValidator<DummyCommand>>
             {
-                validatorSpy
+                validatorSpy,
             };
 
             middleware = new ValidationMiddleware<DummyCommand, Result>(validators);
@@ -29,18 +29,15 @@ namespace WebTests.Services.Validation
         [Fact]
         public async Task It_Returns_A_Validation_Error_If_Validation_Fails()
         {
-            var error = Error.ValidationError(new Dictionary<string, string>());
-            validatorSpy.Result = error;
-
-            RequestHandlerDelegate<Result> next = () => Task.FromResult(Result.Ok());
+            validatorSpy.Result = Error.ValidationError(new Dictionary<string, string>());
 
             var result = await middleware.Handle(
                 new DummyCommand(),
                 default,
-                next);
+                () => Task.FromResult(Result.Ok()));
 
-            Assert.False(result);
-            Assert.Same(error, result.Error);
+            result.ShouldBeAnError();
+            result.Error.ShouldBe(validatorSpy.Result.Error);
         }
 
         [Fact]
@@ -49,15 +46,14 @@ namespace WebTests.Services.Validation
             validatorSpy.Result = Result.Ok();
 
             var handlerResult = Result.Ok();
-            RequestHandlerDelegate<Result> next = () => Task.FromResult(handlerResult);
 
             var result = await middleware.Handle(
                 new DummyCommand(),
                 default,
-                next);
+                () => Task.FromResult(handlerResult));
 
-            Assert.True(result);
-            Assert.Same(handlerResult, result);
+            result.IsSuccess.ShouldBe(true);
+            result.ShouldBe(handlerResult);
         }
     }
 }

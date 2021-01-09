@@ -33,7 +33,7 @@ namespace Web.Features.Menus.RenameMenuCategory
 
             if (!menu.ContainsCategory(command.OldName))
             {
-                return Error.NotFound($"Category {command.OldName} doesn't exist for this menu.");
+                return Error.BadRequest($"Category {command.OldName} doesn't exist for this menu.");
             }
 
             if (command.OldName != command.NewName && menu.ContainsCategory(command.NewName))

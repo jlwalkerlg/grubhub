@@ -1,48 +1,49 @@
-using System;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
+using Shouldly;
 using Web.Features.Users;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Users.GetAuthUser
 {
-    public class GetAuthUserIntegrationTests : WebIntegrationTestBase
+    public class GetAuthUserIntegrationTests : IntegrationTestBase
     {
-        public GetAuthUserIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public GetAuthUserIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
-        public async Task It_Gets_The_Logged_In_User()
+        public async Task It_Returns_The_Authenticated_User()
         {
-            var user = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var user = new User();
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                user.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
+            var restaurant = new Restaurant()
+            {
+                ManagerId = user.Id,
+            };
 
-            var menu = new Menu(restaurant.Id);
+            fixture.Insert(user, restaurant);
 
-            await fixture.InsertDb(user, restaurant, menu);
-            await Login(user);
+            var response = await fixture.GetAuthenticatedClient(user.Id).Get("/auth/user");
 
-            var userDto = await Get<UserDto>("/auth/user");
-            Assert.Equal(user.Id.Value, userDto.Id);
-            Assert.Equal("Jordan Walker", userDto.Name);
-            Assert.Equal("walker.jlg@gmail.com", userDto.Email);
-            Assert.Equal(restaurant.Id.Value, userDto.RestaurantId);
-            Assert.Equal("Chow Main", userDto.RestaurantName);
+            response.StatusCode.ShouldBe(200);
+
+            var userDto = await response.GetData<UserDto>();
+
+            userDto.Id.ShouldBe(user.Id);
+            userDto.Name.ShouldBe(user.Name);
+            userDto.Email.ShouldBe(user.Email);
+            userDto.RestaurantId.ShouldBe(restaurant.Id);
+            userDto.RestaurantName.ShouldBe(restaurant.Name);
+            userDto.Role.ShouldBe(user.Role);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_The_User_Is_Not_Found()
+        {
+            var response = await fixture.GetAuthenticatedClient().Get("/auth/user");
+
+            response.StatusCode.ShouldBe(404);
         }
     }
 }

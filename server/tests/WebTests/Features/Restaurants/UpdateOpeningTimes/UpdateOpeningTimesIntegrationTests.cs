@@ -1,42 +1,30 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
-using Web.Features.Restaurants;
+using Shouldly;
 using Web.Features.Restaurants.UpdateOpeningTimes;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 {
-    public class UpdateOpeningTimesIntegrationTests : WebIntegrationTestBase
+    public class UpdateOpeningTimesIntegrationTests : IntegrationTestBase
     {
-        public UpdateOpeningTimesIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public UpdateOpeningTimesIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Updates_The_Opening_Times()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var manager = new User();
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
+            var restaurant = new Restaurant()
+            {
+                ManagerId = manager.Id,
+            };
 
-            var menu = new Menu(restaurant.Id);
-
-            await fixture.InsertDb(manager, restaurant, menu);
-            await Login(manager);
+            fixture.Insert(manager, restaurant);
 
             var request = new UpdateOpeningTimesRequest()
             {
@@ -44,19 +32,28 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
                 MondayClose = "16:00",
             };
 
-            var response = await Put($"/restaurants/{restaurant.Id.Value}/opening-times", request);
-            Assert.Equal(200, (int)response.StatusCode);
+            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
+                $"/restaurants/{restaurant.Id}/opening-times",
+                request);
 
-            var restaurantDto = await Get<RestaurantDto>($"/restaurants/{restaurant.Id.Value}");
-            Assert.NotNull(restaurantDto.OpeningTimes.Monday);
-            Assert.Null(restaurantDto.OpeningTimes.Tuesday);
-            Assert.Null(restaurantDto.OpeningTimes.Wednesday);
-            Assert.Null(restaurantDto.OpeningTimes.Thursday);
-            Assert.Null(restaurantDto.OpeningTimes.Friday);
-            Assert.Null(restaurantDto.OpeningTimes.Saturday);
-            Assert.Null(restaurantDto.OpeningTimes.Sunday);
-            Assert.Equal("10:30", restaurantDto.OpeningTimes.Monday.Open);
-            Assert.Equal("16:00", restaurantDto.OpeningTimes.Monday.Close);
+            response.StatusCode.ShouldBe(200);
+
+            var found = fixture.UseTestDbContext(db => db.Restaurants.Single());
+
+            found.MondayOpen.Value.ShouldBe(TimeSpan.Parse(request.MondayOpen));
+            found.MondayClose.Value.ShouldBe(TimeSpan.Parse(request.MondayClose));
+            found.TuesdayOpen.ShouldBeNull();
+            found.TuesdayClose.ShouldBeNull();
+            found.WednesdayOpen.ShouldBeNull();
+            found.WednesdayClose.ShouldBeNull();
+            found.ThursdayOpen.ShouldBeNull();
+            found.ThursdayClose.ShouldBeNull();
+            found.FridayOpen.ShouldBeNull();
+            found.FridayClose.ShouldBeNull();
+            found.SaturdayOpen.ShouldBeNull();
+            found.SaturdayClose.ShouldBeNull();
+            found.SundayOpen.ShouldBeNull();
+            found.SundayClose.ShouldBeNull();
         }
     }
 }

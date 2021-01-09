@@ -1,44 +1,31 @@
-using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
-using Web.Features.Restaurants;
+using Shouldly;
 using Web.Features.Restaurants.UpdateRestaurantDetails;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 {
-    public class UpdateRestaurantDetailsIntegrationTests : WebIntegrationTestBase
+    public class UpdateRestaurantDetailsIntegrationTests : IntegrationTestBase
     {
-        public UpdateRestaurantDetailsIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public UpdateRestaurantDetailsIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Updates_The_Restaurants_Details()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var manager = new User();
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
+            var restaurant = new Restaurant()
+            {
+                ManagerId = manager.Id,
+            };
 
-            var menu = new Menu(restaurant.Id);
+            fixture.Insert(manager, restaurant);
 
-            await fixture.InsertDb(manager, restaurant, menu);
-            await Login(manager);
-
-            var request = new UpdateRestaurantDetailsRequest
+            var request = new UpdateRestaurantDetailsRequest()
             {
                 Name = "Main Chow",
                 PhoneNumber = "09876543210",
@@ -48,17 +35,20 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
-            var response = await Put($"/restaurants/{restaurant.Id.Value}", request);
+            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
+                $"/restaurants/{restaurant.Id}",
+                request);
 
-            Assert.Equal(200, (int)response.StatusCode);
+            response.StatusCode.ShouldBe(200);
 
-            var restaurantDto = await Get<RestaurantDto>($"/restaurants/{restaurant.Id.Value}");
-            Assert.Equal("Main Chow", restaurantDto.Name);
-            Assert.Equal("09876543210", restaurantDto.PhoneNumber);
-            Assert.Equal(13m, restaurantDto.MinimumDeliverySpend);
-            Assert.Equal(3m, restaurantDto.DeliveryFee);
-            Assert.Equal(15, restaurantDto.MaxDeliveryDistanceInKm);
-            Assert.Equal(40, restaurantDto.EstimatedDeliveryTimeInMinutes);
+            var found = fixture.UseTestDbContext(db => db.Restaurants.Single());
+
+            found.Name.ShouldBe(request.Name);
+            found.PhoneNumber.ShouldBe(request.PhoneNumber);
+            found.MinimumDeliverySpend.ShouldBe(request.MinimumDeliverySpend);
+            found.DeliveryFee.ShouldBe(request.DeliveryFee);
+            found.MaxDeliveryDistanceInKm.ShouldBe(request.MaxDeliveryDistanceInKm);
+            found.EstimatedDeliveryTimeInMinutes.ShouldBe(request.EstimatedDeliveryTimeInMinutes);
         }
     }
 }

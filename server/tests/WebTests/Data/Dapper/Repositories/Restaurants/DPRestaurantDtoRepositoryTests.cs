@@ -1,41 +1,29 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Data.Dapper.Repositories.Restaurants;
 using Web.Domain;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
+using Web.Features.Restaurants;
 using WebTests.Doubles;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Data.Dapper.Repositories.Restaurants
 {
-    public class DPRestaurantDtoRepositoryTests : RepositoryTestBase
+    public class DPRestaurantDtoRepositoryTests : IntegrationTestBase
     {
         private readonly ClockStub clock;
         private readonly DPRestaurantDtoRepository repository;
 
-        public DPRestaurantDtoRepositoryTests()
+        public DPRestaurantDtoRepositoryTests(IntegrationTestFixture fixture) : base(fixture)
         {
             clock = new ClockStub();
 
             repository = new DPRestaurantDtoRepository(
-                new TestDbConnectionFactory(TestConfig.InfrastructureTestDbConnectionString),
+                new TestDbConnectionFactory(),
                 clock
             );
-        }
-
-        [Fact]
-        public async Task It_Gets_A_Restaurant_By_Id()
-        {
-            var restaurant = await AddRestaurant();
-
-            var cuisine = new Cuisine("Pizza");
-
-            await context.AddAsync(cuisine);
-            await context.SaveChangesAsync();
-
-            var found = await repository.GetById(restaurant.Id.Value);
-            Assert.True(restaurant.IsEqual(found));
         }
 
         [Fact]
@@ -43,57 +31,68 @@ namespace WebTests.Data.Dapper.Repositories.Restaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
+            var m1 = new User();
+            var m2 = new User();
+            var m3 = new User();
+            var m4 = new User();
+
+            var italian = new Cuisine { Name = "Italian" };
+
             // not approved
-            var r1 = await AddRestaurant(
-                latitude: 54.0f,
-                longitude: -2.0f,
-                maxDeliveryDistance: 5,
-                openingTimes: new OpeningTimes()
-                {
-                    Tuesday = OpeningHours.Parse("00:00", null),
-                },
-                approved: false);
+            var r1 = new Restaurant()
+            {
+                ManagerId = m1.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 5,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Status = "PendingApproval",
+            };
 
             // not open
-            var r2 = await AddRestaurant(
-                latitude: 54.0f,
-                longitude: -2.0f,
-                maxDeliveryDistance: 5,
-                openingTimes: new OpeningTimes(),
-                approved: true);
+            var r2 = new Restaurant()
+            {
+                ManagerId = m2.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 5,
+                TuesdayOpen = null,
+                TuesdayClose = null,
+                Status = "Approved",
+            };
 
             // out of range
-            var r3 = await AddRestaurant(
-                latitude: 55.0f,
-                longitude: -2.0f,
-                maxDeliveryDistance: 5,
-                openingTimes: new OpeningTimes()
-                {
-                    Tuesday = OpeningHours.Parse("00:00", null),
-                },
-                approved: true);
+            var r3 = new Restaurant()
+            {
+                ManagerId = m3.Id,
+                Latitude = 55.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 5,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Status = "Approved",
+            };
 
             // expected
-            var r4 = await AddRestaurant(
-                latitude: 54.0f,
-                longitude: -2.0f,
-                maxDeliveryDistance: 5,
-                openingTimes: new OpeningTimes()
-                {
-                    Tuesday = OpeningHours.Parse("00:00", null),
-                },
-                approved: true);
+            var r4 = new Restaurant()
+            {
+                ManagerId = m4.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 5,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Status = "Approved",
+                Cuisines = new() { italian },
+            };
 
-            var cuisine = new Cuisine("Pizza");
-            r4.SetCuisines(cuisine);
-
-            await context.AddAsync(cuisine);
-            await context.SaveChangesAsync();
+            fixture.Insert(m1, m2, m3, m4, r1, r2, r3, r4, italian);
 
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f));
 
-            Assert.Single(restaurants);
-            Assert.True(r4.IsEqual(restaurants[0]));
+            restaurants.ShouldHaveSingleItem();
+            restaurants.Single().Id.ShouldBe(r4.Id);
         }
 
         [Fact]
@@ -101,27 +100,53 @@ namespace WebTests.Data.Dapper.Repositories.Restaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var r1 = await AddRestaurant(
-                latitude: 54.0f,
-                longitude: -2.15f);
-            var r2 = await AddRestaurant(
-                latitude: 54.0f,
-                longitude: -2.0f);
-            var r3 = await AddRestaurant(
-                latitude: 54.0f,
-                longitude: -2.1f);
+            var m1 = new User();
+            var m2 = new User();
+            var m3 = new User();
 
-            await context.SaveChangesAsync();
-
-            var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
+            var r1 = new Restaurant()
             {
-                SortBy = "distance",
-            });
+                ManagerId = m1.Id,
+                Latitude = 54.0f,
+                Longitude = -2.15f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+            };
 
-            Assert.Equal(3, restaurants.Count);
-            Assert.True(r2.IsEqual(restaurants[0]));
-            Assert.True(r3.IsEqual(restaurants[1]));
-            Assert.True(r1.IsEqual(restaurants[2]));
+            var r2 = new Restaurant()
+            {
+                ManagerId = m2.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+            };
+
+            var r3 = new Restaurant()
+            {
+                ManagerId = m3.Id,
+                Latitude = 54.0f,
+                Longitude = -2.1f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+            };
+
+            fixture.Insert(m1, m2, m3, r1, r2, r3);
+
+            var restaurants = await repository.Search(
+                new Coordinates(54.0f, -2.0f),
+                new RestaurantSearchOptions()
+                {
+                    SortBy = "distance",
+                });
+
+            restaurants.Count.ShouldBe(3);
+            restaurants[0].Id.ShouldBe(r2.Id);
+            restaurants[1].Id.ShouldBe(r3.Id);
+            restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -129,21 +154,56 @@ namespace WebTests.Data.Dapper.Repositories.Restaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var r1 = await AddRestaurant(minDeliverySpend: 15.00m);
-            var r2 = await AddRestaurant(minDeliverySpend: 6.00m);
-            var r3 = await AddRestaurant(minDeliverySpend: 10.00m);
+            var m1 = new User();
+            var m2 = new User();
+            var m3 = new User();
 
-            await context.SaveChangesAsync();
-
-            var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
+            var r1 = new Restaurant()
             {
-                SortBy = "min_order",
-            });
+                ManagerId = m1.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                MinimumDeliverySpend = 15.00m,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+            };
 
-            Assert.Equal(3, restaurants.Count);
-            Assert.True(r2.IsEqual(restaurants[0]));
-            Assert.True(r3.IsEqual(restaurants[1]));
-            Assert.True(r1.IsEqual(restaurants[2]));
+            var r2 = new Restaurant()
+            {
+                ManagerId = m2.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                MinimumDeliverySpend = 6.00m,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+            };
+
+            var r3 = new Restaurant()
+            {
+                ManagerId = m3.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                MinimumDeliverySpend = 10.00m,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+            };
+
+            fixture.Insert(m1, m2, m3, r1, r2, r3);
+
+            var restaurants = await repository.Search(
+                new Coordinates(54.0f, -2.0f),
+                new RestaurantSearchOptions()
+                {
+                    SortBy = "min_order",
+                });
+
+            restaurants.Count.ShouldBe(3);
+            restaurants[0].Id.ShouldBe(r2.Id);
+            restaurants[1].Id.ShouldBe(r3.Id);
+            restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -151,21 +211,57 @@ namespace WebTests.Data.Dapper.Repositories.Restaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var r1 = await AddRestaurant(deliveryFee: 3.00m);
-            var r2 = await AddRestaurant(deliveryFee: 0);
-            var r3 = await AddRestaurant(deliveryFee: 1.50m);
+            var m1 = new User();
+            var m2 = new User();
+            var m3 = new User();
 
-            await context.SaveChangesAsync();
-
-            var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
+            var r1 = new Restaurant()
             {
-                SortBy = "delivery_fee",
-            });
+                ManagerId = m1.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                DeliveryFee = 3.00m,
+            };
 
-            Assert.Equal(3, restaurants.Count);
-            Assert.True(r2.IsEqual(restaurants[0]));
-            Assert.True(r3.IsEqual(restaurants[1]));
-            Assert.True(r1.IsEqual(restaurants[2]));
+            var r2 = new Restaurant()
+            {
+                ManagerId = m2.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                DeliveryFee = 0,
+            };
+
+            var r3 = new Restaurant()
+            {
+                ManagerId = m3.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                DeliveryFee = 1.50m,
+            };
+
+
+            fixture.Insert(m1, m2, m3, r1, r2, r3);
+
+            var restaurants = await repository.Search(
+                new Coordinates(54.0f, -2.0f),
+                new RestaurantSearchOptions()
+                {
+                    SortBy = "delivery_fee",
+                });
+
+            restaurants.Count.ShouldBe(3);
+            restaurants[0].Id.ShouldBe(r2.Id);
+            restaurants[1].Id.ShouldBe(r3.Id);
+            restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -173,21 +269,56 @@ namespace WebTests.Data.Dapper.Repositories.Restaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var r1 = await AddRestaurant(deliveryTime: 60);
-            var r2 = await AddRestaurant(deliveryTime: 30);
-            var r3 = await AddRestaurant(deliveryTime: 40);
+            var m1 = new User();
+            var m2 = new User();
+            var m3 = new User();
 
-            await context.SaveChangesAsync();
-
-            var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
+            var r1 = new Restaurant()
             {
-                SortBy = "time",
-            });
+                ManagerId = m1.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                EstimatedDeliveryTimeInMinutes = 60,
+            };
 
-            Assert.Equal(3, restaurants.Count);
-            Assert.True(r2.IsEqual(restaurants[0]));
-            Assert.True(r3.IsEqual(restaurants[1]));
-            Assert.True(r1.IsEqual(restaurants[2]));
+            var r2 = new Restaurant()
+            {
+                ManagerId = m2.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                EstimatedDeliveryTimeInMinutes = 30,
+            };
+
+            var r3 = new Restaurant()
+            {
+                ManagerId = m3.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                EstimatedDeliveryTimeInMinutes = 40,
+            };
+
+            fixture.Insert(m1, m2, m3, r1, r2, r3);
+
+            var restaurants = await repository.Search(
+                new Coordinates(54.0f, -2.0f),
+                new RestaurantSearchOptions()
+                {
+                    SortBy = "time",
+                });
+
+            restaurants.Count.ShouldBe(3);
+            restaurants[0].Id.ShouldBe(r2.Id);
+            restaurants[1].Id.ShouldBe(r3.Id);
+            restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -195,85 +326,59 @@ namespace WebTests.Data.Dapper.Repositories.Restaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var r1 = await AddRestaurant();
-            var r2 = await AddRestaurant();
-            var r3 = await AddRestaurant();
+            var m1 = new User();
+            var m2 = new User();
+            var m3 = new User();
 
-            var thai = new Cuisine("Thai");
-            var italian = new Cuisine("Italian");
-            var indian = new Cuisine("Indian");
+            var thai = new Cuisine() { Name = "Thai" };
+            var italian = new Cuisine() { Name = "Italian" };
+            var indian = new Cuisine() { Name = "Indian" };
 
-            r1.SetCuisines(thai, italian);
-            r2.SetCuisines(thai);
-            r3.SetCuisines(indian);
-
-            await context.SaveChangesAsync();
-
-            var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f), new()
+            var r1 = new Restaurant()
             {
-                Cuisines = new() { "Thai", "Italian" }
-            });
-
-            Assert.Equal(2, restaurants.Count);
-            Assert.Single(restaurants, dto => r1.IsEqual(dto));
-            Assert.Single(restaurants, dto => r2.IsEqual(dto));
-        }
-
-        private async Task<Restaurant> AddRestaurant(
-            float latitude = 54.0f,
-            float longitude = -2.0f,
-            int maxDeliveryDistance = 10,
-            OpeningTimes openingTimes = null,
-            bool approved = true,
-            decimal minDeliverySpend = 10.00m,
-            decimal deliveryFee = 0,
-            int deliveryTime = 40)
-        {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                Guid.NewGuid().ToString(),
-                new Email(Guid.NewGuid() + "@gmail.com"),
-                Guid.NewGuid().ToString()
-            );
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                Guid.NewGuid().ToString(),
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, MN12 1NM"),
-                new Coordinates(latitude, longitude)
-            )
-            {
-                OpeningTimes = openingTimes,
-                MaxDeliveryDistanceInKm = maxDeliveryDistance,
-                MinimumDeliverySpend = new Money(minDeliverySpend),
-                DeliveryFee = new Money(deliveryFee),
-                EstimatedDeliveryTimeInMinutes = deliveryTime,
+                ManagerId = m1.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Cuisines = new() { thai, italian },
             };
 
-            if (openingTimes == null)
+            var r2 = new Restaurant()
             {
-                restaurant.OpeningTimes = new OpeningTimes()
+                ManagerId = m2.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Cuisines = new() { thai },
+            };
+
+            var r3 = new Restaurant()
+            {
+                ManagerId = m3.Id,
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 10,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Cuisines = new() { indian },
+            };
+
+            fixture.Insert(m1, m2, m3, r1, r2, r3);
+
+            var restaurants = await repository.Search(
+                new Coordinates(54.0f, -2.0f),
+                new RestaurantSearchOptions()
                 {
-                    Monday = OpeningHours.Parse("00:00", null),
-                    Tuesday = OpeningHours.Parse("00:00", null),
-                    Wednesday = OpeningHours.Parse("00:00", null),
-                    Thursday = OpeningHours.Parse("00:00", null),
-                    Friday = OpeningHours.Parse("00:00", null),
-                    Saturday = OpeningHours.Parse("00:00", null),
-                    Sunday = OpeningHours.Parse("00:00", null),
-                };
-            }
+                    Cuisines = new() { "Thai", "Italian" }
+                });
 
-            if (approved)
-            {
-                restaurant.Approve();
-            }
-
-            await context.AddRangeAsync(manager, restaurant);
-
-            return restaurant;
+            restaurants.Count.ShouldBe(2);
+            restaurants.ShouldContain(x => x.Id == r1.Id);
+            restaurants.ShouldContain(x => x.Id == r2.Id);
         }
     }
 }

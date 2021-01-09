@@ -1,65 +1,77 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Menus.AddMenuItem;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Menus.AddMenuItem
 {
-    public class AddMenuItemActionTests : WebActionTestBase
+    public class AddMenuItemActionTests : HttpTestBase
     {
-        public AddMenuItemActionTests(WebActionTestFixture fixture) : base(fixture)
+        public AddMenuItemActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await Post($"/restaurants/{Guid.NewGuid()}/menu/items", new AddMenuItemRequest
+            var request = new AddMenuItemRequest()
             {
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 10m,
-            });
+            };
 
-            Assert.Equal(401, (int)response.StatusCode);
-        }
+            var response = await fixture.GetClient().Post(
+                $"/restaurants/{Guid.NewGuid()}/menu/items",
+                request);
 
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            await Login();
-
-            var response = await Post($"/restaurants/{Guid.NewGuid()}/menu/items", new AddMenuItemRequest
-            {
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
-                Description = "Cheese & tomato",
-                Price = 10m,
-            });
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(401);
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            await Login();
-
-            var response = await Post($"/restaurants/{Guid.NewGuid()}/menu/items", new AddMenuItemRequest
+            var request = new AddMenuItemRequest()
             {
                 CategoryName = "",
                 ItemName = "",
                 Description = "",
                 Price = -10m,
-            });
+            };
+
+            var response = await fixture.GetAuthenticatedClient().Post(
+                $"/restaurants/{Guid.NewGuid()}/menu/items",
+                request);
 
             var errors = await response.GetErrors();
-            Assert.True(errors.ContainsKey("categoryName"));
-            Assert.True(errors.ContainsKey("itemName"));
-            Assert.True(errors.ContainsKey("description"));
-            Assert.True(errors.ContainsKey("price"));
+
+            errors.ShouldContainKey("categoryName");
+            errors.ShouldContainKey("itemName");
+            errors.ShouldContainKey("description");
+            errors.ShouldContainKey("price");
+        }
+
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            var request = new AddMenuItemRequest()
+            {
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
+                Description = "Cheese & tomato",
+                Price = 10m,
+            };
+
+            var response = await fixture.GetAuthenticatedClient().Post(
+                $"/restaurants/{Guid.NewGuid()}/menu/items",
+                request);
+
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+
+            response.StatusCode.ShouldBe(400);
         }
     }
 }

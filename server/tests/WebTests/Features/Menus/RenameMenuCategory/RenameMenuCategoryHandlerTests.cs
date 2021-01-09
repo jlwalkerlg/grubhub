@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -26,7 +27,23 @@ namespace WebTests.Features.Menus.RenameMenuCategory
         }
 
         [Fact]
-        public async Task It_Renames_A_Menu_Category()
+        public async Task It_Fails_If_The_Menu_Is_Not_Found()
+        {
+            var command = new RenameMenuCategoryCommand()
+            {
+                RestaurantId = Guid.NewGuid(),
+                OldName = "Pizza",
+                NewName = "Curry",
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_The_User_Is_Unauthorised()
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
@@ -49,40 +66,23 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            authenticatorSpy.SignIn(Guid.NewGuid());
 
-            var command = new RenameMenuCategoryCommand
+            var command = new RenameMenuCategoryCommand()
             {
-                RestaurantId = restaurant.Id.Value,
+                RestaurantId = restaurant.Id,
                 OldName = "Pizza",
                 NewName = "Curry",
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.True(result);
-            Assert.False(menu.ContainsCategory("Pizza"));
-            Assert.True(menu.ContainsCategory("Curry"));
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.Unauthorised);
         }
 
         [Fact]
-        public async Task It_Fails_If_Menu_Not_Found()
-        {
-            var command = new RenameMenuCategoryCommand
-            {
-                RestaurantId = Guid.NewGuid(),
-                OldName = "Pizza",
-                NewName = "Curry",
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
-        }
-
-        [Fact]
-        public async Task It_Fails_If_Category_Not_Found()
+        public async Task It_Fails_If_The_Category_Doesnt_Exist()
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
@@ -106,21 +106,21 @@ namespace WebTests.Features.Menus.RenameMenuCategory
 
             authenticatorSpy.SignIn(manager);
 
-            var command = new RenameMenuCategoryCommand
+            var command = new RenameMenuCategoryCommand()
             {
-                RestaurantId = restaurant.Id.Value,
+                RestaurantId = restaurant.Id,
                 OldName = "Pizza",
                 NewName = "Curry",
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
 
         [Fact]
-        public async Task It_Fails_If_Category_Already_Exists()
+        public async Task It_Fails_If_The_Category_Already_Exists()
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
@@ -146,56 +146,17 @@ namespace WebTests.Features.Menus.RenameMenuCategory
 
             authenticatorSpy.SignIn(manager);
 
-            var command = new RenameMenuCategoryCommand
+            var command = new RenameMenuCategoryCommand()
             {
-                RestaurantId = restaurant.Id.Value,
+                RestaurantId = restaurant.Id,
                 OldName = "Pizza",
                 NewName = "Curry",
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
-        }
-
-        [Fact]
-        public async Task Unauthorised_If_Not_The_Restaurant_Manager()
-        {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
-                new Coordinates(1, 1));
-
-            var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
-
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
-            await unitOfWorkSpy.Restaurants.Add(restaurant);
-            await unitOfWorkSpy.Menus.Add(menu);
-
-            authenticatorSpy.SignIn(manager);
-
-            var command = new RenameMenuCategoryCommand
-            {
-                RestaurantId = restaurant.Id.Value,
-                OldName = "Pizza",
-                NewName = "Curry",
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.False(result);
-            Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
     }
 }

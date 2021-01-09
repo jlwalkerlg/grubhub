@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Restaurants.Login;
 using Web.Features.Users.Login;
 using Xunit;
@@ -7,12 +8,7 @@ namespace WebTests.Features.Users.Login
 {
     public class LoginValidatorTests
     {
-        private readonly LoginValidator validator;
-
-        public LoginValidatorTests()
-        {
-            validator = new LoginValidator();
-        }
+        private readonly LoginValidator validator = new();
 
         [Theory]
         [InlineData(null)]
@@ -21,16 +17,15 @@ namespace WebTests.Features.Users.Login
         [InlineData("not_an_email")]
         public async Task Disallows_Invalid_Emails(string email)
         {
-            var command = new LoginCommand
+            var command = new LoginCommand()
             {
                 Email = email,
-                Password = "password123",
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Email)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.Email));
         }
 
         [Theory]
@@ -39,16 +34,15 @@ namespace WebTests.Features.Users.Login
         [InlineData(" ")]
         public async Task Disallows_Invalid_Passwords(string password)
         {
-            var command = new LoginCommand
+            var command = new LoginCommand()
             {
-                Email = "walker.jlg@gmail.com",
                 Password = password,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Password)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.Password));
         }
     }
 }

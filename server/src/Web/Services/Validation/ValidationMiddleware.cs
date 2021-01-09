@@ -22,20 +22,19 @@ namespace Web.Services.Validation
             CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
-            if (!validators.Any())
+            if (validators.Any())
             {
-                return await next();
-            }
+                var validationResult = await validators
+                    .First()
+                    .Validate(request);
 
-            var validationResult = await validators
-                .First()
-                .Validate(request);
-
-            if (!validationResult)
-            {
-                var result = new TResponse();
-                result.Error = validationResult.Error;
-                return result;
+                if (!validationResult)
+                {
+                    return new TResponse()
+                    {
+                        Error = validationResult.Error
+                    };
+                }
             }
 
             return await next();

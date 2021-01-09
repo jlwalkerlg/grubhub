@@ -1,53 +1,51 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
-using Web.Features.Menus;
+using Shouldly;
 using Web.Features.Menus.AddMenuCategory;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Menus.AddMenuCategory
 {
-    public class AddMenuCategoryIntegrationTests : WebIntegrationTestBase
+    public class AddMenuCategoryIntegrationTests : IntegrationTestBase
     {
-        public AddMenuCategoryIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public AddMenuCategoryIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Adds_A_Category_To_The_Menu()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var user = new User();
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
+            var restaurant = new Restaurant()
+            {
+                ManagerId = user.Id,
+            };
 
-            var menu = new Menu(restaurant.Id);
+            var menu = new Menu()
+            {
+                Id = 1,
+                RestaurantId = restaurant.Id,
+            };
 
-            await fixture.InsertDb(manager, restaurant, menu);
-            await Login(manager);
+            fixture.Insert(user, restaurant, menu);
 
-            var response = await Post($"/restaurants/{restaurant.Id.Value}/menu/categories", new AddMenuCategoryRequest
+            var request = new AddMenuCategoryRequest()
             {
                 Name = "Pizza",
-            });
+            };
 
-            Assert.Equal(201, (int)response.StatusCode);
+            var response = await fixture.GetAuthenticatedClient(user.Id).Post(
+                $"/restaurants/{restaurant.Id}/menu/categories",
+                request);
 
-            var menuDto = await Get<MenuDto>($"/restaurants/{restaurant.Id.Value}/menu");
-            Assert.Equal("Pizza", menuDto.Categories.Single().Name);
+            response.StatusCode.ShouldBe(201);
+
+            var found = fixture.UseTestDbContext(db => db.MenuCategories.Single());
+
+            found.MenuId.ShouldBe(menu.Id);
+            found.Name.ShouldBe(request.Name);
         }
     }
 }

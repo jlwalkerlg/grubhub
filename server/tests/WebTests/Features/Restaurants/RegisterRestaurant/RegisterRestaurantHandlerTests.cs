@@ -1,111 +1,87 @@
-using System.Linq;
+using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web;
 using Web.Domain;
+using Web.Domain.Users;
 using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Services.Geocoding;
 using WebTests.Doubles;
 using Xunit;
+using static Web.Error;
 
 namespace WebTests.Features.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantHandlerTests
     {
-        private readonly HasherFake hasherFake;
-
         private readonly UnitOfWorkSpy unitOfWorkSpy;
-        private readonly RestaurantRepositorySpy restaurantRepositorySpy;
-        private readonly RestaurantManagerRepositorySpy restaurantManagerRepositorySpy;
-        private readonly EventRepositorySpy eventRepositorySpy;
-
         private readonly GeocoderSpy geocoderSpy;
-
         private readonly RegisterRestaurantHandler handler;
 
         public RegisterRestaurantHandlerTests()
         {
-            hasherFake = new HasherFake();
-
             unitOfWorkSpy = new UnitOfWorkSpy();
-            restaurantRepositorySpy = unitOfWorkSpy.RestaurantRepositorySpy;
-            restaurantManagerRepositorySpy = unitOfWorkSpy.RestaurantManagerRepositorySpy;
-            eventRepositorySpy = unitOfWorkSpy.EventRepositorySpy;
 
             geocoderSpy = new GeocoderSpy();
 
             handler = new RegisterRestaurantHandler(
-                hasherFake,
+                new HasherFake(),
                 unitOfWorkSpy,
                 geocoderSpy,
                 new ClockStub());
         }
 
         [Fact]
-        public async Task It_Creates_A_New_Restaurant()
+        public async Task It_Returns_A_Validation_Error_If_The_Email_Is_Already_Taken()
         {
-            geocoderSpy.Result = Result.Ok(new GeocodingResult
+            await unitOfWorkSpy.UserRepositorySpy.Add(new RestaurantManager(
+                new UserId(Guid.NewGuid()),
+                "Jordan Walker",
+                new Email("taken@gmail.com"),
+                "password123"));
+
+            geocoderSpy.Result = Result.Ok(new GeocodingResult()
             {
-                FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
-                Coordinates = new Coordinates(1, 1),
+                FormattedAddress = "1 Maine Road, Manchester, UK",
+                Coordinates = new Coordinates(54.0f, -2.0f),
             });
 
-            var command = new RegisterRestaurantCommand
+            var command = new RegisterRestaurantCommand()
             {
                 ManagerName = "Jordan Walker",
-                ManagerEmail = "test@email.com",
+                ManagerEmail = "taken@gmail.com",
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
                 RestaurantPhoneNumber = "01234567890",
-                Address = "1 Maine Road, Manchester, UK"
+                Address = "1 Maine Road, Manchester, UK",
             };
 
             var result = await handler.Handle(command, default);
 
-            var manager = restaurantManagerRepositorySpy.Managers.Single();
-            var hashedPassword = hasherFake.Hash(command.ManagerPassword);
-            Assert.Equal(command.ManagerName, manager.Name);
-            Assert.Equal(command.ManagerEmail, manager.Email.Address);
-            Assert.Equal(hashedPassword, manager.Password);
-
-            var restaurant = restaurantRepositorySpy.Restaurants.Single();
-            Assert.Equal(manager.Id, restaurant.ManagerId);
-            Assert.Equal(command.RestaurantName, restaurant.Name);
-            Assert.Equal(command.RestaurantPhoneNumber, restaurant.PhoneNumber.Number);
-            Assert.Equal(command.Address, geocoderSpy.SearchAddress);
-            Assert.Equal(restaurant.Address.Value, geocoderSpy.Result.Value.FormattedAddress);
-
-            var restaurantRegisteredEvent = (RestaurantRegisteredEvent)eventRepositorySpy
-                .Events
-                .Single();
-            Assert.Equal(restaurant.Id, restaurantRegisteredEvent.RestaurantId);
-            Assert.Equal(manager.Id, restaurantRegisteredEvent.ManagerId);
-
-            Assert.True(unitOfWorkSpy.Commited);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.ValidationError);
+            result.Error.Errors.ShouldContainKey(nameof(command.ManagerEmail));
         }
 
         [Fact]
-        public async Task It_Creates_An_Empty_Restaurant_Menu()
+        public async Task It_Fails_If_Geocoding_Fails()
         {
-            geocoderSpy.Result = Result.Ok(new GeocodingResult
-            {
-                FormattedAddress = "1 Maine Road, Manchester, MN121NM, UK",
-                Coordinates = new Coordinates(1, 1),
-            });
+            geocoderSpy.Result = Error.Internal("Geocoding failed.");
 
-            var command = new RegisterRestaurantCommand
+            var command = new RegisterRestaurantCommand()
             {
                 ManagerName = "Jordan Walker",
                 ManagerEmail = "test@email.com",
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
                 RestaurantPhoneNumber = "01234567890",
-                Address = "1 Maine Road, Manchester, UK"
+                Address = "1 Maine Road, Manchester, UK",
             };
-            await handler.Handle(command, default);
 
-            var restaurant = restaurantRepositorySpy.Restaurants.Single();
-            var menu = unitOfWorkSpy.MenuRepositorySpy.Menus.First();
-            Assert.Equal(menu.RestaurantId, restaurant.Id);
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
     }
 }

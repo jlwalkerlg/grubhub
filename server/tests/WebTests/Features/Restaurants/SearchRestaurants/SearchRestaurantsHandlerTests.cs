@@ -1,10 +1,7 @@
-using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web;
-using Web.Domain;
-using Web.Features.Restaurants;
 using Web.Features.Restaurants.SearchRestaurants;
-using Web.Services.Geocoding;
 using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
@@ -31,7 +28,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("fkrjengk")]
-        public async Task It_Fails_If_Postcode_Is_Invalid(string postcode)
+        public async Task It_Fails_If_The_Postcode_Is_Invalid(string postcode)
         {
             var query = new SearchRestaurantsQuery()
             {
@@ -40,14 +37,14 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var result = await handler.Handle(query, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
 
         [Fact]
         public async Task It_Fails_If_Geocoding_Fails()
         {
-            geocoder.Result = Error.Internal("Invalid postal code.");
+            geocoder.Result = Error.Internal("Geocoding failed.");
 
             var query = new SearchRestaurantsQuery()
             {
@@ -56,36 +53,8 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var result = await handler.Handle(query, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
-        }
-
-        [Fact]
-        public async Task It_Returns_The_Restaurants()
-        {
-            geocoder.Result = Result.Ok(new GeocodingResult()
-            {
-                FormattedAddress = "",
-                Coordinates = new Coordinates(53, -2),
-            });
-
-            restaurantDtoRepositoryFake.Restaurants.Add(new RestaurantDto()
-            {
-                Id = Guid.NewGuid(),
-            });
-
-            var query = new SearchRestaurantsQuery()
-            {
-                Postcode = "MN12 1NM"
-            };
-
-            var result = await handler.Handle(query, default);
-
-            Assert.True(result);
-            Assert.Equal(53, restaurantDtoRepositoryFake.SearchCoordinates.Latitude);
-            Assert.Equal(-2, restaurantDtoRepositoryFake.SearchCoordinates.Longitude);
-            Assert.Single(result.Value);
-            Assert.Same(restaurantDtoRepositoryFake.Restaurants[0], result.Value[0]);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
     }
 }

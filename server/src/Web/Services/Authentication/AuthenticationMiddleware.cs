@@ -29,9 +29,10 @@ namespace Web.Services.Authentication
 
             if (!authenticator.IsAuthenticated)
             {
-                var result = new TResponse();
-                result.Error = Error.Unauthenticated();
-                return result;
+                return new TResponse()
+                {
+                    Error = Error.Unauthenticated()
+                };
             }
 
             return await next();

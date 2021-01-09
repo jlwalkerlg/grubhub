@@ -1,50 +1,52 @@
-using System;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Users;
+using Shouldly;
 using Web.Features.Users.UpdateAuthUserDetails;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Users.UpdateAuthUserDetails
 {
-    public class UpdateAuthUserDetailsActionTests : WebActionTestBase
+    public class UpdateAuthUserDetailsActionTests : HttpTestBase
     {
-        public UpdateAuthUserDetailsActionTests(WebActionTestFixture fixture) : base(fixture)
+        public UpdateAuthUserDetailsActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await Put("/auth/user", new UpdateAuthUserDetailsCommand
+            var request = new UpdateAuthUserDetailsCommand()
             {
                 Name = "Bruno",
                 Email = "bruno@gmail.com",
-            });
+            };
 
-            Assert.Equal(401, (int)response.StatusCode);
+            var response = await fixture.GetClient().Put(
+                "/auth/user",
+                request);
+
+            response.StatusCode.ShouldBe(401);
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            var user = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var user = new User();
 
-            await Login(user);
-
-            var response = await Put("/auth/user", new UpdateAuthUserDetailsCommand
+            var request = new UpdateAuthUserDetailsCommand()
             {
                 Name = "",
                 Email = "",
-            });
+            };
+
+            var response = await fixture.GetAuthenticatedClient(user.Id).Put(
+                "/auth/user",
+                request);
 
             var errors = await response.GetErrors();
-            Assert.True(errors.ContainsKey("name"));
-            Assert.True(errors.ContainsKey("email"));
+
+            errors.ShouldContainKey("name");
+            errors.ShouldContainKey("email");
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
@@ -26,90 +27,50 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
         }
 
         [Fact]
-        public async Task It_Updates_The_Restaurants_Cuisines()
+        public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
         {
-            var managerId = new UserId(Guid.NewGuid());
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                managerId,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, MN12 1NM"),
-                new Coordinates(54.0f, -2.0f)
-            );
-
-            var cuisine = new Cuisine("Pizza");
-
-            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
-            await unitOfWorkSpy.CuisineRepositorySpy.Add(cuisine);
-
-            authenticatorSpy.SignIn(managerId);
-
-            var command = new UpdateCuisinesCommand()
-            {
-                RestaurantId = restaurant.Id.Value,
-                Cuisines = new() { "Pizza" },
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.True(result);
-
-            Assert.Single(restaurant.Cuisines);
-            Assert.Equal("Pizza", restaurant.Cuisines[0].Name);
-
-            Assert.True(unitOfWorkSpy.Commited);
-        }
-
-        [Fact]
-        public async Task It_Returns_An_Error_If_Restaurant_Not_Found()
-        {
-            var cuisine = new Cuisine("Pizza");
-
-            await unitOfWorkSpy.CuisineRepositorySpy.Add(cuisine);
-
-            authenticatorSpy.SignIn(Guid.NewGuid());
-
             var command = new UpdateCuisinesCommand()
             {
                 RestaurantId = Guid.NewGuid(),
-                Cuisines = new() { "Pizza" },
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
         }
 
         [Fact]
-        public async Task It_Requires_Authorization()
+        public async Task It_Fails_If_The_User_Is_Unauthorised()
         {
+            var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
+                "Jordan Walker",
+                new Email("walker.jlg@gmail.com"),
+                "password123");
+
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Madchester, MN12 1NM"),
                 new Coordinates(1, 2));
 
-            var cuisine = new Cuisine("Pizza");
-
+            await unitOfWorkSpy.RestaurantManagerRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
-            await unitOfWorkSpy.CuisineRepositorySpy.Add(cuisine);
 
             authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new UpdateCuisinesCommand()
             {
-                RestaurantId = restaurant.Id.Value,
+                RestaurantId = restaurant.Id,
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.Unauthorised);
         }
     }
 }

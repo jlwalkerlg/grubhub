@@ -1,45 +1,54 @@
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Users.Login;
 using Xunit;
 
 namespace WebTests.Features.Users.Login
 {
-    public class LoginActionTests : WebActionTestBase
+    public class LoginActionTests : HttpTestBase
     {
-        public LoginActionTests(WebActionTestFixture fixture) : base(fixture)
+        public LoginActionTests(HttpTestFixture fixture) : base(fixture)
         {
-        }
-
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            var response = await Post("/auth/login", new LoginCommand
-            {
-                Email = "walker.jlg@gmail.com",
-                Password = "password123",
-            });
-
-            Assert.Equal(400, (int)response.StatusCode);
-            Assert.NotNull(await response.GetErrorMessage());
-
-            var authResponse = await Get("/auth/user");
-            Assert.Equal(401, (int)authResponse.StatusCode);
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            var response = await Post("/auth/login", new LoginCommand
+            var request = new LoginCommand()
             {
                 Email = "",
                 Password = "",
-            });
+            };
 
-            Assert.Equal(422, (int)response.StatusCode);
+            var response = await fixture.GetClient().Post(
+                "/auth/login",
+                request);
+
+            response.StatusCode.ShouldBe(422);
 
             var errors = await response.GetErrors();
-            Assert.True(errors.ContainsKey("email"));
-            Assert.True(errors.ContainsKey("password"));
+
+            errors.ShouldContainKey("email");
+            errors.ShouldContainKey("password");
+        }
+
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            var request = new LoginCommand()
+            {
+                Email = "walker.jlg@gmail.com",
+                Password = "password123",
+            };
+
+            var response = await fixture.GetClient().Post(
+                "/auth/login",
+                request);
+
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+
+            (await fixture.GetClient().Get("/auth/user")).StatusCode.ShouldBe(401);
         }
     }
 }

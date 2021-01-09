@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
@@ -36,15 +37,16 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            var command = new ApproveRestaurantCommand
+            var command = new ApproveRestaurantCommand()
             {
-                RestaurantId = restaurant.Id.Value,
+                RestaurantId = restaurant.Id,
             };
+
             var result = await handler.Handle(command, default);
 
-            Assert.True(result);
-            Assert.Equal(RestaurantStatus.Approved, restaurant.Status);
-            Assert.True(unitOfWorkSpy.Commited);
+            result.IsSuccess.ShouldBe(true);
+            restaurant.Status.ShouldBe(RestaurantStatus.Approved);
+            unitOfWorkSpy.Commited.ShouldBe(true);
         }
 
         [Fact]
@@ -60,29 +62,31 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            var command = new ApproveRestaurantCommand
+            var command = new ApproveRestaurantCommand()
             {
-                RestaurantId = restaurant.Id.Value,
+                RestaurantId = restaurant.Id,
             };
+
             var result = await handler.Handle(command, default);
 
             var @event = (await unitOfWorkSpy.EventRepositorySpy.All())
                 .OfType<RestaurantApprovedEvent>()
                 .Single();
 
-            Assert.Equal(@event.RestaurantId, restaurant.Id);
+            @event.RestaurantId.ShouldBe(restaurant.Id);
         }
 
         [Fact]
         public async Task It_Returns_An_Error_If_The_Restaurant_Was_Not_Found()
         {
-            var command = new ApproveRestaurantCommand
+            var command = new ApproveRestaurantCommand()
             {
                 RestaurantId = Guid.NewGuid()
             };
+
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
+            result.ShouldBeAnError();
         }
     }
 }

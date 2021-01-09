@@ -1,4 +1,5 @@
 using System;
+using Shouldly;
 using Web.Services.Tokenization;
 using Xunit;
 
@@ -6,12 +7,7 @@ namespace WebTests.Services.Tokenization
 {
     public class JWTTokenizerTests
     {
-        private readonly JWTTokenizer tokenizer;
-
-        public JWTTokenizerTests()
-        {
-            tokenizer = new JWTTokenizer("secret");
-        }
+        private readonly JWTTokenizer tokenizer = new("secret");
 
         [Fact]
         public void It_Tokenizes_Strings()
@@ -19,7 +15,13 @@ namespace WebTests.Services.Tokenization
             var id = Guid.NewGuid().ToString();
 
             var token = tokenizer.Encode(id);
-            Assert.Equal(id, tokenizer.Decode(token).Value);
+
+            token.ShouldNotBe(id);
+
+            var result = tokenizer.Decode(token);
+
+            result.IsSuccess.ShouldBe(true);
+            result.Value.ShouldBe(id);
         }
 
         [Fact]
@@ -27,7 +29,9 @@ namespace WebTests.Services.Tokenization
         {
             var token = "some random token";
 
-            Assert.False(tokenizer.Decode(token));
+            var result = tokenizer.Decode(token);
+
+            result.ShouldBeAnError();
         }
     }
 }

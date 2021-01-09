@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
@@ -31,6 +32,14 @@ namespace Web.Features.Restaurants.RegisterRestaurant
 
         public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
         {
+            if (await unitOfWork.Users.EmailExists(command.ManagerEmail))
+            {
+                return Error.ValidationError(new Dictionary<string, string>()
+                {
+                    { nameof(command.ManagerEmail), "Email already taken." },
+                });
+            }
+
             var geocodingResult = await geocoder.Geocode(command.Address);
 
             if (!geocodingResult)

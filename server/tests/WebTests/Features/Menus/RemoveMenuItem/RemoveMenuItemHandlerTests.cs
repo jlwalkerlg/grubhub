@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -27,61 +27,19 @@ namespace WebTests.Features.Menus.RemoveMenuItem
         }
 
         [Fact]
-        public async Task It_Removes_A_Menu_Item()
+        public async Task It_Fails_If_The_Menu_Not_Found()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
-                new Coordinates(1, 1));
-            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
 
-            var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
-            menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
-            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
+            authenticatorSpy.SignIn(manager);
 
-            authenticatorSpy.SignIn(authUser);
-
-            var command = new RemoveMenuItemCommand
-            {
-                RestaurantId = menu.RestaurantId.Value,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.True(result);
-            Assert.True(unitOfWorkSpy.Commited);
-
-            var category = menu.Categories.Single();
-
-            Assert.Empty(category.Items);
-        }
-
-        [Fact]
-        public async Task It_Fails_If_Menu_Not_Found()
-        {
-            var authUser = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
-
-            authenticatorSpy.SignIn(authUser);
-
-            var command = new RemoveMenuItemCommand
+            var command = new RemoveMenuItemCommand()
             {
                 RestaurantId = Guid.NewGuid(),
                 CategoryName = "Pizza",
@@ -90,14 +48,14 @@ namespace WebTests.Features.Menus.RemoveMenuItem
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
         }
 
         [Fact]
-        public async Task It_Fails_If_Category_Not_Found()
+        public async Task It_Fails_If_The_User_Is_Unauthorised()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
@@ -105,7 +63,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
@@ -113,29 +71,29 @@ namespace WebTests.Features.Menus.RemoveMenuItem
 
             var menu = new Menu(restaurant.Id);
 
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(authUser);
+            authenticatorSpy.SignIn(Guid.NewGuid());
 
-            var command = new RemoveMenuItemCommand
+            var command = new RemoveMenuItemCommand()
             {
-                RestaurantId = menu.RestaurantId.Value,
+                RestaurantId = restaurant.Id,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.Unauthorised);
         }
 
         [Fact]
-        public async Task It_Fails_If_Item_Not_Found()
+        public async Task It_Fails_If_Category_Not_Found()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
@@ -143,7 +101,45 @@ namespace WebTests.Features.Menus.RemoveMenuItem
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
+                manager.Id,
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Coordinates(1, 1));
+
+            var menu = new Menu(restaurant.Id);
+
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
+            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
+            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
+
+            authenticatorSpy.SignIn(manager);
+
+            var command = new RemoveMenuItemCommand()
+            {
+                RestaurantId = menu.RestaurantId,
+                CategoryName = "Pizza",
+                ItemName = "Margherita",
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_Item_Not_Found()
+        {
+            var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
+                "Jordan Walker",
+                new Email("walker.jlg@gmail.com"),
+                "password123");
+
+            var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
@@ -152,23 +148,23 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
 
-            await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(authUser);
+            authenticatorSpy.SignIn(manager);
 
-            var command = new RemoveMenuItemCommand
+            var command = new RemoveMenuItemCommand()
             {
-                RestaurantId = menu.RestaurantId.Value,
+                RestaurantId = menu.RestaurantId,
                 CategoryName = "Pizza",
                 ItemName = "Margherita",
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
     }
 }

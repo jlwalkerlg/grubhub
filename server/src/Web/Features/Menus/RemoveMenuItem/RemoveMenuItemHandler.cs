@@ -33,14 +33,14 @@ namespace Web.Features.Menus.RemoveMenuItem
 
             if (!menu.ContainsCategory(command.CategoryName))
             {
-                return Error.NotFound($"Category {command.CategoryName} not found.");
+                return Error.BadRequest($"Category {command.CategoryName} not found.");
             }
 
             var category = menu.GetCategory(command.CategoryName);
 
             if (!category.ContainsItem(command.ItemName))
             {
-                return Error.NotFound($"Item {command.ItemName} not found for category {command.CategoryName}.");
+                return Error.BadRequest($"Item {command.ItemName} not found for category {command.CategoryName}.");
             }
 
             category.RemoveItem(command.ItemName);

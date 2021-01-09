@@ -12,7 +12,8 @@ namespace WebTests.Doubles
 
         public Task<User> GetByEmail(string email)
         {
-            return Task.FromResult(Users.FirstOrDefault(x => x.Email.Address == email));
+            return Task.FromResult(
+                Users.FirstOrDefault(x => x.Email.Address == email));
         }
 
         public Task Add(User user)
@@ -23,12 +24,14 @@ namespace WebTests.Doubles
 
         public Task<User> GetById(UserId id)
         {
-            return Task.FromResult(Users.FirstOrDefault(x => x.Id == id));
+            return Task.FromResult(
+                Users.FirstOrDefault(x => x.Id == id));
         }
 
-        public async Task<bool> EmailExists(string email)
+        public Task<bool> EmailExists(string email)
         {
-            return await GetByEmail(email) == null;
+            return Task.FromResult(
+                Users.Any(x => x.Email.Address == email));
         }
     }
 }

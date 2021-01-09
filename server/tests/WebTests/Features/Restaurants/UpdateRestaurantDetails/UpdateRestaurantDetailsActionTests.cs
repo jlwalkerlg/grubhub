@@ -1,61 +1,33 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Restaurants.UpdateRestaurantDetails;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 {
-    public class UpdateRestaurantDetailsActionTests : WebActionTestBase
+    public class UpdateRestaurantDetailsActionTests : HttpTestBase
     {
-        public UpdateRestaurantDetailsActionTests(WebActionTestFixture fixture) : base(fixture)
+        public UpdateRestaurantDetailsActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var request = new UpdateRestaurantDetailsRequest
-            {
-                Name = "Main Chow",
-                PhoneNumber = "09876543210",
-                MinimumDeliverySpend = 13m,
-                DeliveryFee = 3m,
-                MaxDeliveryDistanceInKm = 10,
-                EstimatedDeliveryTimeInMinutes = 40,
-            };
+            var request = new UpdateRestaurantDetailsRequest();
 
-            var response = await Put($"/restaurants/{Guid.NewGuid()}", request);
+            var response = await fixture.GetClient().Put(
+                $"/restaurants/{Guid.NewGuid()}",
+                request);
 
-            Assert.Equal(401, (int)response.StatusCode);
-        }
-
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            await Login();
-
-            var request = new UpdateRestaurantDetailsRequest
-            {
-                Name = "Main Chow",
-                PhoneNumber = "09876543210",
-                MinimumDeliverySpend = 13m,
-                DeliveryFee = 3m,
-                MaxDeliveryDistanceInKm = 10,
-                EstimatedDeliveryTimeInMinutes = 40,
-            };
-
-            var response = await Put($"/restaurants/{Guid.NewGuid()}", request);
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(401);
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            await Login();
-
-            var request = new UpdateRestaurantDetailsRequest
+            var request = new UpdateRestaurantDetailsRequest()
             {
                 Name = "",
                 PhoneNumber = "",
@@ -65,17 +37,41 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 EstimatedDeliveryTimeInMinutes = -40,
             };
 
-            var response = await Put($"/restaurants/{Guid.NewGuid()}", request);
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.NewGuid()}",
+                request);
 
-            Assert.Equal(422, (int)response.StatusCode);
+            response.StatusCode.ShouldBe(422);
 
             var errors = await response.GetErrors();
-            Assert.True(errors.ContainsKey("name"));
-            Assert.True(errors.ContainsKey("phoneNumber"));
-            Assert.True(errors.ContainsKey("minimumDeliverySpend"));
-            Assert.True(errors.ContainsKey("deliveryFee"));
-            Assert.True(errors.ContainsKey("maxDeliveryDistanceInKm"));
-            Assert.True(errors.ContainsKey("estimatedDeliveryTimeInMinutes"));
+
+            errors.ShouldContainKey("name");
+            errors.ShouldContainKey("phoneNumber");
+            errors.ShouldContainKey("minimumDeliverySpend");
+            errors.ShouldContainKey("deliveryFee");
+            errors.ShouldContainKey("maxDeliveryDistanceInKm");
+            errors.ShouldContainKey("estimatedDeliveryTimeInMinutes");
+        }
+
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            var request = new UpdateRestaurantDetailsRequest()
+            {
+                Name = "Main Chow",
+                PhoneNumber = "09876543210",
+                MinimumDeliverySpend = 13m,
+                DeliveryFee = 3m,
+                MaxDeliveryDistanceInKm = 10,
+                EstimatedDeliveryTimeInMinutes = 40,
+            };
+
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.NewGuid()}",
+                request);
+
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

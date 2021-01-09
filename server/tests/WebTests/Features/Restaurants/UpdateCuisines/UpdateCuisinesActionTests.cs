@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Restaurants.UpdateCuisines;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.UpdateCuisines
 {
-    public class UpdateCuisinesActionTests : WebActionTestBase
+    public class UpdateCuisinesActionTests : HttpTestBase
     {
-        public UpdateCuisinesActionTests(WebActionTestFixture fixture) : base(fixture)
+        public UpdateCuisinesActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
@@ -17,21 +17,37 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
         {
             var request = new UpdateCuisinesRequest();
 
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/cuisines", request);
+            var response = await fixture.GetClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/cuisines",
+                request);
 
-            Assert.Equal(401, (int)response.StatusCode);
+            response.StatusCode.ShouldBe(401);
+        }
+
+        [Fact]
+        public async Task It_Returns_Validation_Errors()
+        {
+            var request = new UpdateCuisinesRequest();
+
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.Empty}/cuisines",
+                request);
+
+            response.StatusCode.ShouldBe(422);
+            response.GetErrors().Result.ShouldContainKey("restaurantId");
         }
 
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            await Login();
-
             var request = new UpdateCuisinesRequest();
 
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/cuisines", request);
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/cuisines",
+                request);
 
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

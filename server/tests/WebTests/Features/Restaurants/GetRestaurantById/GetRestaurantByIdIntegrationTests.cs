@@ -1,62 +1,63 @@
 using System;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
+using Shouldly;
 using Web.Features.Restaurants;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.GetRestaurantById
 {
-    public class GetRestaurantByIdIntegrationTests : WebIntegrationTestBase
+    public class GetRestaurantByIdIntegrationTests : IntegrationTestBase
     {
-        public GetRestaurantByIdIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public GetRestaurantByIdIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Returns_The_Restaurant()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var manager = new User();
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
-            restaurant.OpeningTimes = new OpeningTimes()
+            var restaurant = new Restaurant()
             {
-                Monday = new OpeningHours(new TimeSpan(10, 30, 0), new TimeSpan(16, 0, 0)),
+                ManagerId = manager.Id,
             };
-            restaurant.MinimumDeliverySpend = new Money(10m);
-            restaurant.DeliveryFee = new Money(1.5m);
-            restaurant.EstimatedDeliveryTimeInMinutes = 40;
 
-            var menu = new Menu(restaurant.Id);
+            fixture.Insert(manager, restaurant);
 
-            await fixture.InsertDb(manager, restaurant, menu);
+            var response = await fixture.GetClient().Get($"/restaurants/{restaurant.Id}");
 
-            var restaurantDto = await Get<RestaurantDto>($"/restaurants/{restaurant.Id.Value}");
-            Assert.Equal(restaurant.Id.Value, restaurantDto.Id);
-            Assert.Equal(manager.Id.Value, restaurantDto.ManagerId);
-            Assert.Equal("Chow Main", restaurantDto.Name);
-            Assert.Equal("01234567890", restaurantDto.PhoneNumber);
-            Assert.Equal(RestaurantStatus.PendingApproval.ToString(), restaurantDto.Status);
-            Assert.Equal("12 Maine Road, Madchester, MN12 1NM", restaurantDto.Address);
-            Assert.Equal(1, restaurantDto.Latitude);
-            Assert.Equal(2, restaurantDto.Longitude);
-            Assert.Equal("10:30", restaurantDto.OpeningTimes.Monday.Open);
-            Assert.Equal("16:00", restaurantDto.OpeningTimes.Monday.Close);
-            Assert.Equal(1.5m, restaurantDto.DeliveryFee);
-            Assert.Equal(10m, restaurantDto.MinimumDeliverySpend);
-            Assert.Equal(40, restaurantDto.EstimatedDeliveryTimeInMinutes);
+            response.StatusCode.ShouldBe(200);
+
+            var restaurantDto = await response.GetData<RestaurantDto>();
+
+            restaurantDto.Id.ShouldBe(restaurant.Id);
+            restaurantDto.ManagerId.ShouldBe(manager.Id);
+            restaurantDto.Name.ShouldBe(restaurant.Name);
+            restaurantDto.PhoneNumber.ShouldBe(restaurant.PhoneNumber);
+            restaurantDto.Status.ShouldBe(restaurant.Status);
+            restaurantDto.Address.ShouldBe(restaurant.Address);
+            restaurantDto.Latitude.ShouldBe(restaurant.Latitude);
+            restaurantDto.Longitude.ShouldBe(restaurant.Longitude);
+            restaurantDto.OpeningTimes.Monday.ShouldBeNull();
+            restaurantDto.OpeningTimes.Tuesday.ShouldBeNull();
+            restaurantDto.OpeningTimes.Wednesday.ShouldBeNull();
+            restaurantDto.OpeningTimes.Thursday.ShouldBeNull();
+            restaurantDto.OpeningTimes.Friday.ShouldBeNull();
+            restaurantDto.OpeningTimes.Saturday.ShouldBeNull();
+            restaurantDto.OpeningTimes.Sunday.ShouldBeNull();
+            restaurantDto.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
+            restaurantDto.MaxDeliveryDistanceInKm.ShouldBe(restaurant.MaxDeliveryDistanceInKm);
+            restaurantDto.MinimumDeliverySpend.ShouldBe(restaurant.MinimumDeliverySpend);
+            restaurantDto.EstimatedDeliveryTimeInMinutes.ShouldBe(restaurant.EstimatedDeliveryTimeInMinutes);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
+        {
+            var response = await fixture.GetClient().Get($"/restaurants/{Guid.NewGuid()}");
+
+            response.StatusCode.ShouldBe(404);
         }
     }
 }

@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Shouldly;
+using Web;
 using Web.Domain.Restaurants;
 using Web.Envelopes;
 using Web.Features.Restaurants;
@@ -24,6 +27,30 @@ namespace WebTests
             }
 
             return true;
+        }
+
+        public static void ShouldBe(this HttpStatusCode code, int expected)
+        {
+            ((int)code).ShouldBe(expected);
+        }
+
+        public static void ShouldBeAnError(this Result result)
+        {
+            result.IsSuccess.ShouldBe(false);
+        }
+
+        public static async Task<TData> GetData<TData>(this HttpResponseMessage response)
+        {
+            var json = await response.Content.ReadAsStreamAsync();
+
+            var envelope = await JsonSerializer.DeserializeAsync<DataEnvelope<TData>>(
+                json,
+                new JsonSerializerOptions()
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
+
+            return envelope.Data;
         }
 
         private static async Task<ErrorEnvelope> ToErrorEnvelope(this HttpResponseMessage response)

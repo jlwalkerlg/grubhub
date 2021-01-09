@@ -1,61 +1,67 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
-using Web.Features.Menus;
+using Shouldly;
 using Web.Features.Menus.UpdateMenuItem;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Menus.UpdateMenuItem
 {
-    public class UpdateMenuItemIntegrationTests : WebIntegrationTestBase
+    public class UpdateMenuItemIntegrationTests : IntegrationTestBase
     {
-        public UpdateMenuItemIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public UpdateMenuItemIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
-        public async Task It_Renames_An_Item()
+        public async Task It_Renames_A_Menu_Item()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
+            var manager = new User();
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
+            var restaurant = new Restaurant()
+            {
+                ManagerId = manager.Id,
+            };
 
-            var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
-            menu.GetCategory("Pizza").AddItem("Margherita", "Cheese & tomato", new Money(10m));
+            var item = new MenuItem()
+            {
+                Name = "Margherita",
+                Description = "Cheese & tomato",
+                Price = 9.99m,
+            };
 
-            await fixture.InsertDb(manager, restaurant, menu);
-            await Login(manager);
+            var category = new MenuCategory()
+            {
+                Name = "Pizza",
+                Items = new() { item },
+            };
 
-            var response = await Put($"/restaurants/{restaurant.Id.Value}/menu/categories/Pizza/items/Margherita", new UpdateMenuItemRequest
+            var menu = new Menu()
+            {
+                RestaurantId = restaurant.Id,
+                Categories = new() { category },
+            };
+
+            fixture.Insert(manager, restaurant, menu);
+
+            var request = new UpdateMenuItemRequest()
             {
                 NewItemName = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
-            });
+            };
 
-            Assert.Equal(200, (int)response.StatusCode);
+            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
+                $"/restaurants/{restaurant.Id}/menu/categories/Pizza/items/Margherita",
+                request);
 
-            var menuDto = await Get<MenuDto>($"/restaurants/{restaurant.Id.Value}/menu");
-            var categoryDto = menuDto.Categories.Single();
-            var itemDto = categoryDto.Items.Single();
-            Assert.Equal("Hawaiian", itemDto.Name);
-            Assert.Equal("Ham & pineapple", itemDto.Description);
-            Assert.Equal(11.99m, itemDto.Price);
+            response.StatusCode.ShouldBe(200);
+
+            var found = fixture.UseTestDbContext(db => db.MenuItems.Single());
+
+            found.Name.ShouldBe(request.NewItemName);
+            found.Description.ShouldBe(request.Description);
+            found.Price.ShouldBe(request.Price);
         }
     }
 }

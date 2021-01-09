@@ -1,5 +1,6 @@
 using Autofac;
-using Web.Data.Dapper.Repositories.Menus;
+using Web.Data.Dapper.Repositories.Restaurants;
+using Web.Data.Dapper.Repositories.Users;
 
 namespace Web.ServiceRegistration
 {
@@ -7,10 +8,11 @@ namespace Web.ServiceRegistration
     {
         public static void AddDtoRepositories(this ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(DPMenuDtoRepository).Assembly)
-                .Where(x => x.Name.EndsWith("DtoRepository"))
-                .AsImplementedInterfaces()
-                .InstancePerDependency();
+            builder.RegisterType<DPRestaurantDtoRepository>()
+                .AsImplementedInterfaces();
+
+            builder.RegisterType<DPUserDtoRepository>()
+                .AsImplementedInterfaces();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Users;
 using Web.Services.Authentication;
@@ -31,15 +32,15 @@ namespace WebTests.Services.Authentication
             var token = tokenizer.Encode(id.Value.ToString());
             cookieBagSpy.Add("auth_token", token);
 
-            Assert.True(authenticator.IsAuthenticated);
-            Assert.Equal(id, authenticator.UserId);
+            authenticator.IsAuthenticated.ShouldBe(true);
+            authenticator.UserId.ShouldBe(id);
         }
 
         [Fact]
-        public void It_Returns_A_Null_User_Id_If_Not_Authenticated()
+        public void It_Returns_Null_When_Not_Authenticated()
         {
-            Assert.False(authenticator.IsAuthenticated);
-            Assert.Null(authenticator.UserId);
+            authenticator.IsAuthenticated.ShouldBe(false);
+            authenticator.UserId.ShouldBeNull();
         }
 
         [Fact]
@@ -54,12 +55,15 @@ namespace WebTests.Services.Authentication
             authenticator.SignIn(user);
 
             var cookieData = cookieBagSpy.Cookies["auth_token"];
+
             var token = cookieData.Value;
             var cookieOptions = cookieData.Options;
 
-            Assert.True(authenticator.IsAuthenticated);
-            Assert.Equal(user.Id.Value.ToString(), tokenizer.Decode(token).Value);
-            Assert.True(cookieOptions.HttpOnly);
+            var decodedToken = tokenizer.Decode(token).Value;
+
+            authenticator.IsAuthenticated.ShouldBe(true);
+            decodedToken.ShouldBe(user.Id.Value.ToString());
+            cookieOptions.HttpOnly.ShouldBe(true);
         }
 
         [Fact]
@@ -70,10 +74,11 @@ namespace WebTests.Services.Authentication
             authenticator.SignOut();
 
             var cookieData = cookieBagSpy.Deleted["auth_token"];
+
             var cookieOptions = cookieData.Options;
 
-            Assert.False(authenticator.IsAuthenticated);
-            Assert.True(cookieOptions.HttpOnly);
+            authenticator.IsAuthenticated.ShouldBe(false);
+            cookieOptions.HttpOnly.ShouldBe(true);
         }
     }
 }

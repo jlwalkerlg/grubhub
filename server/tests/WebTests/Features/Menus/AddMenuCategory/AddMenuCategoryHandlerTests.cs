@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -27,63 +27,28 @@ namespace WebTests.Features.Menus.AddMenuCategory
         }
 
         [Fact]
-        public async Task It_Adds_A_Category_To_The_Menu()
+        public async Task It_Fails_If_The_Menu_Is_Not_Found()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.SignIn(authUser);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
+
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            var menu = new Menu(restaurant.Id);
-            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
+            authenticatorSpy.SignIn(manager);
 
-            var command = new AddMenuCategoryCommand
-            {
-                RestaurantId = menu.RestaurantId.Value,
-                Name = "Pizza",
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.True(result);
-
-            Assert.Single(menu.Categories);
-
-            var category = menu.Categories.Single();
-            Assert.Equal("Pizza", category.Name);
-        }
-
-        [Fact]
-        public async Task It_Fails_If_Menu_Not_Found()
-        {
-            var authUser = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-            authenticatorSpy.SignIn(authUser);
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(1, 1));
-            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
-
-            var command = new AddMenuCategoryCommand
+            var command = new AddMenuCategoryCommand()
             {
                 RestaurantId = Guid.NewGuid(),
                 Name = "Pizza",
@@ -91,68 +56,75 @@ namespace WebTests.Features.Menus.AddMenuCategory
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
         }
 
         [Fact]
-        public async Task It_Fails_If_Category_Already_Exists()
+        public async Task It_Fails_If_The_User_Is_Unauthorised()
         {
-            var authUser = new RestaurantManager(
+            var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-            authenticatorSpy.SignIn(authUser);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
-                authUser.Id,
+                manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
-            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             var menu = new Menu(restaurant.Id);
+
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
+            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
+            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
+
+            authenticatorSpy.SignIn(Guid.NewGuid());
+
+            var command = new AddMenuCategoryCommand()
+            {
+                RestaurantId = menu.RestaurantId.Value,
+                Name = "Pizza",
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.Unauthorised);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_The_Category_Already_Exists()
+        {
+            var manager = new RestaurantManager(
+                new UserId(Guid.NewGuid()),
+                "Jordan Walker",
+                new Email("walker.jlg@gmail.com"),
+                "password123");
+
+            var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                manager.Id,
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("1 Maine Road, Manchester, UK"),
+                new Coordinates(1, 1));
+
+            var menu = new Menu(restaurant.Id);
+
             menu.AddCategory("Pizza");
-            await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            var command = new AddMenuCategoryCommand
-            {
-                RestaurantId = menu.RestaurantId.Value,
-                Name = "Pizza",
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.False(result);
-            Assert.Equal(ErrorType.BadRequest, result.Error.Type);
-        }
-
-        [Fact]
-        public async Task It_Requires_Authorisation()
-        {
-            var authUser = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-            authenticatorSpy.SignIn(authUser);
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(1, 1));
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
-
-            var menu = new Menu(restaurant.Id);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            var command = new AddMenuCategoryCommand
+            authenticatorSpy.SignIn(manager);
+
+            var command = new AddMenuCategoryCommand()
             {
                 RestaurantId = menu.RestaurantId.Value,
                 Name = "Pizza",
@@ -160,8 +132,8 @@ namespace WebTests.Features.Menus.AddMenuCategory
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
     }
 }

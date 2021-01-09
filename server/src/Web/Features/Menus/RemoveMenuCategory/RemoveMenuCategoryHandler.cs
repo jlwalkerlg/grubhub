@@ -33,7 +33,7 @@ namespace Web.Features.Menus.RemoveMenuCategory
 
             if (!menu.ContainsCategory(command.CategoryName))
             {
-                return Error.NotFound($"Category {command.CategoryName} doesn't exist for this menu.");
+                return Error.BadRequest($"Category {command.CategoryName} doesn't exist for this menu.");
             }
 
             menu.RemoveCategory(command.CategoryName);

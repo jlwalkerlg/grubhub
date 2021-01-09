@@ -1,32 +1,33 @@
 using System;
 using System.Threading.Tasks;
-using WebTests.Doubles;
+using Shouldly;
 using Xunit;
 
 namespace WebTests.Features.Menus.RemoveMenuItem
 {
-    public class RemoveMenuItemActionTests : WebActionTestBase
+    public class RemoveMenuItemActionTests : HttpTestBase
     {
-        public RemoveMenuItemActionTests(WebActionTestFixture fixture) : base(fixture)
+        public RemoveMenuItemActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await Delete($"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita");
+            var response = await fixture.GetClient().Delete(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita");
 
-            Assert.Equal(401, (int)response.StatusCode);
+            response.StatusCode.ShouldBe(401);
         }
 
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            await Login();
+            var response = await fixture.GetAuthenticatedClient().Delete(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita");
 
-            var response = await Delete($"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita");
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

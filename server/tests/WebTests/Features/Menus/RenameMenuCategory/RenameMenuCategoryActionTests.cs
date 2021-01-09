@@ -1,53 +1,62 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Menus.RenameMenuCategory;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Menus.RenameMenuCategory
 {
-    public class RenameMenuCategoryActionTests : WebActionTestBase
+    public class RenameMenuCategoryActionTests : HttpTestBase
     {
-        public RenameMenuCategoryActionTests(WebActionTestFixture fixture) : base(fixture)
+        public RenameMenuCategoryActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza", new RenameMenuCategoryRequest
+            var request = new RenameMenuCategoryRequest()
             {
                 NewName = "Curry",
-            });
+            };
 
-            Assert.Equal(401, (int)response.StatusCode);
-        }
+            var response = await fixture.GetClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza",
+                request);
 
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            await Login();
-
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza", new RenameMenuCategoryRequest
-            {
-                NewName = "Curry",
-            });
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(401);
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            await Login();
-
-            var response = await Put($"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza", new RenameMenuCategoryRequest
+            var request = new RenameMenuCategoryRequest()
             {
                 NewName = "",
-            });
+            };
 
-            var errors = await response.GetErrors();
-            Assert.True(errors.ContainsKey("newName"));
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza",
+                request);
+
+            response.StatusCode.ShouldBe(422);
+            response.GetErrors().Result.ShouldContainKey("newName");
+        }
+
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            var request = new RenameMenuCategoryRequest()
+            {
+                NewName = "Curry",
+            };
+
+            var response = await fixture.GetAuthenticatedClient().Put(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza",
+                request);
+
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

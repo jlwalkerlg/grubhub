@@ -15,10 +15,7 @@ namespace WebTests
 
         public static string GoogleGeocodingApiKey => config["GoogleGeocodingApiKey"];
 
-        public static string InfrastructureTestDbConnectionString =>
-            config["InfrastructureTestDbConnectionString"];
-
-        public static string WebTestDbConnectionString =>
-            config["WebTestDbConnectionString"];
+        public static string TestDbConnectionString =>
+            config["TestDbConnectionString"];
     }
 }

@@ -1,24 +1,13 @@
-using System;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Users;
+using Shouldly;
 using Web.Features.Restaurants.RegisterRestaurant;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantValidatorTests
     {
-        private readonly UnitOfWorkSpy unitOfWorkSpy;
-        private readonly RegisterRestaurantValidator validator;
-
-        public RegisterRestaurantValidatorTests()
-        {
-            unitOfWorkSpy = new UnitOfWorkSpy();
-
-            validator = new RegisterRestaurantValidator(unitOfWorkSpy);
-        }
+        private readonly RegisterRestaurantValidator validator = new();
 
         [Theory]
         [InlineData(null)]
@@ -26,14 +15,15 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [InlineData(" ")]
         public async Task Disallows_Invalid_Manager_Names(string name)
         {
-            var command = new RegisterRestaurantCommandBuilder()
-                .SetManagerName(name)
-                .Build();
+            var command = new RegisterRestaurantCommand()
+            {
+                ManagerName = name,
+            };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerName)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.ManagerName));
         }
 
         [Theory]
@@ -43,35 +33,15 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [InlineData("blahblahblah")]
         public async Task Disallows_Invalid_Manager_Emails(string email)
         {
-            var command = new RegisterRestaurantCommandBuilder()
-                .SetManagerEmail(email)
-                .Build();
+            var command = new RegisterRestaurantCommand()
+            {
+                ManagerEmail = email,
+            };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerEmail)));
-        }
-
-        [Fact]
-        public async Task Disallows_Emails_That_Are_Already_Taken()
-        {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Mr Wong",
-                new Email("wong@test.com"),
-                "password123");
-
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
-
-            var command = new RegisterRestaurantCommandBuilder()
-                .SetManagerEmail(manager.Email.Address)
-                .Build();
-
-            var result = await validator.Validate(command);
-
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerEmail)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.ManagerEmail));
         }
 
         [Theory]
@@ -81,14 +51,15 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [InlineData("1234567")]
         public async Task Disallows_Invalid_Manager_Passwords(string password)
         {
-            var command = new RegisterRestaurantCommandBuilder()
-                .SetManagerPassword(password)
-                .Build();
+            var command = new RegisterRestaurantCommand()
+            {
+                ManagerPassword = password,
+            };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.ManagerPassword)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.ManagerPassword));
         }
 
         [Theory]
@@ -97,14 +68,15 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [InlineData(" ")]
         public async Task Disallows_Invalid_Restaurant_Names(string name)
         {
-            var command = new RegisterRestaurantCommandBuilder()
-                .SetRestaurantName(name)
-                .Build();
+            var command = new RegisterRestaurantCommand()
+            {
+                RestaurantName = name,
+            };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantName)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantName));
         }
 
         [Theory]
@@ -114,14 +86,15 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [InlineData("1352314")]
         public async Task Disallows_Invalid_Restaurant_Phone_Numbers(string number)
         {
-            var command = new RegisterRestaurantCommandBuilder()
-                .SetRestaurantPhoneNumber(number)
-                .Build();
+            var command = new RegisterRestaurantCommand()
+            {
+                RestaurantPhoneNumber = number,
+            };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantPhoneNumber)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantPhoneNumber));
         }
 
         [Theory]
@@ -130,14 +103,15 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [InlineData(" ")]
         public async Task Disallows_Invalid_Restaurant_Addresses(string address)
         {
-            var command = new RegisterRestaurantCommandBuilder()
-                .SetAddress(address)
-                .Build();
+            var command = new RegisterRestaurantCommand()
+            {
+                Address = address,
+            };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Address)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.Address));
         }
     }
 }

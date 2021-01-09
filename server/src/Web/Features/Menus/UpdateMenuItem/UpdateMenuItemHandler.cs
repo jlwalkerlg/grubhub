@@ -34,14 +34,14 @@ namespace Web.Features.Menus.UpdateMenuItem
 
             if (!menu.ContainsCategory(command.CategoryName))
             {
-                return Error.NotFound($"Category {command.CategoryName} not found.");
+                return Error.BadRequest($"Category {command.CategoryName} doesn't exist.");
             }
 
             var category = menu.GetCategory(command.CategoryName);
 
             if (!category.ContainsItem(command.OldItemName))
             {
-                return Error.NotFound($"Item {command.OldItemName} not found for category {command.CategoryName}.");
+                return Error.BadRequest($"Item {command.OldItemName} doesn't exist for category {command.CategoryName}.");
             }
 
             if (command.OldItemName != command.NewItemName && category.ContainsItem(command.NewItemName))

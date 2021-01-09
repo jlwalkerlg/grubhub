@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Restaurants.UpdateRestaurantDetails;
 using Xunit;
 
@@ -7,45 +8,20 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 {
     public class UpdateRestaurantDetailsValidatorTests
     {
-        private readonly UpdateRestaurantDetailsValidator validator;
-        private readonly UpdateRestaurantDetailsCommand validCommand;
-
-        public UpdateRestaurantDetailsValidatorTests()
-        {
-            validator = new UpdateRestaurantDetailsValidator();
-
-            validCommand = new UpdateRestaurantDetailsCommand
-            {
-                RestaurantId = Guid.NewGuid(),
-                Name = "Chow Main",
-                PhoneNumber = "01234567890",
-                MinimumDeliverySpend = 0,
-                DeliveryFee = 0,
-                MaxDeliveryDistanceInKm = 10,
-                EstimatedDeliveryTimeInMinutes = 5,
-            };
-        }
-
-        [Fact]
-        public async Task It_Passes()
-        {
-            var result = await validator.Validate(validCommand);
-
-            Assert.True(result);
-        }
+        private readonly UpdateRestaurantDetailsValidator validator = new();
 
         [Fact]
         public async Task Disallows_Empty_Ids()
         {
-            var command = validCommand with
+            var command = new UpdateRestaurantDetailsCommand()
             {
                 RestaurantId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Theory]
@@ -54,15 +30,15 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         [InlineData(" ")]
         public async Task Disallows_Invalid_Names(string name)
         {
-            var command = validCommand with
+            var command = new UpdateRestaurantDetailsCommand()
             {
                 Name = name,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.Name)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.Name));
         }
 
         [Theory]
@@ -72,60 +48,60 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         [InlineData("1352314")]
         public async Task Disallows_Invalid_Phone_Numbers(string number)
         {
-            var command = validCommand with
+            var command = new UpdateRestaurantDetailsCommand()
             {
                 PhoneNumber = number,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.PhoneNumber)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.PhoneNumber));
         }
 
         [Theory]
         [InlineData(-1)]
         public async Task Disallows_Invalid_Delivery_Fees(decimal fee)
         {
-            var command = validCommand with
+            var command = new UpdateRestaurantDetailsCommand()
             {
                 DeliveryFee = fee,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.DeliveryFee)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.DeliveryFee));
         }
 
         [Theory]
         [InlineData(-1)]
         public async Task Disallows_Invalid_Minimum_Delivery_Spends(decimal spend)
         {
-            var command = validCommand with
+            var command = new UpdateRestaurantDetailsCommand()
             {
                 MinimumDeliverySpend = spend,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MinimumDeliverySpend)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.MinimumDeliverySpend));
         }
 
         [Theory]
         [InlineData(-1)]
         public async Task Disallows_Invalid_Max_Delivery_Distance_In_Km(int distance)
         {
-            var command = validCommand with
+            var command = new UpdateRestaurantDetailsCommand()
             {
                 MaxDeliveryDistanceInKm = distance,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MaxDeliveryDistanceInKm)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.MaxDeliveryDistanceInKm));
         }
 
         [Theory]
@@ -134,15 +110,15 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         [InlineData(4)]
         public async Task Disallows_Invalid_Estimated_Delivery_Times(int time)
         {
-            var command = validCommand with
+            var command = new UpdateRestaurantDetailsCommand()
             {
                 EstimatedDeliveryTimeInMinutes = time,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.EstimatedDeliveryTimeInMinutes)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.EstimatedDeliveryTimeInMinutes));
         }
     }
 }

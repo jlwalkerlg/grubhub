@@ -7,16 +7,11 @@ namespace WebTests.Data
 {
     public class TestDbConnectionFactory : IDbConnectionFactory
     {
-        private readonly string connectionString;
-
-        public TestDbConnectionFactory(string connectionString)
-        {
-            this.connectionString = connectionString;
-        }
-
         public async Task<IDbConnection> OpenConnection()
         {
-            var connection = new NpgsqlConnection(connectionString);
+            var connection = new NpgsqlConnection(
+                TestConfig.TestDbConnectionString);
+
             await connection.OpenAsync();
 
             return connection;

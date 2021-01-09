@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
@@ -25,15 +26,27 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         }
 
         [Fact]
-        public async Task It_Updates_The_Restaurants_Details()
+        public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
+        {
+            var command = new UpdateRestaurantDetailsCommand()
+            {
+                RestaurantId = Guid.NewGuid(),
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_The_User_Is_Unauthorised()
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
-
-            authenticatorSpy.SignIn(manager);
 
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
@@ -43,89 +56,20 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 2));
 
+            await unitOfWorkSpy.RestaurantManagers.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            var command = new UpdateRestaurantDetailsCommand
+            authenticatorSpy.SignIn(Guid.NewGuid());
+
+            var command = new UpdateRestaurantDetailsCommand()
             {
-                RestaurantId = restaurant.Id.Value,
-                Name = "Kung Flu",
-                PhoneNumber = "09876543210",
-                MinimumDeliverySpend = 13m,
-                DeliveryFee = 3m,
-                MaxDeliveryDistanceInKm = 10,
-                EstimatedDeliveryTimeInMinutes = 40,
+                RestaurantId = restaurant.Id,
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.True(result);
-
-            Assert.Equal(command.Name, restaurant.Name);
-            Assert.Equal(command.PhoneNumber, restaurant.PhoneNumber.Number);
-            Assert.Equal(command.MinimumDeliverySpend, restaurant.MinimumDeliverySpend.Amount);
-            Assert.Equal(command.DeliveryFee, restaurant.DeliveryFee.Amount);
-            Assert.Equal(command.MaxDeliveryDistanceInKm, restaurant.MaxDeliveryDistanceInKm);
-            Assert.Equal(command.EstimatedDeliveryTimeInMinutes, restaurant.EstimatedDeliveryTimeInMinutes);
-
-            Assert.True(unitOfWorkSpy.Commited);
-        }
-
-        [Fact]
-        public async Task It_Returns_Not_Found_Error_If_Restaurant_Not_Found()
-        {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-
-            authenticatorSpy.SignIn(manager);
-
-            var command = new UpdateRestaurantDetailsCommand
-            {
-                RestaurantId = Guid.NewGuid(),
-                Name = "Kung Flu",
-                PhoneNumber = "09876543210",
-                MinimumDeliverySpend = 13m,
-                DeliveryFee = 3m,
-                MaxDeliveryDistanceInKm = 10,
-                EstimatedDeliveryTimeInMinutes = 40,
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
-        }
-
-        [Fact]
-        public async Task It_Authorises_The_User()
-        {
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(1, 2));
-
-            await unitOfWorkSpy.Restaurants.Add(restaurant);
-
-            var command = new UpdateRestaurantDetailsCommand
-            {
-                RestaurantId = restaurant.Id.Value,
-                Name = "Kung Flu",
-                PhoneNumber = "09876543210",
-                MinimumDeliverySpend = 13m,
-                DeliveryFee = 3m,
-                MaxDeliveryDistanceInKm = 10,
-                EstimatedDeliveryTimeInMinutes = 40,
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.False(result);
-            Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.Unauthorised);
         }
     }
 }

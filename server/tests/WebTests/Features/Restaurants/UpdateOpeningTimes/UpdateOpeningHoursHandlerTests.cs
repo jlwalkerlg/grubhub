@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
@@ -8,14 +9,12 @@ using WebTests.Doubles;
 using Xunit;
 using static Web.Error;
 
-namespace WebTests.Features.Restaurants.UpdateOpeningHours
+namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 {
     public class UpdateOpeningHoursHandlerTests
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
-
-        public AuthenticatorSpy authenticatorSpy { get; }
-
+        private readonly AuthenticatorSpy authenticatorSpy;
         private readonly UpdateOpeningHoursHandler handler;
 
         public UpdateOpeningHoursHandlerTests()
@@ -28,56 +27,21 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
         }
 
         [Fact]
-        public async Task It_Updates_The_Opening_Times()
+        public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
-
-            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
-            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
-
-            authenticatorSpy.SignIn(manager);
-
             var command = new UpdateOpeningHoursCommand()
             {
-                RestaurantId = restaurant.Id.Value,
-                MondayOpen = "16:00",
-                MondayClose = "23:30",
+                RestaurantId = Guid.NewGuid(),
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.True(result);
-
-            Assert.True(unitOfWorkSpy.Commited);
-
-            Assert.NotNull(restaurant.OpeningTimes);
-            Assert.NotNull(restaurant.OpeningTimes.Monday);
-            Assert.Null(restaurant.OpeningTimes.Tuesday);
-            Assert.Null(restaurant.OpeningTimes.Wednesday);
-            Assert.Null(restaurant.OpeningTimes.Thursday);
-            Assert.Null(restaurant.OpeningTimes.Friday);
-            Assert.Null(restaurant.OpeningTimes.Saturday);
-            Assert.Null(restaurant.OpeningTimes.Sunday);
-            Assert.Equal(16, restaurant.OpeningTimes.Monday.Open.Hours);
-            Assert.Equal(0, restaurant.OpeningTimes.Monday.Open.Minutes);
-            Assert.Equal(23, restaurant.OpeningTimes.Monday.Close?.Hours);
-            Assert.Equal(30, restaurant.OpeningTimes.Monday.Close?.Minutes);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
         }
 
         [Fact]
-        public async Task It_Requires_Authorisation()
+        public async Task If_Fails_If_The_User_Is_Unauthorised()
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
@@ -100,27 +64,13 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var command = new UpdateOpeningHoursCommand()
             {
-                RestaurantId = restaurant.Id.Value,
+                RestaurantId = restaurant.Id,
             };
 
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
-            Assert.Equal(ErrorType.Unauthorised, result.Error.Type);
-        }
-
-        [Fact]
-        public async Task It_Fails_If_Restaurant_Not_Found()
-        {
-            var command = new UpdateOpeningHoursCommand()
-            {
-                RestaurantId = Guid.NewGuid(),
-            };
-
-            var result = await handler.Handle(command, default);
-
-            Assert.False(result);
-            Assert.Equal(ErrorType.NotFound, result.Error.Type);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.Unauthorised);
         }
     }
 }

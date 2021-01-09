@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Services.Geocoding;
 using Xunit;
 
@@ -18,18 +19,18 @@ namespace WebTests.Services.Geocoding
         {
             var result = await geocoder.Geocode("1 Maine Road, Manchester, UK");
 
-            Assert.True(result);
-            Assert.NotNull(result.Value.FormattedAddress);
-            Assert.NotEqual(default, result.Value.Coordinates.Latitude);
-            Assert.NotEqual(default, result.Value.Coordinates.Longitude);
+            result.IsSuccess.ShouldBe(true);
+            result.Value.FormattedAddress.ShouldNotBeNull();
+            result.Value.Coordinates.Latitude.ShouldNotBe(default(float));
+            result.Value.Coordinates.Longitude.ShouldNotBe(default(float));
         }
 
         [Fact]
         public async Task It_Returns_An_Error_If_Geocoding_Fails()
         {
-            var coordinatesResult = await geocoder.Geocode("random");
+            var result = await geocoder.Geocode("not_a_real_address");
 
-            Assert.False(coordinatesResult);
+            result.ShouldBeAnError();
         }
     }
 }

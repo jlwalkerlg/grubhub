@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Domain;
 using Web.Domain.Users;
 using Web.Features.Users.Login;
 using WebTests.Doubles;
 using Xunit;
+using static Web.Error;
 
 namespace WebTests.Features.Users.Login
 {
@@ -28,7 +30,22 @@ namespace WebTests.Features.Users.Login
         }
 
         [Fact]
-        public async Task It_Signs_The_User_In()
+        public async Task It_Fails_If_The_User_Is_Not_Found()
+        {
+            var command = new LoginCommand()
+            {
+                Email = "walker.jlg@gmail.com",
+                Password = "password123",
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_The_Passwords_Dont_Match()
         {
             User user = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
@@ -36,51 +53,18 @@ namespace WebTests.Features.Users.Login
                 new Email("walker.jlg@gmail.com"),
                 hasherFake.Hash("password123"));
 
-            unitOfWorkSpy.UserRepositorySpy.Users.Add(user);
+            await unitOfWorkSpy.UserRepositorySpy.Add(user);
 
-            var command = new LoginCommand
+            var command = new LoginCommand()
             {
-                Email = "walker.jlg@gmail.com",
-                Password = "password123",
-            };
-            var result = await handler.Handle(command, default);
-
-            Assert.Same(user.Id, authenticatorSpy.UserId);
-            Assert.True(result);
-        }
-
-        [Fact]
-        public async Task It_Returns_An_Error_If_User_Not_Found()
-        {
-            var command = new LoginCommand
-            {
-                Email = "walker.jlg@gmail.com",
-                Password = "password123",
-            };
-            var result = await handler.Handle(command, default);
-
-            Assert.False(result);
-        }
-
-        [Fact]
-        public async Task It_Returns_An_Error_If_Password_Doesnt_Match()
-        {
-            User user = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                hasherFake.Hash("password123"));
-
-            unitOfWorkSpy.UserRepositorySpy.Users.Add(user);
-
-            var command = new LoginCommand
-            {
-                Email = "walker.jlg@gmail.com",
+                Email = user.Email.Address,
                 Password = "wrong_password",
             };
+
             var result = await handler.Handle(command, default);
 
-            Assert.False(result);
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.BadRequest);
         }
     }
 }

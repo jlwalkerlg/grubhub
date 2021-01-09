@@ -1,31 +1,20 @@
 using System.Threading.Tasks;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Users.GetAuthUser
 {
-    public class GetAuthUserActionTests : WebActionTestBase
+    public class GetAuthUserActionTests : HttpTestBase
     {
-        public GetAuthUserActionTests(WebActionTestFixture fixture) : base(fixture)
+        public GetAuthUserActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await Get("/auth/user");
+            var response = await fixture.GetClient().Get("/auth/user");
 
-            Assert.Equal(401, (int)response.StatusCode);
-        }
-
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            await Login();
-
-            var response = await Get("/auth/user");
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(401);
         }
     }
 }

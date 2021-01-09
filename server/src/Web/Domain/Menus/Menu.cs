@@ -22,14 +22,18 @@ namespace Web.Domain.Menus
         private readonly List<MenuCategory> categories = new();
         public IReadOnlyList<MenuCategory> Categories => categories;
 
-        public void AddCategory(string name)
+        public MenuCategory AddCategory(string name)
         {
             if (ContainsCategory(name))
             {
                 throw new InvalidOperationException($"Category {name} already exists.");
             }
 
-            categories.Add(new MenuCategory(name));
+            var category = new MenuCategory(name);
+
+            categories.Add(category);
+
+            return category;
         }
 
         public void RemoveCategory(string name)

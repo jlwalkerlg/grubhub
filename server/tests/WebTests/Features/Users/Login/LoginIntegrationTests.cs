@@ -1,59 +1,42 @@
-using System;
 using System.Threading.Tasks;
-using Web.Domain;
-using Web.Domain.Menus;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
 using Web.Features.Users.Login;
-using Web.Services.Hashing;
+using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Features.Users.Login
 {
-    public class LoginIntegrationTests : WebIntegrationTestBase
+    public class LoginIntegrationTests : IntegrationTestBase
     {
-        public LoginIntegrationTests(WebIntegrationTestFixture fixture) : base(fixture)
+        public LoginIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Logs_The_User_In()
         {
-            string password = null;
-            await fixture.ExecuteService<IHasher>(hasher =>
+            var user = new User()
             {
-                password = hasher.Hash("password123");
-                return Task.CompletedTask;
-            });
+                Email = "walker.jlg@gmail.com",
+                Password = fixture.Hash("password123"),
+            };
 
-            var user = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                password);
+            fixture.Insert(user);
 
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                user.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Madchester, MN12 1NM"),
-                new Coordinates(1, 2));
+            var client = fixture.CreateClient();
 
-            var menu = new Menu(restaurant.Id);
-
-            await fixture.InsertDb(user, restaurant, menu);
-
-            var response = await Post("/auth/login", new LoginCommand
+            var request = new LoginCommand()
             {
                 Email = "walker.jlg@gmail.com",
                 Password = "password123",
-            });
+            };
 
-            Assert.Equal(200, (int)response.StatusCode);
+            var response = await client.Post(
+                "/auth/login",
+                request);
 
-            var loggedInResponse = await Get("/auth/user");
-            loggedInResponse.EnsureSuccessStatusCode();
+            response.StatusCode.ShouldBe(200);
+
+            (await client.Get("/auth/user")).EnsureSuccessStatusCode();
         }
     }
 }

@@ -1,21 +1,22 @@
 using System.Threading.Tasks;
-using WebTests.Doubles;
+using Shouldly;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.SearchRestaurants
 {
-    public class SearchRestaurantsActionTests : WebActionTestBase
+    public class SearchRestaurantsActionTests : HttpTestBase
     {
-        public SearchRestaurantsActionTests(WebActionTestFixture fixture) : base(fixture)
+        public SearchRestaurantsActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            var response = await Get("/restaurants?postcode=MN121NM");
+            var response = await fixture.GetClient().Get("/restaurants?postcode=MN121NM");
 
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

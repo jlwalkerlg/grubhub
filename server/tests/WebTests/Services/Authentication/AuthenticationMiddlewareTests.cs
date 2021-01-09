@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web;
-using Web.Domain;
-using Web.Domain.Users;
 using Web.Services.Authentication;
 using WebTests.Doubles;
 using Xunit;
@@ -23,14 +22,21 @@ namespace WebTests.Services.Authentication
         }
 
         [Fact]
+        public async Task It_Returns_An_Authentication_Error_If_Authentication_Fails()
+        {
+            var result = await middleware.Handle(
+                new RequireAuthenticationCommand(),
+                default,
+                () => Task.FromResult(Result.Ok()));
+
+            result.ShouldBeAnError();
+            result.Error.Type.ShouldBe(ErrorType.Unauthenticated);
+        }
+
+        [Fact]
         public async Task It_Returns_The_Handler_Result_If_Authentication_Passes()
         {
-            var user = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-            authenticatorSpy.SignIn(user);
+            authenticatorSpy.SignIn(Guid.NewGuid());
 
             var handlerResult = Result.Ok();
 
@@ -39,22 +45,8 @@ namespace WebTests.Services.Authentication
                 default,
                 () => Task.FromResult(handlerResult));
 
-            Assert.True(result);
-            Assert.Same(handlerResult, result);
-        }
-
-        [Fact]
-        public async Task It_Returns_An_Authentication_Error_If_Authentication_Fails()
-        {
-            authenticatorSpy.SignOut();
-
-            var result = await middleware.Handle(
-                new RequireAuthenticationCommand(),
-                default,
-                () => Task.FromResult(Result.Ok()));
-
-            Assert.False(result);
-            Assert.Equal(ErrorType.Unauthenticated, result.Error.Type);
+            result.IsSuccess.ShouldBe(true);
+            result.ShouldBe(handlerResult);
         }
 
         [Authenticate]

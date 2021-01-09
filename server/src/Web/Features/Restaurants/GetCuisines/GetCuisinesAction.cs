@@ -1,26 +1,29 @@
-using MediatR;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
+using Web.Data;
 
 namespace Web.Features.Restaurants.GetCuisines
 {
     public class GetCuisinesAction : Action
     {
-        private readonly ISender sender;
+        private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetCuisinesAction(ISender sender)
+        public GetCuisinesAction(IDbConnectionFactory dbConnectionFactory)
         {
-            this.sender = sender;
+            this.dbConnectionFactory = dbConnectionFactory;
         }
 
         [HttpGet("/cuisines")]
         public async Task<IActionResult> Execute()
         {
-            var query = new GetCuisinesQuery();
+            var sql = "SELECT c.name FROM cuisines c ORDER BY c.name ASC";
 
-            var result = await sender.Send(query);
-
-            return result ? Ok(result.Value) : Error(result.Error);
+            using (var connection = await dbConnectionFactory.OpenConnection())
+            {
+                return Ok((await connection.QueryAsync<CuisineDto>(sql)).ToList());
+            }
         }
     }
 }

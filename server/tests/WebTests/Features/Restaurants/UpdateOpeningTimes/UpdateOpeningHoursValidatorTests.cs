@@ -1,18 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Restaurants.UpdateOpeningHours;
 using Xunit;
 
-namespace WebTests.Features.Restaurants.UpdateOpeningHours
+namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 {
     public class UpdateOpeningHoursValidatorTests
     {
-        private readonly UpdateOpeningHoursValidator validator;
-
-        public UpdateOpeningHoursValidatorTests()
-        {
-            validator = new UpdateOpeningHoursValidator();
-        }
+        private readonly UpdateOpeningHoursValidator validator = new();
 
         [Fact]
         public async Task Restaurant_Id_Is_Required()
@@ -21,8 +17,8 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.RestaurantId)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Fact]
@@ -35,7 +31,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.True(result);
+            result.IsSuccess.ShouldBe(true);
         }
 
         [Fact]
@@ -49,7 +45,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
 
             var result = await validator.Validate(command);
 
-            Assert.True(result);
+            result.IsSuccess.ShouldBe(true);
         }
 
         [Fact]
@@ -57,16 +53,15 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
         {
             var command = new UpdateOpeningHoursCommand()
             {
-                RestaurantId = Guid.NewGuid(),
                 MondayOpen = "invalid",
                 MondayClose = "invalid",
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayOpen)));
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayClose)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.MondayOpen));
+            result.Error.Errors.ShouldContainKey(nameof(command.MondayClose));
         }
 
         [Theory]
@@ -77,14 +72,13 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
         {
             var command = new UpdateOpeningHoursCommand()
             {
-                RestaurantId = Guid.NewGuid(),
                 MondayOpen = time,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayOpen)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.MondayOpen));
         }
 
         [Theory]
@@ -94,15 +88,14 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
         {
             var command = new UpdateOpeningHoursCommand()
             {
-                RestaurantId = Guid.NewGuid(),
                 MondayOpen = "00:00",
                 MondayClose = time,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayClose)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldContainKey(nameof(command.MondayClose));
         }
 
         [Theory]
@@ -112,16 +105,15 @@ namespace WebTests.Features.Restaurants.UpdateOpeningHours
         {
             var command = new UpdateOpeningHoursCommand()
             {
-                RestaurantId = Guid.NewGuid(),
                 MondayOpen = openingTime,
                 MondayClose = closingTime,
             };
 
             var result = await validator.Validate(command);
 
-            Assert.False(result);
-            Assert.False(result.Error.Errors.ContainsKey(nameof(command.MondayOpen)));
-            Assert.True(result.Error.Errors.ContainsKey(nameof(command.MondayClose)));
+            result.ShouldBeAnError();
+            result.Error.Errors.ShouldNotContainKey(nameof(command.MondayOpen));
+            result.Error.Errors.ShouldContainKey(nameof(command.MondayClose));
         }
     }
 }

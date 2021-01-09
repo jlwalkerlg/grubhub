@@ -1,53 +1,59 @@
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 using Web.Features.Menus.AddMenuCategory;
-using WebTests.Doubles;
 using Xunit;
 
 namespace WebTests.Features.Menus.AddMenuCategory
 {
-    public class AddMenuCategoryActionTests : WebActionTestBase
+    public class AddMenuCategoryActionTests : HttpTestBase
     {
-        public AddMenuCategoryActionTests(WebActionTestFixture fixture) : base(fixture)
+        public AddMenuCategoryActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await Post($"/restaurants/{Guid.NewGuid()}/menu/categories", new AddMenuCategoryRequest
-            {
-                Name = "Pizza",
-            });
+            var request = new AddMenuCategoryRequest();
 
-            Assert.Equal(401, (int)response.StatusCode);
-        }
+            var response = await fixture.GetClient().Post(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories",
+                request);
 
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            await Login();
-
-            var response = await Post($"/restaurants/{Guid.NewGuid()}/menu/categories", new AddMenuCategoryRequest
-            {
-                Name = "Pizza",
-            });
-
-            Assert.Equal(FailMiddlewareStub.Message, await response.GetErrorMessage());
+            response.StatusCode.ShouldBe(401);
         }
 
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            await Login();
-
-            var response = await Post($"/restaurants/{Guid.NewGuid()}/menu/categories", new AddMenuCategoryRequest
+            var request = new AddMenuCategoryRequest()
             {
                 Name = "",
-            });
+            };
 
-            var errors = await response.GetErrors();
-            Assert.True(errors.ContainsKey("name"));
+            var response = await fixture.GetAuthenticatedClient().Post(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories",
+                request);
+
+            response.StatusCode.ShouldBe(422);
+            response.GetErrors().Result.ShouldContainKey("name");
+        }
+
+        [Fact]
+        public async Task It_Returns_Handler_Errors()
+        {
+            var request = new AddMenuCategoryRequest()
+            {
+                Name = "Pizza"
+            };
+
+            var response = await fixture.GetAuthenticatedClient().Post(
+                $"/restaurants/{Guid.NewGuid()}/menu/categories",
+                request);
+
+            response.StatusCode.ShouldBe(400);
+            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }
