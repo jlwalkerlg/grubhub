@@ -18,7 +18,6 @@ namespace Web.Data.EF
 
         public IRestaurantRepository Restaurants => new EFRestaurantRepository(context);
         public IMenuRepository Menus => new EFMenuRepository(context);
-        public IRestaurantManagerRepository RestaurantManagers => new EFRestaurantManagerRepository(context);
         public IUserRepository Users => new EFUserRepository(context);
         public IEventRepository Events => new EFEventRepository(context);
         public ICuisineRepository Cuisines => new EFCuisineRepository(context);

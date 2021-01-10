@@ -65,7 +65,7 @@ namespace Web.Features.Restaurants.RegisterRestaurant
 
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id, clock.UtcNow);
 
-            await unitOfWork.RestaurantManagers.Add(manager);
+            await unitOfWork.Users.Add(manager);
             await unitOfWork.Restaurants.Add(restaurant);
             await unitOfWork.Menus.Add(menu);
             await unitOfWork.Events.Add(ev);

@@ -56,7 +56,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 2));
 
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
+            await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
             authenticatorSpy.SignIn(Guid.NewGuid());

@@ -15,9 +15,6 @@ namespace WebTests.Doubles
         public IMenuRepository Menus => MenuRepositorySpy;
         public MenuRepositorySpy MenuRepositorySpy { get; } = new();
 
-        public IRestaurantManagerRepository RestaurantManagers => RestaurantManagerRepositorySpy;
-        public RestaurantManagerRepositorySpy RestaurantManagerRepositorySpy { get; } = new();
-
         public IUserRepository Users => UserRepositorySpy;
         public UserRepositorySpy UserRepositorySpy { get; } = new();
 

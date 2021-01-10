@@ -33,5 +33,11 @@ namespace WebTests.Doubles
             return Task.FromResult(
                 Users.Any(x => x.Email.Address == email));
         }
+
+        public Task Add(RestaurantManager manager)
+        {
+            Users.Add(manager);
+            return Task.CompletedTask;
+        }
     }
 }

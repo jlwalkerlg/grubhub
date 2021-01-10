@@ -34,5 +34,10 @@ namespace Web.Data.EF.Repositories
 
             return count > 0;
         }
+
+        public async Task Add(RestaurantManager manager)
+        {
+            await context.RestaurantManagers.AddAsync(manager);
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
                 new Address("1 Maine Road, Madchester, MN12 1NM"),
                 new Coordinates(1, 2));
 
-            await unitOfWorkSpy.RestaurantManagerRepositorySpy.Add(manager);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             authenticatorSpy.SignIn(Guid.NewGuid());

@@ -10,7 +10,6 @@ namespace Web
     {
         IRestaurantRepository Restaurants { get; }
         IMenuRepository Menus { get; }
-        IRestaurantManagerRepository RestaurantManagers { get; }
         IUserRepository Users { get; }
         IEventRepository Events { get; }
         ICuisineRepository Cuisines { get; }

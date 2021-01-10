@@ -60,7 +60,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
 
             var menu = new Menu(restaurant.Id);
 
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
+            await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
@@ -97,7 +97,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
 
             var menu = new Menu(restaurant.Id);
 
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
+            await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 

@@ -43,7 +43,7 @@ namespace WebTests.Features.Menus.AddMenuItem
                 new Address("1 Maine Road, Manchester, UK"),
                 new Coordinates(1, 1));
 
-            await unitOfWorkSpy.RestaurantManagerRepositorySpy.Add(manager);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
             authenticatorSpy.SignIn(manager);
@@ -84,7 +84,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             menu.AddCategory("Pizza");
 
-            await unitOfWorkSpy.RestaurantManagerRepositorySpy.Add(manager);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
@@ -124,7 +124,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var menu = new Menu(restaurant.Id);
 
-            await unitOfWorkSpy.RestaurantManagerRepositorySpy.Add(manager);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
@@ -168,7 +168,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
 
-            await unitOfWorkSpy.RestaurantManagerRepositorySpy.Add(manager);
+            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 

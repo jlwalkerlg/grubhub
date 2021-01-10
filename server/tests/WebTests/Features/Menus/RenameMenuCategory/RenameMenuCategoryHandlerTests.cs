@@ -62,7 +62,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var menu = new Menu(restaurant.Id);
             menu.AddCategory("Pizza");
 
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
+            await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
@@ -100,7 +100,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
 
             var menu = new Menu(restaurant.Id);
 
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
+            await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
@@ -140,7 +140,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             menu.AddCategory("Pizza");
             menu.AddCategory("Curry");
 
-            await unitOfWorkSpy.RestaurantManagers.Add(manager);
+            await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
