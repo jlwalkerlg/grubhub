@@ -55,7 +55,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.ValidationError);
-            result.Error.Errors.ShouldContainKey(nameof(command.Email));
+            result.Errors.ShouldContainKey(nameof(command.Email));
         }
     }
 }

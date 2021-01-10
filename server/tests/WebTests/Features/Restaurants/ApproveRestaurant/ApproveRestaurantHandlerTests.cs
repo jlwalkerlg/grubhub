@@ -44,7 +44,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
 
             var result = await handler.Handle(command, default);
 
-            result.IsSuccess.ShouldBe(true);
+            result.ShouldBeSuccessful();
             restaurant.Status.ShouldBe(RestaurantStatus.Approved);
             unitOfWorkSpy.Commited.ShouldBe(true);
         }

@@ -37,7 +37,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
                 request);
 
             response.StatusCode.ShouldBe(422);
-            response.GetErrors().Result.ShouldContainKey("name");
+            response.GetErrors().ShouldContainKey("name");
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

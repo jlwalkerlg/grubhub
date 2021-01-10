@@ -43,7 +43,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 
             response.StatusCode.ShouldBe(422);
 
-            var errors = await response.GetErrors();
+            var errors = response.GetErrors();
 
             errors.ShouldContainKey("name");
             errors.ShouldContainKey("phoneNumber");
@@ -71,7 +71,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

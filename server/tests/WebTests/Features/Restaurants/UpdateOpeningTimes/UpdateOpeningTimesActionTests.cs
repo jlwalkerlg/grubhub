@@ -37,7 +37,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
                 request);
 
             response.StatusCode.ShouldBe(422);
-            response.GetErrors().Result.ShouldContainKey("mondayOpen");
+            response.GetErrors().ShouldContainKey("mondayOpen");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

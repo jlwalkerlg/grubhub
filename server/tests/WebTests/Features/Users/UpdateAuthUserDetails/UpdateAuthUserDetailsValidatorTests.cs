@@ -23,7 +23,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Name));
+            result.Errors.ShouldContainKey(nameof(command.Name));
         }
 
         [Theory]
@@ -41,7 +41,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Email));
+            result.Errors.ShouldContainKey(nameof(command.Email));
         }
     }
 }

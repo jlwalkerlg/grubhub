@@ -19,7 +19,7 @@ namespace WebTests.Services.Geocoding
         {
             var result = await geocoder.Geocode("1 Maine Road, Manchester, UK");
 
-            result.IsSuccess.ShouldBe(true);
+            result.ShouldBeSuccessful();
             result.Value.FormattedAddress.ShouldNotBeNull();
             result.Value.Coordinates.Latitude.ShouldNotBe(default(float));
             result.Value.Coordinates.Longitude.ShouldNotBe(default(float));

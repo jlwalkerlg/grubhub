@@ -34,7 +34,7 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
                 request);
 
             response.StatusCode.ShouldBe(422);
-            response.GetErrors().Result.ShouldContainKey("restaurantId");
+            response.GetErrors().ShouldContainKey("restaurantId");
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 
             var result = await validator.Validate(command);
 
-            result.IsSuccess.ShouldBe(true);
+            result.ShouldBeSuccessful();
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 
             var result = await validator.Validate(command);
 
-            result.IsSuccess.ShouldBe(true);
+            result.ShouldBeSuccessful();
         }
 
         [Fact]
@@ -60,8 +60,8 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.MondayOpen));
-            result.Error.Errors.ShouldContainKey(nameof(command.MondayClose));
+            result.Errors.ShouldContainKey(nameof(command.MondayOpen));
+            result.Errors.ShouldContainKey(nameof(command.MondayClose));
         }
 
         [Theory]
@@ -78,7 +78,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.MondayOpen));
+            result.Errors.ShouldContainKey(nameof(command.MondayOpen));
         }
 
         [Theory]
@@ -95,7 +95,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.MondayClose));
+            result.Errors.ShouldContainKey(nameof(command.MondayClose));
         }
 
         [Theory]
@@ -112,8 +112,8 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldNotContainKey(nameof(command.MondayOpen));
-            result.Error.Errors.ShouldContainKey(nameof(command.MondayClose));
+            result.Errors.ShouldNotContainKey(nameof(command.MondayOpen));
+            result.Errors.ShouldContainKey(nameof(command.MondayClose));
         }
     }
 }

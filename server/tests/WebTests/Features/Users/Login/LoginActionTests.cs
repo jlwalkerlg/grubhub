@@ -26,7 +26,7 @@ namespace WebTests.Features.Users.Login
 
             response.StatusCode.ShouldBe(422);
 
-            var errors = await response.GetErrors();
+            var errors = response.GetErrors();
 
             errors.ShouldContainKey("email");
             errors.ShouldContainKey("password");
@@ -46,7 +46,7 @@ namespace WebTests.Features.Users.Login
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
 
             (await fixture.GetClient().Get("/auth/user")).StatusCode.ShouldBe(401);
         }

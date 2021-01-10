@@ -21,7 +21,7 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
     }
 }

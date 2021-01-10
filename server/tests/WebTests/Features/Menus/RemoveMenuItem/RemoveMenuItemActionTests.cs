@@ -27,7 +27,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita");
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

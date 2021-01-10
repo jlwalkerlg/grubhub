@@ -21,7 +21,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Theory]
@@ -38,7 +38,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.CategoryName));
+            result.Errors.ShouldContainKey(nameof(command.CategoryName));
         }
 
         [Theory]
@@ -55,7 +55,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.ItemName));
+            result.Errors.ShouldContainKey(nameof(command.ItemName));
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Price));
+            result.Errors.ShouldContainKey(nameof(command.Price));
         }
     }
 }

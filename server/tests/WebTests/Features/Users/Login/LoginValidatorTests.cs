@@ -25,7 +25,7 @@ namespace WebTests.Features.Users.Login
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Email));
+            result.Errors.ShouldContainKey(nameof(command.Email));
         }
 
         [Theory]
@@ -42,7 +42,7 @@ namespace WebTests.Features.Users.Login
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Password));
+            result.Errors.ShouldContainKey(nameof(command.Password));
         }
     }
 }

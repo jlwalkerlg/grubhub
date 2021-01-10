@@ -16,7 +16,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             var response = await fixture.GetClient().Get("/restaurants?postcode=MN121NM");
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

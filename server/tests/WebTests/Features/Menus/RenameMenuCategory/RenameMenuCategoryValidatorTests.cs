@@ -21,7 +21,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Theory]
@@ -38,7 +38,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.OldName));
+            result.Errors.ShouldContainKey(nameof(command.OldName));
         }
 
         [Theory]
@@ -55,7 +55,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.NewName));
+            result.Errors.ShouldContainKey(nameof(command.NewName));
         }
     }
 }

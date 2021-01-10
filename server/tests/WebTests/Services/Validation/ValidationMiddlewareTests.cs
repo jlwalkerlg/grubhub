@@ -52,7 +52,7 @@ namespace WebTests.Services.Validation
                 default,
                 () => Task.FromResult(handlerResult));
 
-            result.IsSuccess.ShouldBe(true);
+            result.ShouldBeSuccessful();
             result.ShouldBe(handlerResult);
         }
     }

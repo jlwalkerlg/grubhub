@@ -43,7 +43,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
                 "/auth/user",
                 request);
 
-            var errors = await response.GetErrors();
+            var errors = response.GetErrors();
 
             errors.ShouldContainKey("name");
             errors.ShouldContainKey("email");

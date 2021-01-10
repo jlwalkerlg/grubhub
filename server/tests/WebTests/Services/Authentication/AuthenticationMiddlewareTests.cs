@@ -45,7 +45,7 @@ namespace WebTests.Services.Authentication
                 default,
                 () => Task.FromResult(handlerResult));
 
-            result.IsSuccess.ShouldBe(true);
+            result.ShouldBeSuccessful();
             result.ShouldBe(handlerResult);
         }
 

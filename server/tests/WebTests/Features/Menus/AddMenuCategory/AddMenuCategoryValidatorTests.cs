@@ -21,7 +21,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Theory]
@@ -38,7 +38,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Name));
+            result.Errors.ShouldContainKey(nameof(command.Name));
         }
     }
 }

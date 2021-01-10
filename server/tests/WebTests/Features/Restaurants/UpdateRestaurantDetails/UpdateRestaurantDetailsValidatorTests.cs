@@ -21,7 +21,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantId));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
         [Theory]
@@ -38,7 +38,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Name));
+            result.Errors.ShouldContainKey(nameof(command.Name));
         }
 
         [Theory]
@@ -56,7 +56,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.PhoneNumber));
+            result.Errors.ShouldContainKey(nameof(command.PhoneNumber));
         }
 
         [Theory]
@@ -71,7 +71,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.DeliveryFee));
+            result.Errors.ShouldContainKey(nameof(command.DeliveryFee));
         }
 
         [Theory]
@@ -86,7 +86,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.MinimumDeliverySpend));
+            result.Errors.ShouldContainKey(nameof(command.MinimumDeliverySpend));
         }
 
         [Theory]
@@ -101,7 +101,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.MaxDeliveryDistanceInKm));
+            result.Errors.ShouldContainKey(nameof(command.MaxDeliveryDistanceInKm));
         }
 
         [Theory]
@@ -118,7 +118,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.EstimatedDeliveryTimeInMinutes));
+            result.Errors.ShouldContainKey(nameof(command.EstimatedDeliveryTimeInMinutes));
         }
     }
 }

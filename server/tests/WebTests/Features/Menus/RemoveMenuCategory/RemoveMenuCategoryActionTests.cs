@@ -27,7 +27,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza");
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

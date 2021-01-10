@@ -40,7 +40,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 request);
 
             response.StatusCode.ShouldBe(422);
-            response.GetErrors().Result.ShouldContainKey("newName");
+            response.GetErrors().ShouldContainKey("newName");
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

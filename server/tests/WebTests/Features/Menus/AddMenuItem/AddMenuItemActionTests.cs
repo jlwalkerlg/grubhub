@@ -45,7 +45,7 @@ namespace WebTests.Features.Menus.AddMenuItem
                 $"/restaurants/{Guid.NewGuid()}/menu/items",
                 request);
 
-            var errors = await response.GetErrors();
+            var errors = response.GetErrors();
 
             errors.ShouldContainKey("categoryName");
             errors.ShouldContainKey("itemName");
@@ -69,7 +69,7 @@ namespace WebTests.Features.Menus.AddMenuItem
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
 
             response.StatusCode.ShouldBe(400);
         }

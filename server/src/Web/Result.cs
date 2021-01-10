@@ -1,19 +1,10 @@
+using System.Collections.Generic;
+
 namespace Web
 {
     public class Result
     {
-        public bool IsSuccess { get; private set; }
-
         private Error error;
-        public virtual Error Error
-        {
-            get => error;
-            set
-            {
-                IsSuccess = false;
-                error = value;
-            }
-        }
 
         public Result()
         {
@@ -24,6 +15,20 @@ namespace Web
         {
             Error = error;
         }
+
+        public bool IsSuccess { get; private set; }
+
+        public virtual Error Error
+        {
+            get => error;
+            set
+            {
+                IsSuccess = false;
+                error = value;
+            }
+        }
+
+        public Dictionary<string, string> Errors => error?.Errors;
 
         public static Result Ok()
         {
@@ -46,8 +51,6 @@ namespace Web
 
     public class Result<T> : Result
     {
-        public T Value { get; private set; }
-
         public Result() : base()
         {
         }
@@ -60,6 +63,8 @@ namespace Web
         protected Result(Error error) : base(error)
         {
         }
+
+        public T Value { get; private set; }
 
         public override Error Error
         {

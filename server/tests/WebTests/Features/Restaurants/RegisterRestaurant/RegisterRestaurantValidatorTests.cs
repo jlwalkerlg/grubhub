@@ -23,7 +23,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.ManagerName));
+            result.Errors.ShouldContainKey(nameof(command.ManagerName));
         }
 
         [Theory]
@@ -41,7 +41,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.ManagerEmail));
+            result.Errors.ShouldContainKey(nameof(command.ManagerEmail));
         }
 
         [Theory]
@@ -59,7 +59,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.ManagerPassword));
+            result.Errors.ShouldContainKey(nameof(command.ManagerPassword));
         }
 
         [Theory]
@@ -76,7 +76,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantName));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantName));
         }
 
         [Theory]
@@ -94,7 +94,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.RestaurantPhoneNumber));
+            result.Errors.ShouldContainKey(nameof(command.RestaurantPhoneNumber));
         }
 
         [Theory]
@@ -111,7 +111,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Error.Errors.ShouldContainKey(nameof(command.Address));
+            result.Errors.ShouldContainKey(nameof(command.Address));
         }
     }
 }

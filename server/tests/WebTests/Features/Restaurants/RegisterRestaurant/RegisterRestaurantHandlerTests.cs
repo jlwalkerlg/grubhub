@@ -60,7 +60,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.ValidationError);
-            result.Error.Errors.ShouldContainKey(nameof(command.ManagerEmail));
+            result.Errors.ShouldContainKey(nameof(command.ManagerEmail));
         }
 
         [Fact]

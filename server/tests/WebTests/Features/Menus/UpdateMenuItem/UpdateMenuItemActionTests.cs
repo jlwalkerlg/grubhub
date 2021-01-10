@@ -45,7 +45,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             response.StatusCode.ShouldBe(422);
 
-            var errors = await response.GetErrors();
+            var errors = response.GetErrors();
 
             errors.ShouldContainKey("newItemName");
             errors.ShouldContainKey("description");
@@ -67,7 +67,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace WebTests.Services.Tokenization
 
             var result = tokenizer.Decode(token);
 
-            result.IsSuccess.ShouldBe(true);
+            result.ShouldBeSuccessful();
             result.Value.ShouldBe(id);
         }
 

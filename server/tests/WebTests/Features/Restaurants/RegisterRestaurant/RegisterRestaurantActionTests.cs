@@ -30,7 +30,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             response.StatusCode.ShouldBe(422);
 
-            var errors = (await response.GetErrors());
+            var errors = (response.GetErrors());
 
             errors.ShouldContainKey("managerName");
             errors.ShouldContainKey("managerEmail");
@@ -58,7 +58,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 command);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().Result.ShouldBe(fixture.HandlerErrorMessage);
+            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }
