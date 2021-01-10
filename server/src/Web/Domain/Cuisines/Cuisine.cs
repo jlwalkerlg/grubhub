@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Web.Domain.Restaurants;
 
-namespace Web.Domain.Restaurants
+namespace Web.Domain.Cuisines
 {
     public class Cuisine : Entity<Cuisine>
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Domain.Restaurants;
-using Web.Features.Restaurants;
+using Web.Domain.Cuisines;
+using Web.Features.Cuisines;
 
 namespace WebTests.Doubles
 {

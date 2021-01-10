@@ -1,3 +1,4 @@
+using Web.Domain.Cuisines;
 using Web.Domain.Restaurants;
 
 namespace Web.Data.EF

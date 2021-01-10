@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Data;
+using Web.Features.Cuisines;
 
 namespace Web.Features.Restaurants.GetRestaurantById
 {

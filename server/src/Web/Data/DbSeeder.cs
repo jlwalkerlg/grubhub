@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Web.Data.EF;
 using Web.Domain;
+using Web.Domain.Cuisines;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;

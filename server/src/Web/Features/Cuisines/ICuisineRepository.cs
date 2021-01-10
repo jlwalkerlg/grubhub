@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Domain.Restaurants;
+using Web.Domain.Cuisines;
 
-namespace Web.Features.Restaurants
+namespace Web.Features.Cuisines
 {
     public interface ICuisineRepository
     {

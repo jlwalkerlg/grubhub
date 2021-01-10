@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Web.Domain.Cuisines;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;

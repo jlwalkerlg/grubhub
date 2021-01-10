@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Data;
 
-namespace Web.Features.Restaurants.GetCuisines
+namespace Web.Features.Cuisines.GetCuisines
 {
     public class GetCuisinesAction : Action
     {

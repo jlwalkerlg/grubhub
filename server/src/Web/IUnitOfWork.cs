@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Web.Features.Cuisines;
 using Web.Features.Events;
 using Web.Features.Menus;
 using Web.Features.Restaurants;

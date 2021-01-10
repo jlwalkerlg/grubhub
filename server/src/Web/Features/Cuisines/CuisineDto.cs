@@ -1,4 +1,4 @@
-namespace Web.Features.Restaurants
+namespace Web.Features.Cuisines
 {
     public record CuisineDto
     {

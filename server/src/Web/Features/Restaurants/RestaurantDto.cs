@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Web.Features.Cuisines;
 
 namespace Web.Features.Restaurants
 {
