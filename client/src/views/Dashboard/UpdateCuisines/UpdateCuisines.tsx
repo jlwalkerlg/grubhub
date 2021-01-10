@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import useCuisines from "~/api/restaurants/useCuisines";
+import useCuisines from "~/api/cuisines/useCuisines";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import useUpdateCuisines from "~/api/restaurants/useUpdateCuisines";
 import useAuth from "~/api/users/useAuth";

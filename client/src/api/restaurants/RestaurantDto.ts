@@ -1,4 +1,5 @@
-import { CuisineDto } from "./CuisineDto";
+import { CuisineDto } from "../cuisines/CuisineDto";
+import { OpeningTimes } from "./OpeningTimes";
 
 export interface RestaurantDto {
   id: string;
@@ -18,18 +19,3 @@ export interface RestaurantDto {
 }
 
 type RestaurantStatus = "PendingApproval" | "Approved";
-
-interface OpeningTimes {
-  monday: OpeningHours;
-  tuesday: OpeningHours;
-  wednesday: OpeningHours;
-  thursday: OpeningHours;
-  friday: OpeningHours;
-  saturday: OpeningHours;
-  sunday: OpeningHours;
-}
-
-interface OpeningHours {
-  open: string;
-  close: string;
-}

@@ -8,7 +8,7 @@ namespace Web.ServiceRegistration
     {
         public static void AddDtoRepositories(this ContainerBuilder builder)
         {
-            builder.RegisterType<DPRestaurantDtoRepository>()
+            builder.RegisterType<DPRestaurantSearcher>()
                 .AsImplementedInterfaces();
 
             builder.RegisterType<DPUserDtoRepository>()

@@ -7,7 +7,7 @@ using Web.Services.Geocoding;
 
 namespace Web.Features.Restaurants.SearchRestaurants
 {
-    public class SearchRestaurantsHandler : IRequestHandler<SearchRestaurantsQuery, List<RestaurantDto>>
+    public class SearchRestaurantsHandler : IRequestHandler<SearchRestaurantsQuery, List<RestaurantSearchResult>>
     {
         private static readonly Regex regex = new Regex(
             @"[A-Z]{2}\d{1,2} ?\d[A-Z]{2}",
@@ -15,15 +15,15 @@ namespace Web.Features.Restaurants.SearchRestaurants
             TimeSpan.FromMilliseconds(250));
 
         private readonly IGeocoder geocoder;
-        private readonly IRestaurantDtoRepository repository;
+        private readonly IRestaurantSearcher searcher;
 
-        public SearchRestaurantsHandler(IGeocoder geocoder, IRestaurantDtoRepository repository)
+        public SearchRestaurantsHandler(IGeocoder geocoder, IRestaurantSearcher searcher)
         {
             this.geocoder = geocoder;
-            this.repository = repository;
+            this.searcher = searcher;
         }
 
-        public async Task<Result<List<RestaurantDto>>> Handle(SearchRestaurantsQuery query, CancellationToken cancellationToken)
+        public async Task<Result<List<RestaurantSearchResult>>> Handle(SearchRestaurantsQuery query, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(query.Postcode) || !regex.IsMatch(query.Postcode))
             {
@@ -37,7 +37,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
                 return Error.BadRequest("Sorry, we don't recognise that postcode.");
             }
 
-            var restaurants = await repository.Search(
+            var restaurants = await searcher.Search(
                 geocodingResult.Value.Coordinates,
                 query.Options);
 

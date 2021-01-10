@@ -1,7 +1,21 @@
 import { useQuery } from "react-query";
 import { sleep } from "~/services/utils";
 import Api, { ApiError } from "../Api";
-import { RestaurantDto } from "./RestaurantDto";
+import { CuisineDto } from "../cuisines/CuisineDto";
+import { OpeningTimes } from "./OpeningTimes";
+
+export interface RestaurantSearchResult {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  openingTimes: OpeningTimes;
+  deliveryFee: number;
+  minimumDeliverySpend: number;
+  maxDeliveryDistanceInKm: number;
+  estimatedDeliveryTimeInMinutes: number;
+  cuisines: CuisineDto[];
+}
 
 interface SearchRestaurantsQuery {
   postcode: string;
@@ -15,7 +29,7 @@ async function searchRestaurants(query: SearchRestaurantsQuery) {
   const params = Object.keys(query)
     .map((key) => `${key}=${query[key]}`)
     .join("&");
-  const response = await Api.get<Array<RestaurantDto>>(
+  const response = await Api.get<Array<RestaurantSearchResult>>(
     `/restaurants?${params}`
   );
   return response.data;
@@ -29,7 +43,7 @@ function getSearchRestaurantsQueryKey(query: SearchRestaurantsQuery) {
 }
 
 export default function useSearchRestaurants(query: SearchRestaurantsQuery) {
-  return useQuery<Array<RestaurantDto>, ApiError>(
+  return useQuery<Array<RestaurantSearchResult>, ApiError>(
     getSearchRestaurantsQueryKey(query),
     () => searchRestaurants(query),
     {

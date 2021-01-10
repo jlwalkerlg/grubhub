@@ -7,36 +7,33 @@ using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Features.Cuisines;
 using Web.Features.Restaurants;
+using Web.Features.Restaurants.SearchRestaurants;
 using Web.Services;
 
 namespace Web.Data.Dapper.Repositories.Restaurants
 {
-    public class DPRestaurantDtoRepository : IRestaurantDtoRepository
+    public class DPRestaurantSearcher : IRestaurantSearcher
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
         private readonly IClock clock;
 
-        public DPRestaurantDtoRepository(
+        public DPRestaurantSearcher(
             IDbConnectionFactory dbConnectionFactory, IClock clock)
         {
             this.dbConnectionFactory = dbConnectionFactory;
             this.clock = clock;
         }
 
-        public async Task<List<RestaurantDto>> Search(
+        public async Task<List<RestaurantSearchResult>> Search(
             Coordinates coordinates,
             RestaurantSearchOptions options = null)
         {
             var sql = @"
                 SELECT
                     r.id,
-                    r.manager_id,
                     r.name,
-                    r.phone_number,
-                    r.address,
                     r.latitude,
                     r.longitude,
-                    r.status,
                     r.monday_open,
                     r.monday_close,
                     r.tuesday_open,
@@ -145,18 +142,14 @@ namespace Web.Data.Dapper.Repositories.Restaurants
             }
         }
 
-        private RestaurantDto EntryToDto(RestaurantEntry entry)
+        private RestaurantSearchResult EntryToDto(RestaurantEntry entry)
         {
-            return new RestaurantDto()
+            return new RestaurantSearchResult()
             {
                 Id = entry.id,
-                ManagerId = entry.manager_id,
                 Name = entry.name,
-                PhoneNumber = entry.phone_number,
-                Address = entry.address,
                 Latitude = entry.latitude,
                 Longitude = entry.longitude,
-                Status = entry.status,
                 OpeningTimes = new OpeningTimesDto()
                 {
                     Monday = entry.monday_open.HasValue ? new OpeningHoursDto()
@@ -215,13 +208,9 @@ namespace Web.Data.Dapper.Repositories.Restaurants
         private record RestaurantEntry
         {
             public Guid id { get; init; }
-            public Guid manager_id { get; init; }
             public string name { get; init; }
-            public string phone_number { get; init; }
-            public string address { get; init; }
             public float latitude { get; init; }
             public float longitude { get; init; }
-            public string status { get; init; }
             public TimeSpan? monday_open { get; init; }
             public TimeSpan? monday_close { get; init; }
             public TimeSpan? tuesday_open { get; init; }

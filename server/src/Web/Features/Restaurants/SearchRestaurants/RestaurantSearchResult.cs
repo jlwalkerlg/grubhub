@@ -2,18 +2,14 @@ using System;
 using System.Collections.Generic;
 using Web.Features.Cuisines;
 
-namespace Web.Features.Restaurants
+namespace Web.Features.Restaurants.SearchRestaurants
 {
-    public record RestaurantDto
+    public record RestaurantSearchResult
     {
         public Guid Id { get; init; }
-        public Guid ManagerId { get; init; }
         public string Name { get; init; }
-        public string PhoneNumber { get; init; }
-        public string Address { get; init; }
         public float Latitude { get; init; }
         public float Longitude { get; init; }
-        public string Status { get; init; }
         public OpeningTimesDto OpeningTimes { get; init; } = new();
         public decimal DeliveryFee { get; init; }
         public decimal MinimumDeliverySpend { get; init; }

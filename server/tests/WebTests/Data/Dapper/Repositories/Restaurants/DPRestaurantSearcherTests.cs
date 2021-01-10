@@ -4,23 +4,23 @@ using System.Threading.Tasks;
 using Shouldly;
 using Web.Data.Dapper.Repositories.Restaurants;
 using Web.Domain;
-using Web.Features.Restaurants;
+using Web.Features.Restaurants.SearchRestaurants;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
 
 namespace WebTests.Data.Dapper.Repositories.Restaurants
 {
-    public class DPRestaurantDtoRepositoryTests : IntegrationTestBase
+    public class DPRestaurantSearcherTests : IntegrationTestBase
     {
         private readonly ClockStub clock;
-        private readonly DPRestaurantDtoRepository repository;
+        private readonly DPRestaurantSearcher repository;
 
-        public DPRestaurantDtoRepositoryTests(IntegrationTestFixture fixture) : base(fixture)
+        public DPRestaurantSearcherTests(IntegrationTestFixture fixture) : base(fixture)
         {
             clock = new ClockStub();
 
-            repository = new DPRestaurantDtoRepository(
+            repository = new DPRestaurantSearcher(
                 new TestDbConnectionFactory(),
                 clock
             );

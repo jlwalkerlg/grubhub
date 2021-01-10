@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import useCuisines from "~/api/restaurants/useCuisines";
+import useCuisines from "~/api/cuisines/useCuisines";
 import useSearchRestaurants from "~/api/restaurants/useSearchRestaurants";
 import CashIcon from "~/components/Icons/CashIcon";
 import CheckIcon from "~/components/Icons/CheckIcon";

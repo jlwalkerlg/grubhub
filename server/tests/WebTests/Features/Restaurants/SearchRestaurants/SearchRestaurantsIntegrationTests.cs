@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Shouldly;
-using Web.Features.Restaurants;
+using Web.Features.Restaurants.SearchRestaurants;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
@@ -77,7 +77,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             var response = await fixture.GetClient().Get(
                 "/restaurants?postcode=BD181LT&sort_by=distance&cuisines=Thai,Greek");
 
-            var restaurants = await response.GetData<List<RestaurantDto>>();
+            var restaurants = await response.GetData<List<RestaurantSearchResult>>();
 
             restaurants.Count.ShouldBe(2);
             restaurants[0].Id.ShouldBe(r2.Id);
