@@ -1,13 +1,13 @@
+using Shouldly;
 using System;
 using System.Threading.Tasks;
-using Shouldly;
+using Web;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
 using Web.Features.Restaurants.UpdateOpeningHours;
 using WebTests.Doubles;
 using Xunit;
-using Web;
 
 namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 {

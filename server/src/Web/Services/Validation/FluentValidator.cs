@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
 namespace Web.Services.Validation
 {
     public class FluentValidator<TRequest> : AbstractValidator<TRequest>, IValidator<TRequest>

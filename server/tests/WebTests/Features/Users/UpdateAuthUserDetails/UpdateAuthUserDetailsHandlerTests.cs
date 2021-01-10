@@ -1,12 +1,12 @@
+using Shouldly;
 using System;
 using System.Threading.Tasks;
-using Shouldly;
+using Web;
 using Web.Domain;
 using Web.Domain.Users;
 using Web.Features.Users.UpdateAuthUserDetails;
 using WebTests.Doubles;
 using Xunit;
-using Web;
 
 namespace WebTests.Features.Users.UpdateAuthUserDetails
 {

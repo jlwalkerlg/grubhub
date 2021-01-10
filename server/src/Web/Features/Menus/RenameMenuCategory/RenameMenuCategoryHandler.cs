@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
 using Web.Services.Authentication;
+
 namespace Web.Features.Menus.RenameMenuCategory
 {
     public class RenameMenuCategoryHandler : IRequestHandler<RenameMenuCategoryCommand>

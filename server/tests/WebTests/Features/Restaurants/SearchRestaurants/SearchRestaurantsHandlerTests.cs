@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Shouldly;
+using System.Threading.Tasks;
 using Web;
 using Web.Features.Restaurants.SearchRestaurants;
 using WebTests.Doubles;

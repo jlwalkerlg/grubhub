@@ -1,7 +1,7 @@
+using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Shouldly;
 using Web.Data.Dapper.Repositories.Restaurants;
 using Web.Domain;
 using Web.Features.Restaurants.SearchRestaurants;

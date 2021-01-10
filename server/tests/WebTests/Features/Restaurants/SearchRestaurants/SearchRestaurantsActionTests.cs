@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace WebTests.Features.Restaurants.SearchRestaurants

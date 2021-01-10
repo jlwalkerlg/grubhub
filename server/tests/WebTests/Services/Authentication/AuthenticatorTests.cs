@@ -1,5 +1,5 @@
-using System;
 using Shouldly;
+using System;
 using Web.Domain;
 using Web.Domain.Users;
 using Web.Services.Authentication;

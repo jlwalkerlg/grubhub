@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Services.Authentication;
+
 namespace Web.Features.Users.GetAuthUser
 {
     public class GetAuthUserHandler : IRequestHandler<GetAuthUserQuery, UserDto>

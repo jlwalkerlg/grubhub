@@ -1,6 +1,6 @@
+using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Shouldly;
 using Web.Features.Cuisines;
 using WebTests.TestData;
 using Xunit;

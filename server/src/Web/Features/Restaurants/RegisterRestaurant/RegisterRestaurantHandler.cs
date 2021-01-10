@@ -9,6 +9,7 @@ using Web.Domain.Users;
 using Web.Services;
 using Web.Services.Geocoding;
 using Web.Services.Hashing;
+
 namespace Web.Features.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantHandler : IRequestHandler<RegisterRestaurantCommand>

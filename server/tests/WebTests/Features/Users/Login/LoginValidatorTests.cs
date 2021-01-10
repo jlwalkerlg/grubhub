@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Shouldly;
+using System.Threading.Tasks;
 using Web.Features.Restaurants.Login;
 using Web.Features.Users.Login;
 using Xunit;

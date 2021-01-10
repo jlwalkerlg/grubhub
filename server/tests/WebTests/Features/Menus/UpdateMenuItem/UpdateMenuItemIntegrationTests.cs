@@ -1,6 +1,6 @@
+using Shouldly;
 using System.Linq;
 using System.Threading.Tasks;
-using Shouldly;
 using Web.Features.Menus.UpdateMenuItem;
 using WebTests.TestData;
 using Xunit;

@@ -1,6 +1,6 @@
+using Shouldly;
 using System;
 using System.Threading.Tasks;
-using Shouldly;
 using Web;
 using Web.Domain;
 using Web.Domain.Users;

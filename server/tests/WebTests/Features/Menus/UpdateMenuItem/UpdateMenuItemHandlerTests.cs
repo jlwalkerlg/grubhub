@@ -1,7 +1,8 @@
+using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Shouldly;
+using Web;
 using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -9,7 +10,6 @@ using Web.Domain.Users;
 using Web.Features.Menus.UpdateMenuItem;
 using WebTests.Doubles;
 using Xunit;
-using Web;
 
 namespace WebTests.Features.Menus.UpdateMenuItem
 {

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+
 namespace Web.Services.Geocoding
 {
     public interface IGeocoder

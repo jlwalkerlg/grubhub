@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Shouldly;
+using System.Threading.Tasks;
 using Web.Features.Users.UpdateAuthUserDetails;
 using WebTests.TestData;
 using Xunit;
