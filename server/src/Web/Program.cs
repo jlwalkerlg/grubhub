@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.IO;
 using System.Linq;
 using Web.Data;
 
@@ -20,7 +19,8 @@ namespace Web
             {
                 try
                 {
-                    hostBuilder.ConfigureServices(services => services.AddTransient<DbSeeder>());
+                    hostBuilder.ConfigureServices(services =>
+                        services.AddTransient<DbSeeder>());
                     var host = hostBuilder.Build();
                     Seed(host);
                 }
@@ -40,10 +40,11 @@ namespace Web
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    var env = hostingContext.HostingEnvironment;
-                    var solutionRootPath = Path.Combine(env.ContentRootPath, "..", "..");
-
-                    config.AddJsonFile(Path.Combine(solutionRootPath, "config.json"));
+                    config.AddConfiguration(
+                        new ConfigurationBuilder()
+                            .AddJsonFile("config.json")
+                            .Build()
+                    );
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
