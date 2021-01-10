@@ -4,7 +4,6 @@ using Web;
 using Web.Features.Restaurants.SearchRestaurants;
 using WebTests.Doubles;
 using Xunit;
-using static Web.Error;
 
 namespace WebTests.Features.Restaurants.SearchRestaurants
 {

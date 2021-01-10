@@ -8,7 +8,6 @@ using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Services.Geocoding;
 using WebTests.Doubles;
 using Xunit;
-using static Web.Error;
 
 namespace WebTests.Features.Restaurants.RegisterRestaurant
 {

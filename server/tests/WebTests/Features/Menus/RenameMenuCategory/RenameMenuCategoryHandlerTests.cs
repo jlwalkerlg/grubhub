@@ -8,7 +8,7 @@ using Web.Domain.Users;
 using Web.Features.Menus.RenameMenuCategory;
 using WebTests.Doubles;
 using Xunit;
-using static Web.Error;
+using Web;
 
 namespace WebTests.Features.Menus.RenameMenuCategory
 {

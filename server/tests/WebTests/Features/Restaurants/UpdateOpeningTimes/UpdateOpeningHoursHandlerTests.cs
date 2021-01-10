@@ -7,7 +7,7 @@ using Web.Domain.Users;
 using Web.Features.Restaurants.UpdateOpeningHours;
 using WebTests.Doubles;
 using Xunit;
-using static Web.Error;
+using Web;
 
 namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 {

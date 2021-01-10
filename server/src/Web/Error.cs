@@ -55,15 +55,15 @@ namespace Web
         {
             return new Error(ErrorType.Internal, message);
         }
+    }
 
-        public enum ErrorType
-        {
-            BadRequest,
-            Unauthenticated,
-            Unauthorised,
-            NotFound,
-            ValidationError,
-            Internal,
-        }
+    public enum ErrorType
+    {
+        BadRequest,
+        Unauthenticated,
+        Unauthorised,
+        NotFound,
+        ValidationError,
+        Internal,
     }
 }

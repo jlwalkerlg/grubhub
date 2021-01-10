@@ -6,7 +6,7 @@ using Web.Domain.Users;
 using Web.Features.Users.UpdateAuthUserDetails;
 using WebTests.Doubles;
 using Xunit;
-using static Web.Error;
+using Web;
 
 namespace WebTests.Features.Users.UpdateAuthUserDetails
 {

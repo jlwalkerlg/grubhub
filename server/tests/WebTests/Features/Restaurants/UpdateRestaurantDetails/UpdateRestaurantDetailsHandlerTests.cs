@@ -7,7 +7,7 @@ using Web.Domain.Users;
 using Web.Features.Restaurants.UpdateRestaurantDetails;
 using WebTests.Doubles;
 using Xunit;
-using static Web.Error;
+using Web;
 
 namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 {

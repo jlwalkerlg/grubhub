@@ -5,7 +5,6 @@ using Web;
 using Web.Services.Authentication;
 using WebTests.Doubles;
 using Xunit;
-using static Web.Error;
 
 namespace WebTests.Services.Authentication
 {
