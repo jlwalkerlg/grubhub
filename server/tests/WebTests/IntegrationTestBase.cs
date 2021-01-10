@@ -49,11 +49,6 @@ namespace WebTests
             };
         }
 
-        public HttpTestClient CreateClient()
-        {
-            return new HttpTestClient(factory.CreateClient(), tokenizer);
-        }
-
         public void ResetDatabase()
         {
             using (var conn = new NpgsqlConnection(TestConfig.TestDbConnectionString))

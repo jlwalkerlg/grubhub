@@ -47,12 +47,26 @@ namespace WebTests
         {
             this.factory = factory;
 
-            client = factory.CreateClient();
+            client = CreateHttpClient();
 
             using (var scope = factory.Services.CreateScope())
             {
                 tokenizer = scope.ServiceProvider.GetRequiredService<ITokenizer>();
             }
+        }
+
+        private HttpClient CreateHttpClient()
+        {
+            return factory.CreateClient(new WebApplicationFactoryClientOptions()
+            {
+                AllowAutoRedirect = false,
+                HandleCookies = true,
+            });
+        }
+
+        public HttpTestClient CreateClient()
+        {
+            return new HttpTestClient(CreateHttpClient(), tokenizer);
         }
 
         public HttpTestClient GetClient()
