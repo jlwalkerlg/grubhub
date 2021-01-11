@@ -6,13 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Web;
 using Web.Domain.Users;
 using Web.Services;
-using Web.Services.Geocoding;
 using Web.Services.Tokenization;
 using WebTests.Doubles;
 using Xunit;
@@ -33,11 +31,10 @@ namespace WebTests
     public class HttpTestFixture
     {
         protected readonly HttpTestWebApplicationFactory factory;
-        protected readonly HttpClient client;
         protected readonly ITokenizer tokenizer;
 
-        public string HandlerErrorMessage
-            => HttpTestWebApplicationFactory.FailRequestHandlerError;
+        public string HandlerErrorMessage =>
+            HttpTestWebApplicationFactory.FailRequestHandlerError;
 
         public HttpTestFixture() : this(new())
         {
@@ -47,31 +44,19 @@ namespace WebTests
         {
             this.factory = factory;
 
-            client = CreateHttpClient();
-
             using (var scope = factory.Services.CreateScope())
             {
-                tokenizer = scope.ServiceProvider.GetRequiredService<ITokenizer>();
+                tokenizer = scope.ServiceProvider
+                    .GetRequiredService<ITokenizer>();
             }
         }
 
-        private HttpClient CreateHttpClient()
+        public WebApplicationFactory<Startup> CreateFactory(Action<IServiceCollection> configureServices)
         {
-            return factory.CreateClient(new WebApplicationFactoryClientOptions()
+            return factory.WithWebHostBuilder(config =>
             {
-                AllowAutoRedirect = false,
-                HandleCookies = true,
+                config.ConfigureServices(configureServices);
             });
-        }
-
-        public HttpTestClient CreateClient()
-        {
-            return new HttpTestClient(CreateHttpClient(), tokenizer);
-        }
-
-        public HttpTestClient GetClient()
-        {
-            return new HttpTestClient(client, tokenizer);
         }
 
         public HttpTestClient GetAuthenticatedClient()
@@ -93,6 +78,18 @@ namespace WebTests
         {
             return GetClient().Authenticate(userId);
         }
+
+        public HttpTestClient GetClient()
+        {
+            var client = factory.CreateClient(
+                new WebApplicationFactoryClientOptions()
+                {
+                    AllowAutoRedirect = false,
+                    HandleCookies = true,
+                });
+
+            return new HttpTestClient(client, tokenizer);
+        }
     }
 
     public class HttpTestWebApplicationFactory : WebApplicationFactory<Startup>
@@ -108,7 +105,12 @@ namespace WebTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             base.ConfigureWebHost(builder);
-            builder.ConfigureServices(ConfigureServices);
+            builder.ConfigureServices(services =>
+            {
+                services.AddSingleton<IClock, ClockStub>();
+
+                ConfigureServices(services);
+            });
         }
 
         protected virtual void ConfigureServices(IServiceCollection services)
@@ -172,12 +174,7 @@ namespace WebTests
         {
             builder
                 .RegisterType<GeocoderStub>()
-                .As<IGeocoder>()
-                .SingleInstance();
-
-            builder
-                .RegisterType<ClockStub>()
-                .As<IClock>()
+                .AsImplementedInterfaces()
                 .SingleInstance();
         }
     }

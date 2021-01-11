@@ -4,6 +4,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Web;
 using Web.Services.Tokenization;
 
 namespace WebTests
@@ -14,12 +17,24 @@ namespace WebTests
         private readonly ITokenizer tokenizer;
         private string authToken;
 
-        public HttpTestClient(HttpClient client, ITokenizer tokenizer)
+        public HttpTestClient(WebApplicationFactory<Startup> factory)
         {
+            client = factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
+            using (var scope = factory.Services.CreateScope())
+            {
+                tokenizer = scope.ServiceProvider.GetRequiredService<ITokenizer>();
+            };
+        }
+
+        public HttpTestClient(HttpClient client, ITokenizer tokenizer)
+        {
             this.client = client;
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
             this.tokenizer = tokenizer;
         }
 

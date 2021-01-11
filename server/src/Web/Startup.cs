@@ -64,6 +64,8 @@ namespace Web
             services.AddMediatR(typeof(Startup).Assembly);
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+            services.AddSingleton<IClock, Clock>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -92,10 +94,6 @@ namespace Web
             builder.RegisterType<Authenticator>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-
-            builder.RegisterType<Clock>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

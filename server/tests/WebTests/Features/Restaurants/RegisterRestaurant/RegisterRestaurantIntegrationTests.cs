@@ -1,7 +1,10 @@
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Features.Restaurants.RegisterRestaurant;
+using Web.Services;
 using WebTests.Doubles;
 using Xunit;
 
@@ -16,6 +19,18 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Registers_A_Restaurant_And_A_Manager()
         {
+            var now = DateTime.UtcNow;
+
+            using var factory = fixture.CreateFactory(services =>
+            {
+                services.AddSingleton<IClock>(new ClockStub()
+                {
+                    UtcNow = now,
+                });
+            });
+
+            var client = new HttpTestClient(factory);
+
             var request = new RegisterRestaurantCommand()
             {
                 ManagerName = "Jordan Walker",
@@ -26,9 +41,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 Address = "1 Maine Road, Manchester, UK",
             };
 
-            var response = await fixture.GetClient().Post(
-                "/restaurants/register",
-                request);
+            var response = await client.Post("/restaurants/register", request);
 
             response.StatusCode.ShouldBe(201);
 
@@ -78,12 +91,12 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var @event = fixture.UseTestDbContext(db => db.Events.Single());
 
-            // TODO
             @event.Type.ShouldBe(typeof(RestaurantRegisteredEvent).ToString());
-            // @event.CreatedAt.ShouldBe();
+            @event.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
 
             var rEvent = @event.ToEvent<RestaurantRegisteredEvent>();
 
+            rEvent.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
             rEvent.ManagerId.Value.ShouldBe(manager.Id);
             rEvent.RestaurantId.Value.ShouldBe(restaurant.Id);
         }

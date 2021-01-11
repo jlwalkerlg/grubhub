@@ -22,7 +22,7 @@ namespace WebTests.Features.Users.Logout
 
             fixture.Insert(user);
 
-            var client = fixture.CreateClient();
+            var client = fixture.GetClient();
 
             var loginRequest = new LoginCommand()
             {
