@@ -72,7 +72,6 @@ namespace Web.Domain.Menus
 
         public MenuCategory GetCategory(string name)
         {
-            // TODO: throw exception or return null if doesn't exist?
             return categories.Single(x => x.Name == name);
         }
 

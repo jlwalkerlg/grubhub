@@ -50,7 +50,6 @@ namespace Web.Domain.Menus
 
         public MenuItem GetItem(string name)
         {
-            // TODO: throw exception or return null if doesn't exist?
             return items.Single(x => x.Name == name);
         }
 
