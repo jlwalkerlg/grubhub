@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import React from "react";
 import Layout from "~/components/Layout/Layout";
-import RegisterRestaurantFormController from "./RegisterRestaurantForm/RegisterRestaurantFormController";
+import RegisterRestaurantForm from "./RegisterRestaurantForm/RegisterRestaurantForm";
 
 const RegisterRestaurant: NextPage = () => {
   return (
@@ -18,7 +18,7 @@ const RegisterRestaurant: NextPage = () => {
               you shortly.
             </p>
 
-            <RegisterRestaurantFormController />
+            <RegisterRestaurantForm />
           </div>
         </div>
       </main>

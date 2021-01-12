@@ -5,7 +5,7 @@ export const setFormErrors = <T>(
   form: UseFormMethods<T>
 ) => {
   for (const field in errors) {
-    if (Object.prototype.hasOwnProperty.call(errors, field)) {
+    if (form.getValues().hasOwnProperty(field)) {
       const message = errors[field];
       form.setError(field as FieldName<T>, { message });
     }
