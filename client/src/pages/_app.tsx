@@ -1,4 +1,6 @@
 import { AppProps } from "next/app";
+import Head from "next/head";
+import React from "react";
 import { QueryCache, ReactQueryCacheProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ToastProvider } from "~/components/Toaster/Toaster";
@@ -26,12 +28,18 @@ export default function App(props: AppProps) {
   }
 
   return (
-    <ToastProvider>
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <Hydrate state={props.pageProps.dehydratedState}>
-          <Wrapper {...props} />
-        </Hydrate>
-      </ReactQueryCacheProvider>
-    </ToastProvider>
+    <>
+      <Head>
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </Head>
+
+      <ToastProvider>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+          <Hydrate state={props.pageProps.dehydratedState}>
+            <Wrapper {...props} />
+          </Hydrate>
+        </ReactQueryCacheProvider>
+      </ToastProvider>
+    </>
   );
 }
