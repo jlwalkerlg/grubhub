@@ -1,25 +1,38 @@
-import React from "react";
-import { UseFormMethods } from "react-hook-form";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import {
   combineRules,
   EmailRule,
   PasswordRule,
   RequiredRule,
 } from "~/services/forms/Rule";
+import { setFormErrors } from "~/services/forms/setFormErrors";
+
+interface StepOneValues {
+  managerName: string;
+  managerEmail: string;
+  managerPassword: string;
+}
 
 interface Props {
-  form: UseFormMethods<{
-    managerName: string;
-    managerEmail: string;
-    managerPassword: string;
-  }>;
-  advanceStep(): void;
+  defaults: StepOneValues;
+  errors: { [K in keyof StepOneValues]?: string };
+  advanceStep(data: StepOneValues): any;
 }
 
 const RegisterRestaurantFormStepOne: React.FC<Props> = ({
-  form,
+  defaults,
+  errors,
   advanceStep,
 }) => {
+  const form = useForm<StepOneValues>({
+    defaultValues: defaults,
+  });
+
+  useEffect(() => {
+    setFormErrors(errors, form);
+  }, [errors]);
+
   return (
     <form onSubmit={form.handleSubmit(advanceStep)}>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">

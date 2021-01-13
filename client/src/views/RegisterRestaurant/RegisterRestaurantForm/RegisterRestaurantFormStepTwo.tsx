@@ -1,21 +1,34 @@
-import React from "react";
-import { UseFormMethods } from "react-hook-form";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { combineRules, PhoneRule, RequiredRule } from "~/services/forms/Rule";
+import { setFormErrors } from "~/services/forms/setFormErrors";
+
+interface StepTwoValues {
+  restaurantName: string;
+  restaurantPhoneNumber: string;
+}
 
 interface Props {
-  form: UseFormMethods<{
-    restaurantName: string;
-    restaurantPhoneNumber: string;
-  }>;
-  advanceStep(): void;
-  backStep(): void;
+  defaults: StepTwoValues;
+  errors: { [K in keyof StepTwoValues]?: string };
+  advanceStep(data: StepTwoValues): any;
+  backStep(data: StepTwoValues): any;
 }
 
 const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
-  form,
+  defaults,
+  errors,
   advanceStep,
   backStep,
 }) => {
+  const form = useForm<StepTwoValues>({
+    defaultValues: defaults,
+  });
+
+  useEffect(() => {
+    setFormErrors(errors, form);
+  }, [errors]);
+
   return (
     <form onSubmit={form.handleSubmit(advanceStep)}>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
@@ -70,7 +83,7 @@ const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
         <button
           type="button"
           className="btn btn-outline-primary font-semibold w-full"
-          onClick={backStep}
+          onClick={() => backStep(form.getValues())}
         >
           Back
         </button>

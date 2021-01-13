@@ -1,12 +1,12 @@
 import Router from "next/router";
 import React, { FC, useState } from "react";
-import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import useRegisterRestaurant from "~/api/restaurants/useRegisterRestaurant";
+import useRegisterRestaurant, {
+  RegisterRestaurantCommand,
+} from "~/api/restaurants/useRegisterRestaurant";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
-import { setFormErrors } from "~/services/forms/setFormErrors";
 import RegisterRestaurantFormStepOne from "./RegisterRestaurantFormStepOne";
 import RegisterRestaurantFormStepThree from "./RegisterRestaurantFormStepThree";
 import RegisterRestaurantFormStepTwo from "./RegisterRestaurantFormStepTwo";
@@ -18,82 +18,85 @@ const RegisterRestaurantForm: FC = () => {
 
   if (isLoggedIn) {
     Router.push("/");
-    return null;
   }
 
-  const [register, { isError, error }] = useRegisterRestaurant();
+  const [
+    register,
+    { isError, error, isLoading, isSuccess },
+  ] = useRegisterRestaurant();
 
-  const step1 = useForm({
-    defaultValues: {
-      managerName: "",
-      managerEmail: "",
-      managerPassword: "",
-    },
+  const [values, setValues] = useState<RegisterRestaurantCommand>({
+    managerName: "",
+    managerEmail: "",
+    managerPassword: "",
+    restaurantName: "",
+    restaurantPhoneNumber: "",
+    address: "",
   });
 
-  const step2 = useForm({
-    defaultValues: {
-      restaurantName: "",
-      restaurantPhoneNumber: "",
-    },
-  });
-
-  const step3 = useForm({
-    defaultValues: {
-      address: "",
-    },
-  });
+  const [errors, setErrors] = useState<
+    { [K in keyof RegisterRestaurantCommand]?: string }
+  >({});
 
   const [step, setStep] = useState(1);
 
-  const advanceStep = () => {
+  const advanceStep = (data: any) => {
+    setValues({ ...values, ...data });
     setStep(step + 1);
   };
 
-  const backStep = () => {
+  const backStep = (data: any) => {
+    setValues({ ...values, ...data });
     setStep(step - 1);
   };
 
-  const onSubmit = async () => {
-    if (step3.formState.isSubmitting) return;
+  const onSubmit = async (data: any) => {
+    if (isLoading || isSuccess) return;
 
-    await register(
-      {
-        ...step1.getValues(),
-        ...step2.getValues(),
-        ...step3.getValues(),
+    const command = { ...values, ...data };
+
+    setValues(command);
+
+    await register(command, {
+      onSuccess: async () => {
+        await MySwal.fire({
+          title: <p>Thanks For Registering!</p>,
+          text:
+            "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
+          icon: "success",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+          showConfirmButton: true,
+        });
+
+        Router.push("/login");
       },
-      {
-        onSuccess: async () => {
-          await MySwal.fire({
-            title: <p>Thanks For Registering!</p>,
-            text:
-              "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
-            icon: "success",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            allowEnterKey: false,
-            showConfirmButton: true,
-          });
 
-          Router.push("/login");
-        },
+      onError: (error) => {
+        if (error.isValidationError) {
+          setErrors(error.errors);
 
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, step1);
-            setFormErrors(error.errors, step2);
-            setFormErrors(error.errors, step3);
-
-            if (Object.keys(step1.errors).length > 0) {
+          for (const field of [
+            "managerName",
+            "managerEmail",
+            "managerPassword",
+          ]) {
+            if (error.errors.hasOwnProperty(field)) {
               setStep(1);
-            } else if (Object.keys(step2.errors).length > 0) {
-              setStep(2);
+              return;
             }
           }
-        },
-      }
-    );
+
+          for (const field of ["restaurantName", "restaurantPhoneNumber"]) {
+            if (error.errors.hasOwnProperty(field)) {
+              setStep(2);
+              return;
+            }
+          }
+        }
+      },
+    });
   };
 
   return (
@@ -104,23 +107,29 @@ const RegisterRestaurantForm: FC = () => {
         </div>
       )}
 
-      <div className={step !== 1 ? "sr-only" : undefined}>
-        <RegisterRestaurantFormStepOne form={step1} advanceStep={advanceStep} />
-      </div>
-      <div className={step !== 2 ? "sr-only" : undefined}>
+      {step === 1 && (
+        <RegisterRestaurantFormStepOne
+          defaults={values}
+          errors={errors}
+          advanceStep={advanceStep}
+        />
+      )}
+      {step === 2 && (
         <RegisterRestaurantFormStepTwo
-          form={step2}
+          defaults={values}
+          errors={errors}
           backStep={backStep}
           advanceStep={advanceStep}
         />
-      </div>
-      <div className={step !== 3 ? "sr-only" : undefined}>
+      )}
+      {step === 3 && (
         <RegisterRestaurantFormStepThree
-          form={step3}
+          defaults={values}
+          errors={errors}
           backStep={backStep}
           onSubmit={onSubmit}
         />
-      </div>
+      )}
     </div>
   );
 };

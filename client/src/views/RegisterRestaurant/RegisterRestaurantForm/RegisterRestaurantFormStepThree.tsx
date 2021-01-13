@@ -1,23 +1,36 @@
-import React, { useRef } from "react";
-import { UseFormMethods } from "react-hook-form";
+import React, { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
+import { setFormErrors } from "~/services/forms/setFormErrors";
 import useAddressLookup from "~/services/geolocation/useAddressLookup";
 import useAddressPredictions from "~/services/geolocation/useAddressPredictions";
 import useAutocomplete from "~/services/useAutocomplete";
 
+interface StepThreeValues {
+  address: string;
+}
+
 interface Props {
-  form: UseFormMethods<{
-    address: string;
-  }>;
-  backStep(): void;
-  onSubmit(): void;
+  defaults: StepThreeValues;
+  errors: { [K in keyof StepThreeValues]?: string };
+  backStep(data: StepThreeValues): any;
+  onSubmit(data: StepThreeValues): any;
 }
 
 const RegisterRestaurantFormStepThree: React.FC<Props> = ({
-  form,
+  defaults,
+  errors,
   backStep,
   onSubmit,
 }) => {
+  const form = useForm<StepThreeValues>({
+    defaultValues: defaults,
+  });
+
+  useEffect(() => {
+    setFormErrors(errors, form);
+  }, [errors]);
+
   const address = form.watch("address");
 
   const { predictions, pause } = useAddressPredictions(address);
@@ -102,7 +115,7 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
         <button
           type="button"
           className="btn btn-outline-primary font-semibold w-full"
-          onClick={backStep}
+          onClick={() => backStep(form.getValues())}
         >
           Back
         </button>
