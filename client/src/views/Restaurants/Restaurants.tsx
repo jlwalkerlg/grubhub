@@ -302,13 +302,9 @@ const RestaurantsSearch: React.FC = () => {
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
-  const openSortMenu = useCallback(() => setIsSortMenuOpen(true), [
-    setIsSortMenuOpen,
-  ]);
+  const openSortMenu = useCallback(() => setIsSortMenuOpen(true), []);
 
-  const closeSortMenu = useCallback(() => setIsSortMenuOpen(false), [
-    setIsSortMenuOpen,
-  ]);
+  const closeSortMenu = useCallback(() => setIsSortMenuOpen(false), []);
 
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
@@ -316,15 +312,15 @@ const RestaurantsSearch: React.FC = () => {
   const openFilterMenu = useCallback(() => {
     setIsFilterMenuOpen(true);
     setShowFilterMenu(true);
-  }, [setIsFilterMenuOpen, setShowFilterMenu]);
+  }, []);
 
   const closeFilterMenu = useCallback(() => {
     setIsFilterMenuOpen(false);
-  }, [setIsFilterMenuOpen]);
+  }, []);
 
   const hideFilterMenu = useCallback(() => {
     setShowFilterMenu(false);
-  }, [setShowFilterMenu]);
+  }, []);
 
   const routeWithoutCuisines = () => {
     const params = { ...router.query };

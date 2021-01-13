@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useRef } from "react";
 import { UseFormMethods } from "react-hook-form";
-import Autocomplete from "~/components/Autocomplete/Autocomplete";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import { combineRules, RequiredRule } from "~/services/forms/Rule";
-import useAddressSearch from "~/services/geolocation/useAddressSearch";
+import useAddressLookup from "~/services/geolocation/useAddressLookup";
+import useAddressPredictions from "~/services/geolocation/useAddressPredictions";
+import useAutocomplete from "~/services/useAutocomplete";
 
 interface Props {
   form: UseFormMethods<{
@@ -18,17 +18,29 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
   backStep,
   onSubmit,
 }) => {
-  const {
-    results: addressSearchResults,
-    address,
-    onSelectAddress,
-  } = useAddressSearch(form.watch("address"));
+  const address = form.watch("address");
 
-  useEffect(() => {
-    if (address !== null) {
-      form.setValue("address", address);
-    }
-  }, [address]);
+  const { predictions, pause } = useAddressPredictions(address);
+
+  const autocompleteWrapperRef = useRef<HTMLDivElement>();
+  const autocompleteInputRef = useRef<HTMLInputElement>();
+  const autocompleteEndRef = useRef<HTMLButtonElement>();
+
+  const { isOpen: isAutocompleteOpen, close } = useAutocomplete(
+    predictions,
+    autocompleteInputRef,
+    autocompleteEndRef,
+    autocompleteWrapperRef
+  );
+
+  const { getAddressById } = useAddressLookup();
+
+  const onSelectAddress = async (id: string) => {
+    const address = await getAddressById(id);
+    pause();
+    close();
+    form.setValue("address", address);
+  };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -40,21 +52,47 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
         <label className="label" htmlFor="address">
           Address <span className="text-primary">*</span>
         </label>
-        <Autocomplete
-          inputRef={form.register({
-            validate: combineRules([new RequiredRule()]),
-          })}
-          predictions={addressSearchResults}
-          onSelection={onSelectAddress}
-          autoFocus
-          className="input"
-          type="text"
-          name="address"
-          id="address"
-          placeholder="e.g. 123 High Street"
-          autoComplete="new-password"
-          data-invalid={!!form.errors.address}
-        ></Autocomplete>
+
+        <div ref={autocompleteWrapperRef} className="relative">
+          <input
+            ref={(e) => {
+              autocompleteInputRef.current = e;
+              form.register(e);
+            }}
+            autoFocus
+            className="input"
+            type="text"
+            name="address"
+            id="address"
+            placeholder="e.g. 123 High Street"
+            autoComplete="new-password"
+            data-invalid={!!form.errors.address}
+          />
+
+          {isAutocompleteOpen && (
+            <ul className="absolute top-100 w-full rounded-lg shadow">
+              {predictions.map((x, index) => {
+                return (
+                  <li key={x.description} className="w-full">
+                    <button
+                      ref={
+                        index === predictions.length - 1
+                          ? autocompleteEndRef
+                          : undefined
+                      }
+                      onClick={() => onSelectAddress(x.id)}
+                      type="button"
+                      className="py-2 px-4 w-full text-left bg-white hover:bg-gray-100 focus:bg-gray-100 border-t border-gray-300 cursor-pointer"
+                    >
+                      {x.description}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+
         {form.errors.address && (
           <p className="form-error mt-1">{form.errors.address.message}</p>
         )}

@@ -1,20 +1,22 @@
-import { MutableRefObject, useEffect } from "react";
+import { MutableRefObject, useCallback, useEffect } from "react";
 
 export default function useClickAwayListener(
   ref: MutableRefObject<HTMLElement>,
   callback: () => any,
-  deps: Array<any> = []
+  deps: any[] = []
 ) {
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(<HTMLElement>e.target)) {
-        callback();
-      }
-    }
+  const cb = useCallback(callback, deps);
 
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
+  useEffect(() => {
+    const listener = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(<HTMLElement>e.target)) {
+        cb();
+      }
     };
-  }, [ref, ...deps]);
+
+    document.addEventListener("click", listener);
+    return () => {
+      document.removeEventListener("click", listener);
+    };
+  }, [ref.current, cb]);
 }

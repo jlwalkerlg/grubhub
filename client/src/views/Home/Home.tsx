@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   const {
     postcode,
     isLoading: isLoadingLocation,
-    lookup,
+    getCurrentLocation,
   } = useCurrentLocation();
 
   const form = useForm({
@@ -42,7 +42,7 @@ const Home: NextPage = () => {
 
   const onClickLocation = async () => {
     try {
-      const { postcode } = await lookup();
+      const { postcode } = await getCurrentLocation();
       form.setValue("postcode", postcode);
     } catch (error) {
       addToast(error.message);

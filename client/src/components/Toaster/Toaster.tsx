@@ -91,7 +91,7 @@ const Toast: FC<{ toast: Toast }> = ({ toast }) => {
     return () => {
       clearInterval(handle);
     };
-  }, [timeUntilDelete, setTimeUntilDelete, paused, deleteToast, toast.id]);
+  }, [timeUntilDelete, paused, deleteToast, toast.id]);
 
   const onMouseEnter = () => {
     setPaused(true);

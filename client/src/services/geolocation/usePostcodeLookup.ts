@@ -1,27 +1,42 @@
 import { useQuery } from "react-query";
-import AddressSearcher, { Coordinates } from "./AddressSearcher";
+import Coordinates from "./Coordinates";
+import useGeocodingServices from "./useGeocodingServices";
 
 export function getPostcodeLookupQueryKey(postcode: string) {
   return postcode.trim().replace(" ", "");
 }
 
 export default function usePostcodeLookup(postcode: string) {
+  const { getGeocoder } = useGeocodingServices();
+
   return useQuery<Coordinates, Error>(
     getPostcodeLookupQueryKey(postcode),
     () => {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const coords = await AddressSearcher.getCoordinatesByPostcode(
-            postcode
-          );
+      return new Promise(
+        async (resolve: (address: Coordinates) => void, reject) => {
+          const geocoder = await getGeocoder();
 
-          if (coords !== null) {
-            return resolve(coords);
-          }
-        } catch (e) {}
+          const request: google.maps.GeocoderRequest = {
+            address: postcode,
+          };
 
-        return reject(new Error("Failed to retrieve coordinates."));
-      });
+          geocoder.geocode(request, (results) => {
+            const location = results[0]?.geometry.location;
+
+            if (!location) {
+              reject(new Error("Failed to retrieve postcode."));
+              return;
+            }
+
+            const coords = {
+              latitude: location.lat(),
+              longitude: location.lng(),
+            };
+
+            resolve(coords);
+          });
+        }
+      );
     },
     {
       staleTime: Infinity,
