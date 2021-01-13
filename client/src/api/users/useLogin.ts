@@ -15,17 +15,27 @@ async function login(command: LoginCommand) {
 export default function useLogin() {
   const cache = useQueryCache();
 
-  return useMutation<void, ApiError, LoginCommand, null>(login, {
-    onSuccess: async () => {
-      const user = await getAuthUser();
+  return useMutation<void, ApiError, LoginCommand, null>(
+    async (command) => {
+      await login(command);
 
-      document.cookie = cookie.serialize("auth_data", JSON.stringify(user), {
-        expires: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
-        httpOnly: false,
-        path: "/",
-      });
-
-      cache.setQueryData(getAuthUserQueryKey(), user);
+      localStorage.setItem("isLoggedIn", "true");
     },
-  });
+    {
+      onSuccess: async () => {
+        const user = await getAuthUser();
+
+        document.cookie = cookie.serialize("auth_data", JSON.stringify(user), {
+          expires: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
+          httpOnly: false,
+          path: "/",
+        });
+
+        cache.setQueryData(getAuthUserQueryKey(), user);
+      },
+      onError: () => {
+        localStorage.removeItem("isLoggedIn");
+      },
+    }
+  );
 }

@@ -11,6 +11,8 @@ export async function getAuthUser() {
     const response = await api.get<UserDto>("/auth/user");
     return response.data;
   } catch (e) {
+    localStorage.removeItem("isLoggedIn");
+
     if (e instanceof ApiError && e.statusCode === 401) {
       return null;
     }
@@ -20,11 +22,21 @@ export async function getAuthUser() {
 }
 
 export function useAuthUser() {
-  return useQuery<UserDto, ApiError>(getAuthUserQueryKey(), getAuthUser, {
-    staleTime: Infinity,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  return useQuery<UserDto, ApiError>(
+    getAuthUserQueryKey(),
+    () => {
+      if (!localStorage.getItem("isLoggedIn")) {
+        return null;
+      }
+
+      return getAuthUser();
+    },
+    {
+      staleTime: Infinity,
+      retry: false,
+      refetchOnWindowFocus: false,
+    }
+  );
 }
 
 export default function useAuth() {

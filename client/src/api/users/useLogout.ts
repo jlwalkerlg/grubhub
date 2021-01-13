@@ -10,15 +10,22 @@ async function logout() {
 export default function useLogout() {
   const queryCache = useQueryCache();
 
-  return useMutation<void, ApiError, null, null>(logout, {
-    onSuccess: () => {
-      queryCache.setQueryData(getAuthUserQueryKey(), null);
+  return useMutation<void, ApiError, null, null>(
+    async () => {
+      await logout();
 
-      document.cookie = cookie.serialize("auth_data", "", {
-        expires: new Date(0),
-        httpOnly: false,
-        path: "/",
-      });
+      localStorage.removeItem("isLoggedIn");
     },
-  });
+    {
+      onSuccess: () => {
+        queryCache.setQueryData(getAuthUserQueryKey(), null);
+
+        document.cookie = cookie.serialize("auth_data", "", {
+          expires: new Date(0),
+          httpOnly: false,
+          path: "/",
+        });
+      },
+    }
+  );
 }
