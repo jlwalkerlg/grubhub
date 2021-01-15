@@ -89,16 +89,13 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
 const MenuItem: FC<{ item: MenuItemDto }> = ({ item }) => {
   return (
-    <li
-      className="bg-white rounded border border-gray-200 p-4 w-full text-left mt-2"
-      role="button"
-    >
+    <button className="bg-white rounded border border-gray-200 p-4 w-full text-left mt-2">
       <p className="font-bold text-gray-700 text-xl">{item.name}</p>
       {item.description && (
         <p className="text-gray-700 text-sm mt-1">{item.description}</p>
       )}
       <p className="text-primary mt-2">£{item.price.toFixed(2)}</p>
-    </li>
+    </button>
   );
 };
 
@@ -193,9 +190,8 @@ const MobileMenu: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
             id={category.name}
             className="border-b border-gray-400"
           >
-            <div
+            <button
               className="flex items-center justify-between p-4"
-              role="button"
               onClick={
                 isCategoryOpen
                   ? () => closeCategory(category.name)
@@ -214,7 +210,7 @@ const MobileMenu: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
                   className="h-8 w-8 text-primary"
                 />
               )}
-            </div>
+            </button>
 
             {isCategoryOpen && (
               <ul className="px-4 pb-4">
