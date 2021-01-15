@@ -6,7 +6,8 @@ import CashIcon from "~/components/Icons/CashIcon";
 import ClockIcon from "~/components/Icons/ClockIcon";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
 import usePostcodeLookup from "~/services/geolocation/usePostcodeLookup";
-import { getCurrentDayOfWeek, haversine } from "~/services/utils";
+import useDate from "~/services/useDate";
+import { haversine } from "~/services/utils";
 import styles from "./RestaurantSearchResults.module.css";
 
 const RestaurantSearchResults: FC = () => {
@@ -28,7 +29,7 @@ const RestaurantSearchResults: FC = () => {
     error: postcodeLookupError,
   } = usePostcodeLookup(postcode);
 
-  const day = getCurrentDayOfWeek();
+  const { dayOfWeek } = useDate();
 
   if (isLoadingRestaurants || isLoadingCoords) {
     return <p>Loading restaurants...</p>;
@@ -56,7 +57,7 @@ const RestaurantSearchResults: FC = () => {
             coords
           );
 
-          const closingTime = restaurant.openingTimes[day].close;
+          const closingTime = restaurant.openingTimes[dayOfWeek].close;
 
           return (
             <Link key={restaurant.id} href={`/restaurants/${restaurant.id}`}>

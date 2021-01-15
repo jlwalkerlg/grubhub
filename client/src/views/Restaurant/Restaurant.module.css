@@ -1,0 +1,6 @@
+.header {
+  @apply h-72;
+
+  background: url(http://foodbakery.chimpgroup.com/wp-content/uploads/cover-photo17.jpg)
+    no-repeat scroll 0 0 / cover;
+}

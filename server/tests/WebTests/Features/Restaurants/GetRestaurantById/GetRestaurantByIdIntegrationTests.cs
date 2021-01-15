@@ -1,5 +1,6 @@
 using Shouldly;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Web.Features.Restaurants;
 using WebTests.TestData;
@@ -23,7 +24,28 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
                 ManagerId = manager.Id,
             };
 
-            fixture.Insert(manager, restaurant);
+            var margherita = new MenuItem()
+            {
+                Name = "Margherita",
+                Description = "Cheese & tomato",
+                Price = 9.99m,
+            };
+
+            var pizza = new MenuCategory()
+            {
+                Name = "Pizza",
+                Items = new() { margherita },
+            };
+
+            var menu = new Menu()
+            {
+                RestaurantId = restaurant.Id,
+                Categories = new() { pizza },
+            };
+
+            fixture.Insert(manager, restaurant, menu);
+
+            var items = fixture.UseTestDbContext(db => db.MenuItems.ToArray());
 
             var response = await fixture.GetClient().Get($"/restaurants/{restaurant.Id}");
 
@@ -50,6 +72,13 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             restaurantDto.MaxDeliveryDistanceInKm.ShouldBe(restaurant.MaxDeliveryDistanceInKm);
             restaurantDto.MinimumDeliverySpend.ShouldBe(restaurant.MinimumDeliverySpend);
             restaurantDto.EstimatedDeliveryTimeInMinutes.ShouldBe(restaurant.EstimatedDeliveryTimeInMinutes);
+            restaurantDto.Menu.RestaurantId.ShouldBe(restaurant.Id);
+            restaurantDto.Menu.Categories.ShouldHaveSingleItem();
+            restaurantDto.Menu.Categories[0].Name.ShouldBe(pizza.Name);
+            restaurantDto.Menu.Categories[0].Items.ShouldHaveSingleItem();
+            restaurantDto.Menu.Categories[0].Items[0].Name.ShouldBe(margherita.Name);
+            restaurantDto.Menu.Categories[0].Items[0].Description.ShouldBe(margherita.Description);
+            restaurantDto.Menu.Categories[0].Items[0].Price.ShouldBe(margherita.Price);
         }
 
         [Fact]

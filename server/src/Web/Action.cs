@@ -17,6 +17,11 @@ namespace Web
             { ErrorType.Internal, 500 },
         };
 
+        protected IActionResult NotFound(string message)
+        {
+            return Error(Web.Error.NotFound(message));
+        }
+
         protected IActionResult Error(Error error)
         {
             var envelope = new ErrorEnvelope(error.Message)

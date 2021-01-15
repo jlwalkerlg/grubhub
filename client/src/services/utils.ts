@@ -1,4 +1,6 @@
+import { OpeningHours, OpeningTimes } from "~/api/restaurants/OpeningTimes";
 import Coordinates from "./geolocation/Coordinates";
+import { daysOfWeek } from "./useDate";
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -21,20 +23,6 @@ export function haversine(p1: Coordinates, p2: Coordinates) {
   return d / 1000;
 }
 
-const days = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-];
-
-export function getCurrentDayOfWeek() {
-  return days[new Date().getDay()];
-}
-
 export function url(
   path: string,
   params: { [key: string]: string | string[] } = {}
@@ -50,4 +38,39 @@ export function url(
       .map((key) => `${key}=${params[key]}`)
       .join("&")
   );
+}
+
+export function isRestaurantOpen(openingHours: OpeningHours) {
+  const currentDate = new Date();
+
+  const openingDate = new Date();
+  openingDate.setUTCHours(+openingHours.open.slice(0, 2));
+  openingDate.setUTCMinutes(+openingHours.open.slice(3));
+
+  if (openingDate > currentDate) return false;
+
+  if (openingHours.close === null) return true;
+
+  const closingDate = new Date();
+  closingDate.setUTCHours(+openingHours.close.slice(0, 2));
+  closingDate.setUTCMinutes(+openingHours.close.slice(3));
+
+  return closingDate > currentDate;
+}
+
+export function nextOpenDay(openingTimes: OpeningTimes) {
+  const currentDay = new Date().getDay();
+
+  const days = [
+    ...daysOfWeek.slice(currentDay),
+    ...daysOfWeek.slice(0, currentDay),
+  ];
+
+  for (const day of days) {
+    if (openingTimes[day].open !== null) {
+      return day;
+    }
+  }
+
+  return null;
 }

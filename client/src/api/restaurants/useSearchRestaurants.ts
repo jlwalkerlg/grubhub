@@ -1,5 +1,4 @@
 import { useQuery } from "react-query";
-import { sleep } from "~/services/utils";
 import Api, { ApiError } from "../Api";
 import { CuisineDto } from "../cuisines/CuisineDto";
 import { OpeningTimes } from "./OpeningTimes";
@@ -24,8 +23,7 @@ interface SearchRestaurantsQuery {
 }
 
 async function searchRestaurants(query: SearchRestaurantsQuery) {
-  await sleep(1000);
-
+  console.log(query);
   const params = Object.keys(query)
     .map((key) => `${key}=${query[key]}`)
     .join("&");

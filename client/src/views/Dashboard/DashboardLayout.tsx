@@ -126,6 +126,7 @@ export const Dashboard: React.FC<Props> = ({ children, route }) => {
               >
                 <span>Menu</span>
                 <ChevronIcon
+                  direction="down"
                   className={
                     "w-4 h-4 ml-2 transition-transform duration-150 ease-out" +
                     (isMenuOpen ? " transform rotate-180" : "")

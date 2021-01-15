@@ -1,24 +1,44 @@
-import React from "react";
+import React, { FC } from "react";
 
-interface Props {
-  className?: string;
-}
+type Direction = "up" | "down";
 
-const ChevronIcon: React.FC<Props> = ({ className }) => {
+const ChevronIcon: FC<{ direction: Direction; className?: string }> = ({
+  direction,
+  className,
+}) => {
+  if (direction === "up") {
+    return (
+      <svg
+        className={className}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M5 15l7-7 7 7"
+        />
+      </svg>
+    );
+  }
+
   return (
     <svg
       className={className}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
     >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="2"
+        strokeWidth={2}
         d="M19 9l-7 7-7-7"
-      ></path>
+      />
     </svg>
   );
 };

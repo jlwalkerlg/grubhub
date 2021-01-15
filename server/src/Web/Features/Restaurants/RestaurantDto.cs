@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Web.Features.Cuisines;
+using Web.Features.Menus;
 
 namespace Web.Features.Restaurants
 {
@@ -20,5 +21,6 @@ namespace Web.Features.Restaurants
         public int MaxDeliveryDistanceInKm { get; init; }
         public int EstimatedDeliveryTimeInMinutes { get; init; }
         public List<CuisineDto> Cuisines { get; init; } = new();
+        public MenuDto Menu { get; init; }
     }
 }

@@ -1,4 +1,5 @@
 import { CuisineDto } from "../cuisines/CuisineDto";
+import { MenuDto } from "../menu/MenuDto";
 import { OpeningTimes } from "./OpeningTimes";
 
 export interface RestaurantDto {
@@ -15,6 +16,7 @@ export interface RestaurantDto {
   minimumDeliverySpend: number;
   maxDeliveryDistanceInKm: number;
   estimatedDeliveryTimeInMinutes: number;
+  menu: MenuDto;
   cuisines: CuisineDto[];
 }
 
