@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { QueryConfig, useQuery } from "react-query";
 import useGeocodingServices from "./useGeocodingServices";
 
@@ -9,26 +9,41 @@ export function useGoogleMap(
 ) {
   const { isReady } = useGeocodingServices();
 
-  const enabled = isReady && (config?.enabled || true);
-
-  const { data: map, refetch } = useQuery(
-    divId,
-    () => new google.maps.Map(document.getElementById(divId), options),
+  const { data: container } = useQuery(
+    "useGoogleMap_container_" + divId,
+    () => {
+      const container = document.createElement("div");
+      container.id = "useGoogleMap_container_" + divId;
+      container.style.height = "100%";
+      container.style.width = "100%";
+      container.style.position = "absolute";
+      container.style.top = "0px";
+      container.style.left = "0px";
+      return container;
+    },
     {
       staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
+      enabled: isReady && (config?.enabled || true),
+    }
+  );
+
+  const { data: map, isSuccess } = useQuery(
+    divId,
+    () => new google.maps.Map(container, options),
+    {
+      staleTime: Infinity,
       ...config,
-      enabled,
+      enabled: container !== undefined,
     }
   );
 
   useEffect(() => {
-    if (enabled) {
-      refetch();
+    if (container) {
+      document.getElementById(divId).appendChild(container);
     }
-  }, [enabled]);
+  }, [divId, container]);
 
-  return { map };
+  const alreadyInitialisedRef = useRef(isSuccess);
+
+  return { map, alreadyInitialised: alreadyInitialisedRef.current };
 }

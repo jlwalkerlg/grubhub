@@ -26,15 +26,23 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   );
 
   useEffect(() => {
+    let marker: google.maps.Marker;
+
     if (map) {
-      new google.maps.Marker({
+      marker = new google.maps.Marker({
         position: { lat: restaurant.latitude, lng: restaurant.longitude },
         map,
         title: restaurant.name,
         animation: google.maps.Animation.DROP,
       });
     }
-  }, [map]);
+
+    return () => {
+      if (map) {
+        marker.setMap(null);
+      }
+    };
+  }, [map, restaurant]);
 
   const { dayOfWeek } = useDate();
 
