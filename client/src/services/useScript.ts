@@ -13,8 +13,9 @@ export default function useScript(src: string) {
 
         const script = document.createElement("script");
         script.src = src;
+        script.defer = true;
         script.addEventListener("load", () => resolve());
-        document.body.appendChild(script);
+        document.head.appendChild(script);
       });
     },
     {

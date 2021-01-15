@@ -5,25 +5,62 @@ import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
 import Layout from "~/components/Layout/Layout";
+import { useGoogleMap } from "~/services/geolocation/useGoogleMap";
 import useDate from "~/services/useDate";
 import { isRestaurantOpen, nextOpenDay } from "~/services/utils";
 import styles from "./Restaurant.module.css";
 
 const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
+  const { map } = useGoogleMap(
+    "restaurant-location-map",
+    {
+      center: { lat: restaurant.latitude, lng: restaurant.longitude },
+      zoom: 14,
+      mapTypeControl: false,
+      streetViewControl: false,
+    },
+    {
+      enabled: !!restaurant,
+    }
+  );
+
+  useEffect(() => {
+    if (map) {
+      new google.maps.Marker({
+        position: { lat: restaurant.latitude, lng: restaurant.longitude },
+        map,
+        title: restaurant.name,
+        animation: google.maps.Animation.DROP,
+      });
+    }
+  }, [map]);
+
   return (
     <div className="bg-white p-4 rounded border border-gray-200">
       <h3 className="font-bold text-lg text-gray-700 mt-2">Where to find us</h3>
-      <a
-        target="__blank"
-        href={`https://google.co.uk/maps?q=${restaurant.address}`}
-        className="font-semibold text-gray-700 mt-2"
-      >
+
+      <div className="relative mt-3 rounded overflow-hidden h-80 bg-gray-200">
+        <div id="restaurant-location-map" className="w-full h-full"></div>
+        <div className="rounded bg-white border border-gray-300 p-2 text-gray-600 absolute bottom-8 left-4 text-sm">
+          {restaurant.address
+            .replaceAll(",", ",,")
+            .split(", ")
+            .map((x) => (
+              <span key={x}>
+                {x}
+                <br />
+              </span>
+            ))}
+        </div>
+      </div>
+
+      <p className="font-semibold text-gray-700 mt-3 block md:hidden">
         {restaurant.address}
-      </a>
+      </p>
 
-      <hr className="my-4 border-gray-300" />
+      <hr className="my-4 border-gray-300 md:hidden" />
 
-      <h3 className="font-bold text-lg text-gray-700 mt-2">Opening times</h3>
+      <h3 className="font-bold text-lg text-gray-700 mt-6">Opening times</h3>
 
       <ul className="text-sm">
         {Object.keys(restaurant.openingTimes).map((dayOfWeek) => {
@@ -54,7 +91,6 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 const MenuItem: FC<{ item: MenuItemDto }> = ({ item }) => {
   return (
     <li
-      key={item.name}
       className="bg-white rounded border border-gray-200 p-4 w-full text-left mt-2"
       role="button"
     >
@@ -79,7 +115,7 @@ const Menu: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
             <ul className="mt-4">
               {category.items.map((item) => {
-                return <MenuItem item={item} />;
+                return <MenuItem key={item.name} item={item} />;
               })}
             </ul>
           </div>
@@ -261,7 +297,9 @@ const Restaurant: FC = () => {
 
                 <p className="mt-3 text-gray-700">
                   {restaurant.cuisines.map((x) => (
-                    <span className="mx-1">{x.name}</span>
+                    <span key={x.name} className="mx-1">
+                      {x.name}
+                    </span>
                   ))}
                 </p>
 
@@ -271,7 +309,7 @@ const Restaurant: FC = () => {
 
                 <hr className="w-full mt-6 mb-2 border-gray-300 md:hidden" />
 
-                <div className="bg-gray-100 rounded-sm mt-4 text-gray-800">
+                <div className="bg-gray-100 shadow-sm mt-4 text-gray-800">
                   <div className="px-4 pb-2 pt-3">
                     {isOpen && <p className="font-semibold">Delivering now</p>}
                     {!isOpen && nextOpens && <p>Opens {nextOpens}</p>}

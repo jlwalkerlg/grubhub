@@ -39,5 +39,11 @@ export default function useGeocodingServices() {
 
   const refreshSession = () => refetch();
 
-  return { getGeocoder, getClient, getSessionToken, refreshSession };
+  return {
+    isReady: isSuccess,
+    getGeocoder,
+    getClient,
+    getSessionToken,
+    refreshSession,
+  };
 }
