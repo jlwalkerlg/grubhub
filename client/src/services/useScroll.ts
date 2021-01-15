@@ -1,4 +1,4 @@
-import { throttle } from "lodash";
+import { debounce, throttle } from "lodash";
 import { useCallback, useEffect } from "react";
 
 export default function useScroll(
@@ -6,13 +6,16 @@ export default function useScroll(
   wait?: number,
   deps: any[] = []
 ) {
-  const cb = useCallback(throttle(callback, wait), [deps]);
+  const throttled = useCallback(throttle(callback, wait), [deps]);
+  const debounced = useCallback(debounce(callback, wait), [deps]);
 
   useEffect(() => {
-    document.addEventListener("scroll", cb);
+    document.addEventListener("scroll", throttled);
+    document.addEventListener("scroll", debounced);
 
     return () => {
-      document.removeEventListener("scroll", cb);
+      document.removeEventListener("scroll", throttled);
+      document.removeEventListener("scroll", debounced);
     };
-  }, [cb]);
+  }, [throttled]);
 }

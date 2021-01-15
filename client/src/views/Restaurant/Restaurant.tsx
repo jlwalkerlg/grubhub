@@ -7,6 +7,7 @@ import ChevronIcon from "~/components/Icons/ChevronIcon";
 import Layout from "~/components/Layout/Layout";
 import { useGoogleMap } from "~/services/geolocation/useGoogleMap";
 import useDate from "~/services/useDate";
+import useScroll from "~/services/useScroll";
 import { isRestaurantOpen, nextOpenDay } from "~/services/utils";
 import styles from "./Restaurant.module.css";
 
@@ -101,9 +102,56 @@ const MenuItem: FC<{ item: MenuItemDto }> = ({ item }) => {
   );
 };
 
-const Menu: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
+const Menu: FC<{
+  restaurant: RestaurantDto;
+  setHash: (hash: string) => any;
+}> = ({ restaurant, setHash }) => {
+  const [listEl, setListEl] = useState<HTMLElement>();
+  const [elements, setElements] = useState<HTMLElement[]>([]);
+
+  useEffect(() => {
+    setListEl(document.getElementById("categoryList"));
+
+    setElements(
+      Array.prototype.slice.call(
+        document.querySelectorAll("#categoryList > div")
+      )
+    );
+  }, []);
+
+  useScroll(
+    () => {
+      if (!listEl || elements.length === 0) return;
+
+      if (listEl.getBoundingClientRect().y > window.innerHeight) {
+        setHash(elements[0]?.id ?? "");
+        return;
+      }
+
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
+
+        const rect = el.getBoundingClientRect();
+
+        if (rect.y >= 64 && rect.y <= window.innerHeight / 2) {
+          setHash(el.id);
+          return;
+        }
+
+        if (rect.y > window.innerHeight / 2) {
+          setHash(elements[i - 1]?.id ?? elements[0].id);
+          return;
+        }
+      }
+
+      setHash(elements[elements.length - 1].id);
+    },
+    500,
+    [listEl, elements]
+  );
+
   return (
-    <div>
+    <div id="categoryList">
       {restaurant.menu.categories.map((category) => {
         return (
           <div key={category.name} id={category.name} className="py-4">
@@ -196,24 +244,27 @@ const Restaurant: FC = () => {
 
   const [tab, setTab] = useState<"Menu" | "Information">("Menu");
 
-  const [hash, setHash] = useState<string>("");
-  useEffect(() => setHash(window.location.hash), []);
+  const [hash, setHash] = useState("");
+
+  useEffect(() => setHash(restaurant?.menu.categories[0]?.name || ""), [
+    restaurant,
+  ]);
 
   const onClickCategoryLink = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
 
-      const href = e.currentTarget.href;
-      const hash = href.slice(href.indexOf("#"));
-      const id = hash.slice(1);
+      const id = e.currentTarget.dataset.target;
 
       const el = document.getElementById(id);
       const nav = document.getElementById("nav");
 
-      window.scrollBy(0, el.getBoundingClientRect().top - nav.offsetHeight);
-      window.history.replaceState({}, "", href);
+      window.scrollBy({
+        top: el.getBoundingClientRect().top - nav.offsetHeight,
+        behavior: "smooth",
+      });
 
-      setHash(hash);
+      setHash(id);
     },
     []
   );
@@ -258,16 +309,17 @@ const Restaurant: FC = () => {
         <div className="flex">
           <div className="flex-1 flex">
             <div className="w-1/4 hidden lg:block">
-              <ul className="mt-8 border-l border-gray-400 text-gray-600">
+              <ul className="sticky top-20 mt-8 text-gray-600">
                 {restaurant.menu.categories.map((category) => {
                   return (
                     <li key={category.name}>
                       <a
                         href={`#${category.name}`}
+                        data-target={category.name}
                         onClick={onClickCategoryLink}
-                        className={`pl-2 py-2 block hover:text-gray-900 hover:font-semibold ${
-                          hash === `#${category.name}`
-                            ? "text-gray-900 font-semibold"
+                        className={`pl-2 py-2 block hover:text-gray-900 hover:font-semibold border-l border-gray-400 hover:border-gray-900 ${
+                          hash === category.name
+                            ? "text-gray-900 font-semibold border-gray-900"
                             : ""
                         }`}
                       >
@@ -372,7 +424,7 @@ const Restaurant: FC = () => {
               {tab === "Menu" && (
                 <>
                   <div className="hidden lg:block">
-                    <Menu restaurant={restaurant} />
+                    <Menu restaurant={restaurant} setHash={setHash} />
                   </div>
 
                   <div className="lg:hidden">

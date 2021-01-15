@@ -23,7 +23,6 @@ interface SearchRestaurantsQuery {
 }
 
 async function searchRestaurants(query: SearchRestaurantsQuery) {
-  console.log(query);
   const params = Object.keys(query)
     .map((key) => `${key}=${query[key]}`)
     .join("&");
