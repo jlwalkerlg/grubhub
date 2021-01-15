@@ -149,21 +149,23 @@ const Menu: FC<{
 
   return (
     <div id="categoryList">
-      {restaurant.menu.categories.map((category) => {
-        return (
-          <div key={category.name} id={category.name} className="py-4">
-            <h3 className="font-bold text-gray-700 text-2xl">
-              {category.name}
-            </h3>
+      {restaurant.menu.categories
+        .filter((category) => category.items.length > 0)
+        .map((category) => {
+          return (
+            <div key={category.name} id={category.name} className="py-4">
+              <h3 className="font-bold text-gray-700 text-2xl">
+                {category.name}
+              </h3>
 
-            <ul className="mt-4">
-              {category.items.map((item) => {
-                return <MenuItem key={item.name} item={item} />;
-              })}
-            </ul>
-          </div>
-        );
-      })}
+              <ul className="mt-4">
+                {category.items.map((item) => {
+                  return <MenuItem key={item.name} item={item} />;
+                })}
+              </ul>
+            </div>
+          );
+        })}
     </div>
   );
 };
@@ -181,47 +183,52 @@ const MobileMenu: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
   return (
     <div>
-      {restaurant.menu.categories.map((category) => {
-        const isCategoryOpen = openCategories.includes(category.name);
+      {restaurant.menu.categories
+        .filter((category) => category.items.length > 0)
+        .map((category) => {
+          const isCategoryOpen = openCategories.includes(category.name);
 
-        return (
-          <div
-            key={category.name}
-            id={category.name}
-            className="border-b border-gray-400"
-          >
-            <button
-              className="flex items-center justify-between p-4"
-              onClick={
-                isCategoryOpen
-                  ? () => closeCategory(category.name)
-                  : () => openCategory(category.name)
-              }
+          return (
+            <div
+              key={category.name}
+              id={category.name}
+              className="border-b border-gray-400"
             >
-              <h3 className="font-bold text-gray-700 text-2xl">
-                {category.name}
-              </h3>
+              <button
+                className="flex items-center justify-between p-4"
+                onClick={
+                  isCategoryOpen
+                    ? () => closeCategory(category.name)
+                    : () => openCategory(category.name)
+                }
+              >
+                <h3 className="font-bold text-gray-700 text-2xl">
+                  {category.name}
+                </h3>
 
-              {isCategoryOpen ? (
-                <ChevronIcon direction="up" className="h-8 w-8 text-primary" />
-              ) : (
-                <ChevronIcon
-                  direction="down"
-                  className="h-8 w-8 text-primary"
-                />
+                {isCategoryOpen ? (
+                  <ChevronIcon
+                    direction="up"
+                    className="h-8 w-8 text-primary"
+                  />
+                ) : (
+                  <ChevronIcon
+                    direction="down"
+                    className="h-8 w-8 text-primary"
+                  />
+                )}
+              </button>
+
+              {isCategoryOpen && (
+                <ul className="px-4 pb-4">
+                  {category.items.map((item) => {
+                    return <MenuItem key={item.name} item={item} />;
+                  })}
+                </ul>
               )}
-            </button>
-
-            {isCategoryOpen && (
-              <ul className="px-4 pb-4">
-                {category.items.map((item) => {
-                  return <MenuItem key={item.name} item={item} />;
-                })}
-              </ul>
-            )}
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
     </div>
   );
 };

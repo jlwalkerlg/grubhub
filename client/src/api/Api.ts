@@ -30,9 +30,9 @@ export class ApiError {
   readonly statusCode: number;
 
   public constructor(response: AxiosResponse<ErrorEnvelope>) {
-    this.message = response.data.message || "Something went wrong...";
-    this.errors = response.data.errors;
-    this.statusCode = response.status;
+    this.message = response?.data?.message || "Something went wrong...";
+    this.errors = response?.data?.errors;
+    this.statusCode = response?.status || 500;
   }
 
   get isValidationError() {

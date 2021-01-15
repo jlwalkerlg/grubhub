@@ -37,10 +37,16 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
                 Items = new() { margherita },
             };
 
+            var burgers = new MenuCategory()
+            {
+                Name = "Burgers",
+                Items = new(),
+            };
+
             var menu = new Menu()
             {
                 RestaurantId = restaurant.Id,
-                Categories = new() { pizza },
+                Categories = new() { pizza, burgers },
             };
 
             fixture.Insert(manager, restaurant, menu);
@@ -73,12 +79,21 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             restaurantDto.MinimumDeliverySpend.ShouldBe(restaurant.MinimumDeliverySpend);
             restaurantDto.EstimatedDeliveryTimeInMinutes.ShouldBe(restaurant.EstimatedDeliveryTimeInMinutes);
             restaurantDto.Menu.RestaurantId.ShouldBe(restaurant.Id);
-            restaurantDto.Menu.Categories.ShouldHaveSingleItem();
-            restaurantDto.Menu.Categories[0].Name.ShouldBe(pizza.Name);
-            restaurantDto.Menu.Categories[0].Items.ShouldHaveSingleItem();
-            restaurantDto.Menu.Categories[0].Items[0].Name.ShouldBe(margherita.Name);
-            restaurantDto.Menu.Categories[0].Items[0].Description.ShouldBe(margherita.Description);
-            restaurantDto.Menu.Categories[0].Items[0].Price.ShouldBe(margherita.Price);
+
+            var categories = restaurantDto.Menu.Categories
+                .OrderBy(x => x.Name)
+                .ToArray();
+
+            categories.Length.ShouldBe(2);
+
+            categories[0].Name.ShouldBe(burgers.Name);
+            categories[0].Items.ShouldBeEmpty();
+
+            categories[1].Name.ShouldBe(pizza.Name);
+            categories[1].Items.ShouldHaveSingleItem();
+            categories[1].Items[0].Name.ShouldBe(margherita.Name);
+            categories[1].Items[0].Description.ShouldBe(margherita.Description);
+            categories[1].Items[0].Price.ShouldBe(margherita.Price);
         }
 
         [Fact]

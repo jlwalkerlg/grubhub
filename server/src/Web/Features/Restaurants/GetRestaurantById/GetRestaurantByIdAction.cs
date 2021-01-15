@@ -127,7 +127,10 @@ namespace Web.Features.Restaurants.GetRestaurantById
                 {
                     var category = categoryEntry.ToDto();
 
-                    category.Items.AddRange(itemMapByCategoryId[categoryEntry.id]);
+                    if (itemMapByCategoryId.ContainsKey(categoryEntry.id))
+                    {
+                        category.Items.AddRange(itemMapByCategoryId[categoryEntry.id]);
+                    }
 
                     menu.Categories.Add(category);
                 }
