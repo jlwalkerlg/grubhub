@@ -35,6 +35,8 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
     }
   }, [map]);
 
+  const { dayOfWeek } = useDate();
+
   return (
     <div className="bg-white p-4 rounded border border-gray-200">
       <h3 className="font-bold text-lg text-gray-700 mt-2">Where to find us</h3>
@@ -63,22 +65,18 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       <h3 className="font-bold text-lg text-gray-700 mt-6">Opening times</h3>
 
       <ul className="text-sm">
-        {Object.keys(restaurant.openingTimes).map((dayOfWeek) => {
+        {Object.keys(restaurant.openingTimes).map((day) => {
           return (
             <li
-              key={dayOfWeek}
+              key={day}
               className={`flex justify-between items-center py-4 border-b ${
-                dayOfWeek === "sunday"
-                  ? "border-transparent"
-                  : "border-gray-300"
-              }`}
+                day === "sunday" ? "border-transparent" : "border-gray-300"
+              } ${day === dayOfWeek ? "text-primary" : ""}`}
             >
+              <div>{day.slice(0, 1).toUpperCase() + day.slice(1)}</div>
               <div>
-                {dayOfWeek.slice(0, 1).toUpperCase() + dayOfWeek.slice(1)}
-              </div>
-              <div>
-                {restaurant.openingTimes[dayOfWeek].open} -{" "}
-                {restaurant.openingTimes[dayOfWeek].close ?? "midnight"}
+                {restaurant.openingTimes[day].open} -{" "}
+                {restaurant.openingTimes[day].close ?? "midnight"}
               </div>
             </li>
           );
