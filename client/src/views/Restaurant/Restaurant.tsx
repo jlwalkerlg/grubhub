@@ -203,7 +203,7 @@ const MobileMenu: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
               className="border-b border-gray-400"
             >
               <button
-                className="flex items-center justify-between p-4"
+                className="flex items-center justify-between p-4 w-full"
                 onClick={
                   isCategoryOpen
                     ? () => closeCategory(category.name)
