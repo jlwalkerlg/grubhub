@@ -17,7 +17,7 @@ const RestaurantSearchResults: FC = () => {
 
   const {
     data: restaurants,
-    isLoading: isLoadingRestaurants,
+    isFetching: isFetchingRestaurants,
     isError: isSearchError,
     error: searchError,
   } = useSearchRestaurants({ ...router.query, postcode });
@@ -31,7 +31,7 @@ const RestaurantSearchResults: FC = () => {
 
   const { dayOfWeek } = useDate();
 
-  if (isLoadingRestaurants || isLoadingCoords) {
+  if (isFetchingRestaurants || isLoadingCoords) {
     return <p>Loading restaurants...</p>;
   }
 

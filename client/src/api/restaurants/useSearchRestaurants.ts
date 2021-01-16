@@ -45,7 +45,6 @@ export default function useSearchRestaurants(query: SearchRestaurantsQuery) {
     () => searchRestaurants(query),
     {
       staleTime: 0,
-      cacheTime: 0,
       refetchOnMount: false,
       refetchOnReconnect: true,
       refetchOnWindowFocus: false,
