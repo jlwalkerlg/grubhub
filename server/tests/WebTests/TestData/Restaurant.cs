@@ -21,6 +21,9 @@ namespace WebTests.TestData
         [Column("name")]
         public string Name { get; set; } = Guid.NewGuid().ToString();
 
+        [Column("description")]
+        public string Description { get; set; }
+
         [Column("phone_number")]
         public string PhoneNumber { get; set; } = "01234567890";
 

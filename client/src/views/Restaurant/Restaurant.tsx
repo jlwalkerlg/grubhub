@@ -72,6 +72,25 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
       <hr className="my-4 border-gray-300 md:hidden" />
 
+      {restaurant.description && (
+        <>
+          <h3 className="font-bold text-lg text-gray-700 mt-4">
+            A little bit about us
+          </h3>
+
+          <p className="text-gray-700 mt-3 block">
+            {restaurant.description.split("\n").map((x, i) => (
+              <span>
+                {i !== 0 && <br />}
+                {x}
+              </span>
+            ))}
+          </p>
+
+          <hr className="my-6 border-gray-300" />
+        </>
+      )}
+
       <h3 className="font-bold text-lg text-gray-700 mt-6">Opening times</h3>
 
       <ul className="text-sm">

@@ -41,6 +41,20 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             result.Errors.ShouldContainKey(nameof(command.Name));
         }
 
+        [Fact]
+        public async Task Disallows_Description_That_Are_Too_Long()
+        {
+            var command = new UpdateRestaurantDetailsCommand()
+            {
+                Description = new string('c', 401),
+            };
+
+            var result = await validator.Validate(command);
+
+            result.ShouldBeAnError();
+            result.Errors.ShouldContainKey(nameof(command.Description));
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]

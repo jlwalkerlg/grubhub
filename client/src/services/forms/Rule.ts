@@ -95,3 +95,24 @@ export class MinRule implements Rule {
     return null;
   }
 }
+
+export class MaxLengthRule implements Rule {
+  private max: number;
+  readonly message: string;
+
+  constructor(max: number);
+  constructor(max: number, message: string);
+  constructor(max: number, message: string = null) {
+    this.max = max;
+
+    if (message === null) {
+      this.message = `Must not be longer than ${max} characters.`;
+    }
+  }
+
+  validate(value: string): string | null {
+    if (value?.length > this.max) return this.message;
+
+    return null;
+  }
+}

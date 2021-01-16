@@ -31,6 +31,10 @@ namespace Web.Data.EF.Configurations
 
             builder.Property(x => x.Name).IsRequired().HasColumnName("name");
 
+            builder.Property(x => x.Description)
+                .HasColumnName("description")
+                .HasMaxLength(400);
+
             builder.OwnsOne(x => x.PhoneNumber, x =>
             {
                 x.Property(y => y.Number).IsRequired().HasColumnName("phone_number");

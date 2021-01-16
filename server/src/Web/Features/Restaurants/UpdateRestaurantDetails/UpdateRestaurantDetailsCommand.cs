@@ -8,6 +8,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
     {
         public Guid RestaurantId { get; init; }
         public string Name { get; init; }
+        public string Description { get; init; }
         public string PhoneNumber { get; init; }
         public decimal DeliveryFee { get; init; }
         public decimal MinimumDeliverySpend { get; init; }

@@ -22,6 +22,7 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             var restaurant = new Restaurant()
             {
                 ManagerId = manager.Id,
+                Description = "Space exploration to nuclear stations!",
             };
 
             var margherita = new MenuItem()
@@ -62,6 +63,7 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             restaurantDto.Id.ShouldBe(restaurant.Id);
             restaurantDto.ManagerId.ShouldBe(manager.Id);
             restaurantDto.Name.ShouldBe(restaurant.Name);
+            restaurantDto.Description.ShouldBe(restaurant.Description);
             restaurantDto.PhoneNumber.ShouldBe(restaurant.PhoneNumber);
             restaurantDto.Status.ShouldBe(restaurant.Status);
             restaurantDto.Address.ShouldBe(restaurant.Address);

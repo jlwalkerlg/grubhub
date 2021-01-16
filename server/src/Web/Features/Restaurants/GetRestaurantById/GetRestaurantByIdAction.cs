@@ -27,6 +27,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                     r.id,
                     r.manager_id,
                     r.name,
+                    r.description,
                     r.phone_number,
                     r.address,
                     r.latitude,
@@ -164,6 +165,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             public Guid id { get; init; }
             public Guid manager_id { get; init; }
             public string name { get; init; }
+            public string description { get; init; }
             public string phone_number { get; init; }
             public string address { get; init; }
             public float latitude { get; init; }
@@ -196,6 +198,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                     Id = id,
                     ManagerId = manager_id,
                     Name = name,
+                    Description = description,
                     PhoneNumber = phone_number,
                     Address = address,
                     Latitude = latitude,

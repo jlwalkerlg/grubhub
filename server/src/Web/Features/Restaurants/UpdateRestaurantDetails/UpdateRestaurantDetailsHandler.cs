@@ -35,6 +35,9 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             }
 
             restaurant.Name = command.Name;
+            restaurant.Description = string.IsNullOrWhiteSpace(command.Description)
+                ? null
+                : command.Description;
             restaurant.PhoneNumber = new PhoneNumber(command.PhoneNumber);
             restaurant.MinimumDeliverySpend = new Money(command.MinimumDeliverySpend);
             restaurant.DeliveryFee = new Money(command.DeliveryFee);

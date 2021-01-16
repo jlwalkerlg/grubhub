@@ -28,6 +28,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var request = new UpdateRestaurantDetailsRequest()
             {
                 Name = "Main Chow",
+                Description = "Dog Days Are Over",
                 PhoneNumber = "09876543210",
                 MinimumDeliverySpend = 13m,
                 DeliveryFee = 3m,
@@ -44,6 +45,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var found = fixture.UseTestDbContext(db => db.Restaurants.Single());
 
             found.Name.ShouldBe(request.Name);
+            found.Description.ShouldBe(request.Description);
             found.PhoneNumber.ShouldBe(request.PhoneNumber);
             found.MinimumDeliverySpend.ShouldBe(request.MinimumDeliverySpend);
             found.DeliveryFee.ShouldBe(request.DeliveryFee);

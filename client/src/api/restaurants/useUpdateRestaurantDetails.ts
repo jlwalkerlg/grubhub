@@ -5,6 +5,7 @@ import { getRestaurantQueryKey } from "./useRestaurant";
 export interface UpdateRestaurantDetailsCommand {
   id: string;
   name: string;
+  description?: string;
   phoneNumber: string;
   deliveryFee: number;
   minimumDeliverySpend: number;

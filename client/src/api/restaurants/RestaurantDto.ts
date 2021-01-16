@@ -6,6 +6,7 @@ export interface RestaurantDto {
   id: string;
   managerId: string;
   name: string;
+  description?: string;
   phoneNumber: string;
   address: string;
   latitude: number;

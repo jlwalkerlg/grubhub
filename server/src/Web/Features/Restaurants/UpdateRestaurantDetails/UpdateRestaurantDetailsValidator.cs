@@ -19,6 +19,9 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             CascadeRuleFor(x => x.Name)
                 .Required();
 
+            CascadeRuleFor(x => x.Description)
+                .MaxLength(400);
+
             CascadeRuleFor(x => x.PhoneNumber)
                 .Required()
                 .PhoneNumber();

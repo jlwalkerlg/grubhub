@@ -23,6 +23,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             {
                 RestaurantId = id,
                 Name = request.Name,
+                Description = request.Description,
                 PhoneNumber = request.PhoneNumber,
                 DeliveryFee = request.DeliveryFee,
                 MinimumDeliverySpend = request.MinimumDeliverySpend,

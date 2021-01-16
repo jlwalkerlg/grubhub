@@ -64,6 +64,21 @@ namespace Web.Domain.Restaurants
             }
         }
 
+        private string description;
+        public string Description
+        {
+            get => description;
+            set
+            {
+                if (value?.Length > 400)
+                {
+                    throw new ArgumentException("Description must not be longer than 400 characters.");
+                }
+
+                description = value;
+            }
+        }
+
         private PhoneNumber phoneNumber;
         public PhoneNumber PhoneNumber
         {

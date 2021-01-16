@@ -25,6 +25,13 @@ namespace Web.Services.Validation
                 .WithMessage($"Must be at least {minLength} characters long.");
         }
 
+        public static IRuleBuilderOptions<T, string> MaxLength<T>(this IRuleBuilder<T, string> ruleBuilder, int maxLength)
+        {
+            return ruleBuilder
+                .MaximumLength(maxLength)
+                .WithMessage($"Must not be greater that {maxLength} characters long.");
+        }
+
         public static IRuleBuilderOptions<T, int> Min<T>(this IRuleBuilder<T, int> ruleBuilder, int min)
         {
             return ruleBuilder

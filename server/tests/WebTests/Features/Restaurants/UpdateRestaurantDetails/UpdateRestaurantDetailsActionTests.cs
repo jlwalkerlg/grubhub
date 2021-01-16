@@ -30,6 +30,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var request = new UpdateRestaurantDetailsRequest()
             {
                 Name = "",
+                Description = new string('c', 401),
                 PhoneNumber = "",
                 MinimumDeliverySpend = -1m,
                 DeliveryFee = -1m,
@@ -46,6 +47,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             var errors = response.GetErrors();
 
             errors.ShouldContainKey("name");
+            errors.ShouldContainKey("description");
             errors.ShouldContainKey("phoneNumber");
             errors.ShouldContainKey("minimumDeliverySpend");
             errors.ShouldContainKey("deliveryFee");

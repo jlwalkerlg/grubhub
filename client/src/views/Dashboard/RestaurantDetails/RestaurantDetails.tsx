@@ -9,6 +9,7 @@ import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import {
   combineRules,
+  MaxLengthRule,
   MinRule,
   PhoneRule,
   RequiredRule,
@@ -22,6 +23,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
   const form = useForm({
     defaultValues: {
       name: restaurant.name,
+      description: restaurant.description,
       phoneNumber: restaurant.phoneNumber,
       deliveryFee: restaurant.deliveryFee,
       minimumDeliverySpend: restaurant.minimumDeliverySpend,
@@ -83,6 +85,24 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         />
         {form.errors.name && (
           <p className="form-error mt-1">{form.errors.name.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="description">
+          Description
+        </label>
+        <textarea
+          ref={form.register({
+            validate: combineRules([new MaxLengthRule(400)]),
+          })}
+          className="input"
+          name="description"
+          id="description"
+          data-invalid={!!form.errors.description}
+        ></textarea>
+        {form.errors.description && (
+          <p className="form-error mt-1">{form.errors.description.message}</p>
         )}
       </div>
 
