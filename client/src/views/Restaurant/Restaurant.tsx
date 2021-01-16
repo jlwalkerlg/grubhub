@@ -1,15 +1,16 @@
 import { useRouter } from "next/router";
 import React, { FC, useCallback, useEffect, useState } from "react";
+import { ApiError } from "~/api/Api";
 import { MenuItemDto } from "~/api/menu/MenuDto";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
+import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
 import { useGoogleMap } from "~/services/geolocation/useGoogleMap";
 import useDate from "~/services/useDate";
 import useScroll from "~/services/useScroll";
 import { isRestaurantOpen, nextOpenDay } from "~/services/utils";
-import styles from "./Restaurant.module.css";
 
 const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const { map } = useGoogleMap(
@@ -241,26 +242,11 @@ const MobileMenu: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   );
 };
 
-const Restaurant: FC = () => {
-  const router = useRouter();
-
-  const { data: restaurant, isLoading, isError, error } = useRestaurant(
-    router.query.id?.toString(),
-    {
-      enabled: router.query.id !== undefined,
-    }
-  );
-
-  const { dayOfWeek } = useDate();
-
-  const [tab, setTab] = useState<"Menu" | "Information">("Menu");
-
-  const [hash, setHash] = useState("");
-
-  useEffect(() => setHash(restaurant?.menu.categories[0]?.name || ""), [
-    restaurant,
-  ]);
-
+const CuisineList: FC<{
+  restaurant: RestaurantDto;
+  hash: string;
+  setHash: (hash: string) => any;
+}> = ({ restaurant, hash, setHash }) => {
   const onClickCategoryLink = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
@@ -280,21 +266,32 @@ const Restaurant: FC = () => {
     []
   );
 
-  if (router.query.id === undefined || isLoading) {
-    return (
-      <Layout title="FoodSnap">
-        <p>Loading restaurant...</p>
-      </Layout>
-    );
-  }
+  return (
+    <ul className="sticky top-20 mt-8 text-gray-600">
+      {restaurant.menu.categories.map((category) => {
+        return (
+          <li key={category.name}>
+            <a
+              href={`#${category.name}`}
+              data-target={category.name}
+              onClick={onClickCategoryLink}
+              className={`pl-2 py-2 block hover:text-gray-900 hover:font-semibold border-l border-gray-400 hover:border-gray-900 ${
+                hash === category.name
+                  ? "text-gray-900 font-semibold border-gray-900"
+                  : ""
+              }`}
+            >
+              {category.name}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
 
-  if (isError) {
-    return (
-      <Layout title="Whoops! | FoodSnap">
-        <p>Failed to load restaurant: {error.message}</p>
-      </Layout>
-    );
-  }
+const Header: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
+  const { dayOfWeek } = useDate();
 
   const formattedDeliveryFee =
     restaurant.deliveryFee === +restaurant.deliveryFee.toFixed()
@@ -313,159 +310,224 @@ const Restaurant: FC = () => {
     : nextOpenDay(restaurant.openingTimes) ?? null;
 
   return (
-    <Layout title={`${restaurant.name} | Order now on FoodSnap!`}>
-      <div aria-hidden className={styles["header"]}></div>
+    <div className="bg-white rounded border border-gray-200 pb-8 flex flex-col items-center justify-start">
+      <img
+        src="http://foodbakery.chimpgroup.com/wp-content/uploads/fb-restaurant-01-1.jpg"
+        width="65"
+        height="65"
+        alt={`${restaurant.name} logo`}
+        className="rounded border-2 border-white -mt-8"
+      />
 
-      <main className="lg:container md:px-4">
-        <div className="flex">
-          <div className="flex-1 flex">
-            <div className="w-1/4 hidden lg:block">
-              <ul className="sticky top-20 mt-8 text-gray-600">
-                {restaurant.menu.categories.map((category) => {
-                  return (
-                    <li key={category.name}>
-                      <a
-                        href={`#${category.name}`}
-                        data-target={category.name}
-                        onClick={onClickCategoryLink}
-                        className={`pl-2 py-2 block hover:text-gray-900 hover:font-semibold border-l border-gray-400 hover:border-gray-900 ${
-                          hash === category.name
-                            ? "text-gray-900 font-semibold border-gray-900"
-                            : ""
-                        }`}
-                      >
-                        {category.name}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+      <h1 className="font-bold text-3xl tracking-wider text-gray-800 text-center mt-4">
+        {restaurant.name}
+      </h1>
 
-            <div className="flex-1 lg:ml-4">
-              <div className="bg-white rounded border border-gray-200 pb-8 flex flex-col items-center justify-start md:-mt-32">
-                <img
-                  src="http://foodbakery.chimpgroup.com/wp-content/uploads/fb-restaurant-01-1.jpg"
-                  width="65"
-                  height="65"
-                  alt={`${restaurant.name} logo`}
-                  className="rounded border-2 border-white -mt-8"
-                />
+      <p className="mt-3 text-gray-700">
+        {restaurant.cuisines.map((x) => (
+          <span key={x.name} className="mx-1">
+            {x.name}
+          </span>
+        ))}
+      </p>
 
-                <h1 className="font-bold text-3xl tracking-wider text-gray-800 text-center mt-4">
-                  {restaurant.name}
-                </h1>
+      <p className="mt-3 text-center text-gray-700 text-sm">
+        {restaurant.address}
+      </p>
 
-                <p className="mt-3 text-gray-700">
-                  {restaurant.cuisines.map((x) => (
-                    <span key={x.name} className="mx-1">
-                      {x.name}
-                    </span>
-                  ))}
-                </p>
+      <hr className="w-full mt-6 mb-2 border-gray-300 md:hidden" />
 
-                <p className="mt-3 text-center text-gray-700 text-sm">
-                  {restaurant.address}
-                </p>
-
-                <hr className="w-full mt-6 mb-2 border-gray-300 md:hidden" />
-
-                <div className="bg-gray-100 shadow-sm mt-4 text-gray-800">
-                  <div className="px-4 pb-2 pt-3">
-                    {isOpen && <p className="font-semibold">Delivering now</p>}
-                    {!isOpen && nextOpens && <p>Opens {nextOpens}</p>}
-                    {!isOpen && !nextOpens && <p>Closed</p>}
-                  </div>
-
-                  <hr />
-
-                  <div className="flex items-center px-4 pb-2 pt-3 text-sm">
-                    {formattedDeliveryFee === "0" ? (
-                      <p>
-                        <span className="font-bold">Free</span> delivery
-                      </p>
-                    ) : (
-                      <p>
-                        <span className="font-bold">
-                          £{formattedDeliveryFee}
-                        </span>{" "}
-                        delivery fee
-                      </p>
-                    )}
-
-                    {formattedMinOrder === "0" ? (
-                      <p className="ml-16">
-                        <span className="font-bold">No min order</span>
-                      </p>
-                    ) : (
-                      <p className="ml-16">
-                        <span className="font-bold">£{formattedMinOrder}</span>{" "}
-                        min order
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded text-gray-700 text-sm md:my-4">
-                <div className="flex w-72 mx-auto md:w-full">
-                  <button
-                    onClick={() => setTab("Menu")}
-                    className={`flex-1 py-4 border-b-2 border-transparent hover:font-bold hover:border-primary-500 hover:text-base ${
-                      tab === "Menu"
-                        ? "font-bold border-primary-500 text-base"
-                        : ""
-                    }`}
-                  >
-                    Menu
-                  </button>
-                  <button
-                    onClick={() => setTab("Information")}
-                    className={`flex-1 py-4 border-b-2 border-transparent hover:font-bold hover:border-primary-500 hover:text-base ${
-                      tab === "Information"
-                        ? "font-bold border-primary-500 text-base"
-                        : ""
-                    }`}
-                  >
-                    Information
-                  </button>
-                </div>
-              </div>
-
-              {tab === "Menu" && (
-                <>
-                  <div className="hidden lg:block">
-                    <Menu restaurant={restaurant} setHash={setHash} />
-                  </div>
-
-                  <div className="lg:hidden">
-                    <MobileMenu restaurant={restaurant} />
-                  </div>
-                </>
-              )}
-
-              {tab === "Information" && (
-                <InformationTab restaurant={restaurant} />
-              )}
-            </div>
-          </div>
-
-          <div className="w-1/3 self-start -mt-32 hidden md:block">
-            <div className="ml-4 bg-white rounded border border-gray-200 p-4">
-              <h2 className="font-bold text-2xl tracking-wider text-gray-800">
-                Your order
-              </h2>
-
-              <hr className="my-3 border-gray-300" />
-
-              <p className="text-gray-700">
-                You haven't added any food to your order...{" "}
-                <span className="font-semibold italic">yet</span>.
-              </p>
-            </div>
-          </div>
+      <div className="bg-gray-100 shadow-sm mt-4 text-gray-800">
+        <div className="px-4 pb-2 pt-3">
+          {isOpen && <p className="font-semibold">Delivering now</p>}
+          {!isOpen && nextOpens && <p>Opens {nextOpens}</p>}
+          {!isOpen && !nextOpens && <p>Closed</p>}
         </div>
-      </main>
+
+        <hr />
+
+        <div className="flex items-center px-4 pb-2 pt-3 text-sm">
+          {formattedDeliveryFee === "0" ? (
+            <p>
+              <span className="font-bold">Free</span> delivery
+            </p>
+          ) : (
+            <p>
+              <span className="font-bold">£{formattedDeliveryFee}</span>{" "}
+              delivery fee
+            </p>
+          )}
+
+          {formattedMinOrder === "0" ? (
+            <p className="ml-16">
+              <span className="font-bold">No min order</span>
+            </p>
+          ) : (
+            <p className="ml-16">
+              <span className="font-bold">£{formattedMinOrder}</span> min order
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Order: FC = () => {
+  return (
+    <div className="bg-white rounded border border-gray-200 p-4">
+      <h2 className="font-bold text-2xl tracking-wider text-gray-800">
+        Your order
+      </h2>
+
+      <hr className="my-3 border-gray-300" />
+
+      <p className="text-gray-700">
+        You haven't added any food to your order...{" "}
+        <span className="font-semibold italic">yet</span>.
+      </p>
+    </div>
+  );
+};
+
+const Tabs: FC<{
+  tab: string;
+  setTab: (tab: "Menu" | "Information") => any;
+}> = ({ tab, setTab }) => {
+  return (
+    <div className="bg-white border border-gray-200 rounded text-gray-700 text-sm">
+      <div className="flex w-72 mx-auto md:w-full">
+        <button
+          onClick={() => setTab("Menu")}
+          className={`flex-1 py-4 border-b-2 border-transparent hover:font-bold hover:border-primary-500 hover:text-base ${
+            tab === "Menu" ? "font-bold border-primary-500 text-base" : ""
+          }`}
+        >
+          Menu
+        </button>
+        <button
+          onClick={() => setTab("Information")}
+          className={`flex-1 py-4 border-b-2 border-transparent hover:font-bold hover:border-primary-500 hover:text-base ${
+            tab === "Information"
+              ? "font-bold border-primary-500 text-base"
+              : ""
+          }`}
+        >
+          Information
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Main: FC<{
+  isLoading: boolean;
+  isError: boolean;
+  error: ApiError;
+  restaurant: RestaurantDto;
+}> = ({ isLoading, isError, error, restaurant }) => {
+  const [tab, setTab] = useState<"Menu" | "Information">("Menu");
+
+  const [hash, setHash] = useState("");
+
+  useEffect(() => setHash(restaurant?.menu.categories[0]?.name || ""), [
+    restaurant,
+  ]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <SpinnerIcon className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <p>Failed to load restaurant: {error.message}</p>;
+  }
+
+  return (
+    <div className="flex">
+      <div className="w-1/4 hidden lg:block">
+        <CuisineList restaurant={restaurant} hash={hash} setHash={setHash} />
+      </div>
+
+      <div className="flex-1 lg:ml-4 md:-mt-36">
+        <Header restaurant={restaurant} />
+
+        <div className="md:my-4">
+          <Tabs tab={tab} setTab={setTab} />
+        </div>
+
+        {tab === "Menu" && (
+          <>
+            <div className="hidden lg:block">
+              <Menu restaurant={restaurant} setHash={setHash} />
+            </div>
+
+            <div className="lg:hidden">
+              <MobileMenu restaurant={restaurant} />
+            </div>
+          </>
+        )}
+
+        {tab === "Information" && <InformationTab restaurant={restaurant} />}
+      </div>
+    </div>
+  );
+};
+
+const Restaurant: FC = () => {
+  const router = useRouter();
+
+  const { data: restaurant, isLoading, isError, error } = useRestaurant(
+    router.query.id?.toString(),
+    {
+      enabled: router.query.id !== undefined,
+    }
+  );
+
+  const loading = router.query.id === undefined || isLoading;
+
+  const title = loading
+    ? "FoodSnap"
+    : isError
+    ? "Whoops! | FoodSnap"
+    : `${restaurant.name} | Order now on FoodSnap!`;
+
+  return (
+    <Layout title={title}>
+      {!loading && !isError && (
+        <div
+          aria-hidden
+          className="h-72"
+          style={{
+            background:
+              "url(http://foodbakery.chimpgroup.com/wp-content/uploads/cover-photo17.jpg) no-repeat scroll 0 0 / cover",
+          }}
+        ></div>
+      )}
+
+      <div className="lg:container md:px-4">
+        <div className="flex mt-4">
+          <main className="flex-1">
+            <Main
+              isLoading={loading}
+              isError={isError}
+              error={error}
+              restaurant={restaurant}
+            />
+          </main>
+
+          <aside
+            className={`w-1/3 self-start ml-4 hidden md:block ${
+              !loading && !isError ? "-mt-36" : ""
+            }`}
+          >
+            <Order />
+          </aside>
+        </div>
+      </div>
     </Layout>
   );
 };
