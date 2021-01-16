@@ -124,6 +124,7 @@ const RegisterRestaurantForm: FC = () => {
       )}
       {step === 3 && (
         <RegisterRestaurantFormStepThree
+          isSubmitting={isLoading}
           defaults={values}
           errors={errors}
           backStep={backStep}

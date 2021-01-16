@@ -11,6 +11,7 @@ interface StepThreeValues {
 }
 
 interface Props {
+  isSubmitting: boolean;
   defaults: StepThreeValues;
   errors: { [K in keyof StepThreeValues]?: string };
   backStep(data: StepThreeValues): any;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const RegisterRestaurantFormStepThree: React.FC<Props> = ({
+  isSubmitting,
   defaults,
   errors,
   backStep,
@@ -53,6 +55,7 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
     pause();
     close();
     form.setValue("address", address);
+    autocompleteInputRef.current.focus();
   };
 
   return (
@@ -125,9 +128,9 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
         <button
           type="submit"
           className="btn btn-primary font-semibold w-full"
-          disabled={form.formState.isSubmitting}
+          disabled={isSubmitting}
         >
-          {form.formState.isSubmitting ? (
+          {isSubmitting ? (
             <SpinnerIcon className="h-6 w-6 inline-block animate-spin" />
           ) : (
             <span>Register</span>
