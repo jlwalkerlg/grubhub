@@ -26,7 +26,20 @@ namespace Web.Domain.Menus
             }
         }
 
-        public string Description { get; set; }
+        private string description;
+        public string Description
+        {
+            get => description;
+            set
+            {
+                if (value?.Length > 280)
+                {
+                    throw new ArgumentException("Description must not be longer than 280 characters.");
+                }
+
+                description = value;
+            }
+        }
 
         public Money price;
         public Money Price

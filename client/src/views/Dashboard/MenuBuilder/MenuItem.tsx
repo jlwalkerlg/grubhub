@@ -1,8 +1,8 @@
-import React from "react";
+import React, { FC } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { MenuCategoryDto, MenuItemDto } from "~/api/menu/MenuDto";
+import { MenuCategoryDto, MenuDto, MenuItemDto } from "~/api/menu/MenuDto";
 import useMenu from "~/api/menu/useMenu";
 import useRemoveMenuItem from "~/api/restaurants/useRemoveMenuItem";
 import useUpdateMenuItem from "~/api/restaurants/useUpdateMenuItem";
@@ -12,26 +12,25 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { useToasts } from "~/components/Toaster/Toaster";
-import { combineRules, MinRule, RequiredRule } from "~/services/forms/Rule";
+import {
+  combineRules,
+  MaxLengthRule,
+  MinRule,
+  RequiredRule,
+} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+
 const MySwal = withReactContent(Swal);
 
-interface Props {
+const UpdateForm: FC<{
+  menu: MenuDto;
   category: MenuCategoryDto;
   item: MenuItemDto;
-}
+  close: () => any;
+}> = ({ menu, category, item, close }) => {
+  const [update, { isError, error, reset }] = useUpdateMenuItem();
 
-const MenuItem: React.FC<Props> = ({ category, item }) => {
-  const { addToast } = useToasts();
-
-  const { user } = useAuth();
-  const { data: menu } = useMenu(user.restaurantId);
-
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = React.useState(false);
-
-  const [update, updateStatus] = useUpdateMenuItem();
-
-  const updateForm = useForm({
+  const form = useForm({
     defaultValues: {
       newItemName: item.name,
       description: item.description,
@@ -39,8 +38,8 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
     },
   });
 
-  const onSubmit = updateForm.handleSubmit(async (data) => {
-    if (updateForm.formState.isSubmitting) return;
+  const onSubmit = form.handleSubmit(async (data) => {
+    if (form.formState.isSubmitting) return;
 
     await update(
       {
@@ -52,26 +51,123 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
       },
       {
         onSuccess: () => {
-          setIsUpdateFormOpen(false);
+          form.setValue("newItemName", data.newItemName);
+          form.setValue("description", data.description);
+          form.setValue("price", data.price);
+          close();
         },
         onError: (error) => {
           if (error.isValidationError) {
-            setFormErrors(error.errors, updateForm);
+            setFormErrors(error.errors, form);
           }
         },
       }
     );
   });
 
-  const onEdit = () => {
-    setIsUpdateFormOpen(true);
+  const cancel = () => {
+    close();
+    form.reset();
+    reset();
   };
 
-  const onCancelEdit = () => {
-    setIsUpdateFormOpen(false);
-    updateForm.reset();
-    updateStatus.reset();
-  };
+  return (
+    <form onSubmit={onSubmit} className="px-2 pb-3">
+      {isError && (
+        <div className="my-3">
+          <ErrorAlert message={error.message} />
+        </div>
+      )}
+
+      <div className="mt-4">
+        <label className="label" htmlFor="name">
+          Name <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule()]),
+          })}
+          className="input"
+          type="text"
+          name="newItemName"
+          id="newItemName"
+          data-invalid={!!form.errors.newItemName}
+        />
+        {form.errors.newItemName && (
+          <p className="form-error mt-1">{form.errors.newItemName.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="description">
+          Description
+        </label>
+        <textarea
+          ref={form.register({
+            validate: combineRules([new MaxLengthRule(280)]),
+          })}
+          className="input"
+          name="description"
+          id="description"
+          data-invalid={!!form.errors.description}
+        ></textarea>
+        {form.errors.description && (
+          <p className="form-error mt-1">{form.errors.description.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="price">
+          Price <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+          })}
+          className="input"
+          type="number"
+          min="0"
+          step="0.01"
+          name="price"
+          id="price"
+          data-invalid={!!form.errors.price}
+        />
+        {form.errors.price && (
+          <p className="form-error mt-1">{form.errors.price.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="w-full lg:w-auto btn btn-sm btn-primary"
+        >
+          Update Item
+        </button>
+        <button
+          type="button"
+          onClick={cancel}
+          disabled={form.formState.isSubmitting}
+          className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const MenuItem: React.FC<{
+  category: MenuCategoryDto;
+  item: MenuItemDto;
+}> = ({ category, item }) => {
+  const { addToast } = useToasts();
+
+  const { user } = useAuth();
+  const { data: menu } = useMenu(user.restaurantId);
+
+  const [isUpdateFormOpen, setIsUpdateFormOpen] = React.useState(false);
 
   const [remove, removeStatus] = useRemoveMenuItem();
 
@@ -128,8 +224,7 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
               <button
                 type="button"
                 className="text-blue-700"
-                onClick={onEdit}
-                disabled={updateForm.formState.isSubmitting}
+                onClick={() => setIsUpdateFormOpen(true)}
               >
                 <PencilIcon className="w-5 h-5" />
               </button>
@@ -144,100 +239,21 @@ const MenuItem: React.FC<Props> = ({ category, item }) => {
             </div>
           )}
         </div>
-        <p className="text-gray-800">{item.description}</p>
+        {item.description && (
+          <p className="text-gray-800 whitespace-pre-line">
+            {item.description}
+          </p>
+        )}
         <p className="mt-1 font-medium text-sm text-red-700">£{item.price}</p>
       </div>
 
       {isUpdateFormOpen && (
-        <form onSubmit={onSubmit} className="px-2 pb-3">
-          {updateStatus.isError && (
-            <div className="my-3">
-              <ErrorAlert message={updateStatus.error.message} />
-            </div>
-          )}
-
-          <div className="mt-4">
-            <label className="label" htmlFor="name">
-              Name <span className="text-primary">*</span>
-            </label>
-            <input
-              ref={updateForm.register({
-                validate: combineRules([new RequiredRule()]),
-              })}
-              className="input"
-              type="text"
-              name="newItemName"
-              id="newItemName"
-              data-invalid={!!updateForm.errors.newItemName}
-            />
-            {updateForm.errors.newItemName && (
-              <p className="form-error mt-1">
-                {updateForm.errors.newItemName.message}
-              </p>
-            )}
-          </div>
-
-          <div className="mt-4">
-            <label className="label" htmlFor="description">
-              Description <span className="text-primary">*</span>
-            </label>
-            <textarea
-              ref={updateForm.register({
-                validate: combineRules([new RequiredRule()]),
-              })}
-              className="input"
-              name="description"
-              id="description"
-              data-invalid={!!updateForm.errors.description}
-            ></textarea>
-            {updateForm.errors.description && (
-              <p className="form-error mt-1">
-                {updateForm.errors.description.message}
-              </p>
-            )}
-          </div>
-
-          <div className="mt-4">
-            <label className="label" htmlFor="price">
-              Price <span className="text-primary">*</span>
-            </label>
-            <input
-              ref={updateForm.register({
-                validate: combineRules([new RequiredRule(), new MinRule(0)]),
-              })}
-              className="input"
-              type="number"
-              min="0"
-              step="0.01"
-              name="price"
-              id="price"
-              data-invalid={!!updateForm.errors.price}
-            />
-            {updateForm.errors.price && (
-              <p className="form-error mt-1">
-                {updateForm.errors.price.message}
-              </p>
-            )}
-          </div>
-
-          <div className="mt-4">
-            <button
-              type="submit"
-              disabled={updateForm.formState.isSubmitting}
-              className="w-full lg:w-auto btn btn-sm btn-primary"
-            >
-              Update Item
-            </button>
-            <button
-              type="button"
-              onClick={onCancelEdit}
-              disabled={updateForm.formState.isSubmitting}
-              className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+        <UpdateForm
+          menu={menu}
+          category={category}
+          item={item}
+          close={() => setIsUpdateFormOpen(false)}
+        />
       )}
     </div>
   );

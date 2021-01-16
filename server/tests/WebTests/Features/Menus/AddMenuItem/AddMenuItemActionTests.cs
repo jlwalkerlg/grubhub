@@ -37,7 +37,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             {
                 CategoryName = "",
                 ItemName = "",
-                Description = "",
+                Description = new string('c', 281),
                 Price = -10m,
             };
 

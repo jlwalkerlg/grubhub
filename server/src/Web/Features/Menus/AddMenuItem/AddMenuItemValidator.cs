@@ -16,7 +16,7 @@ namespace Web.Features.Menus.AddMenuItem
                 .Required();
 
             CascadeRuleFor(x => x.Description)
-                .Required();
+                .MaxLength(280);
 
             CascadeRuleFor(x => x.Price)
                 .Required()

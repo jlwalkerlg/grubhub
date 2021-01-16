@@ -78,13 +78,8 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
             A little bit about us
           </h3>
 
-          <p className="text-gray-700 mt-3 block">
-            {restaurant.description.split("\n").map((x, i) => (
-              <span>
-                {i !== 0 && <br />}
-                {x}
-              </span>
-            ))}
+          <p className="text-gray-700 mt-3 block whitespace-pre-line">
+            {restaurant.description}
           </p>
 
           <hr className="my-6 border-gray-300" />
@@ -120,7 +115,9 @@ const MenuItem: FC<{ item: MenuItemDto }> = ({ item }) => {
     <button className="bg-white rounded border border-gray-200 p-4 w-full text-left mt-2">
       <p className="font-bold text-gray-700 text-xl">{item.name}</p>
       {item.description && (
-        <p className="text-gray-700 text-sm mt-1">{item.description}</p>
+        <p className="text-gray-700 text-sm mt-1 whitespace-pre-line">
+          {item.description}
+        </p>
       )}
       <p className="text-primary mt-2">£{item.price.toFixed(2)}</p>
     </button>

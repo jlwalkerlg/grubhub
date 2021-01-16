@@ -10,6 +10,6 @@ export interface MenuCategoryDto {
 
 export interface MenuItemDto {
   name: string;
-  description: string;
+  description?: string;
   price: number;
 }

@@ -6,14 +6,17 @@ import useAddMenuItem from "~/api/restaurants/useAddMenuItem";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
-import { combineRules, MinRule, RequiredRule } from "~/services/forms/Rule";
+import {
+  combineRules,
+  MaxLengthRule,
+  MinRule,
+  RequiredRule,
+} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
 
-interface Props {
+const NewMenuItemDropdown: React.FC<{
   category: MenuCategoryDto;
-}
-
-const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
+}> = ({ category }) => {
   const { user } = useAuth();
   const { data: menu } = useMenu(user.restaurantId);
 
@@ -99,11 +102,11 @@ const NewMenuItemDropdown: React.FC<Props> = ({ category }) => {
 
           <div className="mt-4">
             <label className="label" htmlFor="description">
-              Description <span className="text-primary">*</span>
+              Description
             </label>
             <textarea
               ref={form.register({
-                validate: combineRules([new RequiredRule()]),
+                validate: combineRules([new MaxLengthRule(280)]),
               })}
               className="input"
               name="description"

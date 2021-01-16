@@ -19,7 +19,7 @@ namespace Web.Features.Menus.UpdateMenuItem
                 .Required();
 
             RuleFor(x => x.Description)
-                .Required();
+                .MaxLength(280);
 
             RuleFor(x => x.Price)
                 .Required()

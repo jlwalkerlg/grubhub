@@ -21,7 +21,7 @@ namespace Web.Data.EF.Configurations
 
             builder.Property(x => x.Description)
                 .HasColumnName("description")
-                .IsRequired();
+                .HasMaxLength(280);
 
             builder.OwnsOne(x => x.Price, y =>
             {

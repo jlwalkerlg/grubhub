@@ -19,7 +19,8 @@ namespace Web.Features.Menus.UpdateMenuItem
 
         public async Task<Result> Handle(UpdateMenuItemCommand command, CancellationToken cancellationToken)
         {
-            var menu = await unitOfWork.Menus.GetByRestaurantId(new RestaurantId(command.RestaurantId));
+            var menu = await unitOfWork.Menus
+                .GetByRestaurantId(new RestaurantId(command.RestaurantId));
 
             if (menu == null)
             {
@@ -45,7 +46,8 @@ namespace Web.Features.Menus.UpdateMenuItem
                 return Error.BadRequest($"Item {command.OldItemName} doesn't exist for category {command.CategoryName}.");
             }
 
-            if (command.OldItemName != command.NewItemName && category.ContainsItem(command.NewItemName))
+            if (command.OldItemName != command.NewItemName
+                && category.ContainsItem(command.NewItemName))
             {
                 return Error.BadRequest($"Item {command.NewItemName} already exists for category {command.CategoryName}.");
             }
@@ -53,7 +55,11 @@ namespace Web.Features.Menus.UpdateMenuItem
             var item = category.GetItem(command.OldItemName);
 
             category.RenameItem(command.OldItemName, command.NewItemName);
-            item.Description = command.Description;
+
+            item.Description = string.IsNullOrWhiteSpace(command.Description)
+                ? null
+                : command.Description;
+
             item.Price = new Money(command.Price);
 
             await unitOfWork.Commit();

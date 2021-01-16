@@ -19,11 +19,9 @@ import NewMenuItemDropdown from "./NewMenuItemDropdown";
 
 const MySwal = withReactContent(Swal);
 
-interface Props {
+const MenuCategory: React.FC<{
   category: MenuCategoryDto;
-}
-
-const MenuCategory: React.FC<Props> = ({ category }) => {
+}> = ({ category }) => {
   const { addToast } = useToasts();
 
   const { user } = useAuth();

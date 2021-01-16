@@ -35,7 +35,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             var request = new UpdateMenuItemRequest()
             {
                 NewItemName = "",
-                Description = "",
+                Description = new string('c', 281),
                 Price = -1m,
             };
 
