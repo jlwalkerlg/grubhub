@@ -39,6 +39,14 @@ namespace WebTests.Features.Users.GetAuthUser
         }
 
         [Fact]
+        public async Task It_Fails_If_The_User_Not_Authenticated()
+        {
+            var response = await fixture.GetClient().Get("/auth/user");
+
+            response.StatusCode.ShouldBe(401);
+        }
+
+        [Fact]
         public async Task It_Fails_If_The_User_Is_Not_Found()
         {
             var response = await fixture.GetAuthenticatedClient().Get("/auth/user");

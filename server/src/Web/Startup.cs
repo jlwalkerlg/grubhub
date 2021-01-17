@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Web.Data;
+using Web.Features.Restaurants.SearchRestaurants;
 using Web.ServiceRegistration;
 using Web.Services;
 using Web.Services.Authentication;
@@ -77,7 +78,8 @@ namespace Web
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
-            builder.AddDtoRepositories();
+            builder.RegisterType<DPRestaurantSearcher>()
+                .AsImplementedInterfaces();
 
             builder.RegisterType<Hasher>()
                 .AsImplementedInterfaces()

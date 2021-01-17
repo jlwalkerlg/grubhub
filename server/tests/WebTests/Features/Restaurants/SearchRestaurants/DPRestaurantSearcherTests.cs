@@ -2,14 +2,13 @@ using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Data.Dapper.Repositories.Restaurants;
 using Web.Domain;
 using Web.Features.Restaurants.SearchRestaurants;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
 
-namespace WebTests.Data.Dapper.Repositories.Restaurants
+namespace WebTests.Features.Restaurants.SearchRestaurants
 {
     public class DPRestaurantSearcherTests : IntegrationTestBase
     {

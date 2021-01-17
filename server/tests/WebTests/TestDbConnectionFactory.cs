@@ -3,7 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Web.Data;
 
-namespace WebTests.Data
+namespace WebTests
 {
     public class TestDbConnectionFactory : IDbConnectionFactory
     {

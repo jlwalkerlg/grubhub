@@ -1,30 +1,55 @@
-﻿using MediatR;
+﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Web.Data;
+using Web.Services.Authentication;
 
 namespace Web.Features.Users.GetAuthUser
 {
     public class GetAuthUserAction : Action
     {
-        private readonly ISender sender;
+        private readonly IAuthenticator authenticator;
+        private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetAuthUserAction(ISender sender)
+        public GetAuthUserAction(IAuthenticator authenticator, IDbConnectionFactory dbConnectionFactory)
         {
-            this.sender = sender;
+            this.authenticator = authenticator;
+            this.dbConnectionFactory = dbConnectionFactory;
         }
 
         [HttpGet("/auth/user")]
         public async Task<IActionResult> Execute()
         {
-            var query = new GetAuthUserQuery();
-            var result = await sender.Send(new GetAuthUserQuery());
-
-            if (!result)
+            if (!authenticator.IsAuthenticated)
             {
-                return Error(result.Error);
+                return Error(Web.Error.Unauthenticated());
             }
 
-            return Ok(result.Value);
+            var sql = @"
+                SELECT
+                    u.id,
+                    u.name,
+                    u.email,
+                    u.role,
+                    r.id as restaurant_id,
+                    r.name as restaurant_name
+                FROM
+                    users u
+                LEFT JOIN restaurants r ON r.manager_id = u.id
+                WHERE
+                    u.Id = @Id";
+
+            using (var connection = await dbConnectionFactory.OpenConnection())
+            {
+                var user = await connection
+                    .QuerySingleOrDefaultAsync<UserDto>(
+                        sql,
+                        new { Id = authenticator.UserId.Value });
+
+                return user == null
+                    ? Error(Web.Error.NotFound("User not found."))
+                    : Ok(user);
+            }
         }
     }
 }

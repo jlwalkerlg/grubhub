@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Data;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Features.Cuisines;
-using Web.Features.Restaurants;
-using Web.Features.Restaurants.SearchRestaurants;
 using Web.Services;
 
-namespace Web.Data.Dapper.Repositories.Restaurants
+namespace Web.Features.Restaurants.SearchRestaurants
 {
     public class DPRestaurantSearcher : IRestaurantSearcher
     {
