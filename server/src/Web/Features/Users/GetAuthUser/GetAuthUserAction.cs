@@ -22,7 +22,7 @@ namespace Web.Features.Users.GetAuthUser
         {
             if (!authenticator.IsAuthenticated)
             {
-                return Error(Web.Error.Unauthenticated());
+                return Unauthenticated();
             }
 
             var sql = @"
@@ -47,7 +47,7 @@ namespace Web.Features.Users.GetAuthUser
                         new { Id = authenticator.UserId.Value });
 
                 return user == null
-                    ? Error(Web.Error.NotFound("User not found."))
+                    ? NotFound("User not found.")
                     : Ok(user);
             }
         }

@@ -22,6 +22,11 @@ namespace Web
             return Error(Web.Error.NotFound(message));
         }
 
+        protected IActionResult Unauthenticated()
+        {
+            return Error(Web.Error.Unauthenticated());
+        }
+
         protected IActionResult Error(Error error)
         {
             var envelope = new ErrorEnvelope(error.Message)

@@ -26,15 +26,15 @@ namespace Web.Services.Tokenization
             }
             catch (JWT.Exceptions.TokenExpiredException)
             {
-                return Result<string>.Fail(Error.Internal("Token expired."));
+                return Error.Internal("Token expired.");
             }
             catch (JWT.Exceptions.InvalidTokenPartsException)
             {
-                return Result<string>.Fail(Error.Internal("Invalid token."));
+                return Error.Internal("Invalid token.");
             }
             catch (JWT.Exceptions.SignatureVerificationException)
             {
-                return Result<string>.Fail(Error.Internal("Signature invalid."));
+                return Error.Internal("Signature invalid.");
             }
         }
 

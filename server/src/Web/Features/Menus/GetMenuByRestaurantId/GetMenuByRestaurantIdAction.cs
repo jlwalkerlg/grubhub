@@ -71,7 +71,7 @@ namespace Web.Features.Menus.GetMenuByRestaurantId
                     new { RestaurantId = restaurantId });
 
                 return menu == null
-                    ? Error(Web.Error.NotFound("Menu not found."))
+                    ? NotFound("Menu not found.")
                     : Ok(menu);
             }
         }

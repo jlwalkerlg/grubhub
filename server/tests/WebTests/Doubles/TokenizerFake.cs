@@ -10,7 +10,7 @@ namespace WebTests.Doubles
         {
             if (!token.StartsWith("token:"))
             {
-                return Result<string>.Fail(Error.Internal("Invalid token."));
+                return Error.Internal("Invalid token.");
             }
 
             if (token.Contains(":expiry:"))
