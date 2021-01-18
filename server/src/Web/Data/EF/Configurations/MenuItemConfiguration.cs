@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Menus;
@@ -10,10 +11,10 @@ namespace Web.Data.EF.Configurations
         {
             builder.ToTable("menu_items");
 
-            builder.Property<int>("id")
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .ValueGeneratedOnAdd();
-            builder.HasKey("id");
+                .ValueGeneratedNever();
 
             builder.Property(x => x.Name)
                 .HasColumnName("name")
@@ -30,8 +31,9 @@ namespace Web.Data.EF.Configurations
                     .IsRequired();
             });
 
-            builder.Property<int>("menu_category_id")
+            builder.Property<Guid>("menu_category_id")
                 .IsRequired();
+
             builder.HasIndex("menu_category_id", "Name")
                 .IsUnique();
         }

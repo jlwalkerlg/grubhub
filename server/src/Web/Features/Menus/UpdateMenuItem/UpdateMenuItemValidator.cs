@@ -9,13 +9,13 @@ namespace Web.Features.Menus.UpdateMenuItem
             RuleFor(x => x.RestaurantId)
                 .Required();
 
-            RuleFor(x => x.CategoryName)
+            RuleFor(x => x.CategoryId)
                 .Required();
 
-            RuleFor(x => x.OldItemName)
+            RuleFor(x => x.ItemId)
                 .Required();
 
-            RuleFor(x => x.NewItemName)
+            RuleFor(x => x.Name)
                 .Required();
 
             RuleFor(x => x.Description)

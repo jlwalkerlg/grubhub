@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
@@ -37,7 +38,7 @@ namespace Web.Features.Menus.AddMenuCategory
                 return Error.BadRequest($"Category {command.Name} already exists.");
             }
 
-            menu.AddCategory(command.Name);
+            menu.AddCategory(Guid.NewGuid(), command.Name);
 
             await unitOfWork.Commit();
 

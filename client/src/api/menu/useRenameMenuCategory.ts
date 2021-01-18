@@ -1,18 +1,18 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { getMenuQueryKey } from "../menu/useMenu";
+import { getMenuQueryKey } from "./useMenu";
 
 export interface RenameMenuCategoryCommand {
   restaurantId: string;
-  oldName: string;
+  categoryId: string;
   newName: string;
 }
 
 async function renameMenuCategory(command: RenameMenuCategoryCommand) {
-  const { restaurantId, oldName, ...data } = command;
+  const { restaurantId, categoryId, ...data } = command;
 
   await Api.put(
-    `/restaurants/${restaurantId}/menu/categories/${oldName}`,
+    `/restaurants/${restaurantId}/menu/categories/${categoryId}`,
     data
   );
 }

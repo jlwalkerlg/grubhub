@@ -32,19 +32,21 @@ namespace Web.Features.Menus.RemoveMenuItem
                 return Error.Unauthorised("Only the restaurant owner can update the menu.");
             }
 
-            if (!menu.ContainsCategory(command.CategoryName))
+            // This logic belongs in the domain model.
+            // Just return a Result from the domain.
+            if (!menu.ContainsCategoryById(command.CategoryId))
             {
-                return Error.BadRequest($"Category {command.CategoryName} not found.");
+                return Error.BadRequest("Category not found.");
             }
 
-            var category = menu.GetCategory(command.CategoryName);
+            var category = menu.GetCategory(command.CategoryId);
 
-            if (!category.ContainsItem(command.ItemName))
+            if (!category.ContainsItem(command.ItemId))
             {
-                return Error.BadRequest($"Item {command.ItemName} not found for category {command.CategoryName}.");
+                return Error.BadRequest("Item not found.");
             }
 
-            category.RemoveItem(command.ItemName);
+            category.RemoveItem(command.ItemId);
 
             await unitOfWork.Commit();
 

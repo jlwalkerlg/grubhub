@@ -4,8 +4,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { MenuCategoryDto, MenuDto, MenuItemDto } from "~/api/menu/MenuDto";
 import useMenu from "~/api/menu/useMenu";
-import useRemoveMenuItem from "~/api/restaurants/useRemoveMenuItem";
-import useUpdateMenuItem from "~/api/restaurants/useUpdateMenuItem";
+import useRemoveMenuItem from "~/api/menu/useRemoveMenuItem";
+import useUpdateMenuItem from "~/api/menu/useUpdateMenuItem";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import CloseIcon from "~/components/Icons/CloseIcon";
@@ -32,7 +32,7 @@ const UpdateForm: FC<{
 
   const form = useForm({
     defaultValues: {
-      newItemName: item.name,
+      name: item.name,
       description: item.description,
       price: item.price,
     },
@@ -44,14 +44,14 @@ const UpdateForm: FC<{
     await update(
       {
         restaurantId: menu.restaurantId,
-        categoryName: category.name,
-        oldItemName: item.name,
+        categoryId: category.id,
+        itemId: item.id,
         ...data,
         price: +data.price,
       },
       {
         onSuccess: () => {
-          form.setValue("newItemName", data.newItemName);
+          form.setValue("name", data.name);
           form.setValue("description", data.description);
           form.setValue("price", data.price);
           close();
@@ -89,12 +89,12 @@ const UpdateForm: FC<{
           })}
           className="input"
           type="text"
-          name="newItemName"
-          id="newItemName"
-          data-invalid={!!form.errors.newItemName}
+          name="name"
+          id="name"
+          data-invalid={!!form.errors.name}
         />
-        {form.errors.newItemName && (
-          <p className="form-error mt-1">{form.errors.newItemName.message}</p>
+        {form.errors.name && (
+          <p className="form-error mt-1">{form.errors.name.message}</p>
         )}
       </div>
 
@@ -194,8 +194,8 @@ const MenuItem: React.FC<{
     await remove(
       {
         restaurantId: menu.restaurantId,
-        categoryName: category.name,
-        itemName: item.name,
+        categoryId: category.id,
+        itemId: item.id,
       },
       {
         onError: (error) => {

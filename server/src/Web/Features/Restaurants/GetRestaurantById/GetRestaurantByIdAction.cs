@@ -1,7 +1,6 @@
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Data;
@@ -277,7 +276,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
 
         private record MenuCategoryEntry
         {
-            public int id { get; init; }
+            public Guid id { get; init; }
             public int menu_id { get; init; }
             public string name { get; init; }
 
@@ -285,6 +284,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             {
                 return new MenuCategoryDto()
                 {
+                    Id = id,
                     Name = name,
                 };
             }
@@ -292,8 +292,8 @@ namespace Web.Features.Restaurants.GetRestaurantById
 
         private record MenuItemEntry
         {
-            public int id { get; init; }
-            public int menu_category_id { get; init; }
+            public Guid id { get; init; }
+            public Guid menu_category_id { get; init; }
             public string name { get; init; }
             public string description { get; init; }
             public decimal price { get; init; }
@@ -302,6 +302,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             {
                 return new MenuItemDto()
                 {
+                    Id = id,
                     Name = name,
                     Description = description,
                     Price = price,

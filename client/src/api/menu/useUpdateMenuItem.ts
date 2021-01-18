@@ -1,21 +1,21 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { getMenuQueryKey } from "../menu/useMenu";
+import { getMenuQueryKey } from "./useMenu";
 
 export interface UpdateMenuItemCommand {
   restaurantId: string;
-  categoryName: string;
-  oldItemName: string;
-  newItemName: string;
+  categoryId: string;
+  itemId: string;
+  name: string;
   description: string;
   price: number;
 }
 
 async function updateMenuItem(command: UpdateMenuItemCommand) {
-  const { restaurantId, categoryName, oldItemName, ...data } = command;
+  const { restaurantId, categoryId, itemId, ...data } = command;
 
   await Api.put(
-    `/restaurants/${restaurantId}/menu/categories/${categoryName}/items/${oldItemName}`,
+    `/restaurants/${restaurantId}/menu/categories/${categoryId}/items/${itemId}`,
     data
   );
 }

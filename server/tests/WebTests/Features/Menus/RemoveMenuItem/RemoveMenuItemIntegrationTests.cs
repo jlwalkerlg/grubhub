@@ -44,7 +44,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             fixture.Insert(manager, restaurant, menu);
 
             var response = await fixture.GetAuthenticatedClient(manager.Id).Delete(
-                $"/restaurants/{restaurant.Id}/menu/categories/Pizza/items/Margherita");
+                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items/{item.Id}");
 
             response.StatusCode.ShouldBe(204);
 

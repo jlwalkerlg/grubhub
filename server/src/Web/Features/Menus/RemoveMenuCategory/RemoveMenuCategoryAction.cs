@@ -14,25 +14,20 @@ namespace Web.Features.Menus.RemoveMenuCategory
             this.sender = sender;
         }
 
-        [HttpDelete("/restaurants/{restaurantId}/menu/categories/{category}")]
+        [HttpDelete("/restaurants/{restaurantId}/menu/categories/{categoryId}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
-            [FromRoute] string category)
+            [FromRoute] Guid categoryId)
         {
             var command = new RemoveMenuCategoryCommand
             {
                 RestaurantId = restaurantId,
-                CategoryName = category,
+                CategoryId = categoryId,
             };
 
             var result = await sender.Send(command);
 
-            if (!result)
-            {
-                return Error(result.Error);
-            }
-
-            return StatusCode(204);
+            return result ? StatusCode(204) : Error(result.Error);
         }
     }
 }

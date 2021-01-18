@@ -15,7 +15,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
         public async Task It_Requires_Authentication()
         {
             var response = await fixture.GetClient().Delete(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza");
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(401);
         }
@@ -24,7 +24,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
         public async Task It_Returns_Handler_Errors()
         {
             var response = await fixture.GetAuthenticatedClient().Delete(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza");
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(400);
             response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);

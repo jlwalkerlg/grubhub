@@ -11,12 +11,14 @@ namespace Web.Features.Menus
 
     public record MenuCategoryDto
     {
+        public Guid Id { get; init; }
         public string Name { get; init; }
         public List<MenuItemDto> Items { get; init; } = new();
     }
 
     public record MenuItemDto
     {
+        public Guid Id { get; init; }
         public string Name { get; init; }
         public string Description { get; init; }
         public decimal Price { get; init; }

@@ -25,7 +25,6 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var category = new MenuCategory()
             {
-                Id = 1,
                 Name = "Pizza",
             };
 
@@ -39,14 +38,13 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var request = new AddMenuItemRequest()
             {
-                CategoryName = category.Name,
-                ItemName = "Margherita",
+                Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 10m,
             };
 
             var response = await fixture.GetAuthenticatedClient(manager.Id).Post(
-                $"/restaurants/{restaurant.Id}/menu/items",
+                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items",
                 request);
 
             response.StatusCode.ShouldBe(201);
@@ -54,7 +52,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             var found = fixture.UseTestDbContext(db => db.MenuItems.Single());
 
             found.MenuCategoryId.ShouldBe(category.Id);
-            found.Name.ShouldBe(request.ItemName);
+            found.Name.ShouldBe(request.Name);
             found.Description.ShouldBe(request.Description);
             found.Price.ShouldBe(request.Price);
         }

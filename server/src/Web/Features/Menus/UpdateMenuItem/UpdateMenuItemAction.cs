@@ -14,31 +14,26 @@ namespace Web.Features.Menus.UpdateMenuItem
             this.sender = sender;
         }
 
-        [HttpPut("/restaurants/{restaurantId}/menu/categories/{category}/items/{itemName}")]
+        [HttpPut("/restaurants/{restaurantId}/menu/categories/{categoryId}/items/{itemId}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
-            [FromRoute] string category,
-            [FromRoute] string itemName,
+            [FromRoute] Guid categoryId,
+            [FromRoute] Guid itemId,
             [FromBody] UpdateMenuItemRequest request)
         {
             var command = new UpdateMenuItemCommand
             {
                 RestaurantId = restaurantId,
-                CategoryName = category,
-                OldItemName = itemName,
-                NewItemName = request.NewItemName,
+                CategoryId = categoryId,
+                ItemId = itemId,
+                Name = request.Name,
                 Description = request.Description,
                 Price = request.Price
             };
 
             var result = await sender.Send(command);
 
-            if (!result)
-            {
-                return Error(result.Error);
-            }
-
-            return Ok();
+            return result ? Ok() : Error(result.Error);
         }
     }
 }

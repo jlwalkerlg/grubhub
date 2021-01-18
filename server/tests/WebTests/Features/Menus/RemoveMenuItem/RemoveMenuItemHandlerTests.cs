@@ -42,8 +42,8 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand()
             {
                 RestaurantId = Guid.NewGuid(),
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = Guid.NewGuid(),
+                ItemId = Guid.NewGuid(),
             };
 
             var result = await handler.Handle(command, default);
@@ -70,6 +70,8 @@ namespace WebTests.Features.Menus.RemoveMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+            var item = category.AddItem(Guid.NewGuid(), "Margherita", null, new Money(9.99m));
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -80,8 +82,8 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand()
             {
                 RestaurantId = restaurant.Id,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = category.Id,
+                ItemId = item.Id,
             };
 
             var result = await handler.Handle(command, default);
@@ -118,8 +120,8 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = Guid.NewGuid(),
+                ItemId = Guid.NewGuid(),
             };
 
             var result = await handler.Handle(command, default);
@@ -146,7 +148,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -157,8 +159,8 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             var command = new RemoveMenuItemCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = category.Id,
+                ItemId = Guid.NewGuid(),
             };
 
             var result = await handler.Handle(command, default);

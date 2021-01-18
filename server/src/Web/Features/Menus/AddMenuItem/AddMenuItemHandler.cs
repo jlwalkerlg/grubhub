@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
@@ -33,19 +34,23 @@ namespace Web.Features.Menus.AddMenuItem
                 return Error.Unauthorised("Only the restaurant owner can add menu items.");
             }
 
-            if (!menu.ContainsCategory(command.CategoryName))
+            if (!menu.ContainsCategoryById(command.CategoryId))
             {
-                return Error.NotFound($"Category {command.CategoryName} not found.");
+                return Error.NotFound("Category not found.");
             }
 
-            var category = menu.GetCategory(command.CategoryName);
+            var category = menu.GetCategory(command.CategoryId);
 
-            if (category.ContainsItem(command.ItemName))
+            if (category.ContainsItem(command.Name))
             {
-                return Error.BadRequest($"Item {command.ItemName} already exists for category {command.CategoryName}.");
+                return Error.BadRequest("Item already exists.");
             }
 
-            category.AddItem(command.ItemName, command.Description, new Money(command.Price));
+            category.AddItem(
+                Guid.NewGuid(),
+                command.Name,
+                command.Description,
+                new Money(command.Price));
 
             await unitOfWork.Commit();
 

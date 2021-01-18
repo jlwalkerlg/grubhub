@@ -9,7 +9,7 @@ namespace Web.Features.Menus.RenameMenuCategory
             RuleFor(x => x.RestaurantId)
                 .Required();
 
-            RuleFor(x => x.OldName)
+            RuleFor(x => x.CategoryId)
                 .Required();
 
             RuleFor(x => x.NewName)

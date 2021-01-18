@@ -24,21 +24,18 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task OldName_Cant_Be_Empty(string oldName)
+        [Fact]
+        public async Task CategoryId_Cant_Be_Empty()
         {
             var command = new RenameMenuCategoryCommand()
             {
-                OldName = oldName,
+                CategoryId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.OldName));
+            result.Errors.ShouldContainKey(nameof(command.CategoryId));
         }
 
         [Theory]

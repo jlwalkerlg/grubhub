@@ -14,28 +14,24 @@ namespace Web.Features.Menus.AddMenuItem
             this.sender = sender;
         }
 
-        [HttpPost("/restaurants/{restaurantId}/menu/items")]
+        [HttpPost("/restaurants/{restaurantId}/menu/categories/{categoryId}/items")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
+            [FromRoute] Guid categoryId,
             [FromBody] AddMenuItemRequest request)
         {
-            var command = new AddMenuItemCommand
+            var command = new AddMenuItemCommand()
             {
                 RestaurantId = restaurantId,
-                CategoryName = request.CategoryName,
-                ItemName = request.ItemName,
+                CategoryId = categoryId,
+                Name = request.Name,
                 Description = request.Description,
                 Price = request.Price
             };
 
             var result = await sender.Send(command);
 
-            if (!result)
-            {
-                return Error(result.Error);
-            }
-
-            return StatusCode(201);
+            return result ? StatusCode(201) : Error(result.Error);
         }
     }
 }

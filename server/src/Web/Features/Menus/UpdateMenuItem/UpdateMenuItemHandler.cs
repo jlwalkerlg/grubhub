@@ -34,27 +34,27 @@ namespace Web.Features.Menus.UpdateMenuItem
                 return Error.Unauthorised("Only the restaurant owner can update the menu.");
             }
 
-            if (!menu.ContainsCategory(command.CategoryName))
+            // TODO: this logic belongs in domain model
+            if (!menu.ContainsCategoryById(command.CategoryId))
             {
-                return Error.BadRequest($"Category {command.CategoryName} doesn't exist.");
+                return Error.BadRequest("Category not found.");
             }
 
-            var category = menu.GetCategory(command.CategoryName);
+            var category = menu.GetCategory(command.CategoryId);
 
-            if (!category.ContainsItem(command.OldItemName))
+            if (!category.ContainsItem(command.ItemId))
             {
-                return Error.BadRequest($"Item {command.OldItemName} doesn't exist for category {command.CategoryName}.");
+                return Error.BadRequest("Item not found.");
             }
 
-            if (command.OldItemName != command.NewItemName
-                && category.ContainsItem(command.NewItemName))
+            var item = category.GetItem(command.ItemId);
+
+            if (item.Name != command.Name && category.ContainsItem(command.Name))
             {
-                return Error.BadRequest($"Item {command.NewItemName} already exists for category {command.CategoryName}.");
+                return Error.BadRequest("Item already exists.");
             }
 
-            var item = category.GetItem(command.OldItemName);
-
-            category.RenameItem(command.OldItemName, command.NewItemName);
+            category.RenameItem(command.ItemId, command.Name);
 
             item.Description = string.IsNullOrWhiteSpace(command.Description)
                 ? null

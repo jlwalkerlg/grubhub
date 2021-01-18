@@ -14,27 +14,22 @@ namespace Web.Features.Menus.RenameMenuCategory
             this.sender = sender;
         }
 
-        [HttpPut("/restaurants/{restaurantId}/menu/categories/{category}")]
+        [HttpPut("/restaurants/{restaurantId}/menu/categories/{categoryId}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
-            [FromRoute] string category,
+            [FromRoute] Guid categoryId,
             [FromBody] RenameMenuCategoryRequest request)
         {
             var command = new RenameMenuCategoryCommand
             {
                 RestaurantId = restaurantId,
-                OldName = category,
+                CategoryId = categoryId,
                 NewName = request.NewName,
             };
 
             var result = await sender.Send(command);
 
-            if (!result)
-            {
-                return Error(result.Error);
-            }
-
-            return Ok();
+            return result ? Ok() : Error(result.Error);
         }
     }
 }

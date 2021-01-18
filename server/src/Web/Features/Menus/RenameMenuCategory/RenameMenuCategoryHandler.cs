@@ -32,19 +32,26 @@ namespace Web.Features.Menus.RenameMenuCategory
                 return Error.Unauthorised("Only the restaurant manager can update the menu.");
             }
 
-            if (!menu.ContainsCategory(command.OldName))
+            // TODO: this logic belongs in the domain model.
+            // Just return Result from the domain.
+            if (!menu.ContainsCategoryById(command.CategoryId))
             {
-                return Error.BadRequest($"Category {command.OldName} doesn't exist for this menu.");
+                return Error.BadRequest("Category not found.");
             }
 
-            if (command.OldName != command.NewName && menu.ContainsCategory(command.NewName))
+            var category = menu.GetCategoryById(command.CategoryId);
+
+            if (category.Name != command.NewName)
             {
-                return Error.BadRequest($"Category {command.NewName} already exists.");
+                if (menu.ContainsCategory(command.NewName))
+                {
+                    return Error.BadRequest("Category already exists.");
+                }
+
+                menu.RenameCategory(command.CategoryId, command.NewName);
+
+                await unitOfWork.Commit();
             }
-
-            menu.RenameCategory(command.OldName, command.NewName);
-
-            await unitOfWork.Commit();
 
             return Result.Ok();
         }

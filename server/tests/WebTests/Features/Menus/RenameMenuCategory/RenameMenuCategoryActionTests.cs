@@ -21,7 +21,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             };
 
             var response = await fixture.GetClient().Put(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza",
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(401);
@@ -36,7 +36,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             };
 
             var response = await fixture.GetAuthenticatedClient().Put(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza",
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(422);
@@ -52,7 +52,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             };
 
             var response = await fixture.GetAuthenticatedClient().Put(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza",
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(400);

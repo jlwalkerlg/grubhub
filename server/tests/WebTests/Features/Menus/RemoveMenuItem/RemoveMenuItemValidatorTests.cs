@@ -11,7 +11,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
         private readonly RemoveMenuItemValidator validator = new();
 
         [Fact]
-        public async Task Disallows_Empty_Restaurant_Ids()
+        public async Task Disallows_Empty_RestaurantId()
         {
             var command = new RemoveMenuItemCommand()
             {
@@ -24,38 +24,32 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task Disallows_Invalid_Categories(string category)
+        [Fact]
+        public async Task Disallows_Empty_CategoryId()
         {
             var command = new RemoveMenuItemCommand()
             {
-                CategoryName = category,
+                CategoryId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.CategoryName));
+            result.Errors.ShouldContainKey(nameof(command.CategoryId));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task Disallows_Invalid_Items(string item)
+        [Fact]
+        public async Task Disallows_Empty_ItemId()
         {
             var command = new RemoveMenuItemCommand()
             {
-                ItemName = item,
+                ItemId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.ItemName));
+            result.Errors.ShouldContainKey(nameof(command.ItemId));
         }
     }
 }

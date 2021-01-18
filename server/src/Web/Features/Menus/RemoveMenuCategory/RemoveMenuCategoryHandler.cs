@@ -32,12 +32,12 @@ namespace Web.Features.Menus.RemoveMenuCategory
                 return Error.Unauthorised("Only the restaurant manager can update the menu.");
             }
 
-            if (!menu.ContainsCategory(command.CategoryName))
+            if (!menu.ContainsCategoryById(command.CategoryId))
             {
-                return Error.BadRequest($"Category {command.CategoryName} doesn't exist for this menu.");
+                return Error.BadRequest("Category not found.");
             }
 
-            menu.RemoveCategory(command.CategoryName);
+            menu.RemoveCategory(command.CategoryId);
 
             await unitOfWork.Commit();
 

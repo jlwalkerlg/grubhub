@@ -24,21 +24,18 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task CategoryName_Cant_Be_Empty(string name)
+        [Fact]
+        public async Task CategoryId_Cant_Be_Empty()
         {
             var command = new RemoveMenuCategoryCommand()
             {
-                CategoryName = name,
+                CategoryId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.CategoryName));
+            result.Errors.ShouldContainKey(nameof(command.CategoryId));
         }
     }
 }

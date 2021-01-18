@@ -9,7 +9,7 @@ namespace Web.Features.Menus.RemoveMenuCategory
             RuleFor(x => x.RestaurantId)
                 .Required();
 
-            RuleFor(x => x.CategoryName)
+            RuleFor(x => x.CategoryId)
                 .Required();
         }
     }

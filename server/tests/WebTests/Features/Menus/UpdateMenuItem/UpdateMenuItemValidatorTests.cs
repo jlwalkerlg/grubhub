@@ -26,38 +26,32 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task Disallows_Invalid_Categories(string category)
+        [Fact]
+        public async Task Disallows_Empty_CategoryId()
         {
             var command = new UpdateMenuItemCommand()
             {
-                CategoryName = category,
+                CategoryId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.RestaurantId));
+            result.Errors.ShouldContainKey(nameof(command.CategoryId));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task Disallows_Invalid_Items(string item)
+        [Fact]
+        public async Task Disallows_Empty_ItemId()
         {
             var command = new UpdateMenuItemCommand()
             {
-                OldItemName = item,
+                ItemId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.OldItemName));
+            result.Errors.ShouldContainKey(nameof(command.ItemId));
         }
 
         [Theory]
@@ -68,13 +62,13 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var command = new UpdateMenuItemCommand()
             {
-                NewItemName = name,
+                Name = name,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.NewItemName));
+            result.Errors.ShouldContainKey(nameof(command.Name));
         }
 
         [Fact]

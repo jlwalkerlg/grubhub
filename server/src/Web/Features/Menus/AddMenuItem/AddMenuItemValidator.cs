@@ -9,10 +9,10 @@ namespace Web.Features.Menus.AddMenuItem
             CascadeRuleFor(x => x.RestaurantId)
                 .Required();
 
-            CascadeRuleFor(x => x.CategoryName)
+            CascadeRuleFor(x => x.CategoryId)
                 .Required();
 
-            CascadeRuleFor(x => x.ItemName)
+            CascadeRuleFor(x => x.Name)
                 .Required();
 
             CascadeRuleFor(x => x.Description)

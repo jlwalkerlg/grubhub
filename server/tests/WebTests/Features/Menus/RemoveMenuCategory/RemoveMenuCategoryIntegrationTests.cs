@@ -36,7 +36,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             fixture.Insert(manager, restaurant, menu);
 
             var response = await fixture.GetAuthenticatedClient(manager.Id).Delete(
-                $"/restaurants/{restaurant.Id}/menu/categories/Pizza");
+                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}");
 
             response.StatusCode.ShouldBe(204);
 

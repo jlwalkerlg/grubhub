@@ -7,6 +7,8 @@ namespace Web.Domain.Menus
 {
     public class Menu : Entity<Menu>
     {
+        private readonly List<MenuCategory> categories = new();
+
         public Menu(RestaurantId restaurantId)
         {
             if (restaurantId == null)
@@ -19,55 +21,71 @@ namespace Web.Domain.Menus
 
         public RestaurantId RestaurantId { get; }
 
-        private readonly List<MenuCategory> categories = new();
         public IReadOnlyList<MenuCategory> Categories => categories;
 
-        public MenuCategory AddCategory(string name)
+        public MenuCategory AddCategory(Guid id, string name)
         {
             if (ContainsCategory(name))
             {
                 throw new InvalidOperationException($"Category {name} already exists.");
             }
 
-            var category = new MenuCategory(name);
+            var category = new MenuCategory(id, name);
 
             categories.Add(category);
 
             return category;
         }
 
-        public void RemoveCategory(string name)
+        public void RemoveCategory(Guid id)
         {
-            if (!ContainsCategory(name))
+            if (!ContainsCategoryById(id))
             {
-                throw new InvalidOperationException($"Category {name} doesn't exist.");
+                throw new InvalidOperationException("Category doesn't exist.");
             }
 
-            var category = GetCategory(name);
+            var category = GetCategoryById(id);
 
             categories.Remove(category);
         }
 
-        public void RenameCategory(string oldName, string newName)
+        public void RenameCategory(Guid id, string newName)
         {
-            if (!ContainsCategory(oldName))
+            if (!ContainsCategoryById(id))
             {
-                throw new InvalidOperationException($"Category {oldName} doesn't exist.");
+                throw new InvalidOperationException("Category doesn't exist.");
             }
 
-            if (oldName == newName)
-            {
-                return;
-            }
+            var category = GetCategoryById(id);
 
-            var category = GetCategory(oldName);
+            if (category.Name != newName && ContainsCategory(newName))
+            {
+                throw new InvalidOperationException("Category already exists.");
+            }
 
             category.Name = newName;
         }
 
+        public bool ContainsCategoryById(Guid id)
+        {
+            return categories.Any(x => x.Id == id);
+        }
+
+        // TODO: rename
         public bool ContainsCategory(string name)
         {
             return categories.Any(x => x.Name == name);
+        }
+
+        public MenuCategory GetCategoryById(Guid id)
+        {
+            return categories.Single(x => x.Id == id);
+        }
+
+        // TODO: rename
+        public MenuCategory GetCategory(Guid id)
+        {
+            return categories.Single(x => x.Id == id);
         }
 
         public MenuCategory GetCategory(string name)

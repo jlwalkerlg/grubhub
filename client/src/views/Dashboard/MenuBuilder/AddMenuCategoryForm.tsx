@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import useAddMenuCategory from "~/api/restaurants/useAddMenuCategory";
+import useAddMenuCategory from "~/api/menu/useAddMenuCategory";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";

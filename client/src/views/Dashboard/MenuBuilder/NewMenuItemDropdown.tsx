@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { MenuCategoryDto } from "~/api/menu/MenuDto";
+import useAddMenuItem from "~/api/menu/useAddMenuItem";
 import useMenu from "~/api/menu/useMenu";
-import useAddMenuItem from "~/api/restaurants/useAddMenuItem";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
@@ -26,7 +26,7 @@ const NewMenuItemDropdown: React.FC<{
 
   const form = useForm({
     defaultValues: {
-      itemName: "",
+      name: "",
       description: "",
       price: null,
     },
@@ -38,7 +38,7 @@ const NewMenuItemDropdown: React.FC<{
     await addItem(
       {
         restaurantId: menu.restaurantId,
-        categoryName: category.name,
+        categoryId: category.id,
         ...data,
         price: +data.price,
       },
@@ -82,7 +82,7 @@ const NewMenuItemDropdown: React.FC<{
           )}
 
           <div className="mt-4">
-            <label className="label" htmlFor="itemName">
+            <label className="label" htmlFor="name">
               Name <span className="text-primary">*</span>
             </label>
             <input
@@ -91,12 +91,12 @@ const NewMenuItemDropdown: React.FC<{
               })}
               className="input"
               type="text"
-              name="itemName"
-              id="itemName"
-              data-invalid={!!form.errors.itemName}
+              name="name"
+              id="name"
+              data-invalid={!!form.errors.name}
             />
-            {form.errors.itemName && (
-              <p className="form-error mt-1">{form.errors.itemName.message}</p>
+            {form.errors.name && (
+              <p className="form-error mt-1">{form.errors.name.message}</p>
             )}
           </div>
 

@@ -42,7 +42,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             };
 
             var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
-                $"/restaurants/{restaurant.Id}/menu/categories/Pizza",
+                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}",
                 request);
 
             response.StatusCode.ShouldBe(200);

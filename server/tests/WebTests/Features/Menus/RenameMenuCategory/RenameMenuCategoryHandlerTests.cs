@@ -32,7 +32,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var command = new RenameMenuCategoryCommand()
             {
                 RestaurantId = Guid.NewGuid(),
-                OldName = "Pizza",
+                CategoryId = Guid.NewGuid(),
                 NewName = "Curry",
             };
 
@@ -60,7 +60,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
 
             await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -71,7 +71,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var command = new RenameMenuCategoryCommand()
             {
                 RestaurantId = restaurant.Id,
-                OldName = "Pizza",
+                CategoryId = category.Id,
                 NewName = "Curry",
             };
 
@@ -109,7 +109,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var command = new RenameMenuCategoryCommand()
             {
                 RestaurantId = restaurant.Id,
-                OldName = "Pizza",
+                CategoryId = Guid.NewGuid(),
                 NewName = "Curry",
             };
 
@@ -137,8 +137,9 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
-            menu.AddCategory("Curry");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+
+            menu.AddCategory(Guid.NewGuid(), "Curry");
 
             await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -149,7 +150,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             var command = new RenameMenuCategoryCommand()
             {
                 RestaurantId = restaurant.Id,
-                OldName = "Pizza",
+                CategoryId = category.Id,
                 NewName = "Curry",
             };
 

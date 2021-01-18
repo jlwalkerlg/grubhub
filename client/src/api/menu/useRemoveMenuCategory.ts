@@ -1,17 +1,17 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { getMenuQueryKey } from "../menu/useMenu";
+import { getMenuQueryKey } from "./useMenu";
 
 interface RemoveMenuCategoryCommand {
   restaurantId: string;
-  categoryName: string;
+  categoryId: string;
 }
 
 async function removeMenuCategory(command: RemoveMenuCategoryCommand) {
-  const { restaurantId, categoryName } = command;
+  const { restaurantId, categoryId } = command;
 
   await Api.delete(
-    `/restaurants/${restaurantId}/menu/categories/${categoryName}`
+    `/restaurants/${restaurantId}/menu/categories/${categoryId}`
   );
 }
 

@@ -4,14 +4,25 @@ namespace Web.Domain.Menus
 {
     public class MenuItem : Entity<MenuItem>
     {
-        internal MenuItem(string name, string description, Money price)
+        private string name;
+        private string description;
+        private Money price;
+
+        internal MenuItem(Guid id, string name, string description, Money price)
         {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Id must not be empty.");
+            }
+
+            Id = id;
             Name = name;
             Description = description;
             Price = price;
         }
 
-        private string name;
+        public Guid Id { get; }
+
         public string Name
         {
             get => name;
@@ -26,7 +37,6 @@ namespace Web.Domain.Menus
             }
         }
 
-        private string description;
         public string Description
         {
             get => description;
@@ -41,7 +51,6 @@ namespace Web.Domain.Menus
             }
         }
 
-        public Money price;
         public Money Price
         {
             get => price;

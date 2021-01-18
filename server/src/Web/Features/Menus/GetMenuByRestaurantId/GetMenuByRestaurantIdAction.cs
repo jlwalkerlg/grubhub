@@ -40,7 +40,7 @@ namespace Web.Features.Menus.GetMenuByRestaurantId
             {
                 MenuDto menu = null;
 
-                await connection.QueryAsync<MenuEntry, MenuCategoryEntry, MenuItemEntry, object>(
+                await connection.QueryAsync<MenuEntry, MenuCategoryDto, MenuItemDto, object>(
                     sql,
                     (menuEntry, categoryEntry, item) =>
                     {
@@ -77,16 +77,6 @@ namespace Web.Features.Menus.GetMenuByRestaurantId
         }
 
         private record MenuEntry : MenuDto
-        {
-            public int Id { get; set; }
-        }
-
-        private record MenuCategoryEntry : MenuCategoryDto
-        {
-            public int Id { get; set; }
-        }
-
-        private record MenuItemEntry : MenuItemDto
         {
             public int Id { get; set; }
         }

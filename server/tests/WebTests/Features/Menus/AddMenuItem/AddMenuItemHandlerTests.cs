@@ -51,8 +51,8 @@ namespace WebTests.Features.Menus.AddMenuItem
             var command = new AddMenuItemCommand()
             {
                 RestaurantId = restaurant.Id,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = Guid.NewGuid(),
+                Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };
@@ -81,8 +81,7 @@ namespace WebTests.Features.Menus.AddMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-
-            menu.AddCategory("Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -93,8 +92,8 @@ namespace WebTests.Features.Menus.AddMenuItem
             var command = new AddMenuItemCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = category.Id,
+                Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };
@@ -133,8 +132,8 @@ namespace WebTests.Features.Menus.AddMenuItem
             var command = new AddMenuItemCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = Guid.NewGuid(),
+                Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };
@@ -164,9 +163,9 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             var menu = new Menu(restaurant.Id);
 
-            var category = menu.AddCategory("Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
 
-            category.AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
+            category.AddItem(Guid.NewGuid(), "Margherita", "Cheese & tomato", new Money(9.99m));
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -177,8 +176,8 @@ namespace WebTests.Features.Menus.AddMenuItem
             var command = new AddMenuItemCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                ItemName = "Margherita",
+                CategoryId = category.Id,
+                Name = "Margherita",
                 Description = "Cheese & tomato",
                 Price = 9.99m,
             };

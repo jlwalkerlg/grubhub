@@ -1,19 +1,22 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { getMenuQueryKey } from "../menu/useMenu";
+import { getMenuQueryKey } from "./useMenu";
 
 export interface AddMenuItemCommand {
   restaurantId: string;
-  categoryName: string;
-  itemName: string;
+  categoryId: string;
+  name: string;
   description: string;
   price: number;
 }
 
 async function addMenuItem(command: AddMenuItemCommand) {
-  const { restaurantId, ...data } = command;
+  const { restaurantId, categoryId, ...data } = command;
 
-  await Api.post(`/restaurants/${restaurantId}/menu/items`, data);
+  await Api.post(
+    `/restaurants/${restaurantId}/menu/categories/${categoryId}/items`,
+    data
+  );
 }
 
 export default function useAddMenuItem() {

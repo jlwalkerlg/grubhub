@@ -116,7 +116,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
 
             var menu = new Menu(restaurant.Id);
 
-            menu.AddCategory("Pizza");
+            menu.AddCategory(Guid.NewGuid(), "Pizza");
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);

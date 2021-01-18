@@ -122,12 +122,13 @@ namespace Web.Data
                     {
                         var categoryName = categoryEl.GetProperty("name").GetString();
 
-                        menu.AddCategory(categoryName);
+                        menu.AddCategory(Guid.NewGuid(), categoryName);
 
                         foreach (var itemEl in categoryEl.GetProperty("items").EnumerateArray())
                         {
                             menu.GetCategory(categoryName)
                                 .AddItem(
+                                    Guid.NewGuid(),
                                     itemEl.GetProperty("name").GetString(),
                                     itemEl.GetProperty("description").GetString(),
                                     new Money(itemEl.GetProperty("price").GetDecimal())

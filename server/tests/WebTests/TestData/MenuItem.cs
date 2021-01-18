@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +9,7 @@ namespace WebTests.TestData
     {
         [Key]
         [Column("id")]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column("name")]
         public string Name { get; set; }
@@ -20,6 +21,6 @@ namespace WebTests.TestData
         public decimal Price { get; set; }
 
         [Column("menu_category_id")]
-        public int MenuCategoryId { get; set; }
+        public Guid MenuCategoryId { get; set; }
     }
 }

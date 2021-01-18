@@ -11,7 +11,7 @@ namespace WebTests.Features.Menus.AddMenuItem
         private readonly AddMenuItemValidator validator = new();
 
         [Fact]
-        public async Task Disallows_Empty_Restaurant_Ids()
+        public async Task Disallows_Empty_RestaurantId()
         {
             var command = new AddMenuItemCommand()
             {
@@ -24,21 +24,18 @@ namespace WebTests.Features.Menus.AddMenuItem
             result.Errors.ShouldContainKey(nameof(command.RestaurantId));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task Disallows_Invalid_Categories(string category)
+        [Fact]
+        public async Task Disallows_Empty_CategoryId()
         {
             var command = new AddMenuItemCommand()
             {
-                CategoryName = category,
+                CategoryId = Guid.Empty,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.CategoryName));
+            result.Errors.ShouldContainKey(nameof(command.CategoryId));
         }
 
         [Theory]
@@ -49,13 +46,13 @@ namespace WebTests.Features.Menus.AddMenuItem
         {
             var command = new AddMenuItemCommand()
             {
-                ItemName = name,
+                Name = name,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.ItemName));
+            result.Errors.ShouldContainKey(nameof(command.Name));
         }
 
         [Fact]

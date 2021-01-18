@@ -32,7 +32,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             var command = new RemoveMenuCategoryCommand()
             {
                 RestaurantId = Guid.NewGuid(),
-                CategoryName = "Pizza",
+                CategoryId = Guid.NewGuid(),
             };
 
             var result = await handler.Handle(command, default);
@@ -59,6 +59,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
 
             await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -69,7 +70,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             var command = new RemoveMenuCategoryCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
+                CategoryId = category.Id,
             };
 
             var result = await handler.Handle(command, default);
@@ -106,7 +107,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             var command = new RemoveMenuCategoryCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
+                CategoryId = Guid.NewGuid(),
             };
 
             var result = await handler.Handle(command, default);

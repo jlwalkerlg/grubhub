@@ -1,6 +1,5 @@
 using Shouldly;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Web;
 using Web.Domain;
@@ -43,9 +42,9 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand()
             {
                 RestaurantId = Guid.NewGuid(),
-                CategoryName = "Pizza",
-                OldItemName = "Margherita",
-                NewItemName = "Hawaiian",
+                CategoryId = Guid.NewGuid(),
+                ItemId = Guid.NewGuid(),
+                Name = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
@@ -84,9 +83,9 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                OldItemName = "Margherita",
-                NewItemName = "Hawaiian",
+                CategoryId = Guid.NewGuid(),
+                ItemId = Guid.NewGuid(),
+                Name = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
@@ -115,7 +114,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -126,9 +125,9 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                OldItemName = "Margherita",
-                NewItemName = "Hawaiian",
+                CategoryId = category.Id,
+                ItemId = Guid.NewGuid(),
+                Name = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
@@ -157,9 +156,10 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            menu.AddCategory("Pizza");
-            menu.Categories.Single().AddItem("Margherita", "Cheese & tomato", new Money(9.99m));
-            menu.Categories.Single().AddItem("Hawaiian", "Ham & pineapple", new Money(11.99m));
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+            var item = category.AddItem(Guid.NewGuid(), "Margherita", "Cheese & tomato", new Money(9.99m));
+
+            category.AddItem(Guid.NewGuid(), "Hawaiian", "Ham & pineapple", new Money(11.99m));
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -170,9 +170,9 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             var command = new UpdateMenuItemCommand()
             {
                 RestaurantId = menu.RestaurantId,
-                CategoryName = "Pizza",
-                OldItemName = "Margherita",
-                NewItemName = "Hawaiian",
+                CategoryId = Guid.NewGuid(),
+                ItemId = item.Id,
+                Name = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };

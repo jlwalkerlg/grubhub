@@ -10,10 +10,10 @@ namespace Web.Data.EF.Configurations
         {
             builder.ToTable("menu_categories");
 
-            builder.Property<int>("id")
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .ValueGeneratedOnAdd();
-            builder.HasKey("id");
+                .ValueGeneratedNever();
 
             builder.HasMany(x => x.Items)
                 .WithOne()

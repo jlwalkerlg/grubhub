@@ -17,13 +17,13 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var request = new UpdateMenuItemRequest()
             {
-                NewItemName = "Hawaiian",
+                Name = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
 
             var response = await fixture.GetClient().Put(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita",
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(401);
@@ -34,20 +34,20 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var request = new UpdateMenuItemRequest()
             {
-                NewItemName = "",
+                Name = "",
                 Description = new string('c', 281),
                 Price = -1m,
             };
 
             var response = await fixture.GetAuthenticatedClient().Put(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita",
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(422);
 
             var errors = response.GetErrors();
 
-            errors.ShouldContainKey("newItemName");
+            errors.ShouldContainKey("name");
             errors.ShouldContainKey("description");
             errors.ShouldContainKey("price");
         }
@@ -57,13 +57,13 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var request = new UpdateMenuItemRequest()
             {
-                NewItemName = "Hawaiian",
+                Name = "Hawaiian",
                 Description = "Ham & pineapple",
                 Price = 11.99m,
             };
 
             var response = await fixture.GetAuthenticatedClient().Put(
-                $"/restaurants/{Guid.NewGuid()}/menu/categories/Pizza/items/Margherita",
+                $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(400);
