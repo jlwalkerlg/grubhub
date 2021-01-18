@@ -1,15 +1,23 @@
 import { NextPage } from "next";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
 import useAuth from "~/api/users/useAuth";
 import Layout from "~/components/Layout/Layout";
 import LoginForm from "./LoginForm";
 
 const Login: NextPage = () => {
-  const { isLoggedIn } = useAuth();
+  const router = useRouter();
+
+  const { isLoggedIn, user } = useAuth();
 
   if (isLoggedIn) {
-    Router.push("/");
+    if (router.query.redirect_to) {
+      router.push(router.query.redirect_to.toString());
+    } else if (user.role === "RestaurantManager") {
+      router.push("/dashboard");
+    } else {
+      router.push("/");
+    }
     return null;
   }
 
