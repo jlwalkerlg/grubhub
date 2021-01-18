@@ -1,6 +1,6 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { getMenuQueryKey } from "./useMenu";
+import { getRestaurantQueryKey } from "../restaurants/useRestaurant";
 
 interface RemoveMenuItemCommand {
   restaurantId: string;
@@ -23,7 +23,9 @@ export default function useRemoveMenuItem() {
     removeMenuItem,
     {
       onSuccess: (_, command) => {
-        queryCache.invalidateQueries(getMenuQueryKey(command.restaurantId));
+        queryCache.invalidateQueries(
+          getRestaurantQueryKey(command.restaurantId)
+        );
       },
     }
   );

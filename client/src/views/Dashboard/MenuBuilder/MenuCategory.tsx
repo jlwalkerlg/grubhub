@@ -3,9 +3,9 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { MenuCategoryDto } from "~/api/menu/MenuDto";
-import useMenu from "~/api/menu/useMenu";
 import useRemoveMenuCategory from "~/api/menu/useRemoveMenuCategory";
 import useRenameMenuCategory from "~/api/menu/useRenameMenuCategory";
+import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import CloseIcon from "~/components/Icons/CloseIcon";
@@ -25,7 +25,7 @@ const MenuCategory: React.FC<{
   const { addToast } = useToasts();
 
   const { user } = useAuth();
-  const { data: menu } = useMenu(user.restaurantId);
+  const { data: restaurant } = useRestaurant(user.restaurantId);
 
   const [isRenameFormOpen, setIsRenameFormOpen] = React.useState(false);
 
@@ -48,7 +48,7 @@ const MenuCategory: React.FC<{
 
     await rename(
       {
-        restaurantId: menu.restaurantId,
+        restaurantId: restaurant.id,
         categoryId: category.id,
         ...data,
       },
@@ -92,7 +92,7 @@ const MenuCategory: React.FC<{
 
     await remove(
       {
-        restaurantId: menu.restaurantId,
+        restaurantId: restaurant.id,
         categoryId: category.id,
       },
       {

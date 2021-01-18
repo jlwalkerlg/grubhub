@@ -1,6 +1,6 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { getMenuQueryKey } from "./useMenu";
+import { getRestaurantQueryKey } from "../restaurants/useRestaurant";
 
 export interface AddMenuItemCommand {
   restaurantId: string;
@@ -24,7 +24,7 @@ export default function useAddMenuItem() {
 
   return useMutation<void, ApiError, AddMenuItemCommand, null>(addMenuItem, {
     onSuccess: (_, command) => {
-      queryCache.invalidateQueries(getMenuQueryKey(command.restaurantId));
+      queryCache.invalidateQueries(getRestaurantQueryKey(command.restaurantId));
     },
   });
 }

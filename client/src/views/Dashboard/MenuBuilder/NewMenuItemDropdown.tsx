@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { MenuCategoryDto } from "~/api/menu/MenuDto";
 import useAddMenuItem from "~/api/menu/useAddMenuItem";
-import useMenu from "~/api/menu/useMenu";
+import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
@@ -18,7 +18,7 @@ const NewMenuItemDropdown: React.FC<{
   category: MenuCategoryDto;
 }> = ({ category }) => {
   const { user } = useAuth();
-  const { data: menu } = useMenu(user.restaurantId);
+  const { data: restaurant } = useRestaurant(user.restaurantId);
 
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -37,7 +37,7 @@ const NewMenuItemDropdown: React.FC<{
 
     await addItem(
       {
-        restaurantId: menu.restaurantId,
+        restaurantId: restaurant.id,
         categoryId: category.id,
         ...data,
         price: +data.price,
