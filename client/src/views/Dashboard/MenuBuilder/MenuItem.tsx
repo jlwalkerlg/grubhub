@@ -244,7 +244,9 @@ const MenuItem: React.FC<{
             {item.description}
           </p>
         )}
-        <p className="mt-1 font-medium text-sm text-red-700">£{item.price}</p>
+        <p className="mt-1 font-medium text-sm text-red-700">
+          £{item.price.toFixed(2)}
+        </p>
       </div>
 
       {isUpdateFormOpen && (
