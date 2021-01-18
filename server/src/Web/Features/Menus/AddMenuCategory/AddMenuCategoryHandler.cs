@@ -33,16 +33,14 @@ namespace Web.Features.Menus.AddMenuCategory
                 return Error.Unauthorised("Only the restaurant owner can add menu categories.");
             }
 
-            if (menu.ContainsCategory(command.Name))
+            var result = menu.AddCategory(Guid.NewGuid(), command.Name);
+
+            if (result)
             {
-                return Error.BadRequest($"Category {command.Name} already exists.");
+                await unitOfWork.Commit();
             }
 
-            menu.AddCategory(Guid.NewGuid(), command.Name);
-
-            await unitOfWork.Commit();
-
-            return Result.Ok();
+            return result;
         }
     }
 }

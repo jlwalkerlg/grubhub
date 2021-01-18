@@ -59,7 +59,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
 
             await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -113,7 +113,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             var result = await handler.Handle(command, default);
 
             result.ShouldBeAnError();
-            result.Error.Type.ShouldBe(ErrorType.BadRequest);
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
         }
     }
 }

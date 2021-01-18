@@ -20,6 +20,8 @@ namespace Web.Domain.Menus
             Name = name;
         }
 
+        private MenuCategory() { } // EF Core
+
         public Guid Id { get; }
 
         public string Name
@@ -38,38 +40,56 @@ namespace Web.Domain.Menus
 
         public IReadOnlyList<MenuItem> Items => items;
 
-        public MenuItem AddItem(Guid id, string name, string description, Money price)
+        public MenuItem GetItemById(Guid id)
         {
-            if (ContainsItem(name))
+            return items.SingleOrDefault(x => x.Id == id);
+        }
+
+        public Result<MenuItem> AddItem(Guid id, string name, string description, Money price)
+        {
+            if (items.Any(x => x.Name == name))
             {
-                throw new InvalidOperationException($"Item {name} already exists for this category.");
+                return Error.BadRequest("Item already exists.");
             }
 
             var item = new MenuItem(id, name, description, price);
 
             items.Add(item);
 
-            return item;
+            return Result.Ok(item);
         }
 
-        public bool ContainsItem(Guid id)
+        public Result RenameItem(Guid id, string newName)
         {
-            return items.Any(x => x.Id == id);
+            var item = items.SingleOrDefault(x => x.Id == id);
+
+            if (item == null)
+            {
+                return Error.NotFound("Item not found.");
+            }
+
+            if (newName != item.Name && items.Any(x => x.Name == newName))
+            {
+                return Error.BadRequest("Item already exists.");
+            }
+
+            item.Name = newName;
+
+            return Result.Ok();
         }
 
-        public bool ContainsItem(string name)
+        public Result RemoveItem(Guid id)
         {
-            return items.Any(x => x.Name == name);
-        }
+            var item = items.SingleOrDefault(x => x.Id == id);
 
-        public MenuItem GetItem(Guid id)
-        {
-            return items.Single(x => x.Id == id);
-        }
+            if (item == null)
+            {
+                return Error.NotFound("Item not found.");
+            }
 
-        public MenuItem GetItem(string name)
-        {
-            return items.Single(x => x.Name == name);
+            items.Remove(item);
+
+            return Result.Ok();
         }
 
         protected override bool IdentityEquals(MenuCategory other)
@@ -81,42 +101,5 @@ namespace Web.Domain.Menus
         {
             return Name.GetHashCode();
         }
-
-        public void RenameItem(Guid id, string newName)
-        {
-            var item = items.SingleOrDefault(x => x.Id == id);
-
-            if (item == null)
-            {
-                throw new InvalidOperationException("Item not found.");
-            }
-
-            if (item.Name == newName)
-            {
-                return;
-            }
-
-            if (items.Any(x => x.Name == newName))
-            {
-                throw new InvalidOperationException("Item already exists.");
-            }
-
-            item.Name = newName;
-        }
-
-        public void RemoveItem(Guid id)
-        {
-            var item = items.SingleOrDefault(x => x.Id == id);
-
-            if (item == null)
-            {
-                throw new InvalidOperationException("Item not found.");
-            }
-
-            items.Remove(item);
-        }
-
-        // EF Core
-        private MenuCategory() { }
     }
 }

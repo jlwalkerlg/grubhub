@@ -70,8 +70,13 @@ namespace WebTests.Features.Menus.RemoveMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
-            var item = category.AddItem(Guid.NewGuid(), "Margherita", null, new Money(9.99m));
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
+            var item = category.AddItem(
+                Guid.NewGuid(),
+                "Margherita",
+                null,
+                new Money(9.99m))
+                .Value;
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -148,7 +153,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -166,7 +171,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             var result = await handler.Handle(command, default);
 
             result.ShouldBeAnError();
-            result.Error.Type.ShouldBe(ErrorType.BadRequest);
+            result.Error.Type.ShouldBe(ErrorType.NotFound);
         }
     }
 }

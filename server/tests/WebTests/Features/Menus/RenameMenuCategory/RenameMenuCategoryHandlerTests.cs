@@ -60,7 +60,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
 
             await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -137,7 +137,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
 
             menu.AddCategory(Guid.NewGuid(), "Curry");
 

@@ -21,6 +21,8 @@ namespace Web.Domain.Menus
             Price = price;
         }
 
+        private MenuItem() { } // EF Core
+
         public Guid Id { get; }
 
         public string Name
@@ -74,8 +76,5 @@ namespace Web.Domain.Menus
         {
             return Name.GetHashCode();
         }
-
-        // EF Core
-        private MenuItem() { }
     }
 }

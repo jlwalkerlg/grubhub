@@ -34,27 +34,25 @@ namespace Web.Features.Menus.AddMenuItem
                 return Error.Unauthorised("Only the restaurant owner can add menu items.");
             }
 
-            if (!menu.ContainsCategoryById(command.CategoryId))
+            var category = menu.GetCategoryById(command.CategoryId);
+
+            if (category == null)
             {
-                return Error.NotFound("Category not found.");
+                return Error.NotFound("Item not found.");
             }
 
-            var category = menu.GetCategory(command.CategoryId);
-
-            if (category.ContainsItem(command.Name))
-            {
-                return Error.BadRequest("Item already exists.");
-            }
-
-            category.AddItem(
+            var result = category.AddItem(
                 Guid.NewGuid(),
                 command.Name,
                 command.Description,
                 new Money(command.Price));
 
-            await unitOfWork.Commit();
+            if (result)
+            {
+                await unitOfWork.Commit();
+            }
 
-            return Result.Ok();
+            return result;
         }
     }
 }

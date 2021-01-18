@@ -122,17 +122,16 @@ namespace Web.Data
                     {
                         var categoryName = categoryEl.GetProperty("name").GetString();
 
-                        menu.AddCategory(Guid.NewGuid(), categoryName);
+                        var category = menu.AddCategory(Guid.NewGuid(), categoryName).Value;
 
                         foreach (var itemEl in categoryEl.GetProperty("items").EnumerateArray())
                         {
-                            menu.GetCategory(categoryName)
-                                .AddItem(
-                                    Guid.NewGuid(),
-                                    itemEl.GetProperty("name").GetString(),
-                                    itemEl.GetProperty("description").GetString(),
-                                    new Money(itemEl.GetProperty("price").GetDecimal())
-                                );
+                            category.AddItem(
+                                Guid.NewGuid(),
+                                itemEl.GetProperty("name").GetString(),
+                                itemEl.GetProperty("description").GetString(),
+                                new Money(itemEl.GetProperty("price").GetDecimal())
+                            );
                         }
                     }
 

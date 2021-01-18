@@ -34,27 +34,26 @@ namespace Web.Features.Menus.UpdateMenuItem
                 return Error.Unauthorised("Only the restaurant owner can update the menu.");
             }
 
-            // TODO: this logic belongs in domain model
-            if (!menu.ContainsCategoryById(command.CategoryId))
+            var category = menu.GetCategoryById(command.CategoryId);
+
+            if (category == null)
             {
                 return Error.BadRequest("Category not found.");
             }
 
-            var category = menu.GetCategory(command.CategoryId);
+            var item = category.GetItemById(command.ItemId);
 
-            if (!category.ContainsItem(command.ItemId))
+            if (item == null)
             {
                 return Error.BadRequest("Item not found.");
             }
 
-            var item = category.GetItem(command.ItemId);
+            var renameResult = category.RenameItem(command.ItemId, command.Name);
 
-            if (item.Name != command.Name && category.ContainsItem(command.Name))
+            if (!renameResult)
             {
-                return Error.BadRequest("Item already exists.");
+                return renameResult;
             }
-
-            category.RenameItem(command.ItemId, command.Name);
 
             item.Description = string.IsNullOrWhiteSpace(command.Description)
                 ? null

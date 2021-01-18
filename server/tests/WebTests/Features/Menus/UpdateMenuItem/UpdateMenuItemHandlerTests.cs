@@ -114,7 +114,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
@@ -156,8 +156,13 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
-            var category = menu.AddCategory(Guid.NewGuid(), "Pizza");
-            var item = category.AddItem(Guid.NewGuid(), "Margherita", "Cheese & tomato", new Money(9.99m));
+            var category = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
+            var item = category.AddItem(
+                Guid.NewGuid(),
+                "Margherita",
+                "Cheese & tomato",
+                new Money(9.99m))
+                .Value;
 
             category.AddItem(Guid.NewGuid(), "Hawaiian", "Ham & pineapple", new Money(11.99m));
 
