@@ -30,7 +30,7 @@ const Nav: React.FC = () => {
   };
 
   return (
-    <nav className="fixed w-full z-40 top-0 bg-white" id="nav">
+    <nav className="fixed w-full z-30 top-0 bg-white" id="nav">
       <div className="shadow-md relative z-10">
         <div className="container flex items-center h-16 py-3">
           <Link href="/">

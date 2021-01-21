@@ -92,6 +92,11 @@ namespace Web.Domain.Menus
             return Result.Ok();
         }
 
+        public bool ContainsItem(Guid menuItemId)
+        {
+            return items.Any(x => x.Id == menuItemId);
+        }
+
         protected override bool IdentityEquals(MenuCategory other)
         {
             return Name == other.Name;

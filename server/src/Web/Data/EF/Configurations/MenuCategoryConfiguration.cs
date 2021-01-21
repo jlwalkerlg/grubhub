@@ -26,6 +26,7 @@ namespace Web.Data.EF.Configurations
 
             builder.Property<int>("menu_id")
                 .IsRequired();
+
             builder.HasIndex("menu_id", "Name")
                 .IsUnique();
         }

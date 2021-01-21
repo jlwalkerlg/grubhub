@@ -10,7 +10,7 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ title, children }) => {
   return (
-    <div className="pt-16 pb-64 text-gray-900">
+    <div className="py-16 text-gray-900">
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
         <title>{title}</title>

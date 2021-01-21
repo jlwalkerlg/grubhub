@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Web.Domain.Orders;
 
 namespace WebTests.TestData
 {
@@ -16,11 +18,12 @@ namespace WebTests.TestData
         public DbSet<Restaurant> Restaurants { get; private set; }
         public DbSet<RestaurantCuisine> RestaurantCuisines { get; private set; }
         public DbSet<User> Users { get; private set; }
+        public DbSet<Order> Orders { get; private set; }
+        public DbSet<OrderItem> OrderItems { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .Entity<Cuisine>()
+            modelBuilder.Entity<Cuisine>()
                 .HasMany(p => p.Restaurants)
                 .WithMany(p => p.Cuisines)
                 .UsingEntity<RestaurantCuisine>(
@@ -36,6 +39,12 @@ namespace WebTests.TestData
                     {
                         j.HasKey(x => new { x.RestaurantId, x.CuisineName });
                     });
+
+            modelBuilder.Entity<Order>()
+                .Property(x => x.Status)
+                .HasColumnName("status")
+                .IsRequired()
+                .HasConversion(new EnumToStringConverter<OrderStatus>());
         }
     }
 }

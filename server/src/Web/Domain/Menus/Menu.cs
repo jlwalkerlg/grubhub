@@ -77,6 +77,19 @@ namespace Web.Domain.Menus
             return Result.Ok();
         }
 
+        public bool ContainsItem(Guid menuItemId)
+        {
+            foreach (var category in categories)
+            {
+                if (category.ContainsItem(menuItemId))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         protected override bool IdentityEquals(Menu other)
         {
             return RestaurantId == other.RestaurantId;

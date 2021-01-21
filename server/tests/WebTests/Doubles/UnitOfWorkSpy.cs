@@ -3,6 +3,7 @@ using Web;
 using Web.Features.Cuisines;
 using Web.Features.Events;
 using Web.Features.Menus;
+using Web.Features.Orders;
 using Web.Features.Restaurants;
 using Web.Features.Users;
 
@@ -26,6 +27,9 @@ namespace WebTests.Doubles
 
         public ICuisineRepository Cuisines => CuisineRepositorySpy;
         public CuisineRepositorySpy CuisineRepositorySpy { get; } = new();
+
+        public IOrderRepository Orders => OrderRepositorySpy;
+        public OrderRepositorySpy OrderRepositorySpy { get; } = new();
 
         public Task Commit()
         {

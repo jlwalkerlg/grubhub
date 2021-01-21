@@ -118,7 +118,7 @@ const MobileFilterMenu: FC<{
   return (
     <div
       ref={ref}
-      className={`fixed top-0 left-0 w-screen h-screen z-50 bg-gray-100 flex flex-col transform transition-transform ${
+      className={`fixed top-0 left-0 w-screen h-screen z-40 bg-gray-100 flex flex-col transform transition-transform ${
         show ? styles["slide-up"] : styles["slide-down"]
       }`}
     >

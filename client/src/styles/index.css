@@ -11,7 +11,8 @@ body {
   transition: background-color 0.2s ease-in-out;
 }
 
-.btn:disabled {
+.btn:disabled,
+.btn.disabled {
   @apply cursor-default;
 }
 
@@ -23,11 +24,12 @@ body {
   @apply bg-primary text-white;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled):not(.disabled) {
   @apply bg-primary-darker;
 }
 
-.btn-primary:disabled {
+.btn-primary:disabled,
+.btn-primary.disabled {
   @apply bg-primary-disabled;
 }
 
@@ -35,11 +37,12 @@ body {
   @apply bg-white border border-primary text-primary-900;
 }
 
-.btn-outline-primary:hover:not(:disabled) {
+.btn-outline-primary:hover:not(:disabled):not(.disabled) {
   @apply bg-primary-100;
 }
 
-.btn-outline-primary:disabled {
+.btn-outline-primary:disabled,
+.btn-outline-primary.disabled {
   @apply bg-primary-100;
 }
 
@@ -102,6 +105,11 @@ pre {
   padding: 1.25em 1.5em;
   white-space: pre;
   word-wrap: normal;
+}
+
+.-shadow-lg {
+  box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 -4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 @tailwind utilities;

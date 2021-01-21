@@ -10,19 +10,24 @@ namespace WebTests.Doubles
 
         public UserId UserId { get; private set; }
 
-        public void SignIn(UserId userId)
+        public void SignIn()
         {
-            UserId = userId;
+            UserId = new UserId(Guid.NewGuid());
         }
 
         public void SignIn(Guid userId)
         {
-            SignIn(new UserId(userId));
+            UserId = new UserId(userId);
         }
 
         public void SignIn(User user)
         {
-            SignIn(user.Id);
+            UserId = user.Id;
+        }
+
+        public void SignIn(UserId userId)
+        {
+            UserId = userId;
         }
 
         public void SignOut()

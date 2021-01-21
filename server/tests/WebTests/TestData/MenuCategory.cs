@@ -13,7 +13,7 @@ namespace WebTests.TestData
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = Guid.NewGuid().ToString();
 
         [Column("menu_id")]
         public int MenuId { get; set; }

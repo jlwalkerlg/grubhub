@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Web.Features.Cuisines;
 using Web.Features.Events;
 using Web.Features.Menus;
+using Web.Features.Orders;
 using Web.Features.Restaurants;
 using Web.Features.Users;
 
@@ -14,6 +15,7 @@ namespace Web
         IUserRepository Users { get; }
         IEventRepository Events { get; }
         ICuisineRepository Cuisines { get; }
+        IOrderRepository Orders { get; }
 
         Task Commit();
     }

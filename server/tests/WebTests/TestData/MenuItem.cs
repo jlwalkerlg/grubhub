@@ -12,13 +12,13 @@ namespace WebTests.TestData
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = Guid.NewGuid().ToString();
 
         [Column("description")]
         public string Description { get; set; }
 
         [Column("price")]
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } = 9.99m;
 
         [Column("menu_category_id")]
         public Guid MenuCategoryId { get; set; }
