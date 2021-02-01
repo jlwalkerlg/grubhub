@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { ApiError } from "~/api/Api";
 import { OrderDto, OrderItemDto } from "~/api/orders/OrderDto";
@@ -158,16 +159,56 @@ const OrderAside: FC<{
 }> = ({ isLoading, isError, error, order, subtotal }) => {
   const { isLoggedIn } = useAuth();
 
+  const router = useRouter();
+
+  console.log(router);
+
   if (!isLoggedIn) {
-    return <p>Must be logged in to begin an order.</p>;
+    return (
+      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
+        <h2 className="font-bold text-xl tracking-wider text-gray-800">
+          Your order
+        </h2>
+
+        <hr className="my-3 border-gray-300" />
+
+        <p>
+          Please{" "}
+          <Link href={`/login?redirect_to=${router.asPath}`}>
+            <a className="text-primary">login</a>
+          </Link>{" "}
+          to begin an order.
+        </p>
+      </div>
+    );
   }
 
   if (isLoading) {
-    return <p>Loading order...</p>;
+    return (
+      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
+        <h2 className="font-bold text-xl tracking-wider text-gray-800">
+          Your order
+        </h2>
+
+        <hr className="my-3 border-gray-300" />
+
+        <p>Loading order...</p>
+      </div>
+    );
   }
 
   if (isError) {
-    return <p>Problem loading order: {error.message}</p>;
+    return (
+      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
+        <h2 className="font-bold text-xl tracking-wider text-gray-800">
+          Your order
+        </h2>
+
+        <hr className="my-3 border-gray-300" />
+
+        <p>Problem loading order: {error.message}</p>
+      </div>
+    );
   }
 
   return (
@@ -176,7 +217,7 @@ const OrderAside: FC<{
         Your order
       </h2>
 
-      <hr className="my-6 border-gray-300" />
+      <hr className="my-3 border-gray-300" />
 
       {order?.items.length > 0 ? (
         <ul>
