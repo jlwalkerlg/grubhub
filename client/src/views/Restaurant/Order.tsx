@@ -161,8 +161,6 @@ const OrderAside: FC<{
 
   const router = useRouter();
 
-  console.log(router);
-
   if (!isLoggedIn) {
     return (
       <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
@@ -217,7 +215,7 @@ const OrderAside: FC<{
         Your order
       </h2>
 
-      <hr className="my-3 border-gray-300" />
+      <hr className="my-6 border-gray-300" />
 
       {order?.items.length > 0 ? (
         <ul>
