@@ -13,6 +13,30 @@ namespace Web.Domain.Restaurants
         public OpeningHours Saturday { get; init; }
         public OpeningHours Sunday { get; init; }
 
+        public bool IsOpen(DateTime time)
+        {
+            var hours = time.DayOfWeek switch
+            {
+                DayOfWeek.Monday => Monday,
+                DayOfWeek.Tuesday => Tuesday,
+                DayOfWeek.Wednesday => Wednesday,
+                DayOfWeek.Thursday => Thursday,
+                DayOfWeek.Friday => Friday,
+                DayOfWeek.Saturday => Saturday,
+                DayOfWeek.Sunday => Sunday,
+                _ => throw new Exception("Day of week not recognised."),
+            };
+
+            if (hours == null)
+            {
+                return false;
+            }
+
+            var ts = new TimeSpan(time.Hour, time.Minute, time.Second);
+
+            return hours.Open <= ts && (hours.Close == null || hours.Close >= ts);
+        }
+
         public static OpeningTimes FromDays(Dictionary<DayOfWeek, OpeningHours> times)
         {
             return new OpeningTimes()
@@ -26,6 +50,17 @@ namespace Web.Domain.Restaurants
                 Sunday = times.GetValueOrDefault(DayOfWeek.Sunday),
             };
         }
+
+        public static OpeningTimes Always { get; } = new OpeningTimes()
+        {
+            Monday = new OpeningHours(TimeSpan.Zero),
+            Tuesday = new OpeningHours(TimeSpan.Zero),
+            Wednesday = new OpeningHours(TimeSpan.Zero),
+            Thursday = new OpeningHours(TimeSpan.Zero),
+            Friday = new OpeningHours(TimeSpan.Zero),
+            Saturday = new OpeningHours(TimeSpan.Zero),
+            Sunday = new OpeningHours(TimeSpan.Zero),
+        };
     }
 
     public record OpeningHours

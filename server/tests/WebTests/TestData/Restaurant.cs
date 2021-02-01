@@ -18,8 +18,6 @@ namespace WebTests.TestData
             {
                 Role = UserRole.RestaurantManager,
             };
-
-            ManagerId = Manager.Id;
         }
 
         [Key]

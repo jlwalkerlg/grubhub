@@ -4,5 +4,6 @@ namespace Web.Domain.Orders
     {
         Active,
         Cancelled,
+        Submitted,
     }
 }

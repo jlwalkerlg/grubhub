@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Web.Domain.Cuisines;
+using Web.Domain.Orders;
 using Web.Domain.Users;
 
 namespace Web.Domain.Restaurants
@@ -184,6 +185,23 @@ namespace Web.Domain.Restaurants
             }
 
             Status = RestaurantStatus.Approved;
+        }
+
+        public Result SubmitOrder(Order order, DateTime time)
+        {
+            if (order.RestaurantId != Id)
+            {
+                throw new InvalidOperationException("Order belongs to another restaurant.");
+            }
+
+            var timeAtDelivery = time.AddMinutes(EstimatedDeliveryTimeInMinutes);
+
+            if (OpeningTimes == null || !OpeningTimes.IsOpen(timeAtDelivery))
+            {
+                return Error.BadRequest("Restaurant closed.");
+            }
+
+            return order.Submit();
         }
 
         protected override bool IdentityEquals(Restaurant other)

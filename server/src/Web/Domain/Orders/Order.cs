@@ -45,6 +45,18 @@ namespace Web.Domain.Orders
             Status = OrderStatus.Cancelled;
         }
 
+        public Result Submit()
+        {
+            if (!items.Any())
+            {
+                return Error.BadRequest("Order is empty.");
+            }
+
+            Status = OrderStatus.Submitted;
+
+            return Result.Ok();
+        }
+
         public void AddItem(Guid menuItemId, int quantity)
         {
             var item = items.SingleOrDefault(x => x.MenuItemId == menuItemId);
