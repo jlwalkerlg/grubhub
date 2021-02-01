@@ -148,7 +148,7 @@ const OrderAside: FC<{
 
       <hr className="my-6 border-gray-300" />
 
-      {order.items.length > 0 ? (
+      {order?.items.length > 0 ? (
         <ul>
           {order.items.map((item) => {
             return <OrderItem key={item.menuItemId} item={item} />;
@@ -168,7 +168,7 @@ const OrderAside: FC<{
         <span>£{subtotal.toFixed(2)}</span>
       </p>
 
-      {order.items.length > 0 && (
+      {order?.items.length > 0 && (
         <Link href="/checkout">
           <a className="btn btn-primary w-full block text-center mt-6">
             Go to payment
@@ -182,10 +182,11 @@ const OrderAside: FC<{
 const Order: FC = () => {
   const { data: order, isLoading, isError, error } = useActiveOrder();
 
-  const subtotal = order?.items.reduce(
-    (carry, item) => carry + item.menuItemPrice * item.quantity,
-    0
-  );
+  const subtotal =
+    order?.items.reduce(
+      (carry, item) => carry + item.menuItemPrice * item.quantity,
+      0
+    ) || 0;
 
   const totalItems =
     order?.items.reduce((carry, item) => carry + item.quantity, 0) || 0;
