@@ -40,7 +40,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 MaxDeliveryDistanceInKm = 5,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
-                Status = "PendingApproval",
+                Status = Web.Domain.Restaurants.RestaurantStatus.PendingApproval,
             };
 
             // not open
@@ -51,7 +51,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 MaxDeliveryDistanceInKm = 5,
                 TuesdayOpen = null,
                 TuesdayClose = null,
-                Status = "Approved",
+                Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
             };
 
             // out of range
@@ -62,7 +62,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 MaxDeliveryDistanceInKm = 5,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
-                Status = "Approved",
+                Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
             };
 
             // expected
@@ -73,7 +73,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 MaxDeliveryDistanceInKm = 5,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
-                Status = "Approved",
+                Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
                 Cuisines = new() { italian },
             };
 

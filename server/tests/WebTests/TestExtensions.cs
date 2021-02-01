@@ -34,6 +34,11 @@ namespace WebTests
             dto.Close.ShouldBe(close?.ToString(@"hh\:mm"));
         }
 
+        public static void ShouldBe(this string sut, Enum expected)
+        {
+            sut.ShouldBe(expected.ToString());
+        }
+
         public static async Task<TData> GetData<TData>(this HttpResponseMessage response)
         {
             var json = await response.Content.ReadAsStreamAsync();

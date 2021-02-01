@@ -52,7 +52,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             restaurant.Address.ShouldBe(GeocoderStub.Address);
             restaurant.Latitude.ShouldBe(GeocoderStub.Latitude);
             restaurant.Longitude.ShouldBe(GeocoderStub.Longitude);
-            restaurant.Status.ShouldBe("PendingApproval");
+            restaurant.Status.ShouldBe(Web.Domain.Restaurants.RestaurantStatus.PendingApproval);
             restaurant.MondayOpen.ShouldBeNull();
             restaurant.MondayClose.ShouldBeNull();
             restaurant.TuesdayOpen.ShouldBeNull();
@@ -77,7 +77,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             manager.Id.ShouldBe(restaurant.ManagerId);
             manager.Email.ShouldBe(request.ManagerEmail);
             manager.Name.ShouldBe(request.ManagerName);
-            manager.Role.ShouldBe("RestaurantManager");
+            manager.Role.ShouldBe(Web.Domain.Users.UserRole.RestaurantManager);
 
             fixture.VerifyHash(request.ManagerPassword, manager.Password).ShouldBe(true);
 

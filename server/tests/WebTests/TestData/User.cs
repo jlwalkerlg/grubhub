@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Web.Domain.Users;
 
 namespace WebTests.TestData
 {
@@ -21,6 +22,6 @@ namespace WebTests.TestData
         public string Password { get; set; } = Guid.NewGuid().ToString();
 
         [Column("role")]
-        public string Role { get; set; } = "RestaurantManager";
+        public UserRole Role { get; set; } = UserRole.RestaurantManager;
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Web.Domain.Orders;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
 
 namespace WebTests.TestData
 {
@@ -40,10 +42,16 @@ namespace WebTests.TestData
                         j.HasKey(x => new { x.RestaurantId, x.CuisineName });
                     });
 
+            modelBuilder.Entity<User>()
+                .Property(x => x.Role)
+                .HasConversion(new EnumToStringConverter<UserRole>());
+
+            modelBuilder.Entity<Restaurant>()
+                .Property(x => x.Status)
+                .HasConversion(new EnumToStringConverter<RestaurantStatus>());
+
             modelBuilder.Entity<Order>()
                 .Property(x => x.Status)
-                .HasColumnName("status")
-                .IsRequired()
                 .HasConversion(new EnumToStringConverter<OrderStatus>());
         }
     }

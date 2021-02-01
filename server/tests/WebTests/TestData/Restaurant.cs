@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Web.Domain.Restaurants;
+using Web.Domain.Users;
 
 namespace WebTests.TestData
 {
@@ -14,7 +16,7 @@ namespace WebTests.TestData
         {
             Manager = new User()
             {
-                Role = "RestaurantManager",
+                Role = UserRole.RestaurantManager,
             };
 
             ManagerId = Manager.Id;
@@ -57,7 +59,7 @@ namespace WebTests.TestData
         public float Longitude { get; set; } = -2.0f;
 
         [Column("status")]
-        public string Status { get; set; } = "Approved";
+        public RestaurantStatus Status { get; set; } = RestaurantStatus.Approved;
 
         [Column("monday_open")]
         public TimeSpan? MondayOpen { get; set; } = TimeSpan.Zero;

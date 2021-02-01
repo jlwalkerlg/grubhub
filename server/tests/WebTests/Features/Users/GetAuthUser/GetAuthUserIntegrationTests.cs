@@ -17,7 +17,7 @@ namespace WebTests.Features.Users.GetAuthUser
         {
             var user = new User()
             {
-                Role = "RestaurantManager",
+                Role = Web.Domain.Users.UserRole.RestaurantManager,
             };
 
             var restaurant = new Restaurant()
