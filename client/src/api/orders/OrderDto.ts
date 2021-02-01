@@ -9,6 +9,7 @@ export interface OrderDto {
 export interface OrderItemDto {
   menuItemId: string;
   menuItemName: string;
+  menuItemDescription: string;
   menuItemPrice: number;
   quantity: number;
 }

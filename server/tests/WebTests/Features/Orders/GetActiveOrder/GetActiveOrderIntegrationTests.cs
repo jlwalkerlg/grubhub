@@ -69,6 +69,7 @@ namespace WebTests.Features.Orders.GetActiveOrder
 
             item.MenuItemId.ShouldBe(menuItem.Id);
             item.MenuItemName.ShouldBe(menuItem.Name);
+            item.MenuItemDescription.ShouldBe(menuItem.Description);
             item.MenuItemPrice.ShouldBe(menuItem.Price);
             item.Quantity.ShouldBe(1);
         }

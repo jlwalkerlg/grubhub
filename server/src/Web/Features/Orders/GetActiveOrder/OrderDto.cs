@@ -16,6 +16,7 @@ namespace Web.Features.Orders.GetActiveOrder
     {
         public Guid MenuItemId { get; init; }
         public string MenuItemName { get; init; }
+        public string MenuItemDescription { get; init; }
         public decimal MenuItemPrice { get; init; }
         public int Quantity { get; init; }
     }

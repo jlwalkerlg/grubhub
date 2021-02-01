@@ -4,7 +4,7 @@ export default function useEscapeKeyListener(
   callback: () => any,
   deps: any[] = []
 ) {
-  const cb = useCallback(callback, deps);
+  const cb = useCallback(callback, [callback, ...deps]);
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {

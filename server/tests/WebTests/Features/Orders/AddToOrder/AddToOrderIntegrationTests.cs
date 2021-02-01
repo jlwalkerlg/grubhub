@@ -43,6 +43,7 @@ namespace WebTests.Features.Orders.AddToOrder
             var request = new AddToOrderRequest()
             {
                 MenuItemId = menuItem.Id,
+                Quantity = 1,
             };
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Post(
@@ -60,7 +61,7 @@ namespace WebTests.Features.Orders.AddToOrder
 
             orderItem.OrderId.ShouldBe(order.Id);
             orderItem.MenuItemId.ShouldBe(request.MenuItemId);
-            orderItem.Quantity.ShouldBe(1);
+            orderItem.Quantity.ShouldBe(request.Quantity);
         }
 
         [Fact]
@@ -99,6 +100,7 @@ namespace WebTests.Features.Orders.AddToOrder
             var request = new AddToOrderRequest()
             {
                 MenuItemId = menuItem.Id,
+                Quantity = 3,
             };
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Post(
@@ -111,7 +113,7 @@ namespace WebTests.Features.Orders.AddToOrder
 
             orderItem.OrderId.ShouldBe(order.Id);
             orderItem.MenuItemId.ShouldBe(request.MenuItemId);
-            orderItem.Quantity.ShouldBe(1);
+            orderItem.Quantity.ShouldBe(request.Quantity);
         }
     }
 }

@@ -13,6 +13,7 @@ import { useToasts } from "~/components/Toaster/Toaster";
 import useEscapeKeyListener from "~/services/useEscapeKeyListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
+import { OrderItemModal } from "./Menu";
 
 const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
   restaurantId,
@@ -38,6 +39,11 @@ const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
     );
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   const price = item.menuItemPrice * item.quantity;
 
   return (
@@ -46,9 +52,12 @@ const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
         {item.quantity}
       </span>
 
-      <span className="ml-4 text-primary text-sm flex-1 mr-4">
+      <button
+        className="ml-4 text-primary text-sm flex-1 mr-4 text-left"
+        onClick={openModal}
+      >
         {item.menuItemName}
-      </span>
+      </button>
 
       <div className="flex-0 flex items-center">
         {isLoading ? (
@@ -63,6 +72,17 @@ const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
       <span className="ml-2 w-14 text-right flex-0 text-gray-700">
         £{price.toFixed(2)}
       </span>
+
+      {isModalOpen && (
+        <OrderItemModal
+          restaurantId={restaurantId}
+          menuItemId={item.menuItemId}
+          menuItemName={item.menuItemName}
+          menuItemDescription={item.menuItemDescription}
+          menuItemPrice={item.menuItemPrice}
+          closeModal={closeModal}
+        />
+      )}
     </li>
   );
 };
@@ -78,7 +98,7 @@ const MobileOrderModal: FC<{
 
   usePreventBodyScroll();
 
-  useEscapeKeyListener(close, [close]);
+  useEscapeKeyListener(close);
 
   return (
     <div className="bg-white border border-gray-200 fixed h-screen w-screen top-0 left-0 flex flex-col z-40">

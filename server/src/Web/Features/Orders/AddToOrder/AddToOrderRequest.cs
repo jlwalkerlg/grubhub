@@ -5,5 +5,6 @@ namespace Web.Features.Orders.AddToOrder
     public record AddToOrderRequest
     {
         public Guid MenuItemId { get; init; }
+        public int Quantity { get; init; }
     }
 }

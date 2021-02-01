@@ -5,6 +5,7 @@ import { activeOrderQueryKey } from "./useActiveOrder";
 interface AddToOrderCommand {
   restaurantId: string;
   menuItemId: string;
+  quantity: number;
 }
 
 export function useAddToOrder() {

@@ -8,5 +8,6 @@ namespace Web.Features.Orders.AddToOrder
     {
         public Guid RestaurantId { get; init; }
         public Guid MenuItemId { get; init; }
+        public int Quantity { get; init; }
     }
 }

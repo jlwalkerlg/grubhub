@@ -17,21 +17,30 @@ namespace Web.Domain.Orders
         private OrderItem() { } // EF Core
 
         public Guid MenuItemId { get; }
-        public int Quantity { get; private set; } = 1;
 
-        public void IncreaseQuantity()
+        private int quantity = 1;
+        public int Quantity
         {
-            Quantity++;
+            get => quantity;
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("Quantity must not be less than 1.");
+                }
+
+                quantity = value;
+            }
         }
 
         public void DecreaseQuantity()
         {
-            if (Quantity == 1)
+            if (quantity == 1)
             {
                 throw new InvalidOperationException("Order item must have at least 1 menu item.");
             }
 
-            Quantity--;
+            quantity--;
         }
     }
 }

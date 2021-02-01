@@ -45,7 +45,7 @@ namespace Web.Features.Orders.AddToOrder
                 await unitOfWork.Orders.Add(order);
             }
 
-            order.AddItem(command.MenuItemId);
+            order.AddItem(command.MenuItemId, command.Quantity);
 
             await unitOfWork.Commit();
 

@@ -1,28 +1,61 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { MenuDto, MenuItemDto } from "~/api/menu/MenuDto";
+import useActiveOrder from "~/api/orders/useActiveOrder";
 import { useAddToOrder } from "~/api/orders/useAddToOrder";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
 import CloseIcon from "~/components/Icons/CloseIcon";
+import PlusIcon from "~/components/Icons/PlusIcon";
 import useEscapeKeyListener from "~/services/useEscapeKeyListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
 import useScroll from "~/services/useScroll";
 
-const OrderItemModal: FC<{
-  menu: MenuDto;
-  item: MenuItemDto;
+export const OrderItemModal: FC<{
+  restaurantId: string;
+  menuItemId: string;
+  menuItemName: string;
+  menuItemDescription: string;
+  menuItemPrice: number;
   closeModal: () => any;
-}> = ({ menu, item, closeModal }) => {
+}> = ({
+  restaurantId,
+  menuItemId,
+  menuItemName,
+  menuItemDescription,
+  menuItemPrice,
+  closeModal,
+}) => {
+  const { data: order } = useActiveOrder(restaurantId);
+
   const closeButtonRef = useRef<HTMLButtonElement>();
   const addToOrderButtonRef = useRef<HTMLButtonElement>();
   useFocusTrap(true, closeButtonRef, addToOrderButtonRef);
 
   usePreventBodyScroll(true);
+
+  const alreadyInOrder = useMemo(
+    () => order.items.some((x) => x.menuItemId === menuItemId),
+    []
+  );
+
+  const [quantity, setQuantity] = useState(() => {
+    return order.items.find((x) => x.menuItemId === menuItemId)?.quantity || 1;
+  });
+
+  const incrementQuantity = () => setQuantity(quantity + 1);
+  const decrementQuantity = () => setQuantity(quantity - 1 || quantity);
 
   const [addToOrder, { isLoading, isError, error }] = useAddToOrder();
 
@@ -31,8 +64,9 @@ const OrderItemModal: FC<{
 
     addToOrder(
       {
-        restaurantId: menu.restaurantId,
-        menuItemId: item.id,
+        restaurantId,
+        menuItemId,
+        quantity,
       },
       {
         onSuccess: closeModal,
@@ -40,9 +74,9 @@ const OrderItemModal: FC<{
     );
   };
 
-  const close = useCallback(() => {
+  const close = () => {
     if (!isLoading) closeModal();
-  }, [isLoading, closeModal]);
+  };
 
   useEscapeKeyListener(close, [close]);
 
@@ -62,25 +96,45 @@ const OrderItemModal: FC<{
         <div className="bg-white shadow-lg h-12 flex items-center justify-between p-4">
           <div className="h-6 w-6" aria-hidden></div>
 
-          <p className="font-semibold text-gray-800">{item.name}</p>
+          <p className="font-semibold text-gray-800">{menuItemName}</p>
 
           <button ref={closeButtonRef} onClick={close}>
             <CloseIcon className="h-6 w-6 text-primary" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto flex flex-col justify-center text-center px-4 py-12">
+        <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center text-center px-4 py-12">
           {isError && (
             <div className="mb-4">
               <ErrorAlert message={error.message} />
             </div>
           )}
 
-          <p className="font-semibold">£{item.price.toFixed(2)}</p>
+          <p className="font-semibold">£{menuItemPrice.toFixed(2)}</p>
 
-          {item.description && (
-            <p className="mt-4 text-sm">{item.description}</p>
+          {menuItemDescription && (
+            <p className="mt-4 text-sm">{menuItemDescription}</p>
           )}
+
+          <div className="flex items-center mt-4">
+            <button
+              onClick={decrementQuantity}
+              disabled={quantity === 1}
+              className={
+                quantity === 1
+                  ? "text-primary-disabled cursor-default"
+                  : "text-primary"
+              }
+            >
+              <PlusIcon className="w-10 h-10" />
+            </button>
+
+            <div className="mx-4 text-3xl">{quantity}</div>
+
+            <button onClick={incrementQuantity} className="text-primary">
+              <PlusIcon className="w-10 h-10" />
+            </button>
+          </div>
         </div>
 
         <div className="p-4 bg-white -shadow-lg">
@@ -92,7 +146,8 @@ const OrderItemModal: FC<{
                 isLoading ? "disabled" : ""
               }`}
             >
-              Add to order £{item.price.toFixed(2)}
+              {alreadyInOrder ? "Update" : "Add to order"} £
+              {(menuItemPrice * quantity).toFixed(2)}
             </button>
           ) : (
             <p>
@@ -131,7 +186,14 @@ const MenuItem: FC<{ menu: MenuDto; item: MenuItemDto }> = ({ menu, item }) => {
       </button>
 
       {isModalOpen && (
-        <OrderItemModal menu={menu} item={item} closeModal={closeModal} />
+        <OrderItemModal
+          restaurantId={menu.restaurantId}
+          menuItemId={item.id}
+          menuItemName={item.name}
+          menuItemDescription={item.description}
+          menuItemPrice={item.price}
+          closeModal={closeModal}
+        />
       )}
     </li>
   );

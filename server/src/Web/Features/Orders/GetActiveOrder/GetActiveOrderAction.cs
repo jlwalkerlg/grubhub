@@ -64,6 +64,7 @@ namespace Web.Features.Orders.GetActiveOrder
                             oi.order_id,
                             oi.menu_item_id,
                             mi.name as menu_item_name,
+                            mi.description as menu_item_description,
                             mi.price as menu_item_price,
                             oi.quantity
                         FROM
@@ -107,6 +108,7 @@ namespace Web.Features.Orders.GetActiveOrder
             public int id { get; init; }
             public Guid menu_item_id { get; init; }
             public string menu_item_name { get; init; }
+            public string menu_item_description { get; init; }
             public decimal menu_item_price { get; init; }
             public int quantity { get; init; }
             public Guid order_id { get; init; }
@@ -117,6 +119,7 @@ namespace Web.Features.Orders.GetActiveOrder
                 {
                     MenuItemId = menu_item_id,
                     MenuItemName = menu_item_name,
+                    MenuItemDescription = menu_item_description,
                     MenuItemPrice = menu_item_price,
                     Quantity = quantity,
                 };

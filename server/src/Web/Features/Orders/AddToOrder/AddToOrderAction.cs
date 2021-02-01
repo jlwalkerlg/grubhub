@@ -23,6 +23,7 @@ namespace Web.Features.Orders.AddToOrder
             {
                 RestaurantId = restaurantId,
                 MenuItemId = request.MenuItemId,
+                Quantity = request.Quantity,
             };
 
             var result = await sender.Send(command);

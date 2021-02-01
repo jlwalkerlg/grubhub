@@ -70,7 +70,7 @@ namespace WebTests.Features.Orders.AddToOrder
         }
 
         [Fact]
-        public async Task It_Increments_The_Quantity_If_The_Order_Item_Already_Exists()
+        public async Task It_Sets_The_Quantity_If_The_Order_Item_Already_Exists()
         {
             var menu = new Menu(new RestaurantId(Guid.NewGuid()));
             var menuCategory = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
@@ -81,7 +81,7 @@ namespace WebTests.Features.Orders.AddToOrder
                 new UserId(Guid.NewGuid()),
                 menu.RestaurantId);
 
-            order.AddItem(menuItem.Id);
+            order.AddItem(menuItem.Id, 1);
 
             await unitOfWorkSpy.Orders.Add(order);
             await unitOfWorkSpy.Menus.Add(menu);
@@ -92,6 +92,7 @@ namespace WebTests.Features.Orders.AddToOrder
             {
                 RestaurantId = menu.RestaurantId,
                 MenuItemId = menuItem.Id,
+                Quantity = 3,
             };
 
             var result = await handler.Handle(command, default);
@@ -100,7 +101,7 @@ namespace WebTests.Features.Orders.AddToOrder
 
             var orderItem = order.Items.Single();
 
-            orderItem.Quantity.ShouldBe(2);
+            orderItem.Quantity.ShouldBe(command.Quantity);
         }
     }
 }

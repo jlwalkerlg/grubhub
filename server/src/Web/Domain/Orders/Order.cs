@@ -45,18 +45,17 @@ namespace Web.Domain.Orders
             Status = OrderStatus.Cancelled;
         }
 
-        public void AddItem(Guid menuItemId)
+        public void AddItem(Guid menuItemId, int quantity)
         {
             var item = items.SingleOrDefault(x => x.MenuItemId == menuItemId);
 
             if (item == null)
             {
-                items.Add(new OrderItem(menuItemId));
+                item = new OrderItem(menuItemId);
+                items.Add(item);
             }
-            else
-            {
-                item.IncreaseQuantity();
-            }
+
+            item.Quantity = quantity;
         }
 
         public Result RemoveItem(Guid menuItemId)

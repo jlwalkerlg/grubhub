@@ -11,6 +11,9 @@ namespace Web.Features.Orders.AddToOrder
 
             RuleFor(x => x.MenuItemId)
                 .Required();
+
+            RuleFor(x => x.Quantity)
+                .Min(1);
         }
     }
 }

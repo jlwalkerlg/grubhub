@@ -30,6 +30,7 @@ namespace WebTests.Features.Orders.AddToOrder
             var request = new AddToOrderRequest()
             {
                 MenuItemId = Guid.Empty,
+                Quantity = 0,
             };
 
             var response = await fixture.GetAuthenticatedClient().Post(
@@ -42,6 +43,7 @@ namespace WebTests.Features.Orders.AddToOrder
 
             errors.ShouldContainKey("menuItemId");
             errors.ShouldContainKey("restaurantId");
+            errors.ShouldContainKey("quantity");
         }
 
         [Fact]
@@ -50,6 +52,7 @@ namespace WebTests.Features.Orders.AddToOrder
             var request = new AddToOrderRequest()
             {
                 MenuItemId = Guid.NewGuid(),
+                Quantity = 1,
             };
 
             var response = await fixture.GetAuthenticatedClient().Post(
