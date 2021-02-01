@@ -22,8 +22,8 @@ namespace Web.Features.Orders.GetActiveOrder
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [HttpGet("/order")]
-        public async Task<IActionResult> Execute()
+        [HttpGet("/order/{restaurantId}")]
+        public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
             if (!authenticator.IsAuthenticated)
             {
@@ -43,10 +43,12 @@ namespace Web.Features.Orders.GetActiveOrder
                         orders o
                     WHERE
                         o.user_id = @UserId
+                        AND o.restaurant_id = @RestaurantId
                         AND o.status = @Status",
                     new
                     {
                         UserId = authenticator.UserId.Value,
+                        RestaurantId = restaurantId,
                         Status = OrderStatus.Active.ToString(),
                     });
 

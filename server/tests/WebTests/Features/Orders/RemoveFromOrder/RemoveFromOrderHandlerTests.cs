@@ -27,12 +27,13 @@ namespace WebTests.Features.Orders.RemoveFromOrder
         }
 
         [Fact]
-        public async Task It_Fails_If_Order_Not_Found()
+        public async Task It_Fails_If_The_Order_Is_Not_Found()
         {
             authenticatorSpy.SignIn();
 
             var command = new RemoveFromOrderCommand()
             {
+                RestaurantId = Guid.NewGuid(),
                 MenuItemId = Guid.NewGuid(),
             };
 
@@ -43,7 +44,7 @@ namespace WebTests.Features.Orders.RemoveFromOrder
         }
 
         [Fact]
-        public async Task It_Fails_If_Order_Item_Not_Found()
+        public async Task It_Fails_If_The_Order_Item_Is_Not_Found()
         {
             var order = new Order(
                 new OrderId(Guid.NewGuid()),
@@ -56,6 +57,7 @@ namespace WebTests.Features.Orders.RemoveFromOrder
 
             var command = new RemoveFromOrderCommand()
             {
+                RestaurantId = Guid.NewGuid(),
                 MenuItemId = Guid.NewGuid(),
             };
 

@@ -40,15 +40,14 @@ namespace WebTests.Features.Orders.AddToOrder
 
             fixture.Insert(manager, restaurant, menu, user);
 
-            var command = new AddToOrderCommand()
+            var request = new AddToOrderRequest()
             {
-                RestaurantId = restaurant.Id,
                 MenuItemId = menuItem.Id,
             };
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Post(
-                "/order",
-                command);
+                $"/order/{restaurant.Id}",
+                request);
 
             response.StatusCode.ShouldBe(200);
 
@@ -60,7 +59,7 @@ namespace WebTests.Features.Orders.AddToOrder
             var orderItem = fixture.UseTestDbContext(db => db.OrderItems.Single());
 
             orderItem.OrderId.ShouldBe(order.Id);
-            orderItem.MenuItemId.ShouldBe(command.MenuItemId);
+            orderItem.MenuItemId.ShouldBe(request.MenuItemId);
             orderItem.Quantity.ShouldBe(1);
         }
 
@@ -97,22 +96,21 @@ namespace WebTests.Features.Orders.AddToOrder
 
             fixture.Insert(manager, restaurant, menu, user, order);
 
-            var command = new AddToOrderCommand()
+            var request = new AddToOrderRequest()
             {
-                RestaurantId = restaurant.Id,
                 MenuItemId = menuItem.Id,
             };
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Post(
-                "/order",
-                command);
+                $"/order/{restaurant.Id}",
+                request);
 
             response.StatusCode.ShouldBe(200);
 
             var orderItem = fixture.UseTestDbContext(db => db.OrderItems.Single());
 
             orderItem.OrderId.ShouldBe(order.Id);
-            orderItem.MenuItemId.ShouldBe(command.MenuItemId);
+            orderItem.MenuItemId.ShouldBe(request.MenuItemId);
             orderItem.Quantity.ShouldBe(1);
         }
     }

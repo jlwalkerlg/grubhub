@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Web.Features.Orders.AddToOrder;
 using Xunit;
@@ -15,7 +16,7 @@ namespace WebTests.Features.Orders.GetActiveOrder
         {
             var command = new AddToOrderCommand();
 
-            var response = await fixture.GetClient().Get("/order");
+            var response = await fixture.GetClient().Get($"/order/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(401);
         }

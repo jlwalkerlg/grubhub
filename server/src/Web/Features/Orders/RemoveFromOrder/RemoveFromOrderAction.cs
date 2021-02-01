@@ -14,11 +14,14 @@ namespace Web.Features.Orders.RemoveFromOrder
             this.sender = sender;
         }
 
-        [HttpDelete("/order/items/{menuItemId}")]
-        public async Task<IActionResult> Execute([FromRoute] Guid menuItemId)
+        [HttpDelete("/order/{restaurantId}/items/{menuItemId}")]
+        public async Task<IActionResult> Execute(
+            [FromRoute] Guid restaurantId,
+            [FromRoute] Guid menuItemId)
         {
             var command = new RemoveFromOrderCommand()
             {
+                RestaurantId = restaurantId,
                 MenuItemId = menuItemId,
             };
 

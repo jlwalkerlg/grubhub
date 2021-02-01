@@ -12,11 +12,11 @@ export function useAddToOrder() {
 
   return useMutation<void, ApiError, AddToOrderCommand, null>(
     async (command) => {
-      await Api.post("/order", command);
+      await Api.post(`/order/${command.restaurantId}`, command);
     },
     {
-      onSuccess: () => {
-        cache.invalidateQueries(activeOrderQueryKey());
+      onSuccess: (_, command) => {
+        cache.invalidateQueries(activeOrderQueryKey(command.restaurantId));
       },
     }
   );

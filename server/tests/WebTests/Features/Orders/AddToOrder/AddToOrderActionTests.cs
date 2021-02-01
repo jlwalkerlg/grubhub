@@ -15,11 +15,11 @@ namespace WebTests.Features.Orders.AddToOrder
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var command = new AddToOrderCommand();
+            var request = new AddToOrderRequest();
 
             var response = await fixture.GetClient().Post(
-                "/order",
-                command);
+                $"/order/{Guid.NewGuid()}",
+                request);
 
             response.StatusCode.ShouldBe(401);
         }
@@ -27,15 +27,14 @@ namespace WebTests.Features.Orders.AddToOrder
         [Fact]
         public async Task It_Returns_Validation_Errors()
         {
-            var command = new AddToOrderCommand()
+            var request = new AddToOrderRequest()
             {
-                RestaurantId = Guid.Empty,
                 MenuItemId = Guid.Empty,
             };
 
             var response = await fixture.GetAuthenticatedClient().Post(
-                "/order",
-                command);
+                $"/order/{Guid.Empty}",
+                request);
 
             response.StatusCode.ShouldBe(422);
 
@@ -48,15 +47,14 @@ namespace WebTests.Features.Orders.AddToOrder
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            var command = new AddToOrderCommand()
+            var request = new AddToOrderRequest()
             {
-                RestaurantId = Guid.NewGuid(),
                 MenuItemId = Guid.NewGuid(),
             };
 
             var response = await fixture.GetAuthenticatedClient().Post(
-                "/order",
-                command);
+                $"/order/{Guid.NewGuid()}",
+                request);
 
             response.StatusCode.ShouldBe(400);
             response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);

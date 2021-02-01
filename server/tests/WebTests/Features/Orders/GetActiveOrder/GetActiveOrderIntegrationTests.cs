@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
@@ -52,7 +53,7 @@ namespace WebTests.Features.Orders.GetActiveOrder
 
             fixture.Insert(manager, restaurant, menu, user, order);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get("/order");
+            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{restaurant.Id}");
 
             response.StatusCode.ShouldBe(200);
 
@@ -73,13 +74,13 @@ namespace WebTests.Features.Orders.GetActiveOrder
         }
 
         [Fact]
-        public async Task It_Returns_Null_If_The_User_Doesnt_Have_An_Active_Order()
+        public async Task It_Returns_Null_If_The_User_Doesnt_Have_An_Active_Order_At_The_Restaurant()
         {
             var user = new User();
 
             fixture.Insert(user);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get("/order");
+            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(200);
 

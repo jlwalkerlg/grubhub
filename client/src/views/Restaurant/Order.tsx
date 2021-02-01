@@ -14,7 +14,10 @@ import useEscapeKeyListener from "~/services/useEscapeKeyListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
 
-const OrderItem: FC<{ item: OrderItemDto }> = ({ item }) => {
+const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
+  restaurantId,
+  item,
+}) => {
   const { addToast } = useToasts();
 
   const [remove, { isLoading }] = useRemoveFromOrder();
@@ -24,6 +27,7 @@ const OrderItem: FC<{ item: OrderItemDto }> = ({ item }) => {
 
     remove(
       {
+        restaurantId,
         menuItemId: item.menuItemId,
       },
       {
@@ -93,7 +97,13 @@ const MobileOrderModal: FC<{
       <div className="flex-1 overflow-y-auto px-4 py-8">
         <ul>
           {order.items.map((item) => {
-            return <OrderItem key={item.menuItemId} item={item} />;
+            return (
+              <OrderItem
+                key={item.menuItemId}
+                restaurantId={order.restaurantId}
+                item={item}
+              />
+            );
           })}
         </ul>
 
@@ -151,7 +161,13 @@ const OrderAside: FC<{
       {order?.items.length > 0 ? (
         <ul>
           {order.items.map((item) => {
-            return <OrderItem key={item.menuItemId} item={item} />;
+            return (
+              <OrderItem
+                key={item.menuItemId}
+                restaurantId={order.restaurantId}
+                item={item}
+              />
+            );
           })}
         </ul>
       ) : (
@@ -179,8 +195,10 @@ const OrderAside: FC<{
   );
 };
 
-const Order: FC = () => {
-  const { data: order, isLoading, isError, error } = useActiveOrder();
+const Order: FC<{ restaurantId: string }> = ({ restaurantId }) => {
+  const { data: order, isLoading, isError, error } = useActiveOrder(
+    restaurantId
+  );
 
   const subtotal =
     order?.items.reduce(

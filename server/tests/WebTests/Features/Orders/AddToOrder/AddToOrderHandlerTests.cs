@@ -32,7 +32,7 @@ namespace WebTests.Features.Orders.AddToOrder
         }
 
         [Fact]
-        public async Task It_Fails_The_Menu_Is_Not_Found()
+        public async Task It_Fails_If_The_Menu_Is_Not_Found()
         {
             authenticatorSpy.SignIn();
 
@@ -49,7 +49,7 @@ namespace WebTests.Features.Orders.AddToOrder
         }
 
         [Fact]
-        public async Task It_Fails_The_Menu_Item_Is_Not_Found()
+        public async Task It_Fails_If_The_Menu_Item_Is_Not_Found()
         {
             var menu = new Menu(new RestaurantId(Guid.NewGuid()));
 
@@ -101,48 +101,6 @@ namespace WebTests.Features.Orders.AddToOrder
             var orderItem = order.Items.Single();
 
             orderItem.Quantity.ShouldBe(2);
-        }
-
-        [Fact]
-        public async Task It_Starts_A_New_Order_If_An_Active_Order_At_Another_Restaurant_Already_Exists()
-        {
-            var existingOrder = new Order(
-                new OrderId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                new RestaurantId(Guid.NewGuid()));
-
-            var menu = new Menu(new RestaurantId(Guid.NewGuid()));
-            var menuCategory = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
-            var menuItem = menuCategory.AddItem(Guid.NewGuid(), "Margherita", null, new Money(9.99m)).Value;
-
-            await unitOfWorkSpy.Orders.Add(existingOrder);
-            await unitOfWorkSpy.Menus.Add(menu);
-
-            authenticatorSpy.SignIn(existingOrder.UserId);
-
-            var command = new AddToOrderCommand()
-            {
-                RestaurantId = menu.RestaurantId,
-                MenuItemId = menuItem.Id,
-            };
-
-            var result = await handler.Handle(command, default);
-
-            result.ShouldBeSuccessful();
-
-            unitOfWorkSpy.OrderRepositorySpy.Orders.Count.ShouldBe(2);
-
-            existingOrder.Status.ShouldBe(OrderStatus.Cancelled);
-
-            var newOrder = unitOfWorkSpy.OrderRepositorySpy.Orders
-                .Single(x => x.RestaurantId == menu.RestaurantId);
-
-            newOrder.Items.ShouldHaveSingleItem();
-
-            var orderItem = newOrder.Items.Single();
-
-            orderItem.Quantity.ShouldBe(1);
-            orderItem.MenuItemId.ShouldBe(menuItem.Id);
         }
     }
 }

@@ -145,7 +145,7 @@ const Restaurant: FC = () => {
               loading || isError ? "md:mt-36" : ""
             }`}
           >
-            <Order />
+            {restaurant && <Order restaurantId={restaurant.id} />}
           </aside>
         </div>
       </div>

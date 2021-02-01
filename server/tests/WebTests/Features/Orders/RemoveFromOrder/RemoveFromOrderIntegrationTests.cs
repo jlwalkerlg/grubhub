@@ -54,7 +54,7 @@ namespace WebTests.Features.Orders.RemoveFromOrder
             fixture.Insert(manager, restaurant, menu, user, order);
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Delete(
-                $"/order/items/{margherita.Id}");
+                $"/order/{restaurant.Id}/items/{margherita.Id}");
 
             response.StatusCode.ShouldBe(204);
 

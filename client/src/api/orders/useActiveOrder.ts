@@ -3,17 +3,17 @@ import Api, { ApiError } from "../Api";
 import useAuth from "../users/useAuth";
 import { OrderDto } from "./OrderDto";
 
-export function activeOrderQueryKey() {
-  return "/order";
+export function activeOrderQueryKey(restaurantId: string) {
+  return `/order/${restaurantId}`;
 }
 
-export default function useActiveOrder() {
+export default function useActiveOrder(restaurantId: string) {
   const { isLoggedIn } = useAuth();
 
   return useQuery<OrderDto, ApiError>(
-    activeOrderQueryKey(),
+    activeOrderQueryKey(restaurantId),
     async () => {
-      const response = await Api.get<OrderDto>("/order");
+      const response = await Api.get<OrderDto>(`/order/${restaurantId}`);
       return response.data;
     },
     {

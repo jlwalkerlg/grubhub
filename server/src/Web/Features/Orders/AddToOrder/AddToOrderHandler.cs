@@ -33,21 +33,10 @@ namespace Web.Features.Orders.AddToOrder
                 return Error.NotFound("Menu item not found.");
             }
 
-            var order = await unitOfWork.Orders.GetActiveOrderForUser(authenticator.UserId);
+            var order = await unitOfWork.Orders.GetActiveOrder(authenticator.UserId, menu.RestaurantId);
 
             if (order == null)
             {
-                order = new Order(
-                    new OrderId(Guid.NewGuid()),
-                    authenticator.UserId,
-                    menu.RestaurantId);
-
-                await unitOfWork.Orders.Add(order);
-            }
-            else if (order.RestaurantId != menu.RestaurantId)
-            {
-                order.Cancel();
-
                 order = new Order(
                     new OrderId(Guid.NewGuid()),
                     authenticator.UserId,

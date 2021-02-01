@@ -3,6 +3,7 @@ import Api, { ApiError } from "../Api";
 import { activeOrderQueryKey } from "./useActiveOrder";
 
 interface RemoveFromOrderCommand {
+  restaurantId: string;
   menuItemId: string;
 }
 
@@ -11,11 +12,13 @@ export default function useRemoveFromOrder() {
 
   return useMutation<void, ApiError, RemoveFromOrderCommand, null>(
     async (command) => {
-      await Api.delete(`/order/items/${command.menuItemId}`);
+      await Api.delete(
+        `/order/${command.restaurantId}/items/${command.menuItemId}`
+      );
     },
     {
-      onSuccess: () => {
-        cache.invalidateQueries(activeOrderQueryKey());
+      onSuccess: (_, command) => {
+        cache.invalidateQueries(activeOrderQueryKey(command.restaurantId));
       },
     }
   );

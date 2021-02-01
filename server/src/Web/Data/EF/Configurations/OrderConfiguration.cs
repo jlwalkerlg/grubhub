@@ -28,8 +28,6 @@ namespace Web.Data.EF.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.UserId)
                 .HasColumnName("user_id");
-            builder.HasIndex(x => x.UserId)
-                .IsUnique();
 
             builder.HasOne<Restaurant>()
                 .WithMany()
@@ -38,8 +36,6 @@ namespace Web.Data.EF.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.RestaurantId)
                 .HasColumnName("restaurant_id");
-            builder.HasIndex(x => x.RestaurantId)
-                .IsUnique();
 
             builder.Property(x => x.Status)
                 .HasColumnName("status")

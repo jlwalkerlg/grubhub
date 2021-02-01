@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Web.Domain.Restaurants;
 using Web.Services.Authentication;
 
 namespace Web.Features.Orders.RemoveFromOrder
@@ -17,11 +18,13 @@ namespace Web.Features.Orders.RemoveFromOrder
 
         public async Task<Result> Handle(RemoveFromOrderCommand command, CancellationToken cancellationToken)
         {
-            var order = await unitOfWork.Orders.GetActiveOrderForUser(authenticator.UserId);
+            var order = await unitOfWork.Orders.GetActiveOrder(
+                authenticator.UserId,
+                new RestaurantId(command.RestaurantId));
 
             if (order == null)
             {
-                return Error.NotFound("Active order not found.");
+                return Error.NotFound("Order not found.");
             }
 
             var result = order.RemoveItem(command.MenuItemId);

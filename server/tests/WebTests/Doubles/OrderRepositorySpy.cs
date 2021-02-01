@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Domain.Orders;
+using Web.Domain.Restaurants;
 using Web.Domain.Users;
 using Web.Features.Orders;
 
@@ -17,10 +18,11 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<Order> GetActiveOrderForUser(UserId userId)
+        public Task<Order> GetActiveOrder(UserId userId, RestaurantId restaurantId)
         {
             return Task.FromResult(
-                Orders.SingleOrDefault(x => x.UserId == userId)
+                Orders.SingleOrDefault(x => x.UserId == userId &&
+                                            x.RestaurantId == restaurantId)
             );
         }
     }

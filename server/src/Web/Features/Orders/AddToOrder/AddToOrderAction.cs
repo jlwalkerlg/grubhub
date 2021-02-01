@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,17 @@ namespace Web.Features.Orders.AddToOrder
             this.sender = sender;
         }
 
-        [HttpPost("/order")]
-        public async Task<IActionResult> Execute([FromBody] AddToOrderCommand command)
+        [HttpPost("/order/{restaurantId}")]
+        public async Task<IActionResult> Execute(
+            [FromRoute] Guid restaurantId,
+            [FromBody] AddToOrderRequest request)
         {
+            var command = new AddToOrderCommand()
+            {
+                RestaurantId = restaurantId,
+                MenuItemId = request.MenuItemId,
+            };
+
             var result = await sender.Send(command);
 
             return result ? Ok() : Error(result.Error);
