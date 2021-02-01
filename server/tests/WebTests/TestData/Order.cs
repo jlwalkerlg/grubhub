@@ -9,24 +9,49 @@ namespace WebTests.TestData
     [Table("orders")]
     public record Order
     {
+        private User user;
+        private Restaurant restaurant;
+
+        public Order()
+        {
+            User = new User();
+            Restaurant = new Restaurant();
+        }
+
         [Key]
         [Column("id")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column("user_id")]
-        public Guid UserId { get; set; }
+        public Guid UserId { get; private set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public User User
+        {
+            get => user;
+            set
+            {
+                user = value;
+                UserId = value == null ? Guid.Empty : value.Id;
+            }
+        }
 
         [Column("restaurant_id")]
-        public Guid RestaurantId { get; set; }
+        public Guid RestaurantId { get; private set; }
 
         [ForeignKey(nameof(RestaurantId))]
-        public Restaurant Restaurant { get; set; }
+        public Restaurant Restaurant
+        {
+            get => restaurant;
+            set
+            {
+                restaurant = value;
+                RestaurantId = value == null ? Guid.Empty : value.Id;
+            }
+        }
 
         [Column("status")]
-        public OrderStatus Status { get; set; }
+        public OrderStatus Status { get; set; } = OrderStatus.Active;
 
         public List<OrderItem> Items { get; set; } = new();
     }

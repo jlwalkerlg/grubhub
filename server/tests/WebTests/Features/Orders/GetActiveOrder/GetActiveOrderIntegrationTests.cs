@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
@@ -17,13 +16,6 @@ namespace WebTests.Features.Orders.GetActiveOrder
         [Fact]
         public async Task It_Returns_The_Authenticated_Users_Order()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
             var menuItem = new MenuItem();
 
             var menuCategory = new MenuCategory()
@@ -33,7 +25,6 @@ namespace WebTests.Features.Orders.GetActiveOrder
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
                 Categories = { menuCategory },
             };
 
@@ -41,19 +32,20 @@ namespace WebTests.Features.Orders.GetActiveOrder
 
             var orderItem = new OrderItem()
             {
+                MenuItem = menuItem,
                 MenuItemId = menuItem.Id,
             };
 
             var order = new Order()
             {
-                RestaurantId = restaurant.Id,
-                UserId = user.Id,
+                Restaurant = menu.Restaurant,
+                User = user,
                 Items = { orderItem },
             };
 
-            fixture.Insert(manager, restaurant, menu, user, order);
+            fixture.Insert(menu, user, order);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{restaurant.Id}");
+            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{order.RestaurantId}");
 
             response.StatusCode.ShouldBe(200);
 
@@ -77,11 +69,13 @@ namespace WebTests.Features.Orders.GetActiveOrder
         [Fact]
         public async Task It_Returns_Null_If_The_User_Doesnt_Have_An_Active_Order_At_The_Restaurant()
         {
+            var menu = new Menu();
+
             var user = new User();
 
-            fixture.Insert(user);
+            fixture.Insert(menu, user);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{Guid.NewGuid()}");
+            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{menu.RestaurantId}");
 
             response.StatusCode.ShouldBe(200);
 

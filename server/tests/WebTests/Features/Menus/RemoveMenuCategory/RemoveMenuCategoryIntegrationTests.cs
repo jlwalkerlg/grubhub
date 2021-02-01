@@ -15,34 +15,23 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
         [Fact]
         public async Task It_Removes_A_Category_From_The_Menu()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
-            var category = new MenuCategory()
-            {
-                Name = "Pizza",
-            };
+            var category = new MenuCategory();
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
                 Categories = new() { category },
             };
 
-            fixture.Insert(manager, restaurant, menu);
+            fixture.Insert(menu);
 
-            var response = await fixture.GetAuthenticatedClient(manager.Id).Delete(
-                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}");
+            var response = await fixture.GetAuthenticatedClient(menu.Restaurant.ManagerId).Delete(
+                $"/restaurants/{menu.RestaurantId}/menu/categories/{category.Id}");
 
             response.StatusCode.ShouldBe(204);
 
-            var found = fixture.UseTestDbContext(db => db.MenuCategories.ToList());
+            var categories = fixture.UseTestDbContext(db => db.MenuCategories.ToArray());
 
-            found.ShouldBeEmpty();
+            categories.ShouldBeEmpty();
         }
     }
 }

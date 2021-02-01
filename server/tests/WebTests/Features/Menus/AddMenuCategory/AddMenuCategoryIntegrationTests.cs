@@ -16,36 +16,28 @@ namespace WebTests.Features.Menus.AddMenuCategory
         [Fact]
         public async Task It_Adds_A_Category_To_The_Menu()
         {
-            var user = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = user.Id,
-            };
-
             var menu = new Menu()
             {
                 Id = 1,
-                RestaurantId = restaurant.Id,
             };
 
-            fixture.Insert(user, restaurant, menu);
+            fixture.Insert(menu);
 
             var request = new AddMenuCategoryRequest()
             {
                 Name = "Pizza",
             };
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Post(
-                $"/restaurants/{restaurant.Id}/menu/categories",
+            var response = await fixture.GetAuthenticatedClient(menu.Restaurant.ManagerId).Post(
+                $"/restaurants/{menu.RestaurantId}/menu/categories",
                 request);
 
             response.StatusCode.ShouldBe(201);
 
-            var found = fixture.UseTestDbContext(db => db.MenuCategories.Single());
+            var category = fixture.UseTestDbContext(db => db.MenuCategories.Single());
 
-            found.MenuId.ShouldBe(menu.Id);
-            found.Name.ShouldBe(request.Name);
+            category.MenuId.ShouldBe(menu.Id);
+            category.Name.ShouldBe(request.Name);
         }
     }
 }

@@ -16,13 +16,6 @@ namespace WebTests.Features.Orders.AddToOrder
         [Fact]
         public async Task It_Starts_A_New_Order()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
             var menuItem = new MenuItem();
 
             var menuCategory = new MenuCategory()
@@ -32,13 +25,12 @@ namespace WebTests.Features.Orders.AddToOrder
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
                 Categories = { menuCategory },
             };
 
             var user = new User();
 
-            fixture.Insert(manager, restaurant, menu, user);
+            fixture.Insert(menu, user);
 
             var request = new AddToOrderRequest()
             {
@@ -47,7 +39,7 @@ namespace WebTests.Features.Orders.AddToOrder
             };
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Post(
-                $"/order/{restaurant.Id}",
+                $"/order/{menu.RestaurantId}",
                 request);
 
             response.StatusCode.ShouldBe(200);
@@ -55,7 +47,7 @@ namespace WebTests.Features.Orders.AddToOrder
             var order = fixture.UseTestDbContext(db => db.Orders.Single());
 
             order.UserId.ShouldBe(user.Id);
-            order.RestaurantId.ShouldBe(restaurant.Id);
+            order.RestaurantId.ShouldBe(menu.RestaurantId);
 
             var orderItem = fixture.UseTestDbContext(db => db.OrderItems.Single());
 
@@ -67,13 +59,6 @@ namespace WebTests.Features.Orders.AddToOrder
         [Fact]
         public async Task It_Adds_To_An_Existing_Order()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
             var menuItem = new MenuItem();
 
             var menuCategory = new MenuCategory()
@@ -83,7 +68,6 @@ namespace WebTests.Features.Orders.AddToOrder
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
                 Categories = { menuCategory },
             };
 
@@ -91,11 +75,11 @@ namespace WebTests.Features.Orders.AddToOrder
 
             var order = new Order()
             {
-                UserId = user.Id,
-                RestaurantId = restaurant.Id,
+                Restaurant = menu.Restaurant,
+                User = user,
             };
 
-            fixture.Insert(manager, restaurant, menu, user, order);
+            fixture.Insert(menu, order);
 
             var request = new AddToOrderRequest()
             {
@@ -104,7 +88,7 @@ namespace WebTests.Features.Orders.AddToOrder
             };
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Post(
-                $"/order/{restaurant.Id}",
+                $"/order/{order.RestaurantId}",
                 request);
 
             response.StatusCode.ShouldBe(200);

@@ -18,10 +18,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Returns_The_Restaurants()
         {
-            var m1 = new User();
-            var m2 = new User();
-            var m3 = new User();
-
             var italian = new Cuisine() { Name = "Italian" };
             var thai = new Cuisine() { Name = "Thai" };
             var greek = new Cuisine() { Name = "Greek" };
@@ -29,7 +25,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r1 = new Restaurant()
             {
-                ManagerId = m1.Id,
                 Latitude = GeocoderStub.Latitude,
                 Longitude = GeocoderStub.Longitude - 0.05f,
                 MondayOpen = TimeSpan.Zero,
@@ -44,7 +39,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r2 = new Restaurant()
             {
-                ManagerId = m2.Id,
                 Latitude = GeocoderStub.Latitude,
                 Longitude = GeocoderStub.Longitude,
                 MondayOpen = TimeSpan.Zero,
@@ -59,7 +53,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r3 = new Restaurant()
             {
-                ManagerId = m3.Id,
                 Latitude = GeocoderStub.Latitude,
                 Longitude = GeocoderStub.Longitude - 0.1f,
                 MondayOpen = TimeSpan.Zero,
@@ -72,7 +65,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Cuisines = new() { indian },
             };
 
-            fixture.Insert(m1, m2, m3, r1, r2, r3, italian, thai, greek, indian);
+            fixture.Insert(r1, r2, r3, italian, thai, greek, indian);
 
             var response = await fixture.GetClient().Get(
                 "/restaurants?postcode=BD181LT&sort_by=distance&cuisines=Thai,Greek");

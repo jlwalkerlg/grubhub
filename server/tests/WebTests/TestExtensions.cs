@@ -1,4 +1,5 @@
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Web;
 using Web.Envelopes;
+using Web.Features.Restaurants;
 
 namespace WebTests
 {
@@ -24,6 +26,12 @@ namespace WebTests
         public static void ShouldBe(this HttpStatusCode code, int expected)
         {
             ((int)code).ShouldBe(expected);
+        }
+
+        public static void ShouldBe(this OpeningHoursDto dto, TimeSpan? open, TimeSpan? close)
+        {
+            dto.Open.ShouldBe(open?.ToString(@"hh\:mm"));
+            dto.Close.ShouldBe(close?.ToString(@"hh\:mm"));
         }
 
         public static async Task<TData> GetData<TData>(this HttpResponseMessage response)

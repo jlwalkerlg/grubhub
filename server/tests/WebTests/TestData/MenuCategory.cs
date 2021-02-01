@@ -8,6 +8,12 @@ namespace WebTests.TestData
     [Table("menu_categories")]
     public record MenuCategory
     {
+        public MenuCategory()
+        {
+            Menu = new Menu();
+            MenuId = Menu.Id;
+        }
+
         [Key]
         [Column("id")]
         public Guid Id { get; set; } = Guid.NewGuid();

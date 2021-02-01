@@ -8,21 +8,41 @@ namespace WebTests.TestData
     [Table("restaurants")]
     public record Restaurant
     {
+        private User manager;
+
+        public Restaurant()
+        {
+            Manager = new User()
+            {
+                Role = "RestaurantManager",
+            };
+
+            ManagerId = Manager.Id;
+        }
+
         [Key]
         [Column("id")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column("manager_id")]
-        public Guid ManagerId { get; set; }
+        public Guid ManagerId { get; private set; }
 
         [ForeignKey(nameof(ManagerId))]
-        public User Manager { get; set; }
+        public User Manager
+        {
+            get => manager;
+            set
+            {
+                manager = value;
+                ManagerId = value == null ? Guid.Empty : value.Id;
+            }
+        }
 
         [Column("name")]
         public string Name { get; set; } = Guid.NewGuid().ToString();
 
         [Column("description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = Guid.NewGuid().ToString();
 
         [Column("phone_number")]
         public string PhoneNumber { get; set; } = "01234567890";
@@ -40,43 +60,43 @@ namespace WebTests.TestData
         public string Status { get; set; } = "Approved";
 
         [Column("monday_open")]
-        public TimeSpan? MondayOpen { get; set; }
+        public TimeSpan? MondayOpen { get; set; } = TimeSpan.Zero;
 
         [Column("monday_close")]
         public TimeSpan? MondayClose { get; set; }
 
         [Column("tuesday_open")]
-        public TimeSpan? TuesdayOpen { get; set; }
+        public TimeSpan? TuesdayOpen { get; set; } = TimeSpan.Zero;
 
         [Column("tuesday_close")]
         public TimeSpan? TuesdayClose { get; set; }
 
         [Column("wednesday_open")]
-        public TimeSpan? WednesdayOpen { get; set; }
+        public TimeSpan? WednesdayOpen { get; set; } = TimeSpan.Zero;
 
         [Column("wednesday_close")]
         public TimeSpan? WednesdayClose { get; set; }
 
         [Column("thursday_open")]
-        public TimeSpan? ThursdayOpen { get; set; }
+        public TimeSpan? ThursdayOpen { get; set; } = TimeSpan.Zero;
 
         [Column("thursday_close")]
         public TimeSpan? ThursdayClose { get; set; }
 
         [Column("friday_open")]
-        public TimeSpan? FridayOpen { get; set; }
+        public TimeSpan? FridayOpen { get; set; } = TimeSpan.Zero;
 
         [Column("friday_close")]
         public TimeSpan? FridayClose { get; set; }
 
         [Column("saturday_open")]
-        public TimeSpan? SaturdayOpen { get; set; }
+        public TimeSpan? SaturdayOpen { get; set; } = TimeSpan.Zero;
 
         [Column("saturday_close")]
         public TimeSpan? SaturdayClose { get; set; }
 
         [Column("sunday_open")]
-        public TimeSpan? SundayOpen { get; set; }
+        public TimeSpan? SundayOpen { get; set; } = TimeSpan.Zero;
 
         [Column("sunday_close")]
         public TimeSpan? SundayClose { get; set; }

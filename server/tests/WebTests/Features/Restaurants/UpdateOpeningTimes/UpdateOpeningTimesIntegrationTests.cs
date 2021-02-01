@@ -17,14 +17,9 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
         [Fact]
         public async Task It_Updates_The_Opening_Times()
         {
-            var manager = new User();
+            var restaurant = new Restaurant();
 
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
-            fixture.Insert(manager, restaurant);
+            fixture.Insert(restaurant);
 
             var request = new UpdateOpeningTimesRequest()
             {
@@ -32,7 +27,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
                 MondayClose = "16:00",
             };
 
-            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
+            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}/opening-times",
                 request);
 

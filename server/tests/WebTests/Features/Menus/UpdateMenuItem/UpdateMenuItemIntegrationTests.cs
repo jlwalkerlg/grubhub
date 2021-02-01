@@ -16,33 +16,19 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         [Fact]
         public async Task It_Updates_A_Menu_Item()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
-            var item = new MenuItem()
-            {
-                Name = "Margherita",
-                Description = "Cheese & tomato",
-                Price = 9.99m,
-            };
+            var item = new MenuItem();
 
             var category = new MenuCategory()
             {
-                Name = "Pizza",
                 Items = new() { item },
             };
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
                 Categories = new() { category },
             };
 
-            fixture.Insert(manager, restaurant, menu);
+            fixture.Insert(menu);
 
             var request = new UpdateMenuItemRequest()
             {
@@ -51,8 +37,8 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
-                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items/{item.Id}",
+            var response = await fixture.GetAuthenticatedClient(menu.Restaurant.ManagerId).Put(
+                $"/restaurants/{menu.RestaurantId}/menu/categories/{category.Id}/items/{item.Id}",
                 request);
 
             response.StatusCode.ShouldBe(200);

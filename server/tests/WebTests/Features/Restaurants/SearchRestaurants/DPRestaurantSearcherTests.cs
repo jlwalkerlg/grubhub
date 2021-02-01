@@ -30,17 +30,11 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var m1 = new User();
-            var m2 = new User();
-            var m3 = new User();
-            var m4 = new User();
-
             var italian = new Cuisine { Name = "Italian" };
 
             // not approved
             var r1 = new Restaurant()
             {
-                ManagerId = m1.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 5,
@@ -52,7 +46,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             // not open
             var r2 = new Restaurant()
             {
-                ManagerId = m2.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 5,
@@ -64,7 +57,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             // out of range
             var r3 = new Restaurant()
             {
-                ManagerId = m3.Id,
                 Latitude = 55.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 5,
@@ -76,7 +68,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             // expected
             var r4 = new Restaurant()
             {
-                ManagerId = m4.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 5,
@@ -86,7 +77,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Cuisines = new() { italian },
             };
 
-            fixture.Insert(m1, m2, m3, m4, r1, r2, r3, r4, italian);
+            fixture.Insert(r1, r2, r3, r4, italian);
 
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f));
 
@@ -99,13 +90,8 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var m1 = new User();
-            var m2 = new User();
-            var m3 = new User();
-
             var r1 = new Restaurant()
             {
-                ManagerId = m1.Id,
                 Latitude = 54.0f,
                 Longitude = -2.15f,
                 MaxDeliveryDistanceInKm = 10,
@@ -115,7 +101,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r2 = new Restaurant()
             {
-                ManagerId = m2.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -125,7 +110,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r3 = new Restaurant()
             {
-                ManagerId = m3.Id,
                 Latitude = 54.0f,
                 Longitude = -2.1f,
                 MaxDeliveryDistanceInKm = 10,
@@ -133,7 +117,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
             };
 
-            fixture.Insert(m1, m2, m3, r1, r2, r3);
+            fixture.Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -153,13 +137,8 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var m1 = new User();
-            var m2 = new User();
-            var m3 = new User();
-
             var r1 = new Restaurant()
             {
-                ManagerId = m1.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -170,7 +149,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r2 = new Restaurant()
             {
-                ManagerId = m2.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -181,7 +159,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r3 = new Restaurant()
             {
-                ManagerId = m3.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -190,7 +167,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
             };
 
-            fixture.Insert(m1, m2, m3, r1, r2, r3);
+            fixture.Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -210,13 +187,8 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var m1 = new User();
-            var m2 = new User();
-            var m3 = new User();
-
             var r1 = new Restaurant()
             {
-                ManagerId = m1.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -227,7 +199,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r2 = new Restaurant()
             {
-                ManagerId = m2.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -238,7 +209,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r3 = new Restaurant()
             {
-                ManagerId = m3.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -248,7 +218,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
 
 
-            fixture.Insert(m1, m2, m3, r1, r2, r3);
+            fixture.Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -268,13 +238,8 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var m1 = new User();
-            var m2 = new User();
-            var m3 = new User();
-
             var r1 = new Restaurant()
             {
-                ManagerId = m1.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -285,7 +250,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r2 = new Restaurant()
             {
-                ManagerId = m2.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -296,7 +260,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r3 = new Restaurant()
             {
-                ManagerId = m3.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -305,7 +268,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
-            fixture.Insert(m1, m2, m3, r1, r2, r3);
+            fixture.Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -325,17 +288,12 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
-            var m1 = new User();
-            var m2 = new User();
-            var m3 = new User();
-
             var thai = new Cuisine() { Name = "Thai" };
             var italian = new Cuisine() { Name = "Italian" };
             var indian = new Cuisine() { Name = "Indian" };
 
             var r1 = new Restaurant()
             {
-                ManagerId = m1.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -346,7 +304,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r2 = new Restaurant()
             {
-                ManagerId = m2.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -357,7 +314,6 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             var r3 = new Restaurant()
             {
-                ManagerId = m3.Id,
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
@@ -366,7 +322,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Cuisines = new() { indian },
             };
 
-            fixture.Insert(m1, m2, m3, r1, r2, r3);
+            fixture.Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),

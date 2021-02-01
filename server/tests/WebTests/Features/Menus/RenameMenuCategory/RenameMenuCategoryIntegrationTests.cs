@@ -16,13 +16,6 @@ namespace WebTests.Features.Menus.RenameMenuCategory
         [Fact]
         public async Task It_Renames_A_Category()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
             var category = new MenuCategory()
             {
                 Name = "Pizza",
@@ -30,19 +23,18 @@ namespace WebTests.Features.Menus.RenameMenuCategory
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
                 Categories = new() { category },
             };
 
-            fixture.Insert(manager, restaurant, menu);
+            fixture.Insert(menu);
 
             var request = new RenameMenuCategoryRequest()
             {
                 NewName = "Curry",
             };
 
-            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
-                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}",
+            var response = await fixture.GetAuthenticatedClient(menu.Restaurant.ManagerId).Put(
+                $"/restaurants/{menu.RestaurantId}/menu/categories/{category.Id}",
                 request);
 
             response.StatusCode.ShouldBe(200);

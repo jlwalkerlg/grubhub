@@ -14,9 +14,6 @@ namespace WebTests.TestData
         [Column("order_id")]
         public Guid OrderId { get; set; }
 
-        [ForeignKey(nameof(OrderId))]
-        public Order Order { get; set; }
-
         [Column("menu_item_id")]
         public Guid MenuItemId { get; set; }
 

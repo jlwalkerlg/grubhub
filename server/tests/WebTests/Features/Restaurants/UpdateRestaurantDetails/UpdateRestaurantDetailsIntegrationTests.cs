@@ -16,14 +16,9 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         [Fact]
         public async Task It_Updates_The_Restaurants_Details()
         {
-            var manager = new User();
+            var restaurant = new Restaurant();
 
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
-            fixture.Insert(manager, restaurant);
+            fixture.Insert(restaurant);
 
             var request = new UpdateRestaurantDetailsRequest()
             {
@@ -36,7 +31,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
-            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
+            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}",
                 request);
 

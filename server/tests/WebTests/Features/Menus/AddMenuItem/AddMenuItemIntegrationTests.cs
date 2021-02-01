@@ -16,25 +16,14 @@ namespace WebTests.Features.Menus.AddMenuItem
         [Fact]
         public async Task It_Adds_An_Item_To_The_Menu()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-            };
-
-            var category = new MenuCategory()
-            {
-                Name = "Pizza",
-            };
+            var category = new MenuCategory();
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
                 Categories = new() { category }
             };
 
-            fixture.Insert(manager, restaurant, menu);
+            fixture.Insert(menu);
 
             var request = new AddMenuItemRequest()
             {
@@ -43,18 +32,18 @@ namespace WebTests.Features.Menus.AddMenuItem
                 Price = 10m,
             };
 
-            var response = await fixture.GetAuthenticatedClient(manager.Id).Post(
-                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items",
+            var response = await fixture.GetAuthenticatedClient(menu.Restaurant.ManagerId).Post(
+                $"/restaurants/{menu.RestaurantId}/menu/categories/{category.Id}/items",
                 request);
 
             response.StatusCode.ShouldBe(201);
 
-            var found = fixture.UseTestDbContext(db => db.MenuItems.Single());
+            var item = fixture.UseTestDbContext(db => db.MenuItems.Single());
 
-            found.MenuCategoryId.ShouldBe(category.Id);
-            found.Name.ShouldBe(request.Name);
-            found.Description.ShouldBe(request.Description);
-            found.Price.ShouldBe(request.Price);
+            item.MenuCategoryId.ShouldBe(category.Id);
+            item.Name.ShouldBe(request.Name);
+            item.Description.ShouldBe(request.Description);
+            item.Price.ShouldBe(request.Price);
         }
     }
 }

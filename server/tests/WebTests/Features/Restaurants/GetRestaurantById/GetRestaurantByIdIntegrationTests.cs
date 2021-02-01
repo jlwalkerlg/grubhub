@@ -17,19 +17,12 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
         [Fact]
         public async Task It_Returns_The_Restaurant()
         {
-            var manager = new User();
-
-            var restaurant = new Restaurant()
-            {
-                ManagerId = manager.Id,
-                Description = "Space exploration to nuclear stations!",
-            };
+            var restaurant = new Restaurant();
 
             var margherita = new MenuItem()
             {
                 Name = "Margherita",
                 Description = "Cheese & tomato",
-                Price = 9.99m,
             };
 
             var pizza = new MenuCategory()
@@ -46,11 +39,11 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
 
             var menu = new Menu()
             {
-                RestaurantId = restaurant.Id,
+                Restaurant = restaurant,
                 Categories = new() { pizza, burgers },
             };
 
-            fixture.Insert(manager, restaurant, menu);
+            fixture.Insert(restaurant, menu);
 
             var items = fixture.UseTestDbContext(db => db.MenuItems.ToArray());
 
@@ -61,7 +54,7 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             var restaurantDto = await response.GetData<RestaurantDto>();
 
             restaurantDto.Id.ShouldBe(restaurant.Id);
-            restaurantDto.ManagerId.ShouldBe(manager.Id);
+            restaurantDto.ManagerId.ShouldBe(restaurant.ManagerId);
             restaurantDto.Name.ShouldBe(restaurant.Name);
             restaurantDto.Description.ShouldBe(restaurant.Description);
             restaurantDto.PhoneNumber.ShouldBe(restaurant.PhoneNumber);
@@ -69,13 +62,13 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             restaurantDto.Address.ShouldBe(restaurant.Address);
             restaurantDto.Latitude.ShouldBe(restaurant.Latitude);
             restaurantDto.Longitude.ShouldBe(restaurant.Longitude);
-            restaurantDto.OpeningTimes.Monday.ShouldBeNull();
-            restaurantDto.OpeningTimes.Tuesday.ShouldBeNull();
-            restaurantDto.OpeningTimes.Wednesday.ShouldBeNull();
-            restaurantDto.OpeningTimes.Thursday.ShouldBeNull();
-            restaurantDto.OpeningTimes.Friday.ShouldBeNull();
-            restaurantDto.OpeningTimes.Saturday.ShouldBeNull();
-            restaurantDto.OpeningTimes.Sunday.ShouldBeNull();
+            restaurantDto.OpeningTimes.Monday.ShouldBe(restaurant.MondayOpen, restaurant.MondayClose);
+            restaurantDto.OpeningTimes.Tuesday.ShouldBe(restaurant.TuesdayOpen, restaurant.TuesdayClose);
+            restaurantDto.OpeningTimes.Wednesday.ShouldBe(restaurant.WednesdayOpen, restaurant.WednesdayClose);
+            restaurantDto.OpeningTimes.Thursday.ShouldBe(restaurant.ThursdayOpen, restaurant.ThursdayClose);
+            restaurantDto.OpeningTimes.Friday.ShouldBe(restaurant.FridayOpen, restaurant.FridayClose);
+            restaurantDto.OpeningTimes.Saturday.ShouldBe(restaurant.SaturdayOpen, restaurant.SaturdayClose);
+            restaurantDto.OpeningTimes.Sunday.ShouldBe(restaurant.SundayOpen, restaurant.SundayClose);
             restaurantDto.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
             restaurantDto.MaxDeliveryDistanceInKm.ShouldBe(restaurant.MaxDeliveryDistanceInKm);
             restaurantDto.MinimumDeliverySpend.ShouldBe(restaurant.MinimumDeliverySpend);

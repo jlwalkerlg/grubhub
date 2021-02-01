@@ -16,26 +16,23 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
         [Fact]
         public async Task It_Updates_The_Cuisines()
         {
-            var manager = new User();
-
             var italian = new Cuisine() { Name = "Italian" };
             var thai = new Cuisine() { Name = "Thai" };
             var indian = new Cuisine() { Name = "Indian" };
 
             var restaurant = new Restaurant()
             {
-                ManagerId = manager.Id,
                 Cuisines = new() { indian },
             };
 
-            fixture.Insert(manager, restaurant, italian, thai, indian);
+            fixture.Insert(restaurant, italian, thai, indian);
 
             var request = new UpdateCuisinesRequest()
             {
-                Cuisines = new() { "Italian", "Thai" },
+                Cuisines = new() { italian.Name, thai.Name },
             };
 
-            var response = await fixture.GetAuthenticatedClient(manager.Id).Put(
+            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}/cuisines",
                 request);
 
@@ -44,8 +41,8 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
             var found = fixture.UseTestDbContext(db => db.RestaurantCuisines.ToList());
 
             found.Count.ShouldBe(2);
-            found.ShouldContain(x => x.RestaurantId == restaurant.Id && x.CuisineName == "Italian");
-            found.ShouldContain(x => x.RestaurantId == restaurant.Id && x.CuisineName == "Thai");
+            found.ShouldContain(x => x.RestaurantId == restaurant.Id && x.CuisineName == italian.Name);
+            found.ShouldContain(x => x.RestaurantId == restaurant.Id && x.CuisineName == thai.Name);
         }
     }
 }

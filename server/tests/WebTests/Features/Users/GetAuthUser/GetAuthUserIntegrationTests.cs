@@ -15,11 +15,14 @@ namespace WebTests.Features.Users.GetAuthUser
         [Fact]
         public async Task It_Returns_The_Authenticated_User()
         {
-            var user = new User();
+            var user = new User()
+            {
+                Role = "RestaurantManager",
+            };
 
             var restaurant = new Restaurant()
             {
-                ManagerId = user.Id,
+                Manager = user,
             };
 
             fixture.Insert(user, restaurant);
