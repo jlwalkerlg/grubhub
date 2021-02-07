@@ -83,14 +83,6 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             fixture.VerifyHash(request.ManagerPassword, manager.Password).ShouldBe(true);
 
-            var menu = fixture.UseTestDbContext(db => db.Menus.Single());
-
-            menu.RestaurantId.ShouldBe(restaurant.Id);
-
-            var categories = fixture.UseTestDbContext(db => db.MenuCategories.ToList());
-
-            categories.ShouldBeEmpty();
-
             var @event = fixture.UseTestDbContext(db => db.Events.Single());
 
             @event.Type.ShouldBe(typeof(RestaurantRegisteredEvent).ToString());

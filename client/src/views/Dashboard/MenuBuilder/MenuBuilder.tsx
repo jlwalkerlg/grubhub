@@ -27,7 +27,7 @@ const MenuBuilder: React.FC = () => {
     <div className="mt-4 text-sm md:text-base">
       <AddMenuCategoryForm />
 
-      {restaurant.menu.categories.map((category) => (
+      {restaurant.menu?.categories.map((category) => (
         <MenuCategory key={category.name} category={category} />
       ))}
     </div>

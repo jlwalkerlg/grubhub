@@ -27,26 +27,9 @@ namespace WebTests.Features.Menus.AddMenuCategory
         }
 
         [Fact]
-        public async Task It_Fails_If_The_Menu_Is_Not_Found()
+        public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
-                new Coordinates(1, 1));
-
-            await unitOfWorkSpy.UserRepositorySpy.Add(manager);
-            await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
-
-            authenticatorSpy.SignIn(manager);
+            authenticatorSpy.SignIn();
 
             var command = new AddMenuCategoryCommand()
             {

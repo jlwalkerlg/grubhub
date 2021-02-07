@@ -51,7 +51,7 @@ const Main: FC<{
 
   const [hash, setHash] = useState("");
 
-  useEffect(() => setHash(restaurant?.menu.categories[0]?.name || ""), [
+  useEffect(() => setHash(restaurant?.menu?.categories[0]?.name || ""), [
     restaurant,
   ]);
 

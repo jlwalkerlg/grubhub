@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
-using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
 using Web.Services;
@@ -62,13 +61,10 @@ namespace Web.Features.Restaurants.RegisterRestaurant
                 new Address(geocodingResult.Value.FormattedAddress),
                 geocodingResult.Value.Coordinates);
 
-            var menu = new Menu(restaurant.Id);
-
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id, clock.UtcNow);
 
             await unitOfWork.Users.Add(manager);
             await unitOfWork.Restaurants.Add(restaurant);
-            await unitOfWork.Menus.Add(menu);
             await unitOfWork.Events.Add(ev);
 
             await unitOfWork.Commit();

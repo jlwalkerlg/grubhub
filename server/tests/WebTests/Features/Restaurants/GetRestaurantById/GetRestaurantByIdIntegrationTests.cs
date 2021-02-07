@@ -92,6 +92,23 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
         }
 
         [Fact]
+        public async Task The_Menu_Is_Null_If_No_Menu_Exists()
+        {
+            var restaurant = new Restaurant();
+
+            fixture.Insert(restaurant);
+
+            var response = await fixture.GetClient().Get($"/restaurants/{restaurant.Id}");
+
+            response.StatusCode.ShouldBe(200);
+
+            var restaurantDto = await response.GetData<RestaurantDto>();
+
+            restaurantDto.Id.ShouldBe(restaurant.Id);
+            restaurantDto.Menu.ShouldBeNull();
+        }
+
+        [Fact]
         public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
         {
             var response = await fixture.GetClient().Get($"/restaurants/{Guid.NewGuid()}");

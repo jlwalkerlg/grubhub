@@ -68,7 +68,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                 }
 
                 var menuEntry = await connection
-                    .QuerySingleAsync<MenuEntry>(
+                    .QuerySingleOrDefaultAsync<MenuEntry>(
                         @"SELECT
                             m.id,
                             m.restaurant_id
@@ -81,9 +81,12 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             RestaurantId = restaurantEntry.id,
                         });
 
-                var categoryEntries = await connection
-                    .QueryAsync<MenuCategoryEntry>(
-                        @"SELECT
+                if (menuEntry != null)
+                {
+
+                    var categoryEntries = await connection
+                        .QueryAsync<MenuCategoryEntry>(
+                            @"SELECT
                             mc.id,
                             mc.menu_id,
                             mc.name
@@ -91,14 +94,14 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             menu_categories mc
                         WHERE
                             mc.menu_id = @MenuId",
-                        new
-                        {
-                            MenuId = menuEntry.id,
-                        });
+                            new
+                            {
+                                MenuId = menuEntry.id,
+                            });
 
-                var itemEntries = await connection
-                    .QueryAsync<MenuItemEntry>(
-                        @"SELECT
+                    var itemEntries = await connection
+                        .QueryAsync<MenuItemEntry>(
+                            @"SELECT
                             i.id,
                             i.menu_category_id,
                             i.name,
@@ -108,34 +111,35 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             menu_items i
                         WHERE
                             i.menu_category_id = ANY(@CategoryIds)",
-                        new
-                        {
-                            CategoryIds = categoryEntries
-                                .Select(c => c.id)
-                                .ToArray(),
-                        });
+                            new
+                            {
+                                CategoryIds = categoryEntries
+                                    .Select(c => c.id)
+                                    .ToArray(),
+                            });
 
-                var menu = menuEntry.ToDto();
+                    var menu = menuEntry.ToDto();
 
-                var itemMapByCategoryId = itemEntries
+                    var itemMapByCategoryId = itemEntries
                     .GroupBy(e => e.menu_category_id)
                     .ToDictionary(
                         e => e.Key,
                         e => e.Select(e => e.ToDto()));
 
-                foreach (var categoryEntry in categoryEntries)
-                {
-                    var category = categoryEntry.ToDto();
-
-                    if (itemMapByCategoryId.ContainsKey(categoryEntry.id))
+                    foreach (var categoryEntry in categoryEntries)
                     {
-                        category.Items.AddRange(itemMapByCategoryId[categoryEntry.id]);
+                        var category = categoryEntry.ToDto();
+
+                        if (itemMapByCategoryId.ContainsKey(categoryEntry.id))
+                        {
+                            category.Items.AddRange(itemMapByCategoryId[categoryEntry.id]);
+                        }
+
+                        menu.Categories.Add(category);
                     }
 
-                    menu.Categories.Add(category);
+                    restaurantEntry.Menu = menu;
                 }
-
-                restaurantEntry.Menu = menu;
 
                 var cuisineEntries = await connection
                     .QueryAsync<RestaurantCuisine>(

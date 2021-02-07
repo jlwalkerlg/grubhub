@@ -249,7 +249,7 @@ export const Menu: FC<{
 
   return (
     <div id="categoryList">
-      {restaurant.menu.categories
+      {restaurant.menu?.categories
         .filter((category) => category.items.length > 0)
         .map((category) => {
           return (
@@ -291,7 +291,7 @@ export const MobileMenu: FC<{ restaurant: RestaurantDto }> = ({
 
   return (
     <div>
-      {restaurant.menu.categories
+      {restaurant.menu?.categories
         .filter((category) => category.items.length > 0)
         .map((category) => {
           const isCategoryOpen = openCategories.includes(category.name);

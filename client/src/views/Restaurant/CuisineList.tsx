@@ -27,7 +27,7 @@ const CuisineList: FC<{
 
   return (
     <ul className="sticky top-20 mt-8 text-gray-600">
-      {restaurant.menu.categories.map((category) => {
+      {restaurant.menu?.categories.map((category) => {
         return (
           <li key={category.name}>
             <a
