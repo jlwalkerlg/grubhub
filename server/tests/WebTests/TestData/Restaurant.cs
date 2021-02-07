@@ -19,6 +19,11 @@ namespace WebTests.TestData
                 Role = UserRole.RestaurantManager,
             };
 
+            Menu = new Menu()
+            {
+                RestaurantId = Id,
+            };
+
             BillingAccount = new BillingAccount()
             {
                 RestaurantId = Id,
@@ -119,6 +124,8 @@ namespace WebTests.TestData
         public int EstimatedDeliveryTimeInMinutes { get; set; } = 40;
 
         public List<Cuisine> Cuisines { get; set; } = new();
+
+        public Menu Menu { get; set; }
 
         public BillingAccount BillingAccount { get; set; }
     }

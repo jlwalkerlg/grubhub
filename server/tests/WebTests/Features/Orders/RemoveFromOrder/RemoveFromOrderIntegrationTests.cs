@@ -15,37 +15,33 @@ namespace WebTests.Features.Orders.RemoveFromOrder
         [Fact]
         public async Task It_Removes_An_Item_From_The_Order()
         {
-            var margherita = new MenuItem();
+            var restaurant = new Restaurant();
+            var menu = restaurant.Menu;
+            var category = new MenuCategory();
+            var menuItem = new MenuItem();
 
-            var pizza = new MenuCategory()
-            {
-                Items = { margherita },
-            };
-
-            var menu = new Menu()
-            {
-                Categories = { pizza },
-            };
+            category.Items.Add(menuItem);
+            menu.Categories.Add(category);
 
             var user = new User();
 
             var orderItem = new OrderItem()
             {
-                MenuItemId = margherita.Id,
+                MenuItemId = menuItem.Id,
                 Quantity = 1,
             };
 
             var order = new Order()
             {
                 User = user,
-                Restaurant = menu.Restaurant,
+                Restaurant = restaurant,
                 Items = { orderItem },
             };
 
-            fixture.Insert(menu, user, order);
+            fixture.Insert(restaurant, user, order);
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Delete(
-                $"/order/{order.RestaurantId}/items/{margherita.Id}");
+                $"/order/{order.RestaurantId}/items/{menuItem.Id}");
 
             response.StatusCode.ShouldBe(204);
 

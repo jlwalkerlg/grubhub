@@ -16,14 +16,13 @@ namespace WebTests.Features.Menus.AddMenuItem
         [Fact]
         public async Task It_Adds_An_Item_To_The_Menu()
         {
+            var restaurant = new Restaurant();
+            var menu = restaurant.Menu;
             var category = new MenuCategory();
 
-            var menu = new Menu()
-            {
-                Categories = new() { category }
-            };
+            menu.Categories.Add(category);
 
-            fixture.Insert(menu);
+            fixture.Insert(restaurant);
 
             var request = new AddMenuItemRequest()
             {
@@ -32,8 +31,8 @@ namespace WebTests.Features.Menus.AddMenuItem
                 Price = 10m,
             };
 
-            var response = await fixture.GetAuthenticatedClient(menu.Restaurant.ManagerId).Post(
-                $"/restaurants/{menu.RestaurantId}/menu/categories/{category.Id}/items",
+            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Post(
+                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items",
                 request);
 
             response.StatusCode.ShouldBe(201);

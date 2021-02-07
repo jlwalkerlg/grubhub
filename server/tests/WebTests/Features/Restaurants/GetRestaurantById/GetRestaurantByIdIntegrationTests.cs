@@ -18,6 +18,7 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
         public async Task It_Returns_The_Restaurant()
         {
             var restaurant = new Restaurant();
+            var menu = restaurant.Menu;
 
             var margherita = new MenuItem()
             {
@@ -37,13 +38,10 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
                 Items = new(),
             };
 
-            var menu = new Menu()
-            {
-                Restaurant = restaurant,
-                Categories = new() { pizza, burgers },
-            };
+            menu.Categories.Add(pizza);
+            menu.Categories.Add(burgers);
 
-            fixture.Insert(restaurant, menu);
+            fixture.Insert(restaurant);
 
             var items = fixture.UseTestDbContext(db => db.MenuItems.ToArray());
 
@@ -94,7 +92,10 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
         [Fact]
         public async Task The_Menu_Is_Null_If_No_Menu_Exists()
         {
-            var restaurant = new Restaurant();
+            var restaurant = new Restaurant()
+            {
+                Menu = null,
+            };
 
             fixture.Insert(restaurant);
 

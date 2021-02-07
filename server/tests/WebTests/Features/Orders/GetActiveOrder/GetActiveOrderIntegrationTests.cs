@@ -16,17 +16,13 @@ namespace WebTests.Features.Orders.GetActiveOrder
         [Fact]
         public async Task It_Returns_The_Authenticated_Users_Order()
         {
+            var restaurant = new Restaurant();
+            var menu = restaurant.Menu;
+            var category = new MenuCategory();
             var menuItem = new MenuItem();
 
-            var menuCategory = new MenuCategory()
-            {
-                Items = { menuItem },
-            };
-
-            var menu = new Menu()
-            {
-                Categories = { menuCategory },
-            };
+            category.Items.Add(menuItem);
+            menu.Categories.Add(category);
 
             var user = new User();
 
@@ -38,12 +34,12 @@ namespace WebTests.Features.Orders.GetActiveOrder
 
             var order = new Order()
             {
-                Restaurant = menu.Restaurant,
+                Restaurant = restaurant,
                 User = user,
                 Items = { orderItem },
             };
 
-            fixture.Insert(menu, user, order);
+            fixture.Insert(restaurant, user, order);
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{order.RestaurantId}");
 
@@ -69,13 +65,14 @@ namespace WebTests.Features.Orders.GetActiveOrder
         [Fact]
         public async Task It_Returns_Null_If_The_User_Doesnt_Have_An_Active_Order_At_The_Restaurant()
         {
-            var menu = new Menu();
+            var restaurant = new Restaurant();
 
             var user = new User();
 
-            fixture.Insert(menu, user);
+            fixture.Insert(restaurant, user);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{menu.RestaurantId}");
+            var response = await fixture.GetAuthenticatedClient(user.Id).Get(
+                $"/order/{restaurant.Id}");
 
             response.StatusCode.ShouldBe(200);
 

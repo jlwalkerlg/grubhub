@@ -16,21 +16,17 @@ namespace WebTests.Features.Orders.AddToOrder
         [Fact]
         public async Task It_Starts_A_New_Order()
         {
+            var restaurant = new Restaurant();
+            var menu = restaurant.Menu;
+            var category = new MenuCategory();
             var menuItem = new MenuItem();
 
-            var menuCategory = new MenuCategory()
-            {
-                Items = { menuItem },
-            };
-
-            var menu = new Menu()
-            {
-                Categories = { menuCategory },
-            };
+            category.Items.Add(menuItem);
+            menu.Categories.Add(category);
 
             var user = new User();
 
-            fixture.Insert(menu, user);
+            fixture.Insert(restaurant, user);
 
             var request = new AddToOrderRequest()
             {
@@ -59,27 +55,23 @@ namespace WebTests.Features.Orders.AddToOrder
         [Fact]
         public async Task It_Adds_To_An_Existing_Order()
         {
+            var restaurant = new Restaurant();
+            var menu = restaurant.Menu;
+            var category = new MenuCategory();
             var menuItem = new MenuItem();
 
-            var menuCategory = new MenuCategory()
-            {
-                Items = { menuItem },
-            };
-
-            var menu = new Menu()
-            {
-                Categories = { menuCategory },
-            };
+            category.Items.Add(menuItem);
+            menu.Categories.Add(category);
 
             var user = new User();
 
             var order = new Order()
             {
-                Restaurant = menu.Restaurant,
+                Restaurant = restaurant,
                 User = user,
             };
 
-            fixture.Insert(menu, order);
+            fixture.Insert(restaurant, user, order);
 
             var request = new AddToOrderRequest()
             {

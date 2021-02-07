@@ -15,22 +15,18 @@ namespace WebTests.Features.Menus.RemoveMenuItem
         [Fact]
         public async Task It_Removes_An_Item_From_The_Menu()
         {
+            var restaurant = new Restaurant();
+            var menu = restaurant.Menu;
+            var category = new MenuCategory();
             var item = new MenuItem();
 
-            var category = new MenuCategory()
-            {
-                Items = new() { item },
-            };
+            category.Items.Add(item);
+            menu.Categories.Add(category);
 
-            var menu = new Menu()
-            {
-                Categories = new() { category },
-            };
+            fixture.Insert(restaurant);
 
-            fixture.Insert(menu);
-
-            var response = await fixture.GetAuthenticatedClient(menu.Restaurant.ManagerId).Delete(
-                $"/restaurants/{menu.RestaurantId}/menu/categories/{category.Id}/items/{item.Id}");
+            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Delete(
+                $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items/{item.Id}");
 
             response.StatusCode.ShouldBe(204);
 

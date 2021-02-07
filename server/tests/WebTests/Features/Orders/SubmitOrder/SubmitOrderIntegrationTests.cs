@@ -33,10 +33,12 @@ namespace WebTests.Features.Orders.SubmitOrder
             var client = new HttpTestClient(factory);
 
             var restaurant = new Restaurant();
-
+            var menu = restaurant.Menu;
+            var category = new MenuCategory();
             var menuItem = new MenuItem();
-            var menuCategory = new MenuCategory() { Items = new() { menuItem } };
-            var menu = new Menu() { Restaurant = restaurant, Categories = new() { menuCategory } };
+
+            category.Items.Add(menuItem);
+            menu.Categories.Add(category);
 
             var user = new User();
 
@@ -53,7 +55,7 @@ namespace WebTests.Features.Orders.SubmitOrder
                 Items = new() { orderItem },
             };
 
-            fixture.Insert(restaurant, menu, user, order);
+            fixture.Insert(restaurant, user, order);
 
             var response = await client.Authenticate(user.Id).Put(
                 $"/order/{restaurant.Id}/submit");
