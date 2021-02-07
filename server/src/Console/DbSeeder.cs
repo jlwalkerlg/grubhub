@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Web.Data.EF;
 using Web.Domain;
+using Web.Domain.Billing;
 using Web.Domain.Cuisines;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -140,6 +141,21 @@ namespace Console
                         };
 
                         await context.AddAsync(restaurantCuisine);
+                    }
+
+                    if (restaurantEl.TryGetProperty("billing_account", out var accountEl))
+                    {
+                        var account = new BillingAccount(
+                            new BillingAccountId(accountEl.GetProperty("id").GetString()),
+                            restaurant.Id
+                        );
+
+                        if (accountEl.GetProperty("enabled").GetBoolean())
+                        {
+                            account.Enable();
+                        }
+
+                        await context.AddAsync(account);
                     }
 
                     var eventDto = new EventDto(

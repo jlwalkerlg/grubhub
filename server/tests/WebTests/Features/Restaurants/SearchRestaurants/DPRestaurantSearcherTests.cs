@@ -27,13 +27,11 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
         // Restaurants should only appear in search results when they
         // have been approved, are currently open, are within delivery range,
-        // and have billing enabled.
+        // have at least one menu item, and have billing enabled.
         [Fact]
         public async Task It_Only_Returns_Suitable_Restaurants()
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
-
-            var italian = new Cuisine { Name = "Italian" };
 
             // not approved
             var r1 = new Restaurant()
@@ -45,6 +43,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 Status = Web.Domain.Restaurants.RestaurantStatus.PendingApproval,
             };
+            r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             // not open
             var r2 = new Restaurant()
@@ -56,6 +55,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
             };
+            r2.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             // out of range
             var r3 = new Restaurant()
@@ -67,6 +67,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
             };
+            r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             // billing disabled
             var r4 = new Restaurant()
@@ -82,6 +83,18 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                     IsBillingEnabled = false,
                 },
             };
+            r4.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
+
+            // no menu items
+            var r5 = new Restaurant()
+            {
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 5,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
+            };
 
             var expected = new Restaurant()
             {
@@ -91,10 +104,10 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
                 Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
-                Cuisines = { new Cuisine() { Name = "Italian" } },
             };
+            expected.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3, r4, expected);
+            fixture.Insert(r1, r2, r3, r4, r5, expected);
 
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f));
 
@@ -115,6 +128,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
+            r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r2 = new Restaurant()
             {
@@ -124,6 +138,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
+            r2.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r3 = new Restaurant()
             {
@@ -133,6 +148,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
+            r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             fixture.Insert(r1, r2, r3);
 
@@ -163,6 +179,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
+            r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r2 = new Restaurant()
             {
@@ -173,6 +190,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
+            r2.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r3 = new Restaurant()
             {
@@ -183,6 +201,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
+            r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             fixture.Insert(r1, r2, r3);
 
@@ -213,6 +232,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 DeliveryFee = 3.00m,
             };
+            r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r2 = new Restaurant()
             {
@@ -223,6 +243,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 DeliveryFee = 0,
             };
+            r2.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r3 = new Restaurant()
             {
@@ -233,7 +254,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 DeliveryFee = 1.50m,
             };
-
+            r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             fixture.Insert(r1, r2, r3);
 
@@ -264,6 +285,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 EstimatedDeliveryTimeInMinutes = 60,
             };
+            r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r2 = new Restaurant()
             {
@@ -274,6 +296,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 EstimatedDeliveryTimeInMinutes = 30,
             };
+            r2.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r3 = new Restaurant()
             {
@@ -284,6 +307,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 EstimatedDeliveryTimeInMinutes = 40,
             };
+            r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             fixture.Insert(r1, r2, r3);
 
@@ -318,6 +342,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 Cuisines = new() { thai, italian },
             };
+            r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r2 = new Restaurant()
             {
@@ -328,6 +353,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 Cuisines = new() { thai },
             };
+            r2.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r3 = new Restaurant()
             {
@@ -338,6 +364,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayClose = null,
                 Cuisines = new() { indian },
             };
+            r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             fixture.Insert(r1, r2, r3);
 

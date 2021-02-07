@@ -65,6 +65,14 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             sql += " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
 
+            sql += @" AND r.id = ANY(
+                    SELECT
+                        m.restaurant_id FROM menus m
+                        INNER JOIN menu_categories mc ON mc.menu_id = m.id
+                        INNER JOIN menu_items mi ON mi.menu_category_id = mc.id
+                    GROUP BY
+                        m.id)";
+
             if (options?.Cuisines.Count > 0)
             {
                 sql += @" AND r.id = ANY(
