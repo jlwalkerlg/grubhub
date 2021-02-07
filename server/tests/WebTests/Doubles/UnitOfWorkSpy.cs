@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Web;
+using Web.Features.Billing;
 using Web.Features.Cuisines;
 using Web.Features.Events;
 using Web.Features.Menus;
@@ -23,13 +24,17 @@ namespace WebTests.Doubles
         public IEventRepository Events => EventRepositorySpy;
         public EventRepositorySpy EventRepositorySpy { get; } = new();
 
-        public bool Commited { get; private set; } = false;
 
         public ICuisineRepository Cuisines => CuisineRepositorySpy;
         public CuisineRepositorySpy CuisineRepositorySpy { get; } = new();
 
         public IOrderRepository Orders => OrderRepositorySpy;
         public OrderRepositorySpy OrderRepositorySpy { get; } = new();
+
+        public IBillingAccountRepository BillingAccounts => BillingAccountsRepositorySpy;
+        public BillingAccountRepositorySpy BillingAccountsRepositorySpy { get; } = new();
+
+        public bool Commited { get; private set; } = false;
 
         public Task Commit()
         {

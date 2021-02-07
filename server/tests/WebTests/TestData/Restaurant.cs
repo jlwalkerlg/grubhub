@@ -18,6 +18,11 @@ namespace WebTests.TestData
             {
                 Role = UserRole.RestaurantManager,
             };
+
+            BillingAccount = new BillingAccount()
+            {
+                RestaurantId = Id,
+            };
         }
 
         [Key]
@@ -114,5 +119,7 @@ namespace WebTests.TestData
         public int EstimatedDeliveryTimeInMinutes { get; set; } = 40;
 
         public List<Cuisine> Cuisines { get; set; } = new();
+
+        public BillingAccount BillingAccount { get; set; }
     }
 }

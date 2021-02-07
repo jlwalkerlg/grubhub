@@ -488,6 +488,9 @@
             }
           ]
         },
+        "billingAccount": {
+          "id": "acct_1IHEmIPFlQyRkXzw"
+        },
         "cuisines": ["Café", "Breakfast"]
       }
     },
@@ -987,6 +990,9 @@
               "items": []
             }
           ]
+        },
+        "billingAccount": {
+          "id": "acct_1IGp8qPTSfPiegQH"
         },
         "cuisines": ["Tapas", "Spanish"]
       }

@@ -59,6 +59,23 @@ namespace WebTests
             });
         }
 
+        public T GetService<T>()
+        {
+            using (var scope = factory.Services.CreateScope())
+            {
+                return scope.ServiceProvider.GetService<T>();
+            }
+        }
+
+        public async Task<Result> Send(IRequest request)
+        {
+            using (var scope = factory.Services.CreateScope())
+            {
+                var sender = scope.ServiceProvider.GetRequiredService<MediatR.ISender>();
+                return await sender.Send(request);
+            }
+        }
+
         public HttpTestClient GetAuthenticatedClient()
         {
             return GetAuthenticatedClient(Guid.NewGuid().ToString());
@@ -81,14 +98,7 @@ namespace WebTests
 
         public HttpTestClient GetClient()
         {
-            var client = factory.CreateClient(
-                new WebApplicationFactoryClientOptions()
-                {
-                    AllowAutoRedirect = false,
-                    HandleCookies = true,
-                });
-
-            return new HttpTestClient(client, tokenizer);
+            return new HttpTestClient(factory);
         }
     }
 

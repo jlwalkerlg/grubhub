@@ -4,6 +4,7 @@ import React from "react";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
+import CashIcon from "~/components/Icons/CashIcon";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
 import ClipboardIcon from "~/components/Icons/ClipboardIcon";
 import ClockIcon from "~/components/Icons/ClockIcon";
@@ -44,6 +45,11 @@ const routes: DashboardRoute[] = [
     title: "Manager Details",
     pathname: "/dashboard/manager-details",
     icon: IdentificationIcon,
+  },
+  {
+    title: "Billing",
+    pathname: "/dashboard/billing",
+    icon: CashIcon,
   },
 ];
 
@@ -163,10 +169,15 @@ export const DashboardLayout: React.FC = (props) => {
   const router = useRouter();
   const route = routes.find((x) => x.pathname === router.pathname);
 
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn, isLoading, user } = useAuth();
 
   if (!isLoading && !isLoggedIn) {
     router.push("/login");
+    return null;
+  }
+
+  if (!isLoading && user.role !== "RestaurantManager") {
+    router.push("/");
     return null;
   }
 

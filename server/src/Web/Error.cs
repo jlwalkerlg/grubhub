@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Web
 {
@@ -55,6 +56,17 @@ namespace Web
         {
             return new Error(ErrorType.Internal, message);
         }
+
+        public override string ToString()
+        {
+            var message = Type == ErrorType.ValidationError
+                ? string.Join(", ", Errors.Select(x => $"{x.Key}: {x.Value}"))
+                : Message;
+
+            return $"Error ({Type.ToString()}): {message}";
+        }
+
+        public static implicit operator string(Error error) => error.ToString();
     }
 
     public enum ErrorType

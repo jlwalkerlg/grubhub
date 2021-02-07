@@ -25,8 +25,11 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             );
         }
 
+        // Restaurants should only appear in search results when they
+        // have been approved, are currently open, are within delivery range,
+        // and have billing enabled.
         [Fact]
-        public async Task It_Retrieves_Open_Restaurants_Within_Range()
+        public async Task It_Only_Returns_Suitable_Restaurants()
         {
             clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
@@ -65,7 +68,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
             };
 
-            // expected
+            // billing disabled
             var r4 = new Restaurant()
             {
                 Latitude = 54.0f,
@@ -74,15 +77,29 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
                 Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
-                Cuisines = new() { italian },
+                BillingAccount = new BillingAccount()
+                {
+                    IsBillingEnabled = false,
+                },
             };
 
-            fixture.Insert(r1, r2, r3, r4, italian);
+            var expected = new Restaurant()
+            {
+                Latitude = 54.0f,
+                Longitude = -2.0f,
+                MaxDeliveryDistanceInKm = 5,
+                TuesdayOpen = TimeSpan.Zero,
+                TuesdayClose = null,
+                Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
+                Cuisines = { new Cuisine() { Name = "Italian" } },
+            };
+
+            fixture.Insert(r1, r2, r3, r4, expected);
 
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f));
 
             restaurants.ShouldHaveSingleItem();
-            restaurants.Single().Id.ShouldBe(r4.Id);
+            restaurants.Single().Id.ShouldBe(expected.Id);
         }
 
         [Fact]

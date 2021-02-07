@@ -13,7 +13,6 @@ namespace WebTests.TestData
         public Menu()
         {
             Restaurant = new Restaurant();
-            RestaurantId = Restaurant.Id;
         }
 
         [Key]

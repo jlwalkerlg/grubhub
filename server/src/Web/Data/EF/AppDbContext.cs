@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Web.Domain.Billing;
 using Web.Domain.Cuisines;
 using Web.Domain.Menus;
 using Web.Domain.Orders;
@@ -21,6 +22,7 @@ namespace Web.Data.EF
         public DbSet<User> Users { get; protected set; }
         public DbSet<Cuisine> Cuisines { get; protected set; }
         public DbSet<Order> Orders { get; protected set; }
+        public DbSet<BillingAccount> BillingAccounts { get; protected set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

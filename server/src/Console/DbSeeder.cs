@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Web.Data.EF;
 using Web.Domain;
+using Web.Domain.Billing;
 using Web.Domain.Cuisines;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -12,7 +13,7 @@ using Web.Domain.Users;
 using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Services.Hashing;
 
-namespace Web.Data
+namespace Console
 {
     public class DbSeeder
     {
@@ -30,11 +31,7 @@ namespace Web.Data
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
 
-            var path = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "Data",
-                "seed.json");
-            var json = await File.ReadAllTextAsync(path);
+            var json = await File.ReadAllTextAsync("seed.json");
             var jdoc = JsonDocument.Parse(json);
 
             var cuisines = jdoc.RootElement
@@ -146,11 +143,22 @@ namespace Web.Data
                         await context.AddAsync(restaurantCuisine);
                     }
 
+                    var billingAccountEl = restaurantEl.GetProperty("billingAccount");
+
+                    var billingAccount = new BillingAccount(
+                        new BillingAccountId(billingAccountEl.GetProperty("id").GetString()),
+                        restaurant.Id);
+
                     var eventDto = new EventDto(
                         new RestaurantRegisteredEvent(restaurant.Id, user.Id, DateTime.UtcNow)
                     );
 
-                    await context.AddRangeAsync(user, restaurant, menu, eventDto);
+                    await context.AddRangeAsync(
+                        user,
+                        restaurant,
+                        menu,
+                        billingAccount,
+                        eventDto);
                 }
 
                 await context.SaveChangesAsync();

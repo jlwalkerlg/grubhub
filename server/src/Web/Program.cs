@@ -1,11 +1,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Linq;
-using Web.Data;
 
 namespace Web
 {
@@ -13,26 +9,7 @@ namespace Web
     {
         public static void Main(string[] args)
         {
-            var hostBuilder = CreateHostBuilder(args);
-
-            if (args.Contains("--seed"))
-            {
-                try
-                {
-                    hostBuilder.ConfigureServices(services =>
-                        services.AddTransient<DbSeeder>());
-                    var host = hostBuilder.Build();
-                    Seed(host);
-                }
-                catch (System.Exception e)
-                {
-                    System.Console.WriteLine(e);
-                }
-            }
-            else
-            {
-                hostBuilder.Build().Run();
-            }
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -50,16 +27,5 @@ namespace Web
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        private static void Seed(IHost host)
-        {
-            using (var scope = host.Services.CreateScope())
-            {
-                var sp = scope.ServiceProvider;
-
-                var seeder = sp.GetRequiredService<DbSeeder>();
-                seeder.Seed().Wait();
-            }
-        }
     }
 }

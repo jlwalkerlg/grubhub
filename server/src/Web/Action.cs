@@ -27,6 +27,11 @@ namespace Web
             return Error(Web.Error.Unauthenticated());
         }
 
+        protected IActionResult Unauthorised(string message = null)
+        {
+            return Error(Web.Error.Unauthorised(message));
+        }
+
         protected IActionResult Error(Error error)
         {
             var envelope = new ErrorEnvelope(error.Message)

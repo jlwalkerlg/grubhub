@@ -1,4 +1,3 @@
-import cookie from "cookie";
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
 import { getAuthUserQueryKey } from "./useAuth";
@@ -19,12 +18,6 @@ export default function useLogout() {
     {
       onSuccess: () => {
         queryCache.setQueryData(getAuthUserQueryKey(), null);
-
-        document.cookie = cookie.serialize("auth_data", "", {
-          expires: new Date(0),
-          httpOnly: false,
-          path: "/",
-        });
       },
     }
   );

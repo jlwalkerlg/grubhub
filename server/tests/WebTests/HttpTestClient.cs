@@ -19,7 +19,13 @@ namespace WebTests
 
         public HttpTestClient(WebApplicationFactory<Startup> factory)
         {
-            client = factory.CreateClient();
+            client = factory.CreateClient(
+                new WebApplicationFactoryClientOptions()
+                {
+                    AllowAutoRedirect = false,
+                    HandleCookies = true,
+                });
+
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -27,15 +33,6 @@ namespace WebTests
             {
                 tokenizer = scope.ServiceProvider.GetRequiredService<ITokenizer>();
             };
-        }
-
-        public HttpTestClient(HttpClient client, ITokenizer tokenizer)
-        {
-            this.client = client;
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
-            this.tokenizer = tokenizer;
         }
 
         public Task<HttpResponseMessage> Get(string uri)

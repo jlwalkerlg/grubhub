@@ -46,12 +46,12 @@ export const OrderItemModal: FC<{
   usePreventBodyScroll(true);
 
   const alreadyInOrder = useMemo(
-    () => order.items.some((x) => x.menuItemId === menuItemId),
+    () => order?.items.some((x) => x.menuItemId === menuItemId) || false,
     []
   );
 
   const [quantity, setQuantity] = useState(() => {
-    return order.items.find((x) => x.menuItemId === menuItemId)?.quantity || 1;
+    return order?.items.find((x) => x.menuItemId === menuItemId)?.quantity || 1;
   });
 
   const incrementQuantity = () => setQuantity(quantity + 1);

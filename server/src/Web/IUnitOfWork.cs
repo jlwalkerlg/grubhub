@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Web.Features.Billing;
 using Web.Features.Cuisines;
 using Web.Features.Events;
 using Web.Features.Menus;
@@ -16,6 +17,7 @@ namespace Web
         IEventRepository Events { get; }
         ICuisineRepository Cuisines { get; }
         IOrderRepository Orders { get; }
+        IBillingAccountRepository BillingAccounts { get; }
 
         Task Commit();
     }

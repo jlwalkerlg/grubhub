@@ -1,4 +1,3 @@
-import cookie from "cookie";
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
 import { getAuthUser, getAuthUserQueryKey } from "./useAuth";
@@ -24,12 +23,6 @@ export default function useLogin() {
     {
       onSuccess: async () => {
         const user = await getAuthUser();
-
-        document.cookie = cookie.serialize("auth_data", JSON.stringify(user), {
-          expires: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
-          httpOnly: false,
-          path: "/",
-        });
 
         cache.setQueryData(getAuthUserQueryKey(), user);
       },

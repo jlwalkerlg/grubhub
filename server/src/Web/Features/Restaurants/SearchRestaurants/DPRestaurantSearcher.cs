@@ -53,8 +53,10 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     r.estimated_delivery_time_in_minutes
                 FROM
                     restaurants r
+                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id
                 WHERE
-                    r.status = @Status";
+                    r.status = @Status
+                    AND ba.billing_enabled = TRUE";
 
             var now = clock.UtcNow;
             var day = now.DayOfWeek.ToString().ToLower();

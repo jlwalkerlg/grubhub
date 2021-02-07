@@ -67,6 +67,8 @@ namespace Web
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
             services.AddSingleton<IClock, Clock>();
+
+            services.AddStripe(Config);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
