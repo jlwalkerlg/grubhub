@@ -36,6 +36,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 SundayOpen = TimeSpan.Zero,
                 Cuisines = new() { thai },
             };
+            r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r2 = new Restaurant()
             {
@@ -50,6 +51,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 SundayOpen = TimeSpan.Zero,
                 Cuisines = new() { italian, greek },
             };
+            r2.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             var r3 = new Restaurant()
             {
@@ -64,6 +66,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 SundayOpen = TimeSpan.Zero,
                 Cuisines = new() { indian },
             };
+            r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
             fixture.Insert(r1, r2, r3, italian, thai, greek, indian);
 
