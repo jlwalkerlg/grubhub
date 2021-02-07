@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Stripe;
 using Web.Domain.Billing;
 using Web.Domain.Restaurants;
-using Web.Domain.Users;
 using Web.Features.Billing;
 
 namespace Web.Services.Billing
@@ -16,7 +15,7 @@ namespace Web.Services.Billing
             this.config = config;
         }
 
-        public async Task<string> CreateAccount(Restaurant restaurant, RestaurantManager manager)
+        public async Task<string> CreateAccount(Restaurant restaurant)
         {
             var service = new AccountService();
 

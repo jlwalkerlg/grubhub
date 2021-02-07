@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Web.Domain.Billing;
 using Web.Domain.Restaurants;
-using Web.Domain.Users;
 using Web.Features.Billing;
 
 namespace WebTests.Doubles
@@ -11,7 +10,7 @@ namespace WebTests.Doubles
         public string AccountId { get; set; }
         public string OnboardingLink { get; set; }
 
-        public Task<string> CreateAccount(Restaurant restaurant, RestaurantManager manager)
+        public Task<string> CreateAccount(Restaurant restaurant)
         {
             return Task.FromResult(AccountId);
         }

@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 
-namespace WebTests.Features.Billing.GenerateOnboardingLink
+namespace WebTests.Features.Billing.GetOnboardingLink
 {
-    public class GenerateOnboardingLinkActionTests : HttpTestBase
+    public class GetOnboardingLinkActionTests : HttpTestBase
     {
-        public GenerateOnboardingLinkActionTests(HttpTestFixture fixture) : base(fixture)
+        public GetOnboardingLinkActionTests(HttpTestFixture fixture) : base(fixture)
         {
         }
 

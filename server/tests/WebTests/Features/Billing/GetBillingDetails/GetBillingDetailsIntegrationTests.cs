@@ -60,5 +60,26 @@ namespace WebTests.Features.Billing.GetBillingDetails
             details.RestaurantId.ShouldBe(restaurant.Id);
             details.IsBillingEnabled.ShouldBe(billingAccount.IsBillingEnabled);
         }
+
+        [Fact]
+        public async Task It_Returns_Null_If_No_Account_Exists()
+        {
+            var restaurant = new Restaurant()
+            {
+                BillingAccount = null,
+            };
+
+            fixture.Insert(restaurant);
+
+            var response = await fixture
+                .GetAuthenticatedClient(restaurant.ManagerId)
+                .Get($"/restaurants/{restaurant.Id}/billing");
+
+            response.StatusCode.ShouldBe(200);
+
+            var details = await response.GetData<BillingDetails>();
+
+            details.ShouldBe(null);
+        }
     }
 }

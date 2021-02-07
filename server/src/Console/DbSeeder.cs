@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Web.Data.EF;
 using Web.Domain;
-using Web.Domain.Billing;
 using Web.Domain.Cuisines;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
@@ -143,12 +142,6 @@ namespace Console
                         await context.AddAsync(restaurantCuisine);
                     }
 
-                    var billingAccountEl = restaurantEl.GetProperty("billingAccount");
-
-                    var billingAccount = new BillingAccount(
-                        new BillingAccountId(billingAccountEl.GetProperty("id").GetString()),
-                        restaurant.Id);
-
                     var eventDto = new EventDto(
                         new RestaurantRegisteredEvent(restaurant.Id, user.Id, DateTime.UtcNow)
                     );
@@ -157,7 +150,6 @@ namespace Console
                         user,
                         restaurant,
                         menu,
-                        billingAccount,
                         eventDto);
                 }
 

@@ -1,6 +1,5 @@
 using Shouldly;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Web;
 using Web.Domain;
@@ -16,7 +15,6 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly GeocoderSpy geocoderSpy;
-        private readonly BillingServiceSpy billingServiceSpy;
         private readonly RegisterRestaurantHandler handler;
 
         public RegisterRestaurantHandlerTests()
@@ -25,13 +23,10 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             geocoderSpy = new GeocoderSpy();
 
-            billingServiceSpy = new BillingServiceSpy();
-
             handler = new RegisterRestaurantHandler(
                 new HasherFake(),
                 unitOfWorkSpy,
                 geocoderSpy,
-                billingServiceSpy,
                 new ClockStub());
         }
 
@@ -86,41 +81,6 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.BadRequest);
-        }
-
-        [Fact]
-        public async Task It_Sets_Up_A_Billing_Account()
-        {
-            geocoderSpy.Result = Result.Ok(new GeocodingResult()
-            {
-                FormattedAddress = "1 Maine Road, Manchester, UK",
-                Coordinates = new Coordinates(54.0f, -2.0f),
-            });
-
-            var billingAccountId = Guid.NewGuid().ToString();
-            billingServiceSpy.AccountId = billingAccountId;
-
-            var command = new RegisterRestaurantCommand()
-            {
-                ManagerName = "Jordan Walker",
-                ManagerEmail = "walker.jlg@gmail.com",
-                ManagerPassword = "password123",
-                RestaurantName = "Chow Main",
-                RestaurantPhoneNumber = "01234567890",
-                Address = "1 Maine Road, Manchester, UK",
-            };
-
-            var result = await handler.Handle(command, default);
-
-            result.ShouldBeSuccessful();
-
-            unitOfWorkSpy.BillingAccountsRepositorySpy.Accounts.ShouldHaveSingleItem();
-
-            var restaurant = unitOfWorkSpy.RestaurantRepositorySpy.Restaurants.Single();
-
-            var account = unitOfWorkSpy.BillingAccountsRepositorySpy.Accounts.Single();
-            account.Id.Value.ShouldBe(billingAccountId);
-            account.RestaurantId.ShouldBe(restaurant.Id);
         }
     }
 }

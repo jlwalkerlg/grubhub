@@ -3,7 +3,6 @@ using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Features.Billing;
 using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Services;
 using WebTests.Doubles;
@@ -21,7 +20,6 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         public async Task It_Registers_A_Restaurant_And_A_Manager()
         {
             var now = DateTime.UtcNow;
-            var billingAccountId = Guid.NewGuid().ToString();
 
             using var factory = fixture.CreateFactory(services =>
             {
@@ -29,13 +27,8 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                     new ClockStub()
                     {
                         UtcNow = now,
-                    });
-
-                services.AddSingleton<IBillingService>(
-                    new BillingServiceSpy()
-                    {
-                        AccountId = billingAccountId,
-                    });
+                    }
+                );
             });
 
             var client = new HttpTestClient(factory);
@@ -97,11 +90,6 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             var categories = fixture.UseTestDbContext(db => db.MenuCategories.ToList());
 
             categories.ShouldBeEmpty();
-
-            var billingAccount = fixture.UseTestDbContext(db => db.BillingAccounts.Single());
-
-            billingAccount.Id.ShouldBe(billingAccountId);
-            billingAccount.RestaurantId.ShouldBe(restaurant.Id);
 
             var @event = fixture.UseTestDbContext(db => db.Events.Single());
 

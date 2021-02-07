@@ -47,7 +47,7 @@ namespace Web.Features.Billing.GetBillingDetails
 
                 if (billingDetailsEntry == null)
                 {
-                    return NotFound("Billing account not found.");
+                    return Ok<BillingDetails>(null);
                 }
 
                 if (authenticator.UserId != billingDetailsEntry.manager_id)

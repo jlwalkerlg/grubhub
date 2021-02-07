@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
-using Web.Domain.Billing;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Web.Features.Billing;
 using Web.Services;
 using Web.Services.Geocoding;
 using Web.Services.Hashing;
@@ -19,20 +17,17 @@ namespace Web.Features.Restaurants.RegisterRestaurant
         private readonly IHasher hasher;
         private readonly IUnitOfWork unitOfWork;
         private readonly IGeocoder geocoder;
-        private readonly IBillingService billingService;
         private readonly IClock clock;
 
         public RegisterRestaurantHandler(
             IHasher hasher,
             IUnitOfWork unitOfWork,
             IGeocoder geocoder,
-            IBillingService billingService,
             IClock clock)
         {
             this.hasher = hasher;
             this.unitOfWork = unitOfWork;
             this.geocoder = geocoder;
-            this.billingService = billingService;
             this.clock = clock;
         }
 
@@ -69,17 +64,11 @@ namespace Web.Features.Restaurants.RegisterRestaurant
 
             var menu = new Menu(restaurant.Id);
 
-            var accountId = await billingService.CreateAccount(restaurant, manager);
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(accountId),
-                restaurant.Id);
-
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id, clock.UtcNow);
 
             await unitOfWork.Users.Add(manager);
             await unitOfWork.Restaurants.Add(restaurant);
             await unitOfWork.Menus.Add(menu);
-            await unitOfWork.BillingAccounts.Add(billingAccount);
             await unitOfWork.Events.Add(ev);
 
             await unitOfWork.Commit();

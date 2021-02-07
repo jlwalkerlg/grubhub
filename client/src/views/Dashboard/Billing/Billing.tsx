@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import useBillingDetails from "~/api/billing/useBillingDetails";
-import useGenerateOnboardingLink from "~/api/billing/useGenerateOnboardingLink";
+import useSetupBilling from "~/api/billing/useSetupBilling";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
@@ -16,17 +16,7 @@ const Billing: FC = () => {
     restaurant.id
   );
 
-  const {
-    refetch: generateOnboardingLink,
-    isFetching: isLoadingLink,
-  } = useGenerateOnboardingLink(restaurant.id, {
-    onSuccess: (link) => {
-      window.location.href = link;
-    },
-    onError: (error) => {
-      addToast(error.message);
-    },
-  });
+  const [setupBilling, { isLoading: isSettingUpBilling }] = useSetupBilling();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -36,15 +26,28 @@ const Billing: FC = () => {
     return <div>{error.message}</div>;
   }
 
+  const onSetupBilling = async () => {
+    if (isSettingUpBilling) return;
+
+    await setupBilling(restaurant.id, {
+      onSuccess: (link) => {
+        window.location.href = link;
+      },
+      onError: (error) => {
+        addToast(error.message);
+      },
+    });
+  };
+
   return (
     <div>
-      {billingDetails.isBillingEnabled ? (
+      {billingDetails?.isBillingEnabled ? (
         <div>
           Billing is enabled. Need to{" "}
           <button
-            onClick={() => generateOnboardingLink()}
+            onClick={onSetupBilling}
             className="btn btn-link"
-            disabled={isLoadingLink}
+            disabled={isSettingUpBilling}
           >
             update your billing details
           </button>
@@ -52,16 +55,15 @@ const Billing: FC = () => {
         </div>
       ) : (
         <div>
-          Please{" "}
+          Billing is currently disabled. Please{" "}
           <button
-            onClick={() => generateOnboardingLink()}
+            onClick={onSetupBilling}
             className="btn btn-link"
-            disabled={isLoadingLink}
+            disabled={isSettingUpBilling}
           >
-            complete onboarding
+            setup billing
           </button>{" "}
-          to setup billing. Your restaurant will not show up in search results
-          until billing is enabled.
+          to activate your restaurant and start collecting orders.
         </div>
       )}
     </div>

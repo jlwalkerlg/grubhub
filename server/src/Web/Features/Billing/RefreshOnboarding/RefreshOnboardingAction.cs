@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Web.Features.Billing.GenerateOnboardingLink;
+using Web.Features.Billing.SetupBilling;
 using Web.Services.Authentication;
 
 namespace Web.Features.Billing.RefreshOnboarding
@@ -30,12 +30,12 @@ namespace Web.Features.Billing.RefreshOnboarding
                 return Redirect($"{config.ClientUrl}/login?redirect_to={config.StripeOnboardingRefreshUrl}?restaurant_id={restaurantId}");
             }
 
-            var query = new GenerateOnboardingLinkQuery()
+            var command = new SetupBillingCommand()
             {
                 RestaurantId = restaurantId,
             };
 
-            var result = await sender.Send(query);
+            var result = await sender.Send(command);
 
             return result ? Redirect(result.Value) : Error(result.Error);
         }

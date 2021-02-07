@@ -7,11 +7,11 @@ using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
 
-namespace WebTests.Features.Billing.GenerateOnboardingLink
+namespace WebTests.Features.Billing.SetupBilling
 {
-    public class GenerateOnboardingLinkIntegrationTests : IntegrationTestBase
+    public class SetupBillingIntegrationTests : IntegrationTestBase
     {
-        public GenerateOnboardingLinkIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
+        public SetupBillingIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
@@ -39,7 +39,7 @@ namespace WebTests.Features.Billing.GenerateOnboardingLink
 
             var response = await client
                 .Authenticate(restaurant.ManagerId)
-                .Get($"/restaurants/{restaurant.Id}/billing/onboarding/link");
+                .Post($"/restaurants/{restaurant.Id}/billing/setup");
 
             response.StatusCode.ShouldBe(200);
 

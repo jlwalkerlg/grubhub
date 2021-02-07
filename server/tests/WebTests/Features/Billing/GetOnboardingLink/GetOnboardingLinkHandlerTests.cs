@@ -6,20 +6,20 @@ using Web.Domain;
 using Web.Domain.Billing;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Web.Features.Billing.GenerateOnboardingLink;
+using Web.Features.Billing.GetOnboardingLink;
 using WebTests.Doubles;
 using Xunit;
 
-namespace WebTests.Features.Billing.GenerateOnboardingLink
+namespace WebTests.Features.Billing.GetOnboardingLink
 {
-    public class GenerateOnboardingLinkHandlerTests
+    public class GetOnboardingLinkHandlerTests
     {
         private readonly AuthenticatorSpy authenticatorSpy;
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly BillingServiceSpy billingServiceSpy;
-        private readonly GenerateOnboardingLinkHandler handler;
+        private readonly GetOnboardingLinkHandler handler;
 
-        public GenerateOnboardingLinkHandlerTests()
+        public GetOnboardingLinkHandlerTests()
         {
             authenticatorSpy = new AuthenticatorSpy();
 
@@ -27,7 +27,7 @@ namespace WebTests.Features.Billing.GenerateOnboardingLink
 
             billingServiceSpy = new BillingServiceSpy();
 
-            handler = new GenerateOnboardingLinkHandler(
+            handler = new GetOnboardingLinkHandler(
                 authenticatorSpy,
                 unitOfWorkSpy,
                 billingServiceSpy);
@@ -53,7 +53,7 @@ namespace WebTests.Features.Billing.GenerateOnboardingLink
 
             authenticatorSpy.SignIn(Guid.NewGuid());
 
-            var query = new GenerateOnboardingLinkQuery()
+            var query = new GetOnboardingLinkQuery()
             {
                 RestaurantId = restaurant.Id,
             };

@@ -1,10 +1,10 @@
 using System;
 using Web.Services.Authentication;
 
-namespace Web.Features.Billing.GenerateOnboardingLink
+namespace Web.Features.Billing.SetupBilling
 {
     [Authenticate]
-    public record GenerateOnboardingLinkQuery : IRequest<string>
+    public record SetupBillingCommand : IRequest<string>
     {
         public Guid RestaurantId { get; init; }
     }

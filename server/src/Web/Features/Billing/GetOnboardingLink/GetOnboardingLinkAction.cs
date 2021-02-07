@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Features.Billing.GenerateOnboardingLink
+namespace Web.Features.Billing.GetOnboardingLink
 {
-    public class GenerateOnboardingLinkAction : Action
+    public class GetOnboardingLinkAction : Action
     {
         private readonly ISender sender;
 
-        public GenerateOnboardingLinkAction(ISender sender)
+        public GetOnboardingLinkAction(ISender sender)
         {
             this.sender = sender;
         }
@@ -17,7 +17,7 @@ namespace Web.Features.Billing.GenerateOnboardingLink
         [HttpGet("/restaurants/{restaurantId:guid}/billing/onboarding/link")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
-            var query = new GenerateOnboardingLinkQuery()
+            var query = new GetOnboardingLinkQuery()
             {
                 RestaurantId = restaurantId,
             };
