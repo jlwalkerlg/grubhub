@@ -14,7 +14,7 @@ namespace Web.Features.Menus.RenameMenuCategory
             this.sender = sender;
         }
 
-        [HttpPut("/restaurants/{restaurantId}/menu/categories/{categoryId}")]
+        [HttpPut("/restaurants/{restaurantId:guid}/menu/categories/{categoryId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromRoute] Guid categoryId,

@@ -22,7 +22,7 @@ namespace Web.Features.Orders.GetActiveOrder
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [HttpGet("/order/{restaurantId}")]
+        [HttpGet("/order/{restaurantId:guid}")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
             if (!authenticator.IsAuthenticated)

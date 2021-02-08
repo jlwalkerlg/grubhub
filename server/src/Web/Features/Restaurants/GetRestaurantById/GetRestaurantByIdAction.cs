@@ -18,7 +18,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [HttpGet("/restaurants/{id}")]
+        [HttpGet("/restaurants/{id:guid}")]
         public async Task<IActionResult> Execute([FromRoute] Guid id)
         {
             var sql = @"

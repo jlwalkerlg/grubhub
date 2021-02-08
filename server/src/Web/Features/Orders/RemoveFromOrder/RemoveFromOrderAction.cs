@@ -14,7 +14,7 @@ namespace Web.Features.Orders.RemoveFromOrder
             this.sender = sender;
         }
 
-        [HttpDelete("/order/{restaurantId}/items/{menuItemId}")]
+        [HttpDelete("/order/{restaurantId:guid}/items/{menuItemId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromRoute] Guid menuItemId)

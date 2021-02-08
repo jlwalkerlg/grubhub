@@ -14,7 +14,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             this.sender = sender;
         }
 
-        [HttpPut("/restaurants/{id}")]
+        [HttpPut("/restaurants/{id:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid id,
             [FromBody] UpdateRestaurantDetailsRequest request)

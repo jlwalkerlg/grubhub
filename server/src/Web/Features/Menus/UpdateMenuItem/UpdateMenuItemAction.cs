@@ -14,7 +14,7 @@ namespace Web.Features.Menus.UpdateMenuItem
             this.sender = sender;
         }
 
-        [HttpPut("/restaurants/{restaurantId}/menu/categories/{categoryId}/items/{itemId}")]
+        [HttpPut("/restaurants/{restaurantId:guid}/menu/categories/{categoryId:guid}/items/{itemId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromRoute] Guid categoryId,

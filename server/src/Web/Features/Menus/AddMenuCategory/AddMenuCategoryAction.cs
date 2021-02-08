@@ -14,7 +14,7 @@ namespace Web.Features.Menus.AddMenuCategory
             this.sender = sender;
         }
 
-        [HttpPost("/restaurants/{restaurantId}/menu/categories")]
+        [HttpPost("/restaurants/{restaurantId:guid}/menu/categories")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromBody] AddMenuCategoryRequest request)

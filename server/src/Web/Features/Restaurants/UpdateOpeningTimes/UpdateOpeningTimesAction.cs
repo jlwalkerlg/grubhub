@@ -15,7 +15,7 @@ namespace Web.Features.Restaurants.UpdateOpeningTimes
             this.sender = sender;
         }
 
-        [HttpPut("/restaurants/{restaurantId}/opening-times")]
+        [HttpPut("/restaurants/{restaurantId:guid}/opening-times")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromBody] UpdateOpeningTimesRequest request)

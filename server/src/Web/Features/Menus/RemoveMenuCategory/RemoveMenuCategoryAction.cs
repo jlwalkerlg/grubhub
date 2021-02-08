@@ -14,7 +14,7 @@ namespace Web.Features.Menus.RemoveMenuCategory
             this.sender = sender;
         }
 
-        [HttpDelete("/restaurants/{restaurantId}/menu/categories/{categoryId}")]
+        [HttpDelete("/restaurants/{restaurantId:guid}/menu/categories/{categoryId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromRoute] Guid categoryId)

@@ -14,7 +14,7 @@ namespace Web.Features.Orders.AddToOrder
             this.sender = sender;
         }
 
-        [HttpPost("/order/{restaurantId}")]
+        [HttpPost("/order/{restaurantId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
             [FromBody] AddToOrderRequest request)

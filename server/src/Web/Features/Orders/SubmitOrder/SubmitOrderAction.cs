@@ -14,7 +14,7 @@ namespace Web.Features.Orders.SubmitOrder
             this.sender = sender;
         }
 
-        [HttpPut("/order/{restaurantId}/submit")]
+        [HttpPut("/order/{restaurantId:guid}/submit")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
             var command = new SubmitOrderCommand()
