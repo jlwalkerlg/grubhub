@@ -8,7 +8,7 @@ export interface OrderDto {
   items: OrderItemDto[];
 }
 
-type OrderStatus = "Active" | "Placed" | "Cancelled";
+type OrderStatus = "Active" | "Placed" | "PaymentConfirmed" | "Cancelled";
 
 export interface OrderItemDto {
   menuItemId: string;

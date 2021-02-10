@@ -49,6 +49,10 @@ namespace Web.Data.EF.Configurations
 
             builder.Property(x => x.PlacedAt).HasColumnName("placed_at");
 
+            builder.Property(x => x.PaymentIntentId).HasColumnName("payment_intent_id");
+
+            builder.Property(x => x.ConfirmedAt).HasColumnName("confirmed_at");
+
             builder.HasMany(x => x.Items)
                 .WithOne()
                 .HasForeignKey("order_id")

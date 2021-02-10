@@ -28,7 +28,9 @@ export default function useActiveOrder(
       ...config,
       enabled: isLoggedIn && (config.enabled ?? true),
       onSuccess: (order) => {
-        cache.setQueryData(getOrderQueryKey(order.id), order);
+        if (order) {
+          cache.setQueryData(getOrderQueryKey(order.id), order);
+        }
 
         if (config.onSuccess) {
           config.onSuccess(order);

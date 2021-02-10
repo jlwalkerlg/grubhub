@@ -9,11 +9,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useForm } from "react-hook-form";
+import { useQueryCache } from "react-query";
 import { OrderDto } from "~/api/orders/OrderDto";
-import useActiveOrder from "~/api/orders/useActiveOrder";
+import useActiveOrder, {
+  getActiveOrderQueryKey,
+} from "~/api/orders/useActiveOrder";
+import { getOrderQueryKey } from "~/api/orders/useOrder";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useRestaurant from "~/api/restaurants/useRestaurant";
-import useAuth from "~/api/users/useAuth";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import TruckIcon from "~/components/Icons/TruckIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
@@ -42,9 +45,9 @@ const CheckoutForm: FC<{ order: OrderDto; restaurant: RestaurantDto }> = ({
 
   const router = useRouter();
 
-  const { user } = useAuth();
+  const cache = useQueryCache();
 
-  const [checkout, { isError, error }] = useCheckout(user);
+  const [checkout, { isError, error }] = useCheckout();
 
   const form = useForm({
     defaultValues: {
@@ -69,7 +72,10 @@ const CheckoutForm: FC<{ order: OrderDto; restaurant: RestaurantDto }> = ({
       },
       {
         onSuccess: async () => {
+          cache.removeQueries(getOrderQueryKey(order.id));
+          cache.prefetchQuery(getOrderQueryKey(order.id));
           await router.push(`/orders/${order.id}`);
+          cache.removeQueries(getActiveOrderQueryKey(restaurant.id));
         },
         onError: (error) => {
           if (error.isValidationError) {

@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
-using Web.Domain.Orders;
+using Web.Features.Orders.GetActiveOrder;
 using Web.Services.Authentication;
 
-namespace Web.Features.Orders.GetActiveOrder
+namespace Web.Features.Orders.GetOrderById
 {
-    public class GetActiveOrderAction : Action
+    public class GetOrderByIdAction : Action
     {
         private readonly IAuthenticator authenticator;
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetActiveOrderAction(
+        public GetOrderByIdAction(
             IAuthenticator authenticator,
             IDbConnectionFactory dbConnectionFactory)
         {
@@ -22,8 +22,8 @@ namespace Web.Features.Orders.GetActiveOrder
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [HttpGet("/restaurants/{restaurantId:guid}/order")]
-        public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
+        [HttpGet("/orders/{id:guid}")]
+        public async Task<IActionResult> Execute([FromRoute] Guid id)
         {
             if (!authenticator.IsAuthenticated)
             {
@@ -44,21 +44,21 @@ namespace Web.Features.Orders.GetActiveOrder
                     FROM
                         orders o
                     WHERE
-                        o.user_id = @UserId
-                        AND o.restaurant_id = @RestaurantId
-                        AND (o.status = @ActiveStatus OR o.status = @PlacedStatus)
-                    ORDER BY o.placed_at",
+                        o.id = @Id
+                    ORDER BY o.id",
                     new
                     {
-                        UserId = authenticator.UserId.Value,
-                        RestaurantId = restaurantId,
-                        ActiveStatus = OrderStatus.Active.ToString(),
-                        PlacedStatus = OrderStatus.Placed.ToString(),
+                        Id = id,
                     });
 
                 if (orderEntry == null)
                 {
-                    return Ok<OrderDto>(null);
+                    return NotFound();
+                }
+
+                if (orderEntry.user_id != authenticator.UserId)
+                {
+                    return Unauthorised();
                 }
 
                 var orderItemEntries = await connection

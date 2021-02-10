@@ -59,6 +59,12 @@ namespace WebTests.TestData
         [Column("placed_at")]
         public DateTime? PlacedAt { get; set; }
 
+        [Column("payment_intent_id")]
+        public string PaymentIntentId { get; set; }
+
+        [Column("confirmed_at")]
+        public DateTime? ConfirmedAt { get; set; }
+
         public List<OrderItem> Items { get; set; } = new();
     }
 }

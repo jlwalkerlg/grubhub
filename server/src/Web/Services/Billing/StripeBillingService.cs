@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Stripe;
 using Web.Domain;
@@ -52,7 +53,7 @@ namespace Web.Services.Billing
             return link.Url;
         }
 
-        public async Task<Result<string>> GeneratePaymentIntent(
+        public async Task<Result<Web.Features.Billing.PaymentIntent>> GeneratePaymentIntent(
             Money amount, BillingAccount account)
         {
             var service = new PaymentIntentService();
@@ -75,7 +76,38 @@ namespace Web.Services.Billing
                 }
             );
 
-            return Result.Ok(intent.ClientSecret);
+            return Result.Ok(
+                new Web.Features.Billing.PaymentIntent()
+                {
+                    Id = intent.Id,
+                    ClientSecret = intent.ClientSecret,
+                });
+        }
+
+        public async Task<Result> ConfirmOrder(Domain.Orders.Order order)
+        {
+            var service = new PaymentIntentService();
+
+            try
+            {
+                var intent = await service.GetAsync(order.PaymentIntentId);
+
+                if (intent.Status == "requires_capture")
+                {
+                    return Result.Ok();
+                }
+
+                return Error.BadRequest("Payment not confirmed.");
+            }
+            catch (Stripe.StripeException e)
+            {
+                if (e.HttpStatusCode == HttpStatusCode.NotFound)
+                {
+                    return Web.Error.NotFound("Payment details not found.");
+                }
+
+                return Web.Error.BadRequest("Failed to confirm order.");
+            }
         }
     }
 }

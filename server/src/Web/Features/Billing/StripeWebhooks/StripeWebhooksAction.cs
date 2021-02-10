@@ -25,18 +25,38 @@ namespace Web.Features.Billing.EnableBilling
         }
 
         [HttpPost("/stripe/webhooks")]
-        public async Task<IActionResult> Execute()
+        public async Task<IActionResult> Webhook()
         {
-            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
             try
             {
-                var stripeEvent = EventUtility.ConstructEvent(
-                    json,
-                    Request.Headers["Stripe-Signature"],
+                var stripeEvent = await DecodeStripeEvent(
                     config.StripeWebhookSigningSecret);
 
                 logger.LogInformation("Stripe event: " + stripeEvent.Type);
+
+                if (stripeEvent.Type == Stripe.Events.PaymentIntentAmountCapturableUpdated)
+                {
+                    // occurs when payment intent is confirmed (card details successfully submitted)
+                }
+
+                return Ok();
+            }
+            catch (StripeException e)
+            {
+                logger.LogError(e.ToString());
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("/stripe/connect/webhooks")]
+        public async Task<IActionResult> ConnectWebhook()
+        {
+            try
+            {
+                var stripeEvent = await DecodeStripeEvent(
+                    config.StripeConnectWebhookSigningSecret);
+
+                logger.LogInformation("Stripe connect event: " + stripeEvent.Type);
 
                 var result = Result.Ok();
 
@@ -59,6 +79,16 @@ namespace Web.Features.Billing.EnableBilling
                 logger.LogError(e.ToString());
                 return BadRequest();
             }
+        }
+
+        private async Task<Event> DecodeStripeEvent(string webhookSigningSecret)
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            return EventUtility.ConstructEvent(
+                json,
+                Request.Headers["Stripe-Signature"],
+                webhookSigningSecret);
         }
 
         private async Task<Result> HandleAccountUpdate(Account account)

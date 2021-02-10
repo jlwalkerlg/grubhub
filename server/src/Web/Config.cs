@@ -11,6 +11,7 @@ namespace Web
         public string StripePublishableKey { get; set; }
         public string StripeSecretKey { get; set; }
         public string StripeWebhookSigningSecret { get; set; }
+        public string StripeConnectWebhookSigningSecret { get; set; }
         public string StripeOnboardingRefreshUrl => $"{ServerUrl}/stripe/onboarding/refresh";
         public string StripeOnboardingReturnUrl => $"{ClientUrl}/dashboard/billing";
         public decimal ServiceCharge => 0.50m;

@@ -16,6 +16,7 @@ namespace Console
             { "seed", "seed" },
             { "create-stripe-account", "create-stripe-account [--name <name>]" },
             { "generate-onboarding-link", "generate-onboarding-link <accountId>" },
+            { "create-payment-intent", "create-payment-intent" },
         };
 
         static void Main(string[] args)
@@ -55,6 +56,10 @@ namespace Console
                 else if (args.Contains("generate-onboarding-link") && args.Length > 1)
                 {
                     GenerateOnboardingLink(args[1]).Wait();
+                }
+                else if (args.Contains("create-payment-intent"))
+                {
+                    CreatePaymentIntent().Wait();
                 }
             }
             catch (System.Exception e)
@@ -119,6 +124,28 @@ namespace Console
             );
 
             System.Console.WriteLine("Onboarding link " + link.Url);
+        }
+
+        private static async Task CreatePaymentIntent()
+        {
+            var service = new PaymentIntentService();
+
+            var intent = await service.CreateAsync(
+                new PaymentIntentCreateOptions()
+                {
+                    CaptureMethod = "manual",
+                    PaymentMethodTypes = new List<string>() { "card" },
+                    Amount = 2000,
+                    Currency = "gbp",
+                    ApplicationFeeAmount = 50,
+                    TransferData = new PaymentIntentTransferDataOptions()
+                    {
+                        Destination = "acct_1IIDXKPRU0NZyTXU",
+                    },
+                }
+            );
+
+            System.Console.WriteLine(intent.ClientSecret);
         }
     }
 }

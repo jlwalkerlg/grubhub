@@ -32,7 +32,20 @@ namespace Web.Domain.Orders
             RestaurantId = restaurantId;
         }
 
-        private Order() { } // EF Core
+        public Result Confirm(DateTime now)
+        {
+            if (Status != OrderStatus.Placed)
+            {
+                return Error.BadRequest("Order not placed.");
+            }
+
+            ConfirmedAt = now;
+            Status = OrderStatus.PaymentConfirmed;
+
+            return Result.Ok();
+        }
+
+        private Order() { } // EF
 
         public OrderId Id { get; }
 
@@ -45,6 +58,10 @@ namespace Web.Domain.Orders
         public Address Address { get; private set; }
 
         public DateTime? PlacedAt { get; private set; }
+
+        public string PaymentIntentId { get; private set; }
+
+        public DateTime? ConfirmedAt { get; private set; }
 
         public IReadOnlyList<OrderItem> Items => items;
 
@@ -70,6 +87,12 @@ namespace Web.Domain.Orders
             PlacedAt = time;
 
             return Result.Ok();
+        }
+
+        public void UpdatePaymentIntentId(string paymentIntentId)
+        {
+            PaymentIntentId = paymentIntentId ??
+                throw new ArgumentNullException(nameof(paymentIntentId));
         }
 
         public void AddItem(Guid menuItemId, int quantity)

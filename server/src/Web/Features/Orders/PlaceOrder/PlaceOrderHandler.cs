@@ -107,20 +107,22 @@ namespace Web.Features.Orders.PlaceOrder
                 + restaurant.DeliveryFee
                 + new Money(config.ServiceCharge);
 
-            var paymentResult = await billingService
+            var paymentIntentResult = await billingService
                 .GeneratePaymentIntent(amount, billingAccount);
 
-            if (!paymentResult)
+            if (!paymentIntentResult)
             {
                 return Error.Internal("Failed to generate payment intent.");
             }
+
+            order.UpdatePaymentIntentId(paymentIntentResult.Value.Id);
 
             var opEvent = new OrderPlacedEvent(order.Id, clock.UtcNow);
 
             await unitOfWork.Events.Add(opEvent);
             await unitOfWork.Commit();
 
-            return Result.Ok(paymentResult.Value);
+            return Result.Ok(paymentIntentResult.Value.ClientSecret);
         }
     }
 }

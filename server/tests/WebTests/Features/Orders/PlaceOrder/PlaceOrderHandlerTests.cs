@@ -13,6 +13,7 @@ using System.Linq;
 using Web.Domain.Menus;
 using Web.Domain.Billing;
 using Web.Services.Geocoding;
+using Web.Features.Billing;
 
 namespace WebTests.Features.Orders.PlaceOrder
 {
@@ -95,8 +96,12 @@ namespace WebTests.Features.Orders.PlaceOrder
             var now = DateTime.UtcNow;
             clockStub.UtcNow = now;
 
-            var paymentIntentId = Guid.NewGuid().ToString();
-            billingServiceSpy.PaymentIntentIdResult = Result.Ok(paymentIntentId);
+            var paymentIntent = new PaymentIntent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ClientSecret = Guid.NewGuid().ToString(),
+            };
+            billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
 
             geocoderSpy.Result = Result.Ok(
                 new GeocodingResult()
@@ -120,7 +125,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             result.ShouldBeSuccessful();
 
-            result.Value.ShouldBe(paymentIntentId);
+            result.Value.ShouldBe(paymentIntent.ClientSecret);
 
             order.Status.ShouldBe(OrderStatus.Placed);
             order.Address.Value.ShouldBe("12 Maine Road, Oldham, Madchester, Manchester, MN12 1NM");
@@ -232,7 +237,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             var orderId = new OrderId(Guid.NewGuid());
             await SetupSuccess(orderId);
 
-            billingServiceSpy.PaymentIntentIdResult = Error.Internal("Payment failed.");
+            billingServiceSpy.PaymentIntentResult = Error.Internal("Payment failed.");
 
             var command = new PlaceOrderCommand()
             {
@@ -292,8 +297,12 @@ namespace WebTests.Features.Orders.PlaceOrder
             var now = DateTime.UtcNow;
             clockStub.UtcNow = now;
 
-            var paymentIntentId = Guid.NewGuid().ToString();
-            billingServiceSpy.PaymentIntentIdResult = Result.Ok(paymentIntentId);
+            var paymentIntent = new PaymentIntent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ClientSecret = Guid.NewGuid().ToString(),
+            };
+            billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
 
             geocoderSpy.Result = Result.Ok(
                 new GeocodingResult()

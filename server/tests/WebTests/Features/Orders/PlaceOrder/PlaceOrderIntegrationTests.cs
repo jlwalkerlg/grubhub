@@ -23,7 +23,12 @@ namespace WebTests.Features.Orders.PlaceOrder
         public async Task It_Places_An_Order()
         {
             var now = DateTime.UtcNow;
-            var paymentIntentId = Guid.NewGuid().ToString();
+
+            var paymentIntent = new PaymentIntent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ClientSecret = Guid.NewGuid().ToString(),
+            };
 
             using var factory = fixture.CreateFactory(services =>
             {
@@ -36,7 +41,7 @@ namespace WebTests.Features.Orders.PlaceOrder
                 services.AddSingleton<IBillingService>(
                     new BillingServiceSpy()
                     {
-                        PaymentIntentIdResult = Result.Ok(paymentIntentId),
+                        PaymentIntentResult = Result.Ok(paymentIntent),
                     });
             });
 
@@ -81,13 +86,14 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             var data = await response.GetData<string>();
 
-            data.ShouldBe(paymentIntentId);
+            data.ShouldBe(paymentIntent.ClientSecret);
 
             var found = fixture.UseTestDbContext(db => db.Orders.Single());
 
             found.Status.ShouldBe(Web.Domain.Orders.OrderStatus.Placed);
             found.Address.ShouldBe("12 Maine Road, Oldham, Madchester, Manchester, MN12 1NM");
             found.PlacedAt.Value.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            found.PaymentIntentId.ShouldBe(paymentIntent.Id);
 
             var @event = fixture.UseTestDbContext(db => db.Events.Single());
 
