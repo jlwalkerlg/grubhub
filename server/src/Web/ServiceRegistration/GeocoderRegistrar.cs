@@ -5,10 +5,10 @@ namespace Web.ServiceRegistration
 {
     public static class GeocoderRegistrar
     {
-        public static void AddGeocoder(this ContainerBuilder builder, Config config)
+        public static void AddGeocoder(this ContainerBuilder builder)
         {
             builder
-                .Register(ctx => new GoogleGeocoder(config.GoogleGeocodingApiKey))
+                .RegisterType<GoogleGeocoder>()
                 .As<IGeocoder>()
                 .SingleInstance();
         }

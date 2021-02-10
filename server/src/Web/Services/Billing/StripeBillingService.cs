@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Stripe;
+using Web.Domain;
 using Web.Domain.Billing;
 using Web.Domain.Restaurants;
 using Web.Features.Billing;
@@ -48,6 +50,32 @@ namespace Web.Services.Billing
                 });
 
             return link.Url;
+        }
+
+        public async Task<Result<string>> GeneratePaymentIntent(
+            Money amount, BillingAccount account)
+        {
+            var service = new PaymentIntentService();
+
+            var amountInPence = (int)(amount.Amount * 100);
+            var applicationFeeInPence = 50;
+
+            var intent = await service.CreateAsync(
+                new PaymentIntentCreateOptions()
+                {
+                    CaptureMethod = "manual",
+                    PaymentMethodTypes = new List<string>() { "card" },
+                    Amount = amountInPence,
+                    Currency = "gbp",
+                    ApplicationFeeAmount = applicationFeeInPence,
+                    TransferData = new PaymentIntentTransferDataOptions()
+                    {
+                        Destination = account.Id.Value.ToString(),
+                    },
+                }
+            );
+
+            return Result.Ok(intent.ClientSecret);
         }
     }
 }

@@ -5,6 +5,7 @@ import { ApiError } from "~/api/Api";
 import { OrderDto, OrderItemDto } from "~/api/orders/OrderDto";
 import useActiveOrder from "~/api/orders/useActiveOrder";
 import useRemoveFromOrder from "~/api/orders/useRemoveFromOrder";
+import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useAuth from "~/api/users/useAuth";
 import CartIcon from "~/components/Icons/CartIcon";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
@@ -89,10 +90,11 @@ const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
 };
 
 const MobileOrderModal: FC<{
+  restaurant: RestaurantDto;
   order: OrderDto;
   subtotal: number;
   close: () => any;
-}> = ({ order, subtotal, close }) => {
+}> = ({ restaurant, order, subtotal, close }) => {
   const closeButtonRef = useRef<HTMLButtonElement>();
   const paymentLinkRef = useRef<HTMLAnchorElement>();
   useFocusTrap(true, closeButtonRef, paymentLinkRef);
@@ -137,14 +139,21 @@ const MobileOrderModal: FC<{
       </div>
 
       <div className="p-4 -shadow-lg flex-0">
-        <Link href="/checkout">
-          <a
-            ref={paymentLinkRef}
-            className="btn btn-primary w-full block text-center"
-          >
-            Go to payment
-          </a>
-        </Link>
+        {subtotal >= restaurant.minimumDeliverySpend ? (
+          <Link href={`/restaurants/${order.restaurantId}/checkout`}>
+            <a
+              ref={paymentLinkRef}
+              className="btn btn-primary w-full block text-center"
+            >
+              Go to payment
+            </a>
+          </Link>
+        ) : (
+          <p className="text-gray-800 text-sm">
+            Spend £{(restaurant.minimumDeliverySpend - subtotal).toFixed(2)}{" "}
+            more for delivery.
+          </p>
+        )}
       </div>
     </div>
   );
@@ -154,9 +163,10 @@ const OrderAside: FC<{
   isLoading: boolean;
   isError: boolean;
   error: ApiError;
+  restaurant: RestaurantDto;
   order: OrderDto;
   subtotal: number;
-}> = ({ isLoading, isError, error, order, subtotal }) => {
+}> = ({ isLoading, isError, error, restaurant, order, subtotal }) => {
   const { isLoggedIn } = useAuth();
 
   const router = useRouter();
@@ -243,20 +253,25 @@ const OrderAside: FC<{
         <span>£{subtotal.toFixed(2)}</span>
       </p>
 
-      {order?.items.length > 0 && (
-        <Link href="/checkout">
+      {subtotal >= restaurant.minimumDeliverySpend ? (
+        <Link href={`/restaurants/${order.restaurantId}/checkout`}>
           <a className="btn btn-primary w-full block text-center mt-6">
             Go to payment
           </a>
         </Link>
+      ) : (
+        <p className="mt-6 text-gray-800 text-sm">
+          Spend £{(restaurant.minimumDeliverySpend - subtotal).toFixed(2)} more
+          for delivery.
+        </p>
       )}
     </div>
   );
 };
 
-const Order: FC<{ restaurantId: string }> = ({ restaurantId }) => {
+const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const { data: order, isLoading, isError, error } = useActiveOrder(
-    restaurantId
+    restaurant.id
   );
 
   const subtotal =
@@ -285,6 +300,7 @@ const Order: FC<{ restaurantId: string }> = ({ restaurantId }) => {
         isLoading={isLoading}
         isError={isError}
         error={error}
+        restaurant={restaurant}
         order={order}
         subtotal={subtotal}
       />
@@ -306,6 +322,7 @@ const Order: FC<{ restaurantId: string }> = ({ restaurantId }) => {
 
           {isModalOpen && (
             <MobileOrderModal
+              restaurant={restaurant}
               order={order}
               subtotal={subtotal}
               close={closeModal}

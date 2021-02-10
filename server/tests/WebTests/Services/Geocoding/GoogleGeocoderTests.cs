@@ -1,5 +1,6 @@
 using Shouldly;
 using System.Threading.Tasks;
+using Web;
 using Web.Services.Geocoding;
 using Xunit;
 
@@ -11,24 +12,67 @@ namespace WebTests.Services.Geocoding
 
         public GoogleGeocoderTests()
         {
-            geocoder = new GoogleGeocoder(TestConfig.GoogleGeocodingApiKey);
+            var config = new Config()
+            {
+                GoogleGeocodingApiKey = TestConfig.GoogleGeocodingApiKey,
+            };
+
+            geocoder = new GoogleGeocoder(config);
         }
 
         [Fact]
-        public async Task It_Converts_An_Address_Into_Coordinates()
+        public async Task Geocode_Finds_Address_Coordinates()
         {
             var result = await geocoder.Geocode("1 Maine Road, Manchester, UK");
 
             result.ShouldBeSuccessful();
             result.Value.FormattedAddress.ShouldNotBeNull();
-            result.Value.Coordinates.Latitude.ShouldNotBe(default(float));
-            result.Value.Coordinates.Longitude.ShouldNotBe(default(float));
+            result.Value.Coordinates.Latitude.ShouldNotBe(default);
+            result.Value.Coordinates.Longitude.ShouldNotBe(default);
         }
 
         [Fact]
-        public async Task It_Returns_An_Error_If_Geocoding_Fails()
+        public async Task Geocode_Fails_If_Address_Geocoding_Fails()
         {
             var result = await geocoder.Geocode("not_a_real_address");
+
+            result.ShouldBeAnError();
+        }
+
+        [Fact]
+        public async Task Geocode_Finds_Address_Details_Coordinates()
+        {
+            var result = await geocoder.Geocode(
+                new AddressDetails(
+                    "19 Bodmin Avenue",
+                    "Wrose",
+                    null,
+                    "Shipley",
+                    "BD18 1LT"
+                )
+            );
+
+            result.ShouldBeSuccessful();
+            result.Value.FormattedAddress.ShouldNotBeNull();
+            result.Value.Coordinates.Latitude.ShouldNotBe(default);
+            result.Value.Coordinates.Longitude.ShouldNotBe(default);
+        }
+
+        [Theory]
+        [InlineData("Not a valid address", null, null, "Shipley", "BD18 1LT")]
+        [InlineData("19 Bodmin Avenue", "Wrose", null, "Shipley", "MN12 1NM")]
+        public async Task Geocode_Fails_If_Address_Details_Geocoding_Fails(
+            string line1, string line2, string line3, string city, string postcode)
+        {
+            var result = await geocoder.Geocode(
+                new AddressDetails(
+                    line1,
+                    line2,
+                    line3,
+                    city,
+                    postcode
+                )
+            );
 
             result.ShouldBeAnError();
         }

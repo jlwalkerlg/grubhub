@@ -1,16 +1,9 @@
 using FluentValidation;
-using System;
-using System.Text.RegularExpressions;
 
 namespace Web.Services.Validation
 {
     public static class ValidatorExtensions
     {
-        private static readonly Regex phoneNumberRegex = new(
-            "^[0-9]{5} ?[0-9]{6}$",
-            RegexOptions.Compiled,
-            TimeSpan.FromMilliseconds(250));
-
         public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
         {
             return ruleBuilder
@@ -63,8 +56,15 @@ namespace Web.Services.Validation
         public static IRuleBuilderOptions<T, string> PhoneNumber<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
-                .Matches(phoneNumberRegex)
+                .Must(Web.Domain.PhoneNumber.IsValid)
                 .WithMessage("Must be a valid phone number.");
+        }
+
+        public static IRuleBuilderOptions<T, string> Postcode<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder
+                .Must(Web.Domain.Postcode.IsValid)
+                .WithMessage("Must be a valid postcode.");
         }
     }
 }

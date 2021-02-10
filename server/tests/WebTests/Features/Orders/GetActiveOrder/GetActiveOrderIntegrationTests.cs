@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
@@ -13,8 +14,11 @@ namespace WebTests.Features.Orders.GetActiveOrder
         {
         }
 
-        [Fact]
-        public async Task It_Returns_The_Authenticated_Users_Order()
+        [Theory]
+        [InlineData(Web.Domain.Orders.OrderStatus.Active)]
+        [InlineData(Web.Domain.Orders.OrderStatus.Placed)]
+        public async Task It_Returns_The_Authenticated_Users_Active_Order(
+            Web.Domain.Orders.OrderStatus status)
         {
             var restaurant = new Restaurant();
             var menu = restaurant.Menu;
@@ -36,12 +40,16 @@ namespace WebTests.Features.Orders.GetActiveOrder
             {
                 Restaurant = restaurant,
                 User = user,
+                Status = status,
+                Address = "2 Electric Avenue",
+                PlacedAt = DateTime.UtcNow,
                 Items = { orderItem },
             };
 
             fixture.Insert(restaurant, user, order);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get($"/order/{order.RestaurantId}");
+            var response = await fixture.GetAuthenticatedClient(user.Id).Get(
+                $"/restaurants/{order.RestaurantId}/order");
 
             response.StatusCode.ShouldBe(200);
 
@@ -50,7 +58,9 @@ namespace WebTests.Features.Orders.GetActiveOrder
             data.Id.ShouldBe(order.Id);
             data.RestaurantId.ShouldBe(order.RestaurantId);
             data.UserId.ShouldBe(order.UserId);
-            data.Status.ShouldBe("Active");
+            data.Status.ShouldBe(status.ToString());
+            data.Address.ShouldBe(order.Address);
+            data.PlacedAt.Value.ShouldBe(order.PlacedAt.Value, TimeSpan.FromSeconds(0.000001));
             data.Items.ShouldHaveSingleItem();
 
             var item = data.Items.Single();
@@ -72,7 +82,7 @@ namespace WebTests.Features.Orders.GetActiveOrder
             fixture.Insert(restaurant, user);
 
             var response = await fixture.GetAuthenticatedClient(user.Id).Get(
-                $"/order/{restaurant.Id}");
+                $"/restaurants/{restaurant.Id}/order");
 
             response.StatusCode.ShouldBe(200);
 

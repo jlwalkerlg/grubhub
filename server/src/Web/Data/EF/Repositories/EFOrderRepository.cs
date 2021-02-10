@@ -32,5 +32,14 @@ namespace Web.Data.EF.Repositories
                 .OrderBy(x => x.Id)
                 .SingleOrDefaultAsync();
         }
+
+        public async Task<Order> GetById(OrderId orderId)
+        {
+            return await context.Orders
+                .Where(x => x.Id == orderId)
+                .Include(x => x.Items)
+                .OrderBy(x => x.Id)
+                .SingleOrDefaultAsync();
+        }
     }
 }

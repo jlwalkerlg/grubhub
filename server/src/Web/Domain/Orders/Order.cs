@@ -35,9 +35,17 @@ namespace Web.Domain.Orders
         private Order() { } // EF Core
 
         public OrderId Id { get; }
+
         public UserId UserId { get; }
+
         public RestaurantId RestaurantId { get; }
+
         public OrderStatus Status { get; private set; } = OrderStatus.Active;
+
+        public Address Address { get; private set; }
+
+        public DateTime? PlacedAt { get; private set; }
+
         public IReadOnlyList<OrderItem> Items => items;
 
         public void Cancel()
@@ -45,14 +53,21 @@ namespace Web.Domain.Orders
             Status = OrderStatus.Cancelled;
         }
 
-        public Result Submit()
+        internal Result Place(Address address, DateTime time)
         {
+            if (Status != OrderStatus.Active && Status != OrderStatus.Placed)
+            {
+                return Error.BadRequest("Order not active.");
+            }
+
             if (!items.Any())
             {
                 return Error.BadRequest("Order is empty.");
             }
 
-            Status = OrderStatus.Submitted;
+            Status = OrderStatus.Placed;
+            Address = address ?? throw new ArgumentNullException(nameof(address));
+            PlacedAt = time;
 
             return Result.Ok();
         }
@@ -68,6 +83,8 @@ namespace Web.Domain.Orders
             }
 
             item.Quantity = quantity;
+
+            Status = OrderStatus.Active;
         }
 
         public Result RemoveItem(Guid menuItemId)
@@ -87,6 +104,8 @@ namespace Web.Domain.Orders
             {
                 items.Remove(orderItem);
             }
+
+            Status = OrderStatus.Active;
 
             return Result.Ok();
         }

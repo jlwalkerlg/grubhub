@@ -53,6 +53,12 @@ namespace WebTests.TestData
         [Column("status")]
         public OrderStatus Status { get; set; } = OrderStatus.Active;
 
+        [Column("address")]
+        public string Address { get; set; }
+
+        [Column("placed_at")]
+        public DateTime? PlacedAt { get; set; }
+
         public List<OrderItem> Items { get; set; } = new();
     }
 }

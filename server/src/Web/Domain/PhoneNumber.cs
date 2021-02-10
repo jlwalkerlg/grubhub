@@ -12,12 +12,7 @@ namespace Web.Domain
 
         public PhoneNumber(string number)
         {
-            if (string.IsNullOrWhiteSpace(number))
-            {
-                throw new ArgumentException("Phone number must not be empty.");
-            }
-
-            if (!regex.IsMatch(number))
+            if (!IsValid(number))
             {
                 throw new ArgumentException("Phone number invalid.");
             }
@@ -26,5 +21,10 @@ namespace Web.Domain
         }
 
         public string Number { get; }
+
+        public static bool IsValid(string number)
+        {
+            return regex.IsMatch(number);
+        }
     }
 }

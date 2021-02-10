@@ -21,8 +21,15 @@ namespace WebTests.Doubles
         public Task<Order> GetActiveOrder(UserId userId, RestaurantId restaurantId)
         {
             return Task.FromResult(
-                Orders.SingleOrDefault(x => x.UserId == userId &&
-                                            x.RestaurantId == restaurantId)
+                Orders.SingleOrDefault(x =>
+                    x.UserId == userId && x.RestaurantId == restaurantId)
+            );
+        }
+
+        public Task<Order> GetById(OrderId orderId)
+        {
+            return Task.FromResult(
+                Orders.SingleOrDefault(x => x.Id == orderId)
             );
         }
     }

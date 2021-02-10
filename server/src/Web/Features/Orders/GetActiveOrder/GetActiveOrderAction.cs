@@ -22,7 +22,7 @@ namespace Web.Features.Orders.GetActiveOrder
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [HttpGet("/order/{restaurantId:guid}")]
+        [HttpGet("/restaurants/{restaurantId:guid}/order")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
             if (!authenticator.IsAuthenticated)
@@ -33,23 +33,27 @@ namespace Web.Features.Orders.GetActiveOrder
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
                 var orderEntry = await connection
-                    .QuerySingleOrDefaultAsync<OrderEntry>(
+                    .QueryFirstOrDefaultAsync<OrderEntry>(
                     @"SELECT
                         o.id,
                         o.user_id,
                         o.restaurant_id,
-                        o.status
+                        o.status,
+                        o.address,
+                        o.placed_at
                     FROM
                         orders o
                     WHERE
                         o.user_id = @UserId
                         AND o.restaurant_id = @RestaurantId
-                        AND o.status = @Status",
+                        AND (o.status = @ActiveStatus OR o.status = @PlacedStatus)
+                    ORDER BY o.placed_at",
                     new
                     {
                         UserId = authenticator.UserId.Value,
                         RestaurantId = restaurantId,
-                        Status = OrderStatus.Active.ToString(),
+                        ActiveStatus = OrderStatus.Active.ToString(),
+                        PlacedStatus = OrderStatus.Placed.ToString(),
                     });
 
                 if (orderEntry == null)
@@ -90,6 +94,8 @@ namespace Web.Features.Orders.GetActiveOrder
             public Guid user_id { get; init; }
             public Guid restaurant_id { get; init; }
             public string status { get; init; }
+            public string address { get; init; }
+            public DateTime placed_at { get; init; }
 
             public OrderDto ToDto()
             {
@@ -99,6 +105,8 @@ namespace Web.Features.Orders.GetActiveOrder
                     UserId = user_id,
                     RestaurantId = restaurant_id,
                     Status = status,
+                    Address = address,
+                    PlacedAt = placed_at,
                 };
             }
         }

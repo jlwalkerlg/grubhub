@@ -9,5 +9,6 @@ namespace Web.Features.Orders
     {
         Task Add(Order order);
         Task<Order> GetActiveOrder(UserId userId, RestaurantId restaurantId);
+        Task<Order> GetById(OrderId orderId);
     }
 }

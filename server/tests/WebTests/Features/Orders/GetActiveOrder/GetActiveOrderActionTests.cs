@@ -16,7 +16,8 @@ namespace WebTests.Features.Orders.GetActiveOrder
         {
             var command = new AddToOrderCommand();
 
-            var response = await fixture.GetClient().Get($"/order/{Guid.NewGuid()}");
+            var response = await fixture.GetClient().Get(
+                $"/restaurants/{Guid.NewGuid()}/order");
 
             response.StatusCode.ShouldBe(401);
         }

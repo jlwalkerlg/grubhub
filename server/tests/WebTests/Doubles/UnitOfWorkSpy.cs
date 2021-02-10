@@ -24,7 +24,6 @@ namespace WebTests.Doubles
         public IEventRepository Events => EventRepositorySpy;
         public EventRepositorySpy EventRepositorySpy { get; } = new();
 
-
         public ICuisineRepository Cuisines => CuisineRepositorySpy;
         public CuisineRepositorySpy CuisineRepositorySpy { get; } = new();
 

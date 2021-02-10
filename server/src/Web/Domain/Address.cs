@@ -16,7 +16,6 @@ namespace Web.Domain
 
         public string Value { get; }
 
-        private Address() { }
-        // EF Core
+        private Address() { } // EF Core
     }
 }

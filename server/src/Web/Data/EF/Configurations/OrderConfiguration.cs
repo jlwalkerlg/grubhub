@@ -42,6 +42,13 @@ namespace Web.Data.EF.Configurations
                 .IsRequired()
                 .HasConversion(new EnumToStringConverter<OrderStatus>());
 
+            builder.OwnsOne(x => x.Address, x =>
+            {
+                x.Property(y => y.Value).HasColumnName("address");
+            });
+
+            builder.Property(x => x.PlacedAt).HasColumnName("placed_at");
+
             builder.HasMany(x => x.Items)
                 .WithOne()
                 .HasForeignKey("order_id")

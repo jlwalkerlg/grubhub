@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Web.Domain.Billing;
 using Web.Domain.Cuisines;
 using Web.Domain.Orders;
 using Web.Domain.Users;
@@ -187,21 +188,43 @@ namespace Web.Domain.Restaurants
             Status = RestaurantStatus.Approved;
         }
 
-        public Result SubmitOrder(Order order, DateTime time)
+        public Result PlaceOrder(
+            Money subtotal,
+            Order order,
+            DeliveryLocation deliveryLocation,
+            BillingAccount billingAccount,
+            DateTime time)
         {
             if (order.RestaurantId != Id)
             {
                 throw new InvalidOperationException("Order belongs to another restaurant.");
             }
 
+            if (subtotal < MinimumDeliverySpend)
+            {
+                return Error.BadRequest("Order subtotal not enough for delivery.");
+            }
+
+            if (!billingAccount.Enabled)
+            {
+                return Error.BadRequest("Restaurant not accepting orders.");
+            }
+
             var timeAtDelivery = time.AddMinutes(EstimatedDeliveryTimeInMinutes);
 
             if (OpeningTimes == null || !OpeningTimes.IsOpen(timeAtDelivery))
             {
-                return Error.BadRequest("Restaurant closed.");
+                return Error.BadRequest("Restaurant is closed at time of delivery.");
             }
 
-            return order.Submit();
+            var distance = deliveryLocation.Coordinates.CalculateDistance(Coordinates);
+
+            if (distance.Km > MaxDeliveryDistanceInKm)
+            {
+                return Error.BadRequest($"Delivery beyond {MaxDeliveryDistanceInKm} km not available.");
+            }
+
+            return order.Place(deliveryLocation.Address, time);
         }
 
         protected override bool IdentityEquals(Restaurant other)

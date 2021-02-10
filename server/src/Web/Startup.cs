@@ -73,7 +73,7 @@ namespace Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.AddGeocoder(Config);
+            builder.AddGeocoder();
             builder.AddMiddleware();
 
             builder.Register(ctx => new DbConnectionFactory(Config.DbConnectionString))

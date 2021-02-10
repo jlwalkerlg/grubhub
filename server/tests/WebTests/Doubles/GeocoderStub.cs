@@ -19,5 +19,14 @@ namespace WebTests.Doubles
                 Coordinates = new Coordinates(Latitude, Longitude),
             }));
         }
+
+        public Task<Result<GeocodingResult>> Geocode(AddressDetails address)
+        {
+            return Task.FromResult(Result.Ok(new GeocodingResult()
+            {
+                FormattedAddress = Address,
+                Coordinates = new Coordinates(Latitude, Longitude),
+            }));
+        }
     }
 }

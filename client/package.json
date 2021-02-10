@@ -9,6 +9,8 @@
     "export": "next export"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.2.2",
+    "@stripe/stripe-js": "^1.12.1",
     "autoprefixer": "^10.0.4",
     "axios": "^0.21.0",
     "jsonwebtoken": "^8.5.1",

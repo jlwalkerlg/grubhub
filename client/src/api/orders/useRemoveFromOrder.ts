@@ -1,6 +1,6 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { activeOrderQueryKey } from "./useActiveOrder";
+import { getActiveOrderQueryKey } from "./useActiveOrder";
 
 interface RemoveFromOrderCommand {
   restaurantId: string;
@@ -18,7 +18,7 @@ export default function useRemoveFromOrder() {
     },
     {
       onSuccess: (_, command) => {
-        cache.invalidateQueries(activeOrderQueryKey(command.restaurantId));
+        cache.invalidateQueries(getActiveOrderQueryKey(command.restaurantId));
       },
     }
   );

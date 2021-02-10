@@ -9,6 +9,8 @@ namespace Web.Features.Orders.GetActiveOrder
         public Guid UserId { get; init; }
         public Guid RestaurantId { get; init; }
         public string Status { get; init; }
+        public string Address { get; init; }
+        public DateTime? PlacedAt { get; init; }
         public List<OrderItemDto> Items { get; init; } = new();
     }
 

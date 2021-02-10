@@ -1,6 +1,6 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
-import { activeOrderQueryKey } from "./useActiveOrder";
+import { getActiveOrderQueryKey } from "./useActiveOrder";
 
 interface AddToOrderCommand {
   restaurantId: string;
@@ -17,7 +17,7 @@ export function useAddToOrder() {
     },
     {
       onSuccess: (_, command) => {
-        cache.invalidateQueries(activeOrderQueryKey(command.restaurantId));
+        cache.invalidateQueries(getActiveOrderQueryKey(command.restaurantId));
       },
     }
   );
