@@ -21,7 +21,7 @@ namespace WebTests.Doubles
         public Result ConfirmResult { get; set; }
         public Order ConfirmedOrder { get; private set; }
 
-        public Task<Result> ConfirmOrder(Order order)
+        public Task<Result> EnsurePaymentWasAccepted(Order order)
         {
             ConfirmedOrder = order;
             return Task.FromResult(ConfirmResult);
@@ -38,9 +38,10 @@ namespace WebTests.Doubles
             return Task.FromResult(OnboardingLink);
         }
 
-        public Task<Result<PaymentIntent>> GeneratePaymentIntent(Money amount, BillingAccount account)
+        public Task<Result<PaymentIntent>> GeneratePaymentIntent(
+            Order order, BillingAccount account)
         {
-            PaymentIntentAmount = amount;
+            PaymentIntentAmount = order.CalculateTotal();
             PaymentIntentAccount = account;
             return Task.FromResult(PaymentIntentResult);
         }

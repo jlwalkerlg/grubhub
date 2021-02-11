@@ -12,7 +12,7 @@ namespace WebTests.TestData
         public int Id { get; set; }
 
         [Column("order_id")]
-        public Guid OrderId { get; set; }
+        public string OrderId { get; set; }
 
         [Column("menu_item_id")]
         public Guid MenuItemId { get; set; }

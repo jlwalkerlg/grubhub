@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Web.Domain.Baskets;
 using Web.Domain.Billing;
 using Web.Domain.Cuisines;
+using Web.Domain.Menus;
 using Web.Domain.Orders;
 using Web.Domain.Users;
 
@@ -46,6 +48,8 @@ namespace Web.Domain.Restaurants
             Coordinates = coordinates;
             Status = RestaurantStatus.PendingApproval;
         }
+
+        private Restaurant() { } // EF
 
         public RestaurantId Id { get; }
 
@@ -188,21 +192,17 @@ namespace Web.Domain.Restaurants
             Status = RestaurantStatus.Approved;
         }
 
-        public Result PlaceOrder(
-            Money subtotal,
-            Order order,
+        public Result<Order> PlaceOrder(
+            OrderId orderId,
+            Basket basket,
+            Menu menu,
             DeliveryLocation deliveryLocation,
             BillingAccount billingAccount,
             DateTime time)
         {
-            if (order.RestaurantId != Id)
+            if (basket.RestaurantId != Id)
             {
-                throw new InvalidOperationException("Order belongs to another restaurant.");
-            }
-
-            if (subtotal < MinimumDeliverySpend)
-            {
-                return Error.BadRequest("Order subtotal not enough for delivery.");
+                throw new InvalidOperationException("Basket belongs to another restaurant.");
             }
 
             if (!billingAccount.Enabled)
@@ -224,7 +224,21 @@ namespace Web.Domain.Restaurants
                 return Error.BadRequest($"Delivery beyond {MaxDeliveryDistanceInKm} km not available.");
             }
 
-            return order.Place(deliveryLocation.Address, time);
+            var subtotal = basket.CalculateSubtotal(menu);
+
+            if (subtotal < MinimumDeliverySpend)
+            {
+                return Error.BadRequest("Order subtotal not enough for delivery.");
+            }
+
+            return Result.Ok(
+                new Order(
+                    orderId,
+                    basket,
+                    subtotal,
+                    DeliveryFee,
+                    deliveryLocation.Address,
+                    time));
         }
 
         protected override bool IdentityEquals(Restaurant other)
@@ -236,8 +250,5 @@ namespace Web.Domain.Restaurants
         {
             return Id.GetHashCode();
         }
-
-        // EF Core
-        private Restaurant() { }
     }
 }

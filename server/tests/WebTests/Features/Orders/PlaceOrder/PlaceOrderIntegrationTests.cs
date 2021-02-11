@@ -49,23 +49,20 @@ namespace WebTests.Features.Orders.PlaceOrder
             var menu = restaurant.Menu;
             var category = new MenuCategory();
             var menuItem = new MenuItem();
-
             category.Items.Add(menuItem);
             menu.Categories.Add(category);
 
             var user = new User();
 
-            var order = new Order();
-            order.User = user;
-            order.Restaurant = restaurant;
+            var basket = new Basket();
+            basket.User = user;
+            basket.Restaurant = restaurant;
+            var basketItem = new BasketItem();
+            basketItem.MenuItem = menuItem;
+            basketItem.Quantity = 2;
+            basket.Items.Add(basketItem);
 
-            var orderItem = new OrderItem();
-            orderItem.MenuItem = menuItem;
-            orderItem.Quantity = 2;
-
-            order.Items.Add(orderItem);
-
-            fixture.Insert(restaurant, user, order);
+            fixture.Insert(restaurant, user, basket);
 
             var client = new HttpTestClient(factory);
 
@@ -79,21 +76,31 @@ namespace WebTests.Features.Orders.PlaceOrder
             };
 
             var response = await client.Authenticate(user.Id).Post(
-                $"/orders/{order.Id}/place",
+                $"/restaurants/{restaurant.Id}/orders",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var data = await response.GetData<string>();
+            var data = await response.GetData<PlaceOrderResponse>();
 
-            data.ShouldBe(paymentIntent.ClientSecret);
+            data.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
-            var found = fixture.UseTestDbContext(db => db.Orders.Single());
+            var order = fixture.UseTestDbContext(db => db.Orders.Single());
 
-            found.Status.ShouldBe(Web.Domain.Orders.OrderStatus.Placed);
-            found.Address.ShouldBe("12 Maine Road, Oldham, Madchester, Manchester, MN12 1NM");
-            found.PlacedAt.Value.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
-            found.PaymentIntentId.ShouldBe(paymentIntent.Id);
+            order.Id.ShouldBe(data.OrderId);
+            order.UserId.ShouldBe(user.Id);
+            order.RestaurantId.ShouldBe(restaurant.Id);
+            order.Subtotal.ShouldBe(menuItem.Price * basketItem.Quantity);
+            order.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
+            order.Status.ShouldBe(Web.Domain.Orders.OrderStatus.Placed);
+            order.Address.ShouldBe("12 Maine Road, Oldham, Madchester, Manchester, MN12 1NM");
+            order.PlacedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            order.PaymentIntentId.ShouldBe(paymentIntent.Id);
+
+            var item = fixture.UseTestDbContext(db => db.OrderItems.Single());
+
+            item.MenuItemId.ShouldBe(basketItem.MenuItemId);
+            item.Quantity.ShouldBe(basketItem.Quantity);
 
             var @event = fixture.UseTestDbContext(db => db.Events.Single());
 

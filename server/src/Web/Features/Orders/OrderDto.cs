@@ -5,12 +5,15 @@ namespace Web.Features.Orders.GetActiveOrder
 {
     public record OrderDto
     {
-        public Guid Id { get; init; }
+        public string Id { get; init; }
         public Guid UserId { get; init; }
         public Guid RestaurantId { get; init; }
+        public decimal Subtotal { get; init; }
+        public decimal DeliveryFee { get; init; }
+        public decimal ServiceFee { get; init; }
         public string Status { get; init; }
         public string Address { get; init; }
-        public DateTime? PlacedAt { get; init; }
+        public DateTime PlacedAt { get; init; }
         public List<OrderItemDto> Items { get; init; } = new();
     }
 

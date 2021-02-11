@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Web.Domain.Baskets;
 using Web.Domain.Billing;
 using Web.Domain.Cuisines;
 using Web.Domain.Menus;
@@ -21,6 +22,7 @@ namespace Web.Data.EF
         public DbSet<RestaurantManager> RestaurantManagers { get; protected set; }
         public DbSet<User> Users { get; protected set; }
         public DbSet<Cuisine> Cuisines { get; protected set; }
+        public DbSet<Basket> Baskets { get; protected set; }
         public DbSet<Order> Orders { get; protected set; }
         public DbSet<BillingAccount> BillingAccounts { get; protected set; }
 

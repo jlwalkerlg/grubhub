@@ -1,10 +1,8 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation } from "react-query";
 import Api, { ApiError } from "../Api";
-import { getActiveOrderQueryKey } from "./useActiveOrder";
 
 export interface PlaceOrderCommand {
   restaurantId: string;
-  orderId: string;
   addressLine1: string;
   addressLine2: string;
   addressLine3: string;
@@ -12,19 +10,20 @@ export interface PlaceOrderCommand {
   postcode: string;
 }
 
-export function usePlaceOrder() {
-  const cache = useQueryCache();
+interface PlaceOrderResponse {
+  orderId: string;
+  paymentIntentClientSecret: string;
+}
 
-  return useMutation<string, ApiError, PlaceOrderCommand, null>(
+export function usePlaceOrder() {
+  return useMutation<PlaceOrderResponse, ApiError, PlaceOrderCommand, null>(
     async (command) => {
-      const { orderId, ...data } = command;
-      const response = await Api.post<string>(`/orders/${orderId}/place`, data);
+      const { restaurantId, ...data } = command;
+      const response = await Api.post<PlaceOrderResponse>(
+        `/restaurants/${restaurantId}/orders`,
+        data
+      );
       return response.data;
-    },
-    {
-      onSuccess: (_, { restaurantId }) => {
-        cache.invalidateQueries(getActiveOrderQueryKey(restaurantId));
-      },
     }
   );
 }

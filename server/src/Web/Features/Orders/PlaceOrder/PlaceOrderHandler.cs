@@ -1,6 +1,6 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Domain;
 using Web.Domain.Orders;
 using Web.Domain.Restaurants;
 using Web.Features.Billing;
@@ -10,7 +10,7 @@ using Web.Services.Geocoding;
 
 namespace Web.Features.Orders.PlaceOrder
 {
-    public class PlaceOrderHandler : IRequestHandler<PlaceOrderCommand, string>
+    public class PlaceOrderHandler : IRequestHandler<PlaceOrderCommand, PlaceOrderResponse>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
@@ -35,26 +35,21 @@ namespace Web.Features.Orders.PlaceOrder
             this.config = config;
         }
 
-        public async Task<Result<string>> Handle(
+        public async Task<Result<PlaceOrderResponse>> Handle(
             PlaceOrderCommand command, CancellationToken cancellationToken)
         {
-            var order = await unitOfWork
-                .Orders
-                .GetById(new OrderId(command.OrderId));
+            var basket = await unitOfWork
+                .Baskets
+                .Get(authenticator.UserId, new RestaurantId(command.RestaurantId));
 
-            if (order == null)
+            if (basket == null)
             {
-                return Error.NotFound("Order not found.");
-            }
-
-            if (order.UserId != authenticator.UserId)
-            {
-                return Error.Unauthorised();
+                return Error.NotFound("Basket not found.");
             }
 
             var billingAccount = await unitOfWork
                 .BillingAccounts
-                .GetByRestaurantId(order.RestaurantId);
+                .GetByRestaurantId(basket.RestaurantId);
 
             if (billingAccount == null)
             {
@@ -66,8 +61,7 @@ namespace Web.Features.Orders.PlaceOrder
                 command.AddressLine2,
                 command.AddressLine3,
                 command.City,
-                command.Postcode
-            );
+                command.Postcode);
 
             var geocodingResult = await geocoder.Geocode(address);
 
@@ -83,46 +77,49 @@ namespace Web.Features.Orders.PlaceOrder
 
             var restaurant = await unitOfWork
                 .Restaurants
-                .GetById(order.RestaurantId);
+                .GetById(basket.RestaurantId);
 
             var menu = await unitOfWork
                 .Menus
                 .GetByRestaurantId(restaurant.Id);
 
-            var subtotal = menu.CalculateSubtotal(order);
-
-            var result = restaurant.PlaceOrder(
-                subtotal,
-                order,
+            var orderResult = restaurant.PlaceOrder(
+                new OrderId(Guid.NewGuid().ToString()),
+                basket,
+                menu,
                 deliveryLocation,
                 billingAccount,
                 clock.UtcNow);
 
-            if (!result)
+            if (!orderResult)
             {
-                return result.Error;
+                return orderResult.Error;
             }
 
-            var amount = subtotal
-                + restaurant.DeliveryFee
-                + new Money(config.ServiceCharge);
+            var order = orderResult.Value;
 
             var paymentIntentResult = await billingService
-                .GeneratePaymentIntent(amount, billingAccount);
+                .GeneratePaymentIntent(order, billingAccount);
 
             if (!paymentIntentResult)
             {
                 return Error.Internal("Failed to generate payment intent.");
             }
 
-            order.UpdatePaymentIntentId(paymentIntentResult.Value.Id);
+            order.PaymentIntentId = paymentIntentResult.Value.Id;
 
             var opEvent = new OrderPlacedEvent(order.Id, clock.UtcNow);
 
+            await unitOfWork.Orders.Add(order);
             await unitOfWork.Events.Add(opEvent);
             await unitOfWork.Commit();
 
-            return Result.Ok(paymentIntentResult.Value.ClientSecret);
+            return Result.Ok(
+                new PlaceOrderResponse()
+                {
+                    OrderId = order.Id.Value,
+                    PaymentIntentClientSecret = paymentIntentResult.Value.ClientSecret,
+                });
         }
     }
 }

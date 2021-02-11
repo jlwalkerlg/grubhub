@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Web.Domain.Orders;
 using Web.Domain.Restaurants;
 
 namespace Web.Domain.Menus
@@ -89,33 +88,6 @@ namespace Web.Domain.Menus
             }
 
             return false;
-        }
-
-        public Money CalculateSubtotal(Order order)
-        {
-            if (order.RestaurantId != RestaurantId)
-            {
-                throw new InvalidOperationException("Wrong menu.");
-            }
-
-            var amount = Money.Zero;
-
-            var menuItems = Categories.SelectMany(
-                x => x.Items
-            ).ToDictionary(item => item.Id);
-
-            foreach (var orderItem in order.Items)
-            {
-                if (!menuItems.ContainsKey(orderItem.MenuItemId))
-                {
-                    throw new InvalidOperationException("Menu item not found.");
-                }
-
-                var menuItem = menuItems[orderItem.MenuItemId];
-                amount += menuItem.Price * orderItem.Quantity;
-            }
-
-            return amount;
         }
 
         protected override bool IdentityEquals(Menu other)

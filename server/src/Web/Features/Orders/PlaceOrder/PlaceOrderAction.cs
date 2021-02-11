@@ -14,14 +14,14 @@ namespace Web.Features.Orders.PlaceOrder
             this.sender = sender;
         }
 
-        [HttpPost("/orders/{orderId:guid}/place")]
+        [HttpPost("/restaurants/{restaurantId:guid}/orders")]
         public async Task<IActionResult> Execute(
-            [FromRoute] Guid orderId,
+            [FromRoute] Guid restaurantId,
             [FromBody] PlaceOrderRequest request)
         {
             var command = new PlaceOrderCommand()
             {
-                OrderId = orderId,
+                RestaurantId = restaurantId,
                 AddressLine1 = request.AddressLine1,
                 AddressLine2 = request.AddressLine2,
                 AddressLine3 = request.AddressLine3,

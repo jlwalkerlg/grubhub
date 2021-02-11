@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +13,8 @@ namespace Web.Features.Orders.ConfirmOrder
             this.sender = sender;
         }
 
-        [HttpPost("/orders/{id:guid}/confirm")]
-        public async Task<IActionResult> Execute([FromRoute] Guid id)
+        [HttpPut("/orders/{id}/confirm")]
+        public async Task<IActionResult> Execute([FromRoute] string id)
         {
             var command = new ConfirmOrderCommand()
             {

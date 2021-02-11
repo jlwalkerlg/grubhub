@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Shouldly;
 using Web.Features.Orders.PlaceOrder;
@@ -13,20 +12,6 @@ namespace WebTests.Features.Orders.PlaceOrder
         public PlaceOrderValidatorTests()
         {
             validator = new PlaceOrderValidator();
-        }
-
-        [Fact]
-        public async Task OrderId()
-        {
-            var command = new PlaceOrderCommand()
-            {
-                OrderId = Guid.Empty,
-            };
-
-            var result = await validator.Validate(command);
-
-            result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.OrderId));
         }
 
         [Theory]

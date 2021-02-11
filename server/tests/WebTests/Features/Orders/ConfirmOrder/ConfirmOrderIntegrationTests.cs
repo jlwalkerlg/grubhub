@@ -39,26 +39,14 @@ namespace WebTests.Features.Orders.ConfirmOrder
                     });
             });
 
-            var restaurant = new Restaurant();
-            var menu = restaurant.Menu;
-            var category = new MenuCategory();
-            var menuItem = new MenuItem();
-
-            category.Items.Add(menuItem);
-            menu.Categories.Add(category);
-
-            var user = new User();
-
             var order = new Order();
-            order.User = user;
-            order.Restaurant = restaurant;
             order.Status = Web.Domain.Orders.OrderStatus.Placed;
 
-            fixture.Insert(restaurant, user, order);
+            fixture.Insert(order);
 
             var client = new HttpTestClient(factory);
 
-            var response = await client.Authenticate(user.Id).Post(
+            var response = await client.Put(
                 $"/orders/{order.Id}/confirm");
 
             response.StatusCode.ShouldBe(200);
@@ -66,7 +54,6 @@ namespace WebTests.Features.Orders.ConfirmOrder
             var found = fixture.UseTestDbContext(db => db.Orders.Single());
 
             found.Status.ShouldBe(Web.Domain.Orders.OrderStatus.PaymentConfirmed);
-            found.ConfirmedAt.Value.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
 
             var @event = fixture.UseTestDbContext(db => db.Events.Single());
 

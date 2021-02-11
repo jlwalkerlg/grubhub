@@ -12,18 +12,9 @@ namespace WebTests.Features.Orders.ConfirmOrder
         }
 
         [Fact]
-        public async Task It_Requires_Authentication()
-        {
-            var response = await fixture.GetClient().Post(
-                $"/orders/{Guid.NewGuid()}/confirm");
-
-            response.StatusCode.ShouldBe(401);
-        }
-
-        [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await fixture.GetClient().Put(
                 $"/orders/{Guid.NewGuid()}/confirm");
 
             response.StatusCode.ShouldBe(400);

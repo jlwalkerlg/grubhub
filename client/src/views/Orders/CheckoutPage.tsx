@@ -10,10 +10,8 @@ import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryCache } from "react-query";
-import { OrderDto } from "~/api/orders/OrderDto";
-import useActiveOrder, {
-  getActiveOrderQueryKey,
-} from "~/api/orders/useActiveOrder";
+import { BasketDto } from "~/api/baskets/BasketDto";
+import useBasket, { getBasketQueryKey } from "~/api/baskets/useBasket";
 import { getOrderQueryKey } from "~/api/orders/useOrder";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useRestaurant from "~/api/restaurants/useRestaurant";
@@ -36,8 +34,8 @@ const stripePromise =
 
 const CARD_ELEMENT_OPTIONS: StripeCardElementOptions = {};
 
-const CheckoutForm: FC<{ order: OrderDto; restaurant: RestaurantDto }> = ({
-  order,
+const CheckoutForm: FC<{ basket: BasketDto; restaurant: RestaurantDto }> = ({
+  basket,
   restaurant,
 }) => {
   const stripe = useStripe();
@@ -67,15 +65,13 @@ const CheckoutForm: FC<{ order: OrderDto; restaurant: RestaurantDto }> = ({
     await checkout(
       {
         restaurantId: restaurant.id,
-        orderId: order.id,
         ...data,
       },
       {
-        onSuccess: async () => {
-          cache.removeQueries(getOrderQueryKey(order.id));
-          cache.prefetchQuery(getOrderQueryKey(order.id));
-          await router.push(`/orders/${order.id}`);
-          cache.removeQueries(getActiveOrderQueryKey(restaurant.id));
+        onSuccess: async (orderId) => {
+          cache.invalidateQueries(getBasketQueryKey(restaurant.id));
+          cache.prefetchQuery(getOrderQueryKey(orderId));
+          await router.push(`/orders/${orderId}`);
         },
         onError: (error) => {
           if (error.isValidationError) {
@@ -216,10 +212,10 @@ const Checkout: FC = () => {
   const isLoadingRouter = !restaurantId;
 
   const {
-    data: order,
+    data: basket,
     isLoading: isLoadingOrder,
     isError: isOrderError,
-  } = useActiveOrder(restaurantId, {
+  } = useBasket(restaurantId, {
     enabled: !isLoadingRouter,
   });
 
@@ -257,12 +253,12 @@ const Checkout: FC = () => {
     );
   }
 
-  if (!isLoading && !isError && !order?.items.length) {
+  if (!isLoading && !isError && !basket?.items.length) {
     router.push(`/restaurants/${restaurantId}`);
     return null;
   }
 
-  const subtotal = order.items.reduce(
+  const subtotal = basket.items.reduce(
     (total, item) => (total += item.quantity * item.menuItemPrice),
     0
   );
@@ -274,14 +270,14 @@ const Checkout: FC = () => {
   return (
     <div className="md:flex items-start">
       <Elements stripe={stripePromise}>
-        <CheckoutForm order={order} restaurant={restaurant} />
+        <CheckoutForm basket={basket} restaurant={restaurant} />
       </Elements>
 
       <div className="mt-4 md:mt-0 md:ml-2 flex-1 rounded bg-white border border-gray-300 p-2">
         <h2 className="font-bold text-xl text-gray-700">Your order</h2>
 
         <ul className="mt-2">
-          {order.items.map((item) => {
+          {basket.items.map((item) => {
             return (
               <li
                 key={item.menuItemId}

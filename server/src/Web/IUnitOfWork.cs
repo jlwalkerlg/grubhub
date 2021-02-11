@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Web.Features.Baskets;
 using Web.Features.Billing;
 using Web.Features.Cuisines;
 using Web.Features.Events;
@@ -16,6 +17,7 @@ namespace Web
         IUserRepository Users { get; }
         IEventRepository Events { get; }
         ICuisineRepository Cuisines { get; }
+        IBasketRepository Baskets { get; }
         IOrderRepository Orders { get; }
         IBillingAccountRepository BillingAccounts { get; }
 

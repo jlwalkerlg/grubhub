@@ -2,13 +2,16 @@ export interface OrderDto {
   id: string;
   userId: string;
   restaurantId: string;
+  subtotal: string;
+  delivery_fee: string;
+  service_fee: string;
   status: OrderStatus;
   address: string;
   placedAt: string;
   items: OrderItemDto[];
 }
 
-type OrderStatus = "Active" | "Placed" | "PaymentConfirmed" | "Cancelled";
+type OrderStatus = "Placed" | "PaymentConfirmed";
 
 export interface OrderItemDto {
   menuItemId: string;

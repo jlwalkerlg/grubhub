@@ -1,10 +1,7 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Menus;
 using Web.Domain.Orders;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
 
 namespace Web.Data.EF.Configurations
 {

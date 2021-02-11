@@ -12,23 +12,26 @@ export default function useCheckout() {
 
   const [placeOrder] = usePlaceOrder();
 
-  return useMutation<void, ApiError, PlaceOrderCommand, null>(
+  return useMutation<string, ApiError, PlaceOrderCommand, null>(
     async (command) => {
       if (!stripe || !elements) return;
 
-      const secret = await placeOrder(command, {
+      const { paymentIntentClientSecret, orderId } = await placeOrder(command, {
         throwOnError: true,
       });
 
       try {
-        const result = await stripe.confirmCardPayment(secret, {
-          payment_method: {
-            card: elements.getElement(CardElement),
-            billing_details: {
-              name: user.name,
+        const result = await stripe.confirmCardPayment(
+          paymentIntentClientSecret,
+          {
+            payment_method: {
+              card: elements.getElement(CardElement),
+              billing_details: {
+                name: user.name,
+              },
             },
-          },
-        });
+          }
+        );
 
         if (result.error) {
           const error: ApiError = {
@@ -49,7 +52,9 @@ export default function useCheckout() {
         throw error;
       }
 
-      await Api.post(`/orders/${command.orderId}/confirm`);
+      await Api.put(`/orders/${orderId}/confirm`);
+
+      return orderId;
     }
   );
 }

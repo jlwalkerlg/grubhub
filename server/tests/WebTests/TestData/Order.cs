@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Web.Domain;
 using Web.Domain.Orders;
 
 namespace WebTests.TestData
@@ -20,7 +21,7 @@ namespace WebTests.TestData
 
         [Key]
         [Column("id")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Column("user_id")]
         public Guid UserId { get; private set; }
@@ -50,20 +51,26 @@ namespace WebTests.TestData
             }
         }
 
+        [Column("subtotal")]
+        public decimal Subtotal { get; set; } = 12.12m;
+
+        [Column("delivery_fee")]
+        public decimal DeliveryFee { get; set; } = 1.51m;
+
+        [Column("service_fee")]
+        public decimal ServiceFee { get; set; } = 0.56m;
+
         [Column("status")]
-        public OrderStatus Status { get; set; } = OrderStatus.Active;
+        public OrderStatus Status { get; set; } = OrderStatus.Placed;
 
         [Column("address")]
-        public string Address { get; set; }
+        public string Address { get; set; } = Guid.NewGuid().ToString();
 
         [Column("placed_at")]
-        public DateTime? PlacedAt { get; set; }
+        public DateTime PlacedAt { get; set; } = DateTime.UtcNow;
 
         [Column("payment_intent_id")]
-        public string PaymentIntentId { get; set; }
-
-        [Column("confirmed_at")]
-        public DateTime? ConfirmedAt { get; set; }
+        public string PaymentIntentId { get; set; } = Guid.NewGuid().ToString();
 
         public List<OrderItem> Items { get; set; } = new();
     }

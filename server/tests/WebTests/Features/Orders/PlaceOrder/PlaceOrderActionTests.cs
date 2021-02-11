@@ -18,7 +18,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             var request = new PlaceOrderRequest();
 
             var response = await fixture.GetClient().Post(
-                $"/orders/{Guid.NewGuid()}/place",
+                $"/restaurants/{Guid.NewGuid()}/orders",
                 request);
 
             response.StatusCode.ShouldBe(401);
@@ -30,7 +30,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             var request = new PlaceOrderRequest();
 
             var response = await fixture.GetAuthenticatedClient().Post(
-                $"/orders/{Guid.NewGuid()}/place",
+                $"/restaurants/{Guid.NewGuid()}/orders",
                 request);
 
             response.StatusCode.ShouldBe(422);
@@ -53,7 +53,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             };
 
             var response = await fixture.GetAuthenticatedClient().Post(
-                $"/orders/{Guid.NewGuid()}/place",
+                $"/restaurants/{Guid.NewGuid()}/orders",
                 request);
 
             response.StatusCode.ShouldBe(400);

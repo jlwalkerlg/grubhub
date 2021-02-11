@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Web.Data.EF.Repositories;
+using Web.Features.Baskets;
 using Web.Features.Billing;
 using Web.Features.Cuisines;
 using Web.Features.Events;
@@ -24,6 +25,7 @@ namespace Web.Data.EF
         public IUserRepository Users => new EFUserRepository(context);
         public IEventRepository Events => new EFEventRepository(context);
         public ICuisineRepository Cuisines => new EFCuisineRepository(context);
+        public IBasketRepository Baskets => new EFBasketRepository(context);
         public IOrderRepository Orders => new EFOrderRepository(context);
         public IBillingAccountRepository BillingAccounts => new EFBillingAccountRepository(context);
 

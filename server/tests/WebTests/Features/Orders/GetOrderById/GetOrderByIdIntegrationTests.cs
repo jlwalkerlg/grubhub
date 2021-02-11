@@ -52,17 +52,14 @@ namespace WebTests.Features.Orders.GetOrderById
             var menu = restaurant.Menu;
             var category = new MenuCategory();
             var menuItem = new MenuItem();
-
             category.Items.Add(menuItem);
             menu.Categories.Add(category);
 
             var order = new Order();
             order.Restaurant = restaurant;
-
             var orderItem = new OrderItem();
             orderItem.MenuItemId = menuItem.Id;
             orderItem.Quantity = 1;
-
             order.Items.Add(orderItem);
 
             fixture.Insert(restaurant, order);
@@ -77,6 +74,9 @@ namespace WebTests.Features.Orders.GetOrderById
             data.Id.ShouldBe(order.Id);
             data.UserId.ShouldBe(order.UserId);
             data.RestaurantId.ShouldBe(order.RestaurantId);
+            data.Subtotal.ShouldBe(order.Subtotal);
+            data.DeliveryFee.ShouldBe(order.DeliveryFee);
+            data.ServiceFee.ShouldBe(order.ServiceFee);
             data.Status.ShouldBe(order.Status);
             data.Address.ShouldBe(order.Address);
             data.PlacedAt.ShouldBe(order.PlacedAt);

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Stripe;
-using Web.Domain;
 using Web.Domain.Billing;
 using Web.Domain.Restaurants;
 using Web.Features.Billing;
@@ -54,11 +54,11 @@ namespace Web.Services.Billing
         }
 
         public async Task<Result<Web.Features.Billing.PaymentIntent>> GeneratePaymentIntent(
-            Money amount, BillingAccount account)
+            Web.Domain.Orders.Order order, BillingAccount account)
         {
             var service = new PaymentIntentService();
 
-            var amountInPence = (int)(amount.Amount * 100);
+            var amountInPence = (int)(order.CalculateTotal().Amount * 100);
             var applicationFeeInPence = 50;
 
             var intent = await service.CreateAsync(
@@ -73,6 +73,10 @@ namespace Web.Services.Billing
                     {
                         Destination = account.Id.Value.ToString(),
                     },
+                },
+                new RequestOptions()
+                {
+                    IdempotencyKey = order.Id.Value.ToString(),
                 }
             );
 
@@ -84,15 +88,22 @@ namespace Web.Services.Billing
                 });
         }
 
-        public async Task<Result> ConfirmOrder(Domain.Orders.Order order)
+        public async Task<Result> EnsurePaymentWasAccepted(Domain.Orders.Order order)
         {
             var service = new PaymentIntentService();
+
+            var whitelist = new[]
+            {
+                "requires_capture",
+                "canceled",
+                "succeeded",
+            };
 
             try
             {
                 var intent = await service.GetAsync(order.PaymentIntentId);
 
-                if (intent.Status == "requires_capture")
+                if (whitelist.Contains(intent.Status))
                 {
                     return Result.Ok();
                 }

@@ -20,6 +20,8 @@ namespace WebTests.TestData
         public DbSet<Restaurant> Restaurants { get; private set; }
         public DbSet<RestaurantCuisine> RestaurantCuisines { get; private set; }
         public DbSet<User> Users { get; private set; }
+        public DbSet<Basket> Baskets { get; private set; }
+        public DbSet<BasketItem> BasketItems { get; private set; }
         public DbSet<Order> Orders { get; private set; }
         public DbSet<OrderItem> OrderItems { get; private set; }
         public DbSet<BillingAccount> BillingAccounts { get; private set; }

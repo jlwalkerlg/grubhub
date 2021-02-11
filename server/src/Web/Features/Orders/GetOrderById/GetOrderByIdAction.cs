@@ -22,8 +22,8 @@ namespace Web.Features.Orders.GetOrderById
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [HttpGet("/orders/{id:guid}")]
-        public async Task<IActionResult> Execute([FromRoute] Guid id)
+        [HttpGet("/orders/{id}")]
+        public async Task<IActionResult> Execute([FromRoute] string id)
         {
             if (!authenticator.IsAuthenticated)
             {
@@ -34,22 +34,25 @@ namespace Web.Features.Orders.GetOrderById
             {
                 var orderEntry = await connection
                     .QueryFirstOrDefaultAsync<OrderEntry>(
-                    @"SELECT
-                        o.id,
-                        o.user_id,
-                        o.restaurant_id,
-                        o.status,
-                        o.address,
-                        o.placed_at
-                    FROM
-                        orders o
-                    WHERE
-                        o.id = @Id
-                    ORDER BY o.id",
-                    new
-                    {
-                        Id = id,
-                    });
+                        @"SELECT
+                            o.id,
+                            o.user_id,
+                            o.restaurant_id,
+                            subtotal,
+                            delivery_fee,
+                            service_fee,
+                            o.status,
+                            o.address,
+                            o.placed_at
+                        FROM
+                            orders o
+                        WHERE
+                            o.id = @Id
+                        ORDER BY o.id",
+                        new
+                        {
+                            Id = id,
+                        });
 
                 if (orderEntry == null)
                 {
@@ -90,12 +93,15 @@ namespace Web.Features.Orders.GetOrderById
 
         private record OrderEntry
         {
-            public Guid id { get; init; }
+            public string id { get; init; }
             public Guid user_id { get; init; }
             public Guid restaurant_id { get; init; }
+            public decimal subtotal { get; init; }
+            public decimal delivery_fee { get; init; }
+            public decimal service_fee { get; init; }
             public string status { get; init; }
             public string address { get; init; }
-            public DateTime? placed_at { get; init; }
+            public DateTime placed_at { get; init; }
 
             public OrderDto ToDto()
             {
@@ -104,6 +110,9 @@ namespace Web.Features.Orders.GetOrderById
                     Id = id,
                     UserId = user_id,
                     RestaurantId = restaurant_id,
+                    Subtotal = subtotal,
+                    DeliveryFee = delivery_fee,
+                    ServiceFee = service_fee,
                     Status = status,
                     Address = address,
                     PlacedAt = placed_at,
@@ -119,7 +128,6 @@ namespace Web.Features.Orders.GetOrderById
             public string menu_item_description { get; init; }
             public decimal menu_item_price { get; init; }
             public int quantity { get; init; }
-            public Guid order_id { get; init; }
 
             public OrderItemDto ToDto()
             {

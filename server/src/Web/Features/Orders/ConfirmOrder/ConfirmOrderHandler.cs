@@ -3,24 +3,21 @@ using System.Threading.Tasks;
 using Web.Domain.Orders;
 using Web.Features.Billing;
 using Web.Services;
-using Web.Services.Authentication;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
     public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderCommand>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IAuthenticator authenticator;
         private readonly IClock clock;
         private readonly IBillingService billingService;
 
-        public ConfirmOrderHandler(IUnitOfWork unitOfWork,
-            IAuthenticator authenticator,
+        public ConfirmOrderHandler(
+            IUnitOfWork unitOfWork,
             IClock clock,
             IBillingService billingService)
         {
             this.unitOfWork = unitOfWork;
-            this.authenticator = authenticator;
             this.clock = clock;
             this.billingService = billingService;
         }
@@ -36,26 +33,16 @@ namespace Web.Features.Orders.ConfirmOrder
                 return Error.NotFound("Order not found.");
             }
 
-            if (authenticator.UserId != order.UserId)
-            {
-                return Error.Unauthorised();
-            }
-
             var now = clock.UtcNow;
 
-            var result = order.Confirm(now);
-
-            if (!result)
-            {
-                return result.Error;
-            }
-
-            var billingServiceResult = await billingService.ConfirmOrder(order);
+            var billingServiceResult = await billingService.EnsurePaymentWasAccepted(order);
 
             if (!billingServiceResult)
             {
                 return billingServiceResult.Error;
             }
+
+            order.Confirm();
 
             var ocEvent = new OrderConfirmedEvent(order.Id, now);
 

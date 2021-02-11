@@ -1,29 +1,181 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ApiError } from "~/api/Api";
-import { OrderDto, OrderItemDto } from "~/api/orders/OrderDto";
-import useActiveOrder from "~/api/orders/useActiveOrder";
-import useRemoveFromOrder from "~/api/orders/useRemoveFromOrder";
+import { BasketDto, BasketItemDto } from "~/api/baskets/BasketDto";
+import { useAddToBasket } from "~/api/baskets/useAddToBasket";
+import useBasket from "~/api/baskets/useBasket";
+import useRemoveFromBasket from "~/api/baskets/useRemoveFromBasket";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useAuth from "~/api/users/useAuth";
+import { ErrorAlert } from "~/components/Alert/Alert";
 import CartIcon from "~/components/Icons/CartIcon";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
+import CloseIcon from "~/components/Icons/CloseIcon";
+import PlusIcon from "~/components/Icons/PlusIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import TrashIcon from "~/components/Icons/TrashIcon";
 import { useToasts } from "~/components/Toaster/Toaster";
 import useEscapeKeyListener from "~/services/useEscapeKeyListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
-import { OrderItemModal } from "./Menu";
 
-const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
+export const OrderItemModal: FC<{
+  restaurantId: string;
+  menuItemId: string;
+  menuItemName: string;
+  menuItemDescription: string;
+  menuItemPrice: number;
+  closeModal: () => any;
+}> = ({
+  restaurantId,
+  menuItemId,
+  menuItemName,
+  menuItemDescription,
+  menuItemPrice,
+  closeModal,
+}) => {
+  const { data: order } = useBasket(restaurantId);
+
+  const closeButtonRef = useRef<HTMLButtonElement>();
+  const addToOrderButtonRef = useRef<HTMLButtonElement>();
+  useFocusTrap(true, closeButtonRef, addToOrderButtonRef);
+
+  usePreventBodyScroll(true);
+
+  const alreadyInOrder = useMemo(
+    () => order?.items.some((x) => x.menuItemId === menuItemId) || false,
+    []
+  );
+
+  const [quantity, setQuantity] = useState(() => {
+    return order?.items.find((x) => x.menuItemId === menuItemId)?.quantity || 1;
+  });
+
+  const incrementQuantity = () => setQuantity(quantity + 1);
+  const decrementQuantity = () => setQuantity(quantity - 1 || quantity);
+
+  const [addToOrder, { isLoading, isError, error }] = useAddToBasket();
+
+  const submit = () => {
+    if (isLoading) return;
+
+    addToOrder(
+      {
+        restaurantId,
+        menuItemId,
+        quantity,
+      },
+      {
+        onSuccess: closeModal,
+      }
+    );
+  };
+
+  const close = () => {
+    if (!isLoading) closeModal();
+  };
+
+  useEscapeKeyListener(close, [close]);
+
+  const router = useRouter();
+
+  const { isLoggedIn } = useAuth();
+
+  return (
+    <div className="fixed w-screen h-screen md:py-8 top-0 left-0 flex items-center justify-center z-50">
+      <div
+        className="fixed w-screen h-screen top-0 left-0"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        onClick={close}
+      ></div>
+
+      <div className="relative max-h-full h-full sm:h-auto w-full sm:w-3/4 sm:max-w-md sm:rounded overflow-hidden flex flex-col bg-gray-50">
+        <div className="bg-white shadow-lg h-12 flex items-center justify-between p-4">
+          <div className="h-6 w-6" aria-hidden></div>
+
+          <p className="font-semibold text-gray-800">{menuItemName}</p>
+
+          <button ref={closeButtonRef} onClick={close}>
+            <CloseIcon className="h-6 w-6 text-primary" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center text-center px-4 py-12">
+          {isError && (
+            <div className="mb-4">
+              <ErrorAlert message={error.message} />
+            </div>
+          )}
+
+          <p className="font-semibold">£{menuItemPrice.toFixed(2)}</p>
+
+          {menuItemDescription && (
+            <p className="mt-4 text-sm">{menuItemDescription}</p>
+          )}
+
+          <div className="flex items-center mt-4">
+            <button
+              onClick={decrementQuantity}
+              disabled={quantity === 1}
+              className={
+                quantity === 1
+                  ? "text-primary-disabled cursor-default"
+                  : "text-primary"
+              }
+            >
+              <PlusIcon className="w-10 h-10" />
+            </button>
+
+            <div className="mx-4 text-3xl">{quantity}</div>
+
+            <button onClick={incrementQuantity} className="text-primary">
+              <PlusIcon className="w-10 h-10" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-4 bg-white -shadow-lg">
+          {isLoggedIn ? (
+            <button
+              ref={addToOrderButtonRef}
+              onClick={submit}
+              className={`btn btn-primary w-full ${
+                isLoading ? "disabled" : ""
+              }`}
+            >
+              {alreadyInOrder ? "Update" : "Add to order"} £
+              {(menuItemPrice * quantity).toFixed(2)}
+            </button>
+          ) : (
+            <p>
+              Please{" "}
+              <Link href={`/login?redirect_to=${router.asPath}`}>
+                <a className="text-primary">login</a>
+              </Link>{" "}
+              to start an order.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const OrderItem: FC<{ restaurantId: string; item: BasketItemDto }> = ({
   restaurantId,
   item,
 }) => {
   const { addToast } = useToasts();
 
-  const [remove, { isLoading }] = useRemoveFromOrder();
+  const [remove, { isLoading }] = useRemoveFromBasket();
 
   const onRemove = () => {
     if (isLoading) return;
@@ -89,12 +241,12 @@ const OrderItem: FC<{ restaurantId: string; item: OrderItemDto }> = ({
   );
 };
 
-const MobileOrderModal: FC<{
+const MobileBasketModal: FC<{
   restaurant: RestaurantDto;
-  order: OrderDto;
+  basket: BasketDto;
   subtotal: number;
   close: () => any;
-}> = ({ restaurant, order, subtotal, close }) => {
+}> = ({ restaurant, basket, subtotal, close }) => {
   const closeButtonRef = useRef<HTMLButtonElement>();
   const paymentLinkRef = useRef<HTMLAnchorElement>();
   useFocusTrap(true, closeButtonRef, paymentLinkRef);
@@ -119,11 +271,11 @@ const MobileOrderModal: FC<{
 
       <div className="flex-1 overflow-y-auto px-4 py-8">
         <ul>
-          {order.items.map((item) => {
+          {basket.items.map((item) => {
             return (
               <OrderItem
                 key={item.menuItemId}
-                restaurantId={order.restaurantId}
+                restaurantId={basket.restaurantId}
                 item={item}
               />
             );
@@ -140,7 +292,7 @@ const MobileOrderModal: FC<{
 
       <div className="p-4 -shadow-lg flex-0">
         {subtotal >= restaurant.minimumDeliverySpend ? (
-          <Link href={`/restaurants/${order.restaurantId}/checkout`}>
+          <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
             <a
               ref={paymentLinkRef}
               className="btn btn-primary w-full block text-center"
@@ -164,9 +316,9 @@ const OrderAside: FC<{
   isError: boolean;
   error: ApiError;
   restaurant: RestaurantDto;
-  order: OrderDto;
+  basket: BasketDto;
   subtotal: number;
-}> = ({ isLoading, isError, error, restaurant, order, subtotal }) => {
+}> = ({ isLoading, isError, error, restaurant, basket, subtotal }) => {
   const { isLoggedIn } = useAuth();
 
   const router = useRouter();
@@ -185,7 +337,7 @@ const OrderAside: FC<{
           <Link href={`/login?redirect_to=${router.asPath}`}>
             <a className="text-primary">login</a>
           </Link>{" "}
-          to begin an order.
+          to order.
         </p>
       </div>
     );
@@ -200,7 +352,7 @@ const OrderAside: FC<{
 
         <hr className="my-3 border-gray-300" />
 
-        <p>Loading order...</p>
+        <p>Loading your order...</p>
       </div>
     );
   }
@@ -214,7 +366,7 @@ const OrderAside: FC<{
 
         <hr className="my-3 border-gray-300" />
 
-        <p>Problem loading order: {error.message}</p>
+        <p>Problem loading your order: {error.message}</p>
       </div>
     );
   }
@@ -227,13 +379,13 @@ const OrderAside: FC<{
 
       <hr className="my-6 border-gray-300" />
 
-      {order?.items.length > 0 ? (
+      {basket?.items.length > 0 ? (
         <ul>
-          {order.items.map((item) => {
+          {basket.items.map((item) => {
             return (
               <OrderItem
                 key={item.menuItemId}
-                restaurantId={order.restaurantId}
+                restaurantId={basket.restaurantId}
                 item={item}
               />
             );
@@ -254,7 +406,7 @@ const OrderAside: FC<{
       </p>
 
       {subtotal >= restaurant.minimumDeliverySpend ? (
-        <Link href={`/restaurants/${order.restaurantId}/checkout`}>
+        <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
           <a className="btn btn-primary w-full block text-center mt-6">
             Go to payment
           </a>
@@ -270,18 +422,16 @@ const OrderAside: FC<{
 };
 
 const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
-  const { data: order, isLoading, isError, error } = useActiveOrder(
-    restaurant.id
-  );
+  const { data: basket, isLoading, isError, error } = useBasket(restaurant.id);
 
   const subtotal =
-    order?.items.reduce(
+    basket?.items.reduce(
       (carry, item) => carry + item.menuItemPrice * item.quantity,
       0
     ) || 0;
 
   const totalItems =
-    order?.items.reduce((carry, item) => carry + item.quantity, 0) || 0;
+    basket?.items.reduce((carry, item) => carry + item.quantity, 0) || 0;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -301,11 +451,11 @@ const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
         isError={isError}
         error={error}
         restaurant={restaurant}
-        order={order}
+        basket={basket}
         subtotal={subtotal}
       />
 
-      {order?.items.length > 0 && (
+      {basket?.items.length > 0 && (
         <>
           <button
             onClick={openModal}
@@ -321,9 +471,9 @@ const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           </button>
 
           {isModalOpen && (
-            <MobileOrderModal
+            <MobileBasketModal
               restaurant={restaurant}
-              order={order}
+              basket={basket}
               subtotal={subtotal}
               close={closeModal}
             />
