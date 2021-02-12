@@ -46,7 +46,6 @@ namespace WebTests.Services.Geocoding
                 new AddressDetails(
                     "19 Bodmin Avenue",
                     "Wrose",
-                    null,
                     "Shipley",
                     "BD18 1LT"
                 )
@@ -59,16 +58,15 @@ namespace WebTests.Services.Geocoding
         }
 
         [Theory]
-        [InlineData("Not a valid address", null, null, "Shipley", "BD18 1LT")]
-        [InlineData("19 Bodmin Avenue", "Wrose", null, "Shipley", "MN12 1NM")]
+        [InlineData("Not a valid address", null, "Shipley", "BD18 1LT")]
+        [InlineData("19 Bodmin Avenue", "Wrose", "Shipley", "MN12 1NM")]
         public async Task Geocode_Fails_If_Address_Details_Geocoding_Fails(
-            string line1, string line2, string line3, string city, string postcode)
+            string line1, string line2, string city, string postcode)
         {
             var result = await geocoder.Geocode(
                 new AddressDetails(
                     line1,
                     line2,
-                    line3,
                     city,
                     postcode
                 )

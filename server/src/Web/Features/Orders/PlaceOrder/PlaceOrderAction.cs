@@ -22,9 +22,9 @@ namespace Web.Features.Orders.PlaceOrder
             var command = new PlaceOrderCommand()
             {
                 RestaurantId = restaurantId,
+                Mobile = request.Mobile,
                 AddressLine1 = request.AddressLine1,
                 AddressLine2 = request.AddressLine2,
-                AddressLine3 = request.AddressLine3,
                 City = request.City,
                 Postcode = request.Postcode,
             };

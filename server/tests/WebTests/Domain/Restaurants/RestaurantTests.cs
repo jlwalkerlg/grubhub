@@ -46,6 +46,8 @@ namespace WebTests.Domain.Restaurants
 
             basket.AddItem(menuItem.Id, 1);
 
+            var mobileNumber = new MobileNumber("07123456789");
+
             var deliveryLocation = new DeliveryLocation(
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(54, -2));
@@ -58,6 +60,7 @@ namespace WebTests.Domain.Restaurants
                 orderId,
                 basket,
                 menu,
+                mobileNumber,
                 deliveryLocation,
                 billingAccount,
                 now);
@@ -72,6 +75,7 @@ namespace WebTests.Domain.Restaurants
             order.Subtotal.ShouldBe(basket.CalculateSubtotal(menu));
             order.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
             order.Status.ShouldBe(OrderStatus.Placed);
+            order.MobileNumber.ShouldBe(mobileNumber);
             order.Address.ShouldBe(deliveryLocation.Address);
             order.PlacedAt.ShouldBe(now);
 
@@ -112,6 +116,8 @@ namespace WebTests.Domain.Restaurants
 
             basket.AddItem(menuItem.Id, 1);
 
+            var mobileNumber = new MobileNumber("07123456789");
+
             var deliveryLocation = new DeliveryLocation(
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(53, -3));
@@ -124,6 +130,7 @@ namespace WebTests.Domain.Restaurants
                 orderId,
                 basket,
                 menu,
+                mobileNumber,
                 deliveryLocation,
                 billingAccount,
                 now);
@@ -164,6 +171,8 @@ namespace WebTests.Domain.Restaurants
 
             basket.AddItem(menuItem.Id, 1);
 
+            var mobileNumber = new MobileNumber("07123456789");
+
             var deliveryLocation = new DeliveryLocation(
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(54, -2));
@@ -176,6 +185,7 @@ namespace WebTests.Domain.Restaurants
                 orderId,
                 basket,
                 menu,
+                mobileNumber,
                 deliveryLocation,
                 billingAccount,
                 now);
@@ -214,6 +224,8 @@ namespace WebTests.Domain.Restaurants
                 new UserId(Guid.NewGuid()),
                 restaurant.Id);
 
+            var mobileNumber = new MobileNumber("07123456789");
+
             var deliveryLocation = new DeliveryLocation(
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(54, -2));
@@ -226,6 +238,7 @@ namespace WebTests.Domain.Restaurants
                 orderId,
                 basket,
                 menu,
+                mobileNumber,
                 deliveryLocation,
                 billingAccount,
                 now);
@@ -266,6 +279,8 @@ namespace WebTests.Domain.Restaurants
 
             basket.AddItem(menuItem.Id, 1);
 
+            var mobileNumber = new MobileNumber("07123456789");
+
             var deliveryLocation = new DeliveryLocation(
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(54, -2));
@@ -278,6 +293,7 @@ namespace WebTests.Domain.Restaurants
                 orderId,
                 basket,
                 menu,
+                mobileNumber,
                 deliveryLocation,
                 billingAccount,
                 now);
@@ -318,6 +334,8 @@ namespace WebTests.Domain.Restaurants
 
             basket.AddItem(menuItem.Id, 1);
 
+            var mobileNumber = new MobileNumber("07123456789");
+
             var deliveryLocation = new DeliveryLocation(
                 new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                 new Coordinates(54, -2));
@@ -330,6 +348,7 @@ namespace WebTests.Domain.Restaurants
                 orderId,
                 basket,
                 menu,
+                mobileNumber,
                 deliveryLocation,
                 billingAccount,
                 now);

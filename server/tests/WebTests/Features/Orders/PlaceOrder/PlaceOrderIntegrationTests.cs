@@ -68,9 +68,9 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             var request = new PlaceOrderRequest()
             {
+                Mobile = "07123456789",
                 AddressLine1 = "12 Maine Road",
                 AddressLine2 = "Oldham",
-                AddressLine3 = "Madchester",
                 City = "Manchester",
                 Postcode = "MN12 1NM",
             };
@@ -91,7 +91,8 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.Subtotal.ShouldBe(menuItem.Price * basketItem.Quantity);
             order.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
             order.Status.ShouldBe(Web.Domain.Orders.OrderStatus.Placed);
-            order.Address.ShouldBe("12 Maine Road, Oldham, Madchester, Manchester, MN12 1NM");
+            order.MobileNumber.ShouldBe(request.Mobile);
+            order.Address.ShouldBe("12 Maine Road, Oldham, Manchester, MN12 1NM");
             order.PlacedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
             order.PaymentIntentId.ShouldBe(paymentIntent.Id);
             order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);

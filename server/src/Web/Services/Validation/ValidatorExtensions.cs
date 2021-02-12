@@ -60,6 +60,13 @@ namespace Web.Services.Validation
                 .WithMessage("Must be a valid phone number.");
         }
 
+        public static IRuleBuilderOptions<T, string> MobileNumber<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder
+                .Must(Web.Domain.MobileNumber.IsValid)
+                .WithMessage("Must be a valid mobile number.");
+        }
+
         public static IRuleBuilderOptions<T, string> Postcode<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder

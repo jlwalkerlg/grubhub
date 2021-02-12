@@ -17,6 +17,23 @@ namespace WebTests.Features.Orders.PlaceOrder
         [Theory]
         [InlineData(null)]
         [InlineData("")]
+        [InlineData("09834562")]
+        public async Task Mobile(string mobile)
+        {
+            var command = new PlaceOrderCommand()
+            {
+                Mobile = mobile,
+            };
+
+            var result = await validator.Validate(command);
+
+            result.ShouldBeAnError();
+            result.Errors.ShouldContainKey(nameof(command.Mobile));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
         public async Task AddressLine1(string address)
         {
             var command = new PlaceOrderCommand()

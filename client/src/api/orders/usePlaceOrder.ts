@@ -2,10 +2,10 @@ import { useMutation } from "react-query";
 import Api, { ApiError } from "../Api";
 
 export interface PlaceOrderCommand {
+  mobile: string;
   restaurantId: string;
   addressLine1: string;
   addressLine2: string;
-  addressLine3: string;
   city: string;
   postcode: string;
 }

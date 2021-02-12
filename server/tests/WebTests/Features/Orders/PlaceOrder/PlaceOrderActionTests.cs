@@ -37,6 +37,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             var errors = response.GetErrors();
 
+            errors.ShouldContainKey("mobile");
             errors.ShouldContainKey("addressLine1");
             errors.ShouldContainKey("city");
             errors.ShouldContainKey("postcode");
@@ -47,6 +48,7 @@ namespace WebTests.Features.Orders.PlaceOrder
         {
             var request = new PlaceOrderRequest()
             {
+                Mobile = "07123456789",
                 AddressLine1 = "12 Maine Road, Manchester, UK",
                 City = "Manchester",
                 Postcode = "MN12 1NM",

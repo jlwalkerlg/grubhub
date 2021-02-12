@@ -65,6 +65,13 @@ namespace Web.Data.EF.Configurations
                 .IsRequired()
                 .HasConversion(new EnumToStringConverter<OrderStatus>());
 
+            builder.OwnsOne(x => x.MobileNumber, x =>
+            {
+                x.Property(y => y.Value)
+                    .HasColumnName("mobile_number")
+                    .IsRequired();
+            });
+
             builder.OwnsOne(x => x.Address, x =>
             {
                 x.Property(y => y.Value)

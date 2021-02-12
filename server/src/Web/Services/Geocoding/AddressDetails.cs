@@ -9,7 +9,6 @@ namespace Web.Services.Geocoding
         public AddressDetails(
             string line1,
             string line2,
-            string line3,
             string city,
             string postcode)
         {
@@ -30,14 +29,12 @@ namespace Web.Services.Geocoding
 
             Line1 = line1;
             Line2 = line2;
-            Line3 = line3;
             City = city;
             Postcode = postcode;
         }
 
         public string Line1 { get; }
         public string Line2 { get; }
-        public string Line3 { get; }
         public string City { get; }
         public string Postcode { get; }
 
@@ -45,7 +42,7 @@ namespace Web.Services.Geocoding
         {
             return new Address(
                 string.Join(", ",
-                    new[] { Line1, Line2, Line3, City, Postcode }
+                    new[] { Line1, Line2, City, Postcode }
                         .Where(x => !string.IsNullOrWhiteSpace(x)))
             );
         }

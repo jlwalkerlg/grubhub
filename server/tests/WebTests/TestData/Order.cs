@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Web.Domain;
 using Web.Domain.Orders;
 
 namespace WebTests.TestData
@@ -62,6 +61,9 @@ namespace WebTests.TestData
 
         [Column("status")]
         public OrderStatus Status { get; set; } = OrderStatus.Placed;
+
+        [Column("mobile_number")]
+        public string MobileNumber { get; set; } = "07123456789";
 
         [Column("address")]
         public string Address { get; set; } = Guid.NewGuid().ToString();

@@ -15,6 +15,7 @@ namespace Web.Domain.Orders
             Basket basket,
             Money subtotal,
             Money deliveryFee,
+            MobileNumber mobileNumber,
             Address address,
             DateTime placedAt)
         {
@@ -28,6 +29,8 @@ namespace Web.Domain.Orders
             RestaurantId = basket.RestaurantId;
             Subtotal = subtotal;
             DeliveryFee = deliveryFee with { }; // removes EF warning
+            MobileNumber = mobileNumber
+                ?? throw new ArgumentNullException(nameof(mobileNumber));
             Address = address;
             PlacedAt = placedAt;
         }
@@ -41,8 +44,9 @@ namespace Web.Domain.Orders
         public Money DeliveryFee { get; }
         public Money ServiceFee { get; } = new Money(0.50m);
         public OrderStatus Status { get; private set; } = OrderStatus.Placed;
-        public Address Address { get; private set; }
-        public DateTime PlacedAt { get; private set; }
+        public MobileNumber MobileNumber { get; }
+        public Address Address { get; }
+        public DateTime PlacedAt { get; }
         public string PaymentIntentId { get; set; }
         public string PaymentIntentClientSecret { get; set; }
         public IReadOnlyList<OrderItem> Items => items;

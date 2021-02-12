@@ -79,6 +79,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new OrderId(Guid.NewGuid().ToString()),
                 basket,
                 menu,
+                new MobileNumber("07123456789"),
                 deliveryLocation,
                 billingAccount,
                 now).Value;
@@ -167,6 +168,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new OrderId(Guid.NewGuid().ToString()),
                 basket,
                 menu,
+                new MobileNumber("07123456789"),
                 deliveryLocation,
                 billingAccount,
                 now).Value;

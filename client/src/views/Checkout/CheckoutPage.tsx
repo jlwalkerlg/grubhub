@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryCache } from "react-query";
+import useBasket from "~/api/baskets/useBasket";
 import { getOrderQueryKey } from "~/api/orders/useOrder";
 import { usePlaceOrder } from "~/api/orders/usePlaceOrder";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
@@ -12,6 +13,7 @@ import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
 import {
   combineRules,
+  MobileRule,
   PostcodeRule,
   RequiredRule,
 } from "~/services/forms/Rule";
@@ -28,9 +30,9 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
   const form = useForm({
     defaultValues: {
+      mobile: "",
       addressLine1: "",
       addressLine2: "",
-      addressLine3: "",
       city: "",
       postcode: "",
     },
@@ -60,14 +62,35 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
   return (
     <div>
-      <h2 className="font-bold text-xl text-gray-800 text-center">
+      <h2 className="font-bold text-xl text-gray-800 text-center pb-2">
         {firstName}, confirm your details.
       </h2>
 
-      {isError && <p className="text-primary mt-1 mb-4">{error.message}</p>}
+      {isError && (
+        <p className="text-primary text-center mt-2">{error.message}</p>
+      )}
 
-      <form onSubmit={handleSubmit} className="mt-8">
-        <div className="mt-3">
+      <form onSubmit={handleSubmit} className="mt-4">
+        <div>
+          <label className="label" htmlFor="mobile">
+            Mobile Number <span className="text-primary">*</span>
+          </label>
+          <input
+            ref={form.register({
+              validate: combineRules([new RequiredRule(), new MobileRule()]),
+            })}
+            className="input"
+            type="text"
+            name="mobile"
+            id="mobile"
+            data-invalid={!!form.errors.mobile}
+          />
+          {form.errors.mobile && (
+            <p className="form-error mt-1">{form.errors.mobile.message}</p>
+          )}
+        </div>
+
+        <div className="mt-6">
           <label className="label" htmlFor="addressLine1">
             Address Line 1 <span className="text-primary">*</span>
           </label>
@@ -90,7 +113,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
         <div className="mt-3">
           <label className="label" htmlFor="addressLine2">
-            Address Line 2
+            Address Line 2 (optional)
           </label>
           <input
             ref={form.register}
@@ -103,25 +126,6 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           {form.errors.addressLine2 && (
             <p className="form-error mt-1">
               {form.errors.addressLine2.message}
-            </p>
-          )}
-        </div>
-
-        <div className="mt-3">
-          <label className="label" htmlFor="addressLine3">
-            Address Line 3
-          </label>
-          <input
-            ref={form.register}
-            className="input"
-            type="text"
-            name="addressLine3"
-            id="addressLine3"
-            data-invalid={!!form.errors.addressLine3}
-          />
-          {form.errors.addressLine3 && (
-            <p className="form-error mt-1">
-              {form.errors.addressLine3.message}
             </p>
           )}
         </div>
@@ -188,8 +192,16 @@ const Checkout: FC = () => {
     enabled: !isLoadingRouter,
   });
 
-  const isLoading = isLoadingRestaurant || isLoadingRouter;
-  const isError = isRestaurantError;
+  const {
+    data: basket,
+    isLoading: isLoadingBasket,
+    isError: isBasketError,
+  } = useBasket(restaurantId, {
+    enabled: !isLoadingRouter,
+  });
+
+  const isLoading = isLoadingRestaurant || isLoadingBasket || isLoadingRouter;
+  const isError = isRestaurantError || isBasketError;
 
   if (isLoading) {
     return (
@@ -212,6 +224,11 @@ const Checkout: FC = () => {
         </p>
       </div>
     );
+  }
+
+  if (basket?.items.length === 0) {
+    router.push(`/restaurants/${restaurantId}`);
+    return null;
   }
 
   return <CheckoutForm restaurant={restaurant} />;

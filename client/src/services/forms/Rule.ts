@@ -75,6 +75,29 @@ export class PhoneRule implements Rule {
   }
 }
 
+export class MobileRule implements Rule {
+  constructor(readonly message: string = "Must be a valid phone number.") {}
+
+  validate(value: string): string | null {
+    if (!value) return this.message;
+
+    const numbers = value
+      .split("")
+      .filter((x) => (+x).toString() === x && +x >= 0 && +x <= 9)
+      .join("");
+
+    if (numbers.startsWith("07") && numbers.length === 11) {
+      return null;
+    }
+
+    if (numbers.startsWith("447") && numbers.length === 12) {
+      return null;
+    }
+
+    return this.message;
+  }
+}
+
 export class MinRule implements Rule {
   private min: number;
   readonly message: string;

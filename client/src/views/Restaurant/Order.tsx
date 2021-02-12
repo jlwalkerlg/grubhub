@@ -288,6 +288,16 @@ const MobileBasketModal: FC<{
           <span>Subtotal</span>
           <span>£{subtotal.toFixed(2)}</span>
         </p>
+
+        <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
+          <span>Delivery fee</span>
+          <span>£{restaurant.deliveryFee.toFixed(2)}</span>
+        </p>
+
+        <p className="mt-3 text-gray-800 text-sm font-semibold flex items-center justify-between">
+          <span>Total</span>
+          <span>£{(subtotal + restaurant.deliveryFee).toFixed(2)}</span>
+        </p>
       </div>
 
       <div className="p-4 -shadow-lg flex-0">
@@ -403,6 +413,16 @@ const OrderAside: FC<{
       <p className="text-gray-800 text-sm font-semibold flex items-center justify-between">
         <span>Subtotal</span>
         <span>£{subtotal.toFixed(2)}</span>
+      </p>
+
+      <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
+        <span>Delivery fee</span>
+        <span>£{restaurant.deliveryFee.toFixed(2)}</span>
+      </p>
+
+      <p className="mt-3 text-gray-800 text-sm font-semibold flex items-center justify-between">
+        <span>Total</span>
+        <span>£{(subtotal + restaurant.deliveryFee).toFixed(2)}</span>
       </p>
 
       {subtotal >= restaurant.minimumDeliverySpend ? (

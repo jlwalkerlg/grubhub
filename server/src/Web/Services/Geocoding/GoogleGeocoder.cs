@@ -54,7 +54,7 @@ namespace Web.Services.Geocoding
         {
             var fullAddress = string.Join(
                 ", ",
-                new[] { address.Line1, address.Line2, address.Line3 }
+                new[] { address.Line1, address.Line2 }
                     .Where(x => !string.IsNullOrWhiteSpace(x)));
 
             var url = string.Format(

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Web.Domain;
 using Web.Domain.Orders;
 using Web.Domain.Restaurants;
 using Web.Features.Billing;
@@ -59,7 +60,6 @@ namespace Web.Features.Orders.PlaceOrder
             var address = new AddressDetails(
                 command.AddressLine1,
                 command.AddressLine2,
-                command.AddressLine3,
                 command.City,
                 command.Postcode);
 
@@ -87,6 +87,7 @@ namespace Web.Features.Orders.PlaceOrder
                 new OrderId(Guid.NewGuid().ToString()),
                 basket,
                 menu,
+                new MobileNumber(command.Mobile),
                 deliveryLocation,
                 billingAccount,
                 clock.UtcNow);

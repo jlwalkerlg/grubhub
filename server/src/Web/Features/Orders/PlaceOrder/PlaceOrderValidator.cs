@@ -6,6 +6,10 @@ namespace Web.Features.Orders.PlaceOrder
     {
         public PlaceOrderValidator()
         {
+            CascadeRuleFor(x => x.Mobile)
+                .Required()
+                .MobileNumber();
+
             CascadeRuleFor(x => x.AddressLine1)
                 .Required();
 

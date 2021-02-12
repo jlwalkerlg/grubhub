@@ -116,9 +116,9 @@ namespace WebTests.Features.Orders.PlaceOrder
             var command = new PlaceOrderCommand()
             {
                 RestaurantId = restaurant.Id,
+                Mobile = "07123456789",
                 AddressLine1 = "12 Maine Road",
                 AddressLine2 = "Oldham",
-                AddressLine3 = "Madchester",
                 City = "Manchester",
                 Postcode = "MN12 1NM",
             };
@@ -135,6 +135,8 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.UserId.ShouldBe(basket.UserId);
             order.RestaurantId.ShouldBe(restaurant.Id);
             order.PlacedAt.ShouldBe(now);
+            order.MobileNumber.Value.ShouldBe(command.Mobile);
+            order.Address.Value.ShouldBe("12 Maine Road, Oldham, Manchester, MN12 1NM");
             order.PaymentIntentId.ShouldBe(paymentIntent.Id);
             order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
@@ -207,9 +209,9 @@ namespace WebTests.Features.Orders.PlaceOrder
             var command = new PlaceOrderCommand()
             {
                 RestaurantId = restaurant.Id,
+                Mobile = "07123456789",
                 AddressLine1 = "12 Maine Road",
                 AddressLine2 = "Oldham",
-                AddressLine3 = "Madchester",
                 City = "Manchester",
                 Postcode = "MN12 1NM",
             };
@@ -277,9 +279,9 @@ namespace WebTests.Features.Orders.PlaceOrder
             var command = new PlaceOrderCommand()
             {
                 RestaurantId = restaurant.Id,
+                Mobile = "07123456789",
                 AddressLine1 = "12 Maine Road",
                 AddressLine2 = "Oldham",
-                AddressLine3 = "Madchester",
                 City = "Manchester",
                 Postcode = "MN12 1NM",
             };
@@ -353,9 +355,9 @@ namespace WebTests.Features.Orders.PlaceOrder
             var command = new PlaceOrderCommand()
             {
                 RestaurantId = restaurant.Id,
+                Mobile = "07123456789",
                 AddressLine1 = "12 Maine Road",
                 AddressLine2 = "Oldham",
-                AddressLine3 = "Madchester",
                 City = "Manchester",
                 Postcode = "MN12 1NM",
             };
@@ -425,9 +427,9 @@ namespace WebTests.Features.Orders.PlaceOrder
             var command = new PlaceOrderCommand()
             {
                 RestaurantId = restaurant.Id,
+                Mobile = "07123456789",
                 AddressLine1 = "12 Maine Road",
                 AddressLine2 = "Oldham",
-                AddressLine3 = "Madchester",
                 City = "Manchester",
                 Postcode = "MN12 1NM",
             };
