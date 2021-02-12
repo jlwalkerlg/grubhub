@@ -5,7 +5,9 @@ using Respawn;
 using System;
 using Web;
 using Web.Data.EF;
+using Web.Features.Billing;
 using Web.Services.Hashing;
+using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
 
@@ -47,6 +49,18 @@ namespace WebTests
                     "public"
                 },
             };
+        }
+
+        private IntegrationTestFixture(IntegrationTestWebApplicationFactory factory)
+            : base(factory)
+        {
+
+        }
+
+        public IntegrationTestFixture WithServices(Action<IServiceCollection> configureServices)
+        {
+            var factory = new IntegrationTestWebApplicationFactory(configureServices);
+            return new IntegrationTestFixture(factory);
         }
 
         public void ResetDatabase()
@@ -106,6 +120,18 @@ namespace WebTests
 
     public class IntegrationTestWebApplicationFactory : HttpTestWebApplicationFactory
     {
+        private readonly Action<IServiceCollection> configureServices;
+
+        public IntegrationTestWebApplicationFactory(
+            Action<IServiceCollection> configureServices) : this()
+        {
+            this.configureServices = configureServices;
+        }
+
+        public IntegrationTestWebApplicationFactory() : base()
+        {
+        }
+
         protected override void ConfigureServices(IServiceCollection services)
         {
             var sp = services.BuildServiceProvider();
@@ -120,6 +146,11 @@ namespace WebTests
                     b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
             });
+
+            if (configureServices != null)
+            {
+                configureServices(services);
+            }
         }
     }
 }

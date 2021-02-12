@@ -20,11 +20,9 @@ namespace WebTests.Features.Billing.RefreshOnboarding
             var restaurant = new Restaurant();
             var billingAccount = restaurant.BillingAccount;
 
-            fixture.Insert(restaurant);
-
             var onboardingLink = "http://localhost:5000";
 
-            using var factory = fixture.CreateFactory(services =>
+            var fixture = this.fixture.WithServices(services =>
             {
                 services.AddSingleton<IBillingService>(
                     new BillingServiceSpy()
@@ -34,10 +32,10 @@ namespace WebTests.Features.Billing.RefreshOnboarding
                     });
             });
 
-            var client = new HttpTestClient(factory);
+            fixture.Insert(restaurant);
 
-            var response = await client
-                .Authenticate(restaurant.ManagerId)
+            var response = await fixture
+                .GetAuthenticatedClient(restaurant.ManagerId)
                 .Get($"/stripe/onboarding/refresh?restaurant_id={restaurant.Id}");
 
             response.StatusCode.ShouldBe(302);

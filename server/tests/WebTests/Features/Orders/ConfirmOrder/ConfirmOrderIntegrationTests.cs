@@ -24,7 +24,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
         {
             var now = DateTime.UtcNow;
 
-            using var factory = fixture.CreateFactory(services =>
+            var fixture = this.fixture.WithServices(services =>
             {
                 services.AddSingleton<IClock>(
                     new ClockStub()
@@ -40,16 +40,19 @@ namespace WebTests.Features.Orders.ConfirmOrder
             });
 
             var order = new Order();
-            order.Status = Web.Domain.Orders.OrderStatus.Placed;
 
             fixture.Insert(order);
 
-            var client = new HttpTestClient(factory);
+            var command = new ConfirmOrderCommand()
+            {
+                PaymentIntentId = order.PaymentIntentId,
+            };
 
-            var response = await client.Put(
-                $"/orders/{order.Id}/confirm");
+            var result = await fixture.Send(command);
 
-            response.StatusCode.ShouldBe(200);
+            if (!result) throw new Exception(result.Error.Message);
+
+            result.ShouldBeSuccessful();
 
             var found = fixture.UseTestDbContext(db => db.Orders.Single());
 

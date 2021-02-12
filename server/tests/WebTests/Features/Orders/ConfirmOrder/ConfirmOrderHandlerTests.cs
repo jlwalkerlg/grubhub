@@ -84,6 +84,8 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 billingAccount,
                 now).Value;
 
+            order.PaymentIntentId = Guid.NewGuid().ToString();
+
             await unitOfWorkSpy.Orders.Add(order);
 
             clockStub.UtcNow = now;
@@ -92,7 +94,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             var command = new ConfirmOrderCommand()
             {
-                OrderId = order.Id.Value,
+                PaymentIntentId = order.PaymentIntentId,
             };
 
             var result = await handler.Handle(command, default);
@@ -117,7 +119,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
         {
             var command = new ConfirmOrderCommand()
             {
-                OrderId = Guid.NewGuid().ToString(),
+                PaymentIntentId = Guid.NewGuid().ToString(),
             };
 
             var result = await handler.Handle(command, default);
@@ -173,6 +175,8 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 billingAccount,
                 now).Value;
 
+            order.PaymentIntentId = Guid.NewGuid().ToString();
+
             await unitOfWorkSpy.Orders.Add(order);
 
             clockStub.UtcNow = now;
@@ -181,7 +185,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             var command = new ConfirmOrderCommand()
             {
-                OrderId = order.Id.Value,
+                PaymentIntentId = order.PaymentIntentId,
             };
 
             var result = await handler.Handle(command, default);

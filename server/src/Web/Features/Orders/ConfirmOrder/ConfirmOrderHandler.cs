@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Domain.Orders;
 using Web.Features.Billing;
 using Web.Services;
 
@@ -26,7 +25,7 @@ namespace Web.Features.Orders.ConfirmOrder
             ConfirmOrderCommand command, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders
-                .GetById(new OrderId(command.OrderId));
+                .GetByPaymentIntentId(command.PaymentIntentId);
 
             if (order == null)
             {

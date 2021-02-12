@@ -6,6 +6,6 @@ namespace Web.Features.Orders
     public interface IOrderRepository
     {
         Task Add(Order order);
-        Task<Order> GetById(OrderId orderId);
+        Task<Order> GetByPaymentIntentId(string paymentIntentId);
     }
 }

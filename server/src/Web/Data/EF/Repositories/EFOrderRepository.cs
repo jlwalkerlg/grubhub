@@ -20,10 +20,10 @@ namespace Web.Data.EF.Repositories
             await context.Orders.AddAsync(order);
         }
 
-        public async Task<Order> GetById(OrderId orderId)
+        public Task<Order> GetByPaymentIntentId(string paymentIntentId)
         {
-            return await context.Orders
-                .Where(x => x.Id == orderId)
+            return context.Orders
+                .Where(x => x.PaymentIntentId == paymentIntentId)
                 .Include(x => x.Items)
                 .OrderBy(x => x.Id)
                 .SingleOrDefaultAsync();

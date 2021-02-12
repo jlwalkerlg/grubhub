@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Stripe;
 using Web.Features.Billing.UpdateBillingDetails;
+using Web.Features.Orders.ConfirmOrder;
 
 namespace Web.Features.Billing.EnableBilling
 {
@@ -25,38 +26,20 @@ namespace Web.Features.Billing.EnableBilling
         }
 
         [HttpPost("/stripe/webhooks")]
-        public async Task<IActionResult> Webhook()
-        {
-            try
-            {
-                var stripeEvent = await DecodeStripeEvent(
-                    config.StripeWebhookSigningSecret);
-
-                logger.LogInformation("Stripe event: " + stripeEvent.Type);
-
-                if (stripeEvent.Type == Stripe.Events.PaymentIntentAmountCapturableUpdated)
-                {
-                    // occurs when payment intent is confirmed (card details successfully submitted)
-                }
-
-                return Ok();
-            }
-            catch (StripeException e)
-            {
-                logger.LogError(e.ToString());
-                return BadRequest();
-            }
-        }
+        public Task<IActionResult> Webhook() =>
+            Execute(config.StripeWebhookSigningSecret);
 
         [HttpPost("/stripe/connect/webhooks")]
-        public async Task<IActionResult> ConnectWebhook()
+        public Task<IActionResult> ConnectWebhook() =>
+            Execute(config.StripeConnectWebhookSigningSecret);
+
+        private async Task<IActionResult> Execute(string webhookSigningSecret)
         {
             try
             {
-                var stripeEvent = await DecodeStripeEvent(
-                    config.StripeConnectWebhookSigningSecret);
+                var stripeEvent = await DecodeStripeEvent(webhookSigningSecret);
 
-                logger.LogInformation("Stripe connect event: " + stripeEvent.Type);
+                logger.LogInformation("Stripe event: " + stripeEvent.Type);
 
                 var result = Result.Ok();
 
@@ -64,6 +47,12 @@ namespace Web.Features.Billing.EnableBilling
                 {
                     var account = stripeEvent.Data.Object as Account;
                     result = await HandleAccountUpdate(account);
+                }
+
+                if (stripeEvent.Type == Stripe.Events.PaymentIntentAmountCapturableUpdated)
+                {
+                    var intent = stripeEvent.Data.Object as Stripe.PaymentIntent;
+                    result = await HandlePaymentConfirmed(intent);
                 }
 
                 if (!result)
@@ -97,6 +86,21 @@ namespace Web.Features.Billing.EnableBilling
             {
                 BillingAccountId = account.Id,
                 IsBillingEnabled = account.ChargesEnabled,
+            };
+
+            return await sender.Send(command);
+        }
+
+        private async Task<Result> HandlePaymentConfirmed(Stripe.PaymentIntent intent)
+        {
+            if (intent.Status != "requires_capture")
+            {
+                return Result.Ok();
+            }
+
+            var command = new ConfirmOrderCommand()
+            {
+                PaymentIntentId = intent.Id,
             };
 
             return await sender.Send(command);

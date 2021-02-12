@@ -18,14 +18,12 @@ namespace WebTests.Features.Billing.GetOnboardingLink
         [Fact]
         public async Task It_Returns_The_Onboarding_Link()
         {
+            var onboardingLink = Guid.NewGuid().ToString();
+
             var restaurant = new Restaurant();
             var billingAccount = restaurant.BillingAccount;
 
-            fixture.Insert(restaurant);
-
-            var onboardingLink = Guid.NewGuid().ToString();
-
-            using var factory = fixture.CreateFactory(services =>
+            var fixture = this.fixture.WithServices(services =>
             {
                 services.AddSingleton<IBillingService>(
                     new BillingServiceSpy()
@@ -35,10 +33,10 @@ namespace WebTests.Features.Billing.GetOnboardingLink
                     });
             });
 
-            var client = new HttpTestClient(factory);
+            fixture.Insert(restaurant);
 
-            var response = await client
-                .Authenticate(restaurant.ManagerId)
+            var response = await fixture
+                .GetAuthenticatedClient(restaurant.ManagerId)
                 .Get($"/restaurants/{restaurant.Id}/billing/onboarding/link");
 
             response.StatusCode.ShouldBe(200);

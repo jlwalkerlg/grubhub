@@ -21,7 +21,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         {
             var now = DateTime.UtcNow;
 
-            using var factory = fixture.CreateFactory(services =>
+            var fixture = this.fixture.WithServices(services =>
             {
                 services.AddSingleton<IClock>(
                     new ClockStub()
@@ -30,8 +30,6 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                     }
                 );
             });
-
-            var client = new HttpTestClient(factory);
 
             var request = new RegisterRestaurantCommand()
             {
@@ -43,7 +41,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 Address = "1 Maine Road, Manchester, UK",
             };
 
-            var response = await client.Post("/restaurants/register", request);
+            var response = await fixture.GetClient().Post("/restaurants/register", request);
 
             response.StatusCode.ShouldBe(201);
 

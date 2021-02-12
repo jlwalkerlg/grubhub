@@ -51,14 +51,6 @@ namespace WebTests
             }
         }
 
-        public WebApplicationFactory<Startup> CreateFactory(Action<IServiceCollection> configureServices)
-        {
-            return factory.WithWebHostBuilder(config =>
-            {
-                config.ConfigureServices(configureServices);
-            });
-        }
-
         public T GetService<T>()
         {
             using (var scope = factory.Services.CreateScope())

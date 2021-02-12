@@ -30,7 +30,7 @@ namespace WebTests.Features.Orders.PlaceOrder
                 ClientSecret = Guid.NewGuid().ToString(),
             };
 
-            using var factory = fixture.CreateFactory(services =>
+            var fixture = this.fixture.WithServices(services =>
             {
                 services.AddSingleton<IClock>(
                     new ClockStub()
@@ -64,8 +64,6 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             fixture.Insert(restaurant, user, basket);
 
-            var client = new HttpTestClient(factory);
-
             var request = new PlaceOrderRequest()
             {
                 Mobile = "07123456789",
@@ -75,7 +73,7 @@ namespace WebTests.Features.Orders.PlaceOrder
                 Postcode = "MN12 1NM",
             };
 
-            var response = await client.Authenticate(user.Id).Post(
+            var response = await fixture.GetAuthenticatedClient(user.Id).Post(
                 $"/restaurants/{restaurant.Id}/orders",
                 request);
 

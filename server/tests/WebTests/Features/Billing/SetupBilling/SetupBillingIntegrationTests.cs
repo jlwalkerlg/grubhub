@@ -21,11 +21,9 @@ namespace WebTests.Features.Billing.SetupBilling
             var restaurant = new Restaurant();
             var billingAccount = restaurant.BillingAccount;
 
-            fixture.Insert(restaurant);
-
             var onboardingLink = Guid.NewGuid().ToString();
 
-            using var factory = fixture.CreateFactory(services =>
+            var fixture = this.fixture.WithServices(services =>
             {
                 services.AddSingleton<IBillingService>(
                     new BillingServiceSpy()
@@ -35,10 +33,10 @@ namespace WebTests.Features.Billing.SetupBilling
                     });
             });
 
-            var client = new HttpTestClient(factory);
+            fixture.Insert(restaurant);
 
-            var response = await client
-                .Authenticate(restaurant.ManagerId)
+            var response = await fixture
+                .GetAuthenticatedClient(restaurant.ManagerId)
                 .Post($"/restaurants/{restaurant.Id}/billing/setup");
 
             response.StatusCode.ShouldBe(200);
