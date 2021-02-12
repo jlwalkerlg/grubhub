@@ -1,24 +1,17 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useMutation } from "react-query";
-import Api, { ApiError } from "~/api/Api";
-import { PlaceOrderCommand, usePlaceOrder } from "~/api/orders/usePlaceOrder";
+import { ApiError } from "~/api/Api";
 import useAuth from "~/api/users/useAuth";
 
-export default function useCheckout() {
+export default function usePay() {
   const stripe = useStripe();
   const elements = useElements();
 
   const { user } = useAuth();
 
-  const [placeOrder] = usePlaceOrder();
-
-  return useMutation<string, ApiError, PlaceOrderCommand, null>(
-    async (command) => {
+  return useMutation<void, ApiError, string, null>(
+    async (paymentIntentClientSecret) => {
       if (!stripe || !elements) return;
-
-      const { paymentIntentClientSecret, orderId } = await placeOrder(command, {
-        throwOnError: true,
-      });
 
       try {
         const result = await stripe.confirmCardPayment(
@@ -51,10 +44,6 @@ export default function useCheckout() {
 
         throw error;
       }
-
-      await Api.put(`/orders/${orderId}/confirm`);
-
-      return orderId;
     }
   );
 }

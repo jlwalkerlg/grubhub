@@ -1,22 +1,14 @@
-import {
-  CardElement,
-  Elements,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
-import { loadStripe, StripeCardElementOptions } from "@stripe/stripe-js";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryCache } from "react-query";
-import { BasketDto } from "~/api/baskets/BasketDto";
-import useBasket, { getBasketQueryKey } from "~/api/baskets/useBasket";
 import { getOrderQueryKey } from "~/api/orders/useOrder";
+import { usePlaceOrder } from "~/api/orders/usePlaceOrder";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useRestaurant from "~/api/restaurants/useRestaurant";
+import useAuth from "~/api/users/useAuth";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import TruckIcon from "~/components/Icons/TruckIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
 import {
   combineRules,
@@ -24,28 +16,15 @@ import {
   RequiredRule,
 } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
-import "./CheckoutPage.module.css";
-import useCheckout from "./useCheckout";
 
-const stripePromise =
-  typeof window === "undefined"
-    ? undefined
-    : loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-
-const CARD_ELEMENT_OPTIONS: StripeCardElementOptions = {};
-
-const CheckoutForm: FC<{ basket: BasketDto; restaurant: RestaurantDto }> = ({
-  basket,
-  restaurant,
-}) => {
-  const stripe = useStripe();
-  const elements = useElements();
-
+const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const router = useRouter();
+
+  const { user } = useAuth();
 
   const cache = useQueryCache();
 
-  const [checkout, { isError, error }] = useCheckout();
+  const [placeOrder, { isError, error }] = usePlaceOrder();
 
   const form = useForm({
     defaultValues: {
@@ -58,20 +37,15 @@ const CheckoutForm: FC<{ basket: BasketDto; restaurant: RestaurantDto }> = ({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    if (!stripe || !elements || form.formState.isSubmitting) {
-      return;
-    }
-
-    await checkout(
+    await placeOrder(
       {
         restaurantId: restaurant.id,
         ...data,
       },
       {
         onSuccess: async (orderId) => {
-          cache.invalidateQueries(getBasketQueryKey(restaurant.id));
           cache.prefetchQuery(getOrderQueryKey(orderId));
-          await router.push(`/orders/${orderId}`);
+          await router.push(`/orders/${orderId}/pay`);
         },
         onError: (error) => {
           if (error.isValidationError) {
@@ -82,22 +56,17 @@ const CheckoutForm: FC<{ basket: BasketDto; restaurant: RestaurantDto }> = ({
     );
   });
 
+  const firstName = user.name.split(" ")[0];
+
   return (
-    <div className="flex-1 rounded bg-white border border-gray-300 p-2 ">
-      <h2 className="font-bold text-xl text-gray-700">Payment details</h2>
+    <div>
+      <h2 className="font-bold text-xl text-gray-800 text-center">
+        {firstName}, confirm your details.
+      </h2>
 
       {isError && <p className="text-primary mt-1 mb-4">{error.message}</p>}
 
-      <form onSubmit={handleSubmit} className="mt-2">
-        <div>
-          <label htmlFor="card" className="label">
-            Card details <span className="text-primary">*</span>
-          </label>
-          <div className="input px-2">
-            <CardElement id="card" options={CARD_ELEMENT_OPTIONS} />
-          </div>
-        </div>
-
+      <form onSubmit={handleSubmit} className="mt-8">
         <div className="mt-3">
           <label className="label" htmlFor="addressLine1">
             Address Line 1 <span className="text-primary">*</span>
@@ -196,10 +165,10 @@ const CheckoutForm: FC<{ basket: BasketDto; restaurant: RestaurantDto }> = ({
         </div>
 
         <button
-          className="btn btn-primary w-full mt-4"
-          disabled={!stripe || !elements || form.formState.isSubmitting}
+          className="btn btn-primary w-full mt-6"
+          disabled={form.formState.isSubmitting}
         >
-          Place my order
+          Go to payment
         </button>
       </form>
     </div>
@@ -212,14 +181,6 @@ const Checkout: FC = () => {
   const isLoadingRouter = !restaurantId;
 
   const {
-    data: basket,
-    isLoading: isLoadingOrder,
-    isError: isOrderError,
-  } = useBasket(restaurantId, {
-    enabled: !isLoadingRouter,
-  });
-
-  const {
     data: restaurant,
     isLoading: isLoadingRestaurant,
     isError: isRestaurantError,
@@ -227,14 +188,14 @@ const Checkout: FC = () => {
     enabled: !isLoadingRouter,
   });
 
-  const isLoading = isLoadingOrder || isLoadingRestaurant || isLoadingRouter;
-  const isError = isOrderError || isRestaurantError;
+  const isLoading = isLoadingRestaurant || isLoadingRouter;
+  const isError = isRestaurantError;
 
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center">
         <SpinnerIcon className="w-6 h-6 animate-spin" />
-        <p className="mt-2 text-gray-700">Loading payment page.</p>
+        <p className="mt-2 text-gray-700">Loading order.</p>
       </div>
     );
   }
@@ -253,89 +214,16 @@ const Checkout: FC = () => {
     );
   }
 
-  if (!isLoading && !isError && !basket?.items.length) {
-    router.push(`/restaurants/${restaurantId}`);
-    return null;
-  }
-
-  const subtotal = basket.items.reduce(
-    (total, item) => (total += item.quantity * item.menuItemPrice),
-    0
-  );
-
-  const serviceCharge = 0.5;
-
-  const total = subtotal + restaurant.deliveryFee + serviceCharge;
-
-  return (
-    <div className="md:flex items-start">
-      <Elements stripe={stripePromise}>
-        <CheckoutForm basket={basket} restaurant={restaurant} />
-      </Elements>
-
-      <div className="mt-4 md:mt-0 md:ml-2 flex-1 rounded bg-white border border-gray-300 p-2">
-        <h2 className="font-bold text-xl text-gray-700">Your order</h2>
-
-        <ul className="mt-2">
-          {basket.items.map((item) => {
-            return (
-              <li
-                key={item.menuItemId}
-                className="flex items-center justify-between text-sm"
-              >
-                <span>
-                  {item.quantity} x {item.menuItemName}
-                </span>
-                <span>{(item.quantity * item.menuItemPrice).toFixed(2)}</span>
-              </li>
-            );
-          })}
-        </ul>
-
-        <hr className="mt-4 -mx-2 border-gray-300" />
-
-        <p className="mt-2 font-bold text-gray-700 flex items-center justify-between">
-          <span>Subtotal</span>
-          <span>{subtotal.toFixed(2)}</span>
-        </p>
-
-        <p className="mt-3 flex items-center justify-between text-sm">
-          <span>Delivery Fee</span>
-          <span>{restaurant.deliveryFee.toFixed(2)}</span>
-        </p>
-
-        <p className="mt-1 flex items-center justify-between text-sm">
-          <span>Service Charge</span>
-          <span>{serviceCharge.toFixed(2)}</span>
-        </p>
-
-        <p className="mt-3 font-bold text-xl text-gray-700 flex items-center justify-between">
-          <span>Total</span>
-          <span>£ {total.toFixed(2)}</span>
-        </p>
-
-        <hr className="mt-4 -mx-2 border-gray-300" />
-
-        <p className="mt-3 text-sm text-center text-gray-700">
-          {restaurant.address}
-        </p>
-
-        <hr className="mt-3 -mx-2 border-gray-300" />
-
-        <p className="mt-3 mb-1 text-sm font-semibold flex items-center">
-          <TruckIcon className="h-5" />
-          <span className="ml-2">Delivery ASAP</span>
-        </p>
-      </div>
-    </div>
-  );
+  return <CheckoutForm restaurant={restaurant} />;
 };
 
 const CheckoutPage: FC = () => {
   return (
-    <AuthLayout title="Checkout">
-      <div className="container max-w-3xl mt-4">
-        <Checkout />
+    <AuthLayout title="Food Snap | Checkout">
+      <div className="container max-w-xl mt-4">
+        <div className="rounded-sm bg-white border border-gray-200 py-6 px-8">
+          <Checkout />
+        </div>
       </div>
     </AuthLayout>
   );

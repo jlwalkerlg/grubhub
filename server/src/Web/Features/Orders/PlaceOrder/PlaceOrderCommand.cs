@@ -4,7 +4,7 @@ using Web.Services.Authentication;
 namespace Web.Features.Orders.PlaceOrder
 {
     [Authenticate]
-    public record PlaceOrderCommand : IRequest<PlaceOrderResponse>
+    public record PlaceOrderCommand : IRequest<string>
     {
         public Guid RestaurantId { get; init; }
         public string AddressLine1 { get; init; }

@@ -72,6 +72,9 @@ namespace WebTests.TestData
         [Column("payment_intent_id")]
         public string PaymentIntentId { get; set; } = Guid.NewGuid().ToString();
 
+        [Column("payment_intent_client_secret")]
+        public string PaymentIntentClientSecret { get; set; } = Guid.NewGuid().ToString();
+
         public List<OrderItem> Items { get; set; } = new();
     }
 }

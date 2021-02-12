@@ -14,6 +14,8 @@ namespace Web.Features.Orders.GetActiveOrder
         public string Status { get; init; }
         public string Address { get; init; }
         public DateTime PlacedAt { get; init; }
+        public string RestaurantAddress { get; init; }
+        public string PaymentIntentClientSecret { get; init; }
         public List<OrderItemDto> Items { get; init; } = new();
     }
 

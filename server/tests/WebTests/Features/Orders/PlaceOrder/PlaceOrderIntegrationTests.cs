@@ -81,13 +81,11 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             response.StatusCode.ShouldBe(200);
 
-            var data = await response.GetData<PlaceOrderResponse>();
-
-            data.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
+            var orderId = await response.GetData<string>();
 
             var order = fixture.UseTestDbContext(db => db.Orders.Single());
 
-            order.Id.ShouldBe(data.OrderId);
+            order.Id.ShouldBe(orderId);
             order.UserId.ShouldBe(user.Id);
             order.RestaurantId.ShouldBe(restaurant.Id);
             order.Subtotal.ShouldBe(menuItem.Price * basketItem.Quantity);
@@ -96,6 +94,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.Address.ShouldBe("12 Maine Road, Oldham, Madchester, Manchester, MN12 1NM");
             order.PlacedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
             order.PaymentIntentId.ShouldBe(paymentIntent.Id);
+            order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
             var item = fixture.UseTestDbContext(db => db.OrderItems.Single());
 

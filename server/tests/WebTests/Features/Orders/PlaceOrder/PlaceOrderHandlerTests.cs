@@ -126,16 +126,17 @@ namespace WebTests.Features.Orders.PlaceOrder
             var result = await handler.Handle(command, default);
 
             result.ShouldBeSuccessful();
-            result.Value.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
             unitOfWorkSpy.OrderRepositorySpy.Orders.ShouldHaveSingleItem();
 
             var order = unitOfWorkSpy.OrderRepositorySpy.Orders.Single();
 
-            order.Id.Value.ShouldBe(result.Value.OrderId);
+            order.Id.Value.ShouldBe(result.Value);
             order.UserId.ShouldBe(basket.UserId);
             order.RestaurantId.ShouldBe(restaurant.Id);
             order.PlacedAt.ShouldBe(now);
+            order.PaymentIntentId.ShouldBe(paymentIntent.Id);
+            order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
             billingServiceSpy.PaymentIntentAmount.ShouldBe(order.CalculateTotal());
             billingServiceSpy.PaymentIntentAccount.ShouldBe(billingAccount);

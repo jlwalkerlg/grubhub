@@ -10,7 +10,7 @@ using Web.Services.Geocoding;
 
 namespace Web.Features.Orders.PlaceOrder
 {
-    public class PlaceOrderHandler : IRequestHandler<PlaceOrderCommand, PlaceOrderResponse>
+    public class PlaceOrderHandler : IRequestHandler<PlaceOrderCommand, string>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
@@ -35,7 +35,7 @@ namespace Web.Features.Orders.PlaceOrder
             this.config = config;
         }
 
-        public async Task<Result<PlaceOrderResponse>> Handle(
+        public async Task<Result<string>> Handle(
             PlaceOrderCommand command, CancellationToken cancellationToken)
         {
             var basket = await unitOfWork
@@ -107,6 +107,7 @@ namespace Web.Features.Orders.PlaceOrder
             }
 
             order.PaymentIntentId = paymentIntentResult.Value.Id;
+            order.PaymentIntentClientSecret = paymentIntentResult.Value.ClientSecret;
 
             var opEvent = new OrderPlacedEvent(order.Id, clock.UtcNow);
 
@@ -114,12 +115,7 @@ namespace Web.Features.Orders.PlaceOrder
             await unitOfWork.Events.Add(opEvent);
             await unitOfWork.Commit();
 
-            return Result.Ok(
-                new PlaceOrderResponse()
-                {
-                    OrderId = order.Id.Value,
-                    PaymentIntentClientSecret = paymentIntentResult.Value.ClientSecret,
-                });
+            return Result.Ok(order.Id.Value);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace Web.Data.EF.Configurations
                 .HasForeignKey(x => x.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.Property(x => x.UserId)
                 .HasColumnName("user_id");
 
@@ -34,22 +35,29 @@ namespace Web.Data.EF.Configurations
                 .HasForeignKey(x => x.RestaurantId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.Property(x => x.RestaurantId)
                 .HasColumnName("restaurant_id");
 
             builder.OwnsOne(x => x.Subtotal, x =>
             {
-                x.Property(y => y.Amount).HasColumnName("subtotal").IsRequired();
+                x.Property(y => y.Amount)
+                    .HasColumnName("subtotal")
+                    .IsRequired();
             });
 
             builder.OwnsOne(x => x.DeliveryFee, x =>
             {
-                x.Property(y => y.Amount).HasColumnName("delivery_fee").IsRequired();
+                x.Property(y => y.Amount)
+                    .HasColumnName("delivery_fee")
+                    .IsRequired();
             });
 
             builder.OwnsOne(x => x.ServiceFee, x =>
             {
-                x.Property(y => y.Amount).HasColumnName("service_fee").IsRequired();
+                x.Property(y => y.Amount)
+                    .HasColumnName("service_fee")
+                    .IsRequired();
             });
 
             builder.Property(x => x.Status)
@@ -59,12 +67,22 @@ namespace Web.Data.EF.Configurations
 
             builder.OwnsOne(x => x.Address, x =>
             {
-                x.Property(y => y.Value).HasColumnName("address").IsRequired();
+                x.Property(y => y.Value)
+                    .HasColumnName("address")
+                    .IsRequired();
             });
 
-            builder.Property(x => x.PlacedAt).HasColumnName("placed_at").IsRequired();
+            builder.Property(x => x.PlacedAt)
+                .HasColumnName("placed_at")
+                .IsRequired();
 
-            builder.Property(x => x.PaymentIntentId).HasColumnName("payment_intent_id");
+            builder.Property(x => x.PaymentIntentId)
+                .HasColumnName("payment_intent_id")
+                .IsRequired();
+
+            builder.Property(x => x.PaymentIntentClientSecret)
+                .HasColumnName("payment_intent_client_secret")
+                .IsRequired();
 
             builder.HasMany(x => x.Items)
                 .WithOne()

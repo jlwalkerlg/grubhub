@@ -38,14 +38,17 @@ namespace Web.Features.Orders.GetOrderById
                             o.id,
                             o.user_id,
                             o.restaurant_id,
-                            subtotal,
-                            delivery_fee,
-                            service_fee,
+                            o.subtotal,
+                            o.delivery_fee,
+                            o.service_fee,
                             o.status,
                             o.address,
-                            o.placed_at
+                            o.placed_at,
+                            o.payment_intent_client_secret,
+                            r.address AS restaurant_address
                         FROM
                             orders o
+                            INNER JOIN restaurants r ON r.id = o.restaurant_id
                         WHERE
                             o.id = @Id
                         ORDER BY o.id",
@@ -102,6 +105,8 @@ namespace Web.Features.Orders.GetOrderById
             public string status { get; init; }
             public string address { get; init; }
             public DateTime placed_at { get; init; }
+            public string restaurant_address { get; init; }
+            public string payment_intent_client_secret { get; init; }
 
             public OrderDto ToDto()
             {
@@ -116,6 +121,8 @@ namespace Web.Features.Orders.GetOrderById
                     Status = status,
                     Address = address,
                     PlacedAt = placed_at,
+                    PaymentIntentClientSecret = payment_intent_client_secret,
+                    RestaurantAddress = restaurant_address,
                 };
             }
         }

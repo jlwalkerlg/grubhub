@@ -10,16 +10,11 @@ export interface PlaceOrderCommand {
   postcode: string;
 }
 
-interface PlaceOrderResponse {
-  orderId: string;
-  paymentIntentClientSecret: string;
-}
-
 export function usePlaceOrder() {
-  return useMutation<PlaceOrderResponse, ApiError, PlaceOrderCommand, null>(
+  return useMutation<string, ApiError, PlaceOrderCommand, null>(
     async (command) => {
       const { restaurantId, ...data } = command;
-      const response = await Api.post<PlaceOrderResponse>(
+      const response = await Api.post<string>(
         `/restaurants/${restaurantId}/orders`,
         data
       );

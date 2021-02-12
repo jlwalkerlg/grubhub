@@ -44,6 +44,7 @@ namespace Web.Domain.Orders
         public Address Address { get; private set; }
         public DateTime PlacedAt { get; private set; }
         public string PaymentIntentId { get; set; }
+        public string PaymentIntentClientSecret { get; set; }
         public IReadOnlyList<OrderItem> Items => items;
 
         public Money CalculateTotal()
