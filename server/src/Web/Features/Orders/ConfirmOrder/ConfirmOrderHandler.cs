@@ -43,6 +43,13 @@ namespace Web.Features.Orders.ConfirmOrder
 
             order.Confirm();
 
+            var basket = await unitOfWork.Baskets.Get(order.UserId, order.RestaurantId);
+
+            if (basket != null)
+            {
+                await unitOfWork.Baskets.Remove(basket);
+            }
+
             var ocEvent = new OrderConfirmedEvent(order.Id, now);
 
             await unitOfWork.Events.Add(ocEvent);

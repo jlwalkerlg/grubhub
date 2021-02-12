@@ -39,9 +39,13 @@ namespace WebTests.Features.Orders.ConfirmOrder
                     });
             });
 
-            var order = new Order();
+            var basket = new Basket();
 
-            fixture.Insert(order);
+            var order = new Order();
+            order.User = basket.User;
+            order.Restaurant = basket.Restaurant;
+
+            fixture.Insert(basket, order);
 
             var command = new ConfirmOrderCommand()
             {
@@ -50,9 +54,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             var result = await fixture.Send(command);
 
-            if (!result) throw new Exception(result.Error.Message);
-
             result.ShouldBeSuccessful();
+
+            var baskets = fixture.UseTestDbContext(db => db.Baskets.ToArray());
+
+            baskets.ShouldBeEmpty();
 
             var found = fixture.UseTestDbContext(db => db.Orders.Single());
 

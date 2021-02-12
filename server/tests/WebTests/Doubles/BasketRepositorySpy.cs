@@ -25,5 +25,11 @@ namespace WebTests.Doubles
                     x.UserId == userId && x.RestaurantId == restaurantId)
             );
         }
+
+        public Task Remove(Basket basket)
+        {
+            Baskets.Remove(basket);
+            return Task.CompletedTask;
+        }
     }
 }

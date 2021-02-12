@@ -31,5 +31,11 @@ namespace Web.Data.EF.Repositories
                 .OrderBy(x => "id")
                 .SingleOrDefaultAsync();
         }
+
+        public Task Remove(Basket basket)
+        {
+            context.Baskets.Remove(basket);
+            return Task.CompletedTask;
+        }
     }
 }

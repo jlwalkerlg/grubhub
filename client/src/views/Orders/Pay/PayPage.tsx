@@ -9,9 +9,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, FormEvent } from "react";
 import { useQueryCache } from "react-query";
-import { getBasketQueryKey } from "~/api/baskets/useBasket";
 import { OrderDto } from "~/api/orders/OrderDto";
-import useOrder, { getOrderQueryKey } from "~/api/orders/useOrder";
+import useOrder from "~/api/orders/useOrder";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import TruckIcon from "~/components/Icons/TruckIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
@@ -45,8 +44,6 @@ const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
     await pay(order.paymentIntentClientSecret, {
       onSuccess: async () => {
         await router.push(`/orders/${order.id}`);
-        cache.invalidateQueries(getOrderQueryKey(order.restaurantId));
-        cache.invalidateQueries(getBasketQueryKey(order.restaurantId));
       },
     });
   };

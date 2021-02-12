@@ -9,5 +9,6 @@ namespace Web.Features.Baskets
     {
         Task Add(Basket basket);
         Task<Basket> Get(UserId userId, RestaurantId restaurantId);
+        Task Remove(Basket basket);
     }
 }

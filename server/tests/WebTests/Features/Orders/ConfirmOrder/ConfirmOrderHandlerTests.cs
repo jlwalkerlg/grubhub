@@ -86,6 +86,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             order.PaymentIntentId = Guid.NewGuid().ToString();
 
+            await unitOfWorkSpy.Baskets.Add(basket);
             await unitOfWorkSpy.Orders.Add(order);
 
             clockStub.UtcNow = now;
@@ -102,6 +103,8 @@ namespace WebTests.Features.Orders.ConfirmOrder
             result.ShouldBeSuccessful();
 
             order.Status.ShouldBe(OrderStatus.PaymentConfirmed);
+
+            unitOfWorkSpy.BasketRepositorySpy.Baskets.ShouldBeEmpty();
 
             var ocEvent = unitOfWorkSpy.EventRepositorySpy
                 .Events
