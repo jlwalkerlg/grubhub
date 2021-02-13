@@ -20,6 +20,15 @@ namespace Web.Data.EF.Repositories
             await context.Orders.AddAsync(order);
         }
 
+        public Task<Order> GetById(OrderId id)
+        {
+            return context.Orders
+                .Where(x => x.Id == id)
+                .Include(x => x.Items)
+                .OrderBy(x => x.Id)
+                .SingleOrDefaultAsync();
+        }
+
         public Task<Order> GetByPaymentIntentId(string paymentIntentId)
         {
             return context.Orders

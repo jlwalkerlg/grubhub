@@ -1,30 +1,53 @@
+import * as signalR from "@microsoft/signalr";
 import { useRouter } from "next/router";
-import React, { FC } from "react";
-import useOrder from "~/api/orders/useOrder";
+import React, { FC, useEffect } from "react";
+import { useQueryCache } from "react-query";
+import useOrder, { getOrderQueryKey } from "~/api/orders/useOrder";
+import { AuthLayout } from "~/components/Layout/Layout";
 
-const OrderPage: FC = () => {
+const Order: FC = () => {
   const router = useRouter();
   const orderId = router.query.id?.toString();
-  const isRouterLoading = !orderId;
 
-  const { data: order, isLoading, isError, error } = useOrder(orderId, {
-    enabled: !isRouterLoading,
-  });
+  const { data: order } = useOrder(orderId, { enabled: !!orderId });
 
-  if (isLoading || isRouterLoading) {
-    return <p>Loading</p>;
-  }
+  const cache = useQueryCache();
 
-  if (isError) {
-    // TODO: why does this evaluate to true after checkout?
-    console.log(error);
-    return <p>Error: {error?.message}</p>;
-  }
+  useEffect(() => {
+    if (!orderId) return;
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("http://localhost:5000/hubs/orders")
+      .build();
+
+    connection.on(`order_${orderId}.updated`, () => {
+      cache.invalidateQueries(getOrderQueryKey(orderId));
+    });
+
+    connection
+      .start()
+      .then(() => cache.invalidateQueries(getOrderQueryKey(orderId)))
+      .catch(console.log);
+
+    return () => orderId && connection.stop();
+  }, [orderId]);
 
   return (
     <div>
-      Order {order?.id} status: {order?.status}
+      {order && (
+        <p>
+          Order ({order.id}) status: {order.status}
+        </p>
+      )}
     </div>
+  );
+};
+
+const OrderPage: FC = () => {
+  return (
+    <AuthLayout title="Your Order">
+      <Order />
+    </AuthLayout>
   );
 };
 

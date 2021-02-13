@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -100,7 +101,10 @@ namespace WebTests
 
         protected override IHost CreateHost(IHostBuilder builder)
         {
-            builder.UseServiceProviderFactory(new HttpTestServiceProviderFactory());
+            builder
+                .UseServiceProviderFactory(new HttpTestServiceProviderFactory())
+                .ConfigureWebHost(x => x.UseEnvironment("Testing"));
+
             return base.CreateHost(builder);
         }
 

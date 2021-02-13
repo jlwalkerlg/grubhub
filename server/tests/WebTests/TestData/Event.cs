@@ -21,6 +21,9 @@ namespace WebTests.TestData
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
+        [Column("handled")]
+        public bool Handled { get; set; }
+
         public TEvent ToEvent<TEvent>() where TEvent : Web.Features.Events.Event
         {
             return JsonSerializer.Deserialize<TEvent>(Data);

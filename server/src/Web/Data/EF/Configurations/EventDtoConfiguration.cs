@@ -17,6 +17,8 @@ namespace Web.Data.EF.Configurations
             builder.Property(x => x.Data).IsRequired().HasColumnName("data").HasColumnType("jsonb");
 
             builder.Property(x => x.CreatedAt).IsRequired().HasColumnName("created_at");
+
+            builder.Property(x => x.Handled).IsRequired().HasColumnName("handled");
         }
     }
 }

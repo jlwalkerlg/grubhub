@@ -2,6 +2,7 @@ using Autofac;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,11 +10,13 @@ using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Web.Data;
 using Web.Features.Restaurants.SearchRestaurants;
+using Web.Hubs;
 using Web.ServiceRegistration;
 using Web.Services;
 using Web.Services.Authentication;
 using Web.Services.Cookies;
 using Web.Services.Hashing;
+using Web.Services.Notifications;
 using Web.Services.Tokenization;
 
 namespace Web
@@ -69,6 +72,13 @@ namespace Web
             services.AddSingleton<IClock, Clock>();
 
             services.AddStripe(Config);
+
+            services.AddSingleton<IUserIdProvider, UserIdProvider>();
+            services.AddSignalR();
+
+            services.AddSingleton<INotifier, Notifier>();
+
+            services.AddScoped<EventProcessor>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -116,6 +126,7 @@ namespace Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<OrderHub>("/hubs/orders");
             });
         }
     }

@@ -16,6 +16,13 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
+        public Task<Order> GetById(OrderId id)
+        {
+            return Task.FromResult(
+                Orders.SingleOrDefault(x => x.Id == id)
+            );
+        }
+
         public Task<Order> GetByPaymentIntentId(string paymentIntentId)
         {
             return Task.FromResult(

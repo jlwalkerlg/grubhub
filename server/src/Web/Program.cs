@@ -1,7 +1,9 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Web.BackgroundServices;
 
 namespace Web
 {
@@ -26,6 +28,13 @@ namespace Web
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices((ctx, services) =>
+                {
+                    if (!ctx.HostingEnvironment.IsTesting())
+                    {
+                        services.AddHostedService<EventWorker>();
+                    }
                 });
     }
 }

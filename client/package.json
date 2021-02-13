@@ -9,6 +9,7 @@
     "export": "next export"
   },
   "dependencies": {
+    "@microsoft/signalr": "^5.0.3",
     "@stripe/react-stripe-js": "^1.2.2",
     "@stripe/stripe-js": "^1.12.1",
     "autoprefixer": "^10.0.4",

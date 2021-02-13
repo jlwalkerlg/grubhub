@@ -6,11 +6,19 @@ namespace Web.Services.Cookies
     public class CookieBag : ICookieBag
     {
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly HttpContext httpContext;
 
         public CookieBag(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;
         }
+
+        public CookieBag(HttpContext httpContext)
+        {
+            this.httpContext = httpContext;
+        }
+
+        private HttpContext HttpContext => httpContext ?? httpContextAccessor.HttpContext;
 
         public void Add(string name, string value)
         {
@@ -19,8 +27,7 @@ namespace Web.Services.Cookies
 
         public void Add(string name, string value, CookieOptions options)
         {
-            httpContextAccessor
-                .HttpContext
+            HttpContext
                 .Response
                 .Cookies
                 .Append(name, value, options);
@@ -40,8 +47,7 @@ namespace Web.Services.Cookies
 
         public string Get(string name)
         {
-            var cookies = httpContextAccessor
-                .HttpContext
+            var cookies = HttpContext
                 .Request
                 .Cookies;
 

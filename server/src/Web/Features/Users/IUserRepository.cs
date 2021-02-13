@@ -8,6 +8,6 @@ namespace Web.Features.Users
         Task<User> GetById(UserId id);
         Task<User> GetByEmail(string email);
         Task<bool> EmailExists(string email);
-        Task Add(RestaurantManager manager);
+        Task Add(User user);
     }
 }
