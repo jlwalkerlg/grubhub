@@ -81,6 +81,7 @@ namespace Web
             services.AddStripe(Config);
 
             services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
             services.AddSingleton<INotifier, Notifier>();
 
