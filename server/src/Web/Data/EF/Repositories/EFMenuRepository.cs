@@ -24,9 +24,11 @@ namespace Web.Data.EF.Repositories
         public async Task<Menu> GetByRestaurantId(RestaurantId id)
         {
             return await context.Menus
-                .Include(x => x.Categories)
-                .ThenInclude(x => x.Items)
-                .OrderBy(x => x.RestaurantId) // needed to suppress ef core warning
+                .Include(x => x.Categories.Where(c =>
+                    !Microsoft.EntityFrameworkCore.EF.Property<bool>(c, "isDeleted")))
+                .ThenInclude(x => x.Items.Where(i =>
+                    !Microsoft.EntityFrameworkCore.EF.Property<bool>(i, "isDeleted")))
+                .OrderBy(x => x.RestaurantId)
                 .SingleOrDefaultAsync(x => x.RestaurantId == id);
         }
     }

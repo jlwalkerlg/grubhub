@@ -20,6 +20,9 @@ namespace WebTests.TestData
         [Column("price")]
         public decimal Price { get; set; } = 9.99m;
 
+        [Column("is_deleted")]
+        public bool IsDeleted { get; set; } = false;
+
         [Column("menu_category_id")]
         public Guid MenuCategoryId { get; set; }
     }

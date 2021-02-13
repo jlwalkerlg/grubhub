@@ -13,7 +13,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
         }
 
         [Fact]
-        public async Task It_Removes_An_Item_From_The_Menu()
+        public async Task It_Soft_Deletes_The_Item()
         {
             var restaurant = new Restaurant();
             var menu = restaurant.Menu;
@@ -30,9 +30,13 @@ namespace WebTests.Features.Menus.RemoveMenuItem
 
             response.StatusCode.ShouldBe(204);
 
-            var found = fixture.UseTestDbContext(db => db.MenuItems.ToList());
+            var items = fixture.UseTestDbContext(db => db.MenuItems.ToArray());
 
-            found.ShouldBeEmpty();
+            items.ShouldHaveSingleItem();
+
+            var found = items.Single();
+
+            found.IsDeleted.ShouldBeTrue();
         }
     }
 }

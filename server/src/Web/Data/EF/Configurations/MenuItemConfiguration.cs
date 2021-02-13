@@ -34,8 +34,10 @@ namespace Web.Data.EF.Configurations
             builder.Property<Guid>("menu_category_id")
                 .IsRequired();
 
-            builder.HasIndex("menu_category_id", "Name")
-                .IsUnique();
+            builder.Property<bool>("isDeleted")
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
         }
 
         [Fact]
-        public async Task It_Removes_A_Category_From_The_Menu()
+        public async Task It_Soft_Deletes_The_Category()
         {
             var restaurant = new Restaurant();
             var menu = restaurant.Menu;
@@ -30,7 +30,11 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
 
             var categories = fixture.UseTestDbContext(db => db.MenuCategories.ToArray());
 
-            categories.ShouldBeEmpty();
+            categories.ShouldHaveSingleItem();
+
+            var found = categories.Single();
+
+            found.IsDeleted.ShouldBeTrue();
         }
     }
 }

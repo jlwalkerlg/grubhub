@@ -18,6 +18,9 @@ namespace WebTests.TestData
         [Column("menu_id")]
         public int MenuId { get; set; }
 
+        [Column("is_deleted")]
+        public bool IsDeleted { get; set; } = false;
+
         public List<MenuItem> Items { get; set; } = new();
     }
 }
