@@ -32,6 +32,11 @@ namespace Web.Features.Orders.ConfirmOrder
                 return Error.NotFound("Order not found.");
             }
 
+            if (order.IsConfirmed)
+            {
+                return Result.Ok();
+            }
+
             var now = clock.UtcNow;
 
             var billingServiceResult = await billingService.EnsurePaymentWasAccepted(order);

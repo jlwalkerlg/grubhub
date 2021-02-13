@@ -49,7 +49,10 @@ namespace Web.Domain.Orders
         public DateTime PlacedAt { get; }
         public string PaymentIntentId { get; set; }
         public string PaymentIntentClientSecret { get; set; }
+
         public IReadOnlyList<OrderItem> Items => items;
+
+        public bool IsConfirmed => Status == OrderStatus.PaymentConfirmed;
 
         public Money CalculateTotal()
         {

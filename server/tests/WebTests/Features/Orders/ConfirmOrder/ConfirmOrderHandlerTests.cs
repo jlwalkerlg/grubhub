@@ -118,6 +118,75 @@ namespace WebTests.Features.Orders.ConfirmOrder
         }
 
         [Fact]
+        public async Task It_Is_Idempotent()
+        {
+            var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address("12 Maine Road"),
+                new Coordinates(54, -2));
+
+            restaurant.MaxDeliveryDistanceInKm = 10;
+            restaurant.MinimumDeliverySpend = new Money(10m);
+            restaurant.OpeningTimes = OpeningTimes.Always;
+
+            var menu = new Menu(restaurant.Id);
+            var menuItem = menu
+                .AddCategory(Guid.NewGuid(), "Pizza").Value
+                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(15m)).Value;
+
+            var basket = new Basket(
+                new UserId(Guid.NewGuid()),
+                restaurant.Id);
+
+            basket.AddItem(menuItem.Id, 1);
+
+            var deliveryLocation = new DeliveryLocation(
+                new Address("13 Maine Road"),
+                new Coordinates(54, -2));
+
+            var billingAccount = new BillingAccount(
+                new BillingAccountId(Guid.NewGuid().ToString()),
+                restaurant.Id);
+
+            billingAccount.Enable();
+
+            var now = DateTime.UtcNow;
+
+            var order = restaurant.PlaceOrder(
+                new OrderId(Guid.NewGuid().ToString()),
+                basket,
+                menu,
+                new MobileNumber("07123456789"),
+                deliveryLocation,
+                billingAccount,
+                now).Value;
+
+            order.PaymentIntentId = Guid.NewGuid().ToString();
+
+            order.Confirm();
+
+            await unitOfWorkSpy.Orders.Add(order);
+
+            var command = new ConfirmOrderCommand()
+            {
+                PaymentIntentId = order.PaymentIntentId,
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeSuccessful();
+
+            order.Status.ShouldBe(OrderStatus.PaymentConfirmed);
+
+            unitOfWorkSpy.EventRepositorySpy.Events.ShouldBeEmpty();
+
+            billingServiceSpy.ConfirmedOrder.ShouldBeNull();
+        }
+
+        [Fact]
         public async Task It_Fails_If_The_Order_Is_Not_Found()
         {
             var command = new ConfirmOrderCommand()
