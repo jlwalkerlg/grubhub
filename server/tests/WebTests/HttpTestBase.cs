@@ -2,7 +2,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -12,7 +11,6 @@ using System.Threading.Tasks;
 using Web;
 using Web.Domain.Users;
 using Web.Services;
-using Web.Services.Tokenization;
 using WebTests.Doubles;
 using Xunit;
 
@@ -32,7 +30,6 @@ namespace WebTests
     public class HttpTestFixture
     {
         protected readonly HttpTestWebApplicationFactory factory;
-        protected readonly ITokenizer tokenizer;
 
         public string HandlerErrorMessage =>
             HttpTestWebApplicationFactory.FailRequestHandlerError;
@@ -44,12 +41,6 @@ namespace WebTests
         protected HttpTestFixture(HttpTestWebApplicationFactory factory)
         {
             this.factory = factory;
-
-            using (var scope = factory.Services.CreateScope())
-            {
-                tokenizer = scope.ServiceProvider
-                    .GetRequiredService<ITokenizer>();
-            }
         }
 
         public T GetService<T>()
@@ -111,6 +102,7 @@ namespace WebTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             base.ConfigureWebHost(builder);
+
             builder.ConfigureServices(services =>
             {
                 services.AddSingleton<IClock, ClockStub>();

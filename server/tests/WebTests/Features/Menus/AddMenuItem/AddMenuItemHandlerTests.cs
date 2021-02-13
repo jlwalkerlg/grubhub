@@ -46,7 +46,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new AddMenuItemCommand()
             {
@@ -87,7 +87,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new AddMenuItemCommand()
             {
@@ -127,7 +127,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new AddMenuItemCommand()
             {
@@ -175,7 +175,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new AddMenuItemCommand()
             {

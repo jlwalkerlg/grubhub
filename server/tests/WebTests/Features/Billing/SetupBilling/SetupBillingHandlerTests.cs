@@ -52,7 +52,7 @@ namespace WebTests.Features.Billing.SetupBilling
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new SetupBillingCommand()
             {
@@ -78,7 +78,7 @@ namespace WebTests.Features.Billing.SetupBilling
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            authenticatorSpy.SignIn(restaurant.ManagerId);
+            await authenticatorSpy.SignIn(restaurant.ManagerId);
 
             billingServiceSpy.AccountId = Guid.NewGuid().ToString();
             billingServiceSpy.OnboardingLink = Guid.NewGuid().ToString();

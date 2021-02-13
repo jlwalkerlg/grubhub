@@ -51,7 +51,7 @@ namespace WebTests.Features.Billing.GetOnboardingLink
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var query = new GetOnboardingLinkQuery()
             {

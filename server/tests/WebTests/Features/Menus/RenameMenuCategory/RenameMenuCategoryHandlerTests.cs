@@ -66,7 +66,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new RenameMenuCategoryCommand()
             {
@@ -104,7 +104,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new RenameMenuCategoryCommand()
             {
@@ -145,7 +145,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new RenameMenuCategoryCommand()
             {

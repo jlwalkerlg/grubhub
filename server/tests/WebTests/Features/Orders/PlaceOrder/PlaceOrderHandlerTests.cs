@@ -93,7 +93,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await unitOfWorkSpy.Baskets.Add(basket);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
 
-            authenticatorSpy.SignIn(basket.UserId);
+            await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
             clockStub.UtcNow = now;
@@ -192,7 +192,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await unitOfWorkSpy.Baskets.Add(basket);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
 
-            authenticatorSpy.SignIn(basket.UserId);
+            await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
             clockStub.UtcNow = now;
@@ -256,7 +256,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await unitOfWorkSpy.Menus.Add(menu);
             await unitOfWorkSpy.Baskets.Add(basket);
 
-            authenticatorSpy.SignIn(basket.UserId);
+            await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
             clockStub.UtcNow = now;
@@ -332,7 +332,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await unitOfWorkSpy.Menus.Add(menu);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
 
-            authenticatorSpy.SignIn(basket.UserId);
+            await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
             clockStub.UtcNow = now;
@@ -409,7 +409,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await unitOfWorkSpy.Baskets.Add(basket);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
 
-            authenticatorSpy.SignIn(basket.UserId);
+            await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
             clockStub.UtcNow = now;

@@ -29,7 +29,7 @@ namespace WebTests.Features.Baskets.RemoveFromBasket
         [Fact]
         public async Task It_Fails_If_The_Basket_Is_Not_Found()
         {
-            authenticatorSpy.SignIn();
+            await authenticatorSpy.SignIn();
 
             var command = new RemoveFromBasketCommand()
             {
@@ -52,7 +52,7 @@ namespace WebTests.Features.Baskets.RemoveFromBasket
 
             await unitOfWorkSpy.Baskets.Add(basket);
 
-            authenticatorSpy.SignIn(basket.UserId);
+            await authenticatorSpy.SignIn(basket.UserId);
 
             var command = new RemoveFromBasketCommand()
             {

@@ -43,7 +43,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
             await unitOfWorkSpy.UserRepositorySpy.Add(authUser);
             await unitOfWorkSpy.UserRepositorySpy.Add(existingUser);
 
-            authenticatorSpy.SignIn(authUser);
+            await authenticatorSpy.SignIn(authUser);
 
             var command = new UpdateAuthUserDetailsCommand()
             {

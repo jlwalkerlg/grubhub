@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Web.Domain.Users;
 using Web.Services.Authentication;
 
@@ -10,29 +11,34 @@ namespace WebTests.Doubles
 
         public UserId UserId { get; private set; }
 
-        public void SignIn()
+        public Task SignIn()
         {
             UserId = new UserId(Guid.NewGuid());
+            return Task.CompletedTask;
         }
 
-        public void SignIn(Guid userId)
+        public Task SignIn(Guid userId)
         {
             UserId = new UserId(userId);
+            return Task.CompletedTask;
         }
 
-        public void SignIn(User user)
+        public Task SignIn(User user)
         {
             UserId = user.Id;
+            return Task.CompletedTask;
         }
 
-        public void SignIn(UserId userId)
+        public Task SignIn(UserId userId)
         {
             UserId = userId;
+            return Task.CompletedTask;
         }
 
-        public void SignOut()
+        public Task SignOut()
         {
             UserId = null;
+            return Task.CompletedTask;
         }
     }
 }

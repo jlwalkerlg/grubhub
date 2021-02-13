@@ -29,7 +29,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
         [Fact]
         public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
         {
-            authenticatorSpy.SignIn();
+            await authenticatorSpy.SignIn();
 
             var command = new AddMenuCategoryCommand()
             {
@@ -66,7 +66,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new AddMenuCategoryCommand()
             {
@@ -105,7 +105,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new AddMenuCategoryCommand()
             {

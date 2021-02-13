@@ -13,11 +13,11 @@ namespace Web.Features.Users.Logout
             this.authenticator = authenticator;
         }
 
-        public Task<Result> Handle(LogoutCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(LogoutCommand command, CancellationToken cancellationToken)
         {
-            authenticator.SignOut();
+            await authenticator.SignOut();
 
-            return Task.FromResult(Result.Ok());
+            return Result.Ok();
         }
     }
 }

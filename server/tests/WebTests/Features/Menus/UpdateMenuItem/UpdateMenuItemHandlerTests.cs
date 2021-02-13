@@ -37,7 +37,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new UpdateMenuItemCommand()
             {
@@ -78,7 +78,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new UpdateMenuItemCommand()
             {
@@ -120,7 +120,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new UpdateMenuItemCommand
             {
@@ -170,7 +170,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new UpdateMenuItemCommand()
             {

@@ -1,83 +1,60 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Web.Domain.Users;
-using Web.Services.Cookies;
-using Web.Services.Tokenization;
 
 namespace Web.Services.Authentication
 {
     public class Authenticator : IAuthenticator
     {
-        private readonly ITokenizer tokenizer;
-        private readonly ICookieBag cookies;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public Authenticator(ITokenizer tokenizer, ICookieBag cookies)
+        public Authenticator(IHttpContextAccessor httpContextAccessor)
         {
-            this.tokenizer = tokenizer;
-            this.cookies = cookies;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        public bool IsAuthenticated => UserId != null;
+        private HttpContext HttpContext => httpContextAccessor.HttpContext;
 
-        public UserId UserId
+        public bool IsAuthenticated => HttpContext.User.Identity.IsAuthenticated;
+
+        public UserId UserId => IsAuthenticated
+            ? new UserId(Guid.Parse(HttpContext.User.Identity.Name))
+            : null;
+
+        public async Task SignIn(User user)
         {
-            get
+            var claims = new[]
             {
-                if (idValue == null)
-                {
-                    idValue = GetUserId();
-                }
+                new Claim(ClaimTypes.Name, user.Id.Value.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+            };
 
-                return idValue == Guid.Empty ? null : new UserId(idValue.Value);
-            }
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var principal = new ClaimsPrincipal(identity);
+
+            var properties = new AuthenticationProperties()
+            {
+                ExpiresUtc = DateTime.Now.AddDays(14),
+            };
+
+            await HttpContext
+                .SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    principal,
+                    properties
+                );
         }
 
-        private Guid? idValue = null;
-
-        public Guid GetUserId()
+        public async Task SignOut()
         {
-            var token = cookies.Get("auth_token");
-
-            if (token == null)
-            {
-                return Guid.Empty;
-            }
-
-            var result = tokenizer.Decode(token);
-            if (!result)
-            {
-                return Guid.Empty;
-            }
-
-            if (!Guid.TryParse(result.Value, out Guid id))
-            {
-                return Guid.Empty;
-            }
-
-            return id;
-        }
-
-        public void SignIn(User user)
-        {
-            var expiresIn = DateTimeOffset.UtcNow.AddDays(14);
-
-            var token = tokenizer.Encode(user.Id.Value.ToString());
-
-            cookies.Add("auth_token", token, new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = expiresIn,
-                Path = "/",
-            });
-        }
-
-        public void SignOut()
-        {
-            cookies.Delete("auth_token", new CookieOptions
-            {
-                HttpOnly = true,
-                Path = "/",
-            });
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace WebTests.Features.Baskets.AddToBasket
         [Fact]
         public async Task It_Fails_If_The_Menu_Is_Not_Found()
         {
-            authenticatorSpy.SignIn();
+            await authenticatorSpy.SignIn();
 
             var command = new AddToBasketCommand()
             {
@@ -55,7 +55,7 @@ namespace WebTests.Features.Baskets.AddToBasket
 
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn();
+            await authenticatorSpy.SignIn();
 
             var command = new AddToBasketCommand()
             {
@@ -85,7 +85,7 @@ namespace WebTests.Features.Baskets.AddToBasket
             await unitOfWorkSpy.Baskets.Add(basket);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn(basket.UserId);
+            await authenticatorSpy.SignIn(basket.UserId);
 
             var command = new AddToBasketCommand()
             {

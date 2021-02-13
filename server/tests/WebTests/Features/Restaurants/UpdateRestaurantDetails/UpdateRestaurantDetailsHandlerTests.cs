@@ -59,7 +59,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             await unitOfWorkSpy.Users.Add(manager);
             await unitOfWorkSpy.Restaurants.Add(restaurant);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new UpdateRestaurantDetailsCommand()
             {

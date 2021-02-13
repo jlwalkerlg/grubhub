@@ -37,7 +37,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new RemoveMenuItemCommand()
             {
@@ -82,7 +82,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new RemoveMenuItemCommand()
             {
@@ -120,7 +120,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new RemoveMenuItemCommand()
             {
@@ -159,7 +159,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
             await unitOfWorkSpy.MenuRepositorySpy.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new RemoveMenuItemCommand()
             {

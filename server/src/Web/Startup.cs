@@ -1,7 +1,10 @@
 using Autofac;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,10 +17,8 @@ using Web.Hubs;
 using Web.ServiceRegistration;
 using Web.Services;
 using Web.Services.Authentication;
-using Web.Services.Cookies;
 using Web.Services.Hashing;
 using Web.Services.Notifications;
-using Web.Services.Tokenization;
 
 namespace Web
 {
@@ -40,6 +41,12 @@ namespace Web
                 builder.AddFilter("Microsoft", LogLevel.Warning);
                 builder.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
             });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = "auth_cookie";
+                });
 
             services
                 .AddControllers()
@@ -73,7 +80,6 @@ namespace Web
 
             services.AddStripe(Config);
 
-            services.AddSingleton<IUserIdProvider, UserIdProvider>();
             services.AddSignalR();
 
             services.AddSingleton<INotifier, Notifier>();
@@ -97,14 +103,6 @@ namespace Web
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
-            builder.Register(ctx => new JWTTokenizer(Config.JWTSecret))
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
-            builder.RegisterType<CookieBag>()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
             builder.RegisterType<Authenticator>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
@@ -121,6 +119,21 @@ namespace Web
 
             app.UseRouting();
 
+            app.UseCookiePolicy(
+                new CookiePolicyOptions()
+                {
+                    MinimumSameSitePolicy = SameSiteMode.Strict,
+                    HttpOnly = HttpOnlyPolicy.Always,
+                    Secure = CookieSecurePolicy.None,
+                });
+
+            // TODO: how to put this in test server?
+            if (env.IsTesting())
+            {
+                app.UseMiddleware<AuthenticationTestMiddleware>();
+            }
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

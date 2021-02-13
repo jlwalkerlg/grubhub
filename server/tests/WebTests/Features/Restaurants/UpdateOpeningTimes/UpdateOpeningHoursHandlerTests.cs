@@ -60,7 +60,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new UpdateOpeningHoursCommand()
             {

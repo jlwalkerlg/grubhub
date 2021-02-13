@@ -65,7 +65,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn(Guid.NewGuid());
+            await authenticatorSpy.SignIn(Guid.NewGuid());
 
             var command = new RemoveMenuCategoryCommand()
             {
@@ -102,7 +102,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.Menus.Add(menu);
 
-            authenticatorSpy.SignIn(manager);
+            await authenticatorSpy.SignIn(manager);
 
             var command = new RemoveMenuCategoryCommand()
             {

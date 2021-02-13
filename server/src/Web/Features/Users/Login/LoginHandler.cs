@@ -35,7 +35,7 @@ namespace Web.Features.Users.Login
                 return Error.BadRequest("Invalid credentials.");
             }
 
-            authenticator.SignIn(user);
+            await authenticator.SignIn(user);
 
             return Result.Ok();
         }

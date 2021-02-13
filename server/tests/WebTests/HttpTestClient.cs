@@ -5,17 +5,14 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using Web;
-using Web.Services.Tokenization;
 
 namespace WebTests
 {
     public class HttpTestClient
     {
         private readonly HttpClient client;
-        private readonly ITokenizer tokenizer;
-        private string authToken;
+        private string userId;
 
         public HttpTestClient(WebApplicationFactory<Startup> factory)
         {
@@ -28,11 +25,6 @@ namespace WebTests
 
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-
-            using (var scope = factory.Services.CreateScope())
-            {
-                tokenizer = scope.ServiceProvider.GetRequiredService<ITokenizer>();
-            };
         }
 
         public Task<HttpResponseMessage> Get(string uri)
@@ -59,9 +51,9 @@ namespace WebTests
 
         private Task<HttpResponseMessage> Send(HttpRequestMessage message, object data = null)
         {
-            if (authToken != null)
+            if (userId != null)
             {
-                message.Headers.Add("Cookie", $"auth_token={authToken}");
+                message.Headers.Add("user-id", userId);
             }
 
             if (data != null)
@@ -83,7 +75,7 @@ namespace WebTests
 
         public HttpTestClient Authenticate(string userId)
         {
-            authToken = tokenizer.Encode(userId);
+            this.userId = userId;
             return this;
         }
     }
