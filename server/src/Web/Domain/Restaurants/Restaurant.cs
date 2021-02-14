@@ -12,6 +12,15 @@ namespace Web.Domain.Restaurants
 {
     public class Restaurant : Entity<Restaurant>
     {
+        private string name;
+        private string description;
+        private PhoneNumber phoneNumber;
+        private Money minimumDeliverySpend = new(0);
+        private Money deliveryFee = new(0);
+        public Distance maxDeliveryDistance = Distance.Zero;
+        private int estimatedDeliveryTime = 30;
+        private readonly List<Cuisine> _cuisines = new();
+
         public Restaurant(
             RestaurantId id,
             UserId managerId,
@@ -55,7 +64,6 @@ namespace Web.Domain.Restaurants
 
         public UserId ManagerId { get; }
 
-        private string name;
         public string Name
         {
             get => name;
@@ -70,7 +78,6 @@ namespace Web.Domain.Restaurants
             }
         }
 
-        private string description;
         public string Description
         {
             get => description;
@@ -85,7 +92,6 @@ namespace Web.Domain.Restaurants
             }
         }
 
-        private PhoneNumber phoneNumber;
         public PhoneNumber PhoneNumber
         {
             get => phoneNumber;
@@ -108,7 +114,6 @@ namespace Web.Domain.Restaurants
 
         public OpeningTimes OpeningTimes { get; set; }
 
-        private Money minimumDeliverySpend = new(0);
         public Money MinimumDeliverySpend
         {
             get => minimumDeliverySpend;
@@ -123,7 +128,6 @@ namespace Web.Domain.Restaurants
             }
         }
 
-        private Money deliveryFee = new(0);
         public Money DeliveryFee
         {
             get => deliveryFee;
@@ -138,22 +142,20 @@ namespace Web.Domain.Restaurants
             }
         }
 
-        public int maxDeliveryDistanceInKm;
-        public int MaxDeliveryDistanceInKm
+        public Distance MaxDeliveryDistance
         {
-            get => maxDeliveryDistanceInKm;
+            get => maxDeliveryDistance;
             set
             {
-                if (value < 0)
+                if (value.Km < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(MaxDeliveryDistanceInKm));
+                    throw new ArgumentOutOfRangeException(nameof(maxDeliveryDistance));
                 }
 
-                maxDeliveryDistanceInKm = value;
+                maxDeliveryDistance = value;
             }
         }
 
-        private int estimatedDeliveryTime = 30;
         public int EstimatedDeliveryTimeInMinutes
         {
             get => estimatedDeliveryTime;
@@ -168,7 +170,6 @@ namespace Web.Domain.Restaurants
             }
         }
 
-        private readonly List<Cuisine> _cuisines = new();
         public IReadOnlyList<Cuisine> Cuisines => _cuisines;
 
         public void SetCuisines(params Cuisine[] cuisines)
@@ -220,9 +221,9 @@ namespace Web.Domain.Restaurants
 
             var distance = deliveryLocation.Coordinates.CalculateDistance(Coordinates);
 
-            if (distance.Km > MaxDeliveryDistanceInKm)
+            if (distance > maxDeliveryDistance)
             {
-                return Error.BadRequest($"Delivery beyond {MaxDeliveryDistanceInKm} km not available.");
+                return Error.BadRequest($"Delivery beyond {maxDeliveryDistance.Km} km not available.");
             }
 
             var subtotal = basket.CalculateSubtotal(menu);

@@ -27,7 +27,7 @@ namespace WebTests.Domain.Restaurants
 
             restaurant.OpeningTimes = OpeningTimes.Always;
             restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistanceInKm = 5;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
             var billingAccount = new BillingAccount(
                 new BillingAccountId(Guid.NewGuid().ToString()),
@@ -97,7 +97,7 @@ namespace WebTests.Domain.Restaurants
 
             restaurant.OpeningTimes = OpeningTimes.Always;
             restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistanceInKm = 5;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
             var billingAccount = new BillingAccount(
                 new BillingAccountId(Guid.NewGuid().ToString()),
@@ -152,7 +152,7 @@ namespace WebTests.Domain.Restaurants
 
             restaurant.OpeningTimes = OpeningTimes.Always;
             restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistanceInKm = 5;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
             var billingAccount = new BillingAccount(
                 new BillingAccountId(Guid.NewGuid().ToString()),
@@ -207,7 +207,7 @@ namespace WebTests.Domain.Restaurants
 
             restaurant.OpeningTimes = OpeningTimes.Always;
             restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistanceInKm = 5;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
             var billingAccount = new BillingAccount(
                 new BillingAccountId(Guid.NewGuid().ToString()),
@@ -260,7 +260,7 @@ namespace WebTests.Domain.Restaurants
 
             restaurant.OpeningTimes = null;
             restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistanceInKm = 5;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
             var billingAccount = new BillingAccount(
                 new BillingAccountId(Guid.NewGuid().ToString()),
@@ -315,7 +315,7 @@ namespace WebTests.Domain.Restaurants
 
             restaurant.OpeningTimes = OpeningTimes.Always;
             restaurant.MinimumDeliverySpend = Money.FromPounds(20m);
-            restaurant.MaxDeliveryDistanceInKm = 5;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
             var billingAccount = new BillingAccount(
                 new BillingAccountId(Guid.NewGuid().ToString()),

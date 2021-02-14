@@ -19,7 +19,7 @@ namespace Web.Features.Restaurants
         public OpeningTimesDto OpeningTimes { get; init; } = new();
         public decimal DeliveryFee { get; init; }
         public decimal MinimumDeliverySpend { get; init; }
-        public int MaxDeliveryDistanceInKm { get; init; }
+        public float MaxDeliveryDistanceInKm { get; init; }
         public int EstimatedDeliveryTimeInMinutes { get; init; }
         public List<CuisineDto> Cuisines { get; init; } = new();
         public MenuDto Menu { get; init; }

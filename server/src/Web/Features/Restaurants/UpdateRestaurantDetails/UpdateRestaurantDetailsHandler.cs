@@ -41,7 +41,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             restaurant.PhoneNumber = new PhoneNumber(command.PhoneNumber);
             restaurant.MinimumDeliverySpend = Money.FromPounds(command.MinimumDeliverySpend);
             restaurant.DeliveryFee = Money.FromPounds(command.DeliveryFee);
-            restaurant.MaxDeliveryDistanceInKm = command.MaxDeliveryDistanceInKm;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(command.MaxDeliveryDistanceInKm);
             restaurant.EstimatedDeliveryTimeInMinutes = command.EstimatedDeliveryTimeInMinutes;
 
             await unitOfWork.Commit();

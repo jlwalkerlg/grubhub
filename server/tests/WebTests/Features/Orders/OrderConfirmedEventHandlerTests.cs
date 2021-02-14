@@ -44,7 +44,7 @@ namespace WebTests.Features.Orders
 
             restaurant.OpeningTimes = OpeningTimes.Always;
             restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistanceInKm = 5;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
             var billingAccount = new BillingAccount(
                 new BillingAccountId(Guid.NewGuid().ToString()),

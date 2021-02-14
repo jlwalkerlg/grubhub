@@ -31,7 +31,7 @@
         "sunday_close": "23:00:00",
         "minimum_delivery_spend": 10.0,
         "delivery_fee": 2.49,
-        "max_delivery_distance_in_km": 5,
+        "max_delivery_distance": 5,
         "estimated_delivery_time_in_minutes": 40,
         "menu": {
           "id": 1,
@@ -524,7 +524,7 @@
         "sunday_close": "23:45:00",
         "minimum_delivery_spend": 10.0,
         "delivery_fee": 2.49,
-        "max_delivery_distance_in_km": 5,
+        "max_delivery_distance": 5,
         "estimated_delivery_time_in_minutes": 45,
         "menu": {
           "categories": [

@@ -68,7 +68,7 @@ namespace Console
                         )
                     );
 
-                    restaurant.MaxDeliveryDistanceInKm = restaurantEl.GetProperty("max_delivery_distance_in_km").GetInt32();
+                    restaurant.MaxDeliveryDistance = Distance.FromKm(restaurantEl.GetProperty("max_delivery_distance").GetInt32());
                     restaurant.EstimatedDeliveryTimeInMinutes =
                         restaurantEl.GetProperty("estimated_delivery_time_in_minutes").GetInt32();
                     restaurant.MinimumDeliverySpend = Money.FromPounds(restaurantEl.GetProperty("minimum_delivery_spend").GetDecimal());

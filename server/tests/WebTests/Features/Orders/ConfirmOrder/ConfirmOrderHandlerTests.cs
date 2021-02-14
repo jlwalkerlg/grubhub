@@ -48,7 +48,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new Address("12 Maine Road"),
                 new Coordinates(54, -2));
 
-            restaurant.MaxDeliveryDistanceInKm = 10;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(10);
             restaurant.MinimumDeliverySpend = Money.FromPounds(10m);
             restaurant.OpeningTimes = OpeningTimes.Always;
 
@@ -128,7 +128,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new Address("12 Maine Road"),
                 new Coordinates(54, -2));
 
-            restaurant.MaxDeliveryDistanceInKm = 10;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(10);
             restaurant.MinimumDeliverySpend = Money.FromPounds(10m);
             restaurant.OpeningTimes = OpeningTimes.Always;
 
@@ -211,7 +211,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new Address("12 Maine Road"),
                 new Coordinates(54, -2));
 
-            restaurant.MaxDeliveryDistanceInKm = 10;
+            restaurant.MaxDeliveryDistance = Distance.FromKm(10);
             restaurant.MinimumDeliverySpend = Money.FromPounds(10m);
             restaurant.OpeningTimes = OpeningTimes.Always;
 

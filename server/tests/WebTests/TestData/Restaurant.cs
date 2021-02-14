@@ -118,7 +118,7 @@ namespace WebTests.TestData
         public int DeliveryFee { get; set; } = 1500;
 
         [Column("max_delivery_distance_in_km")]
-        public int MaxDeliveryDistanceInKm { get; set; } = 5;
+        public float MaxDeliveryDistanceInKm { get; set; } = 5;
 
         [Column("estimated_delivery_time_in_minutes")]
         public int EstimatedDeliveryTimeInMinutes { get; set; } = 40;

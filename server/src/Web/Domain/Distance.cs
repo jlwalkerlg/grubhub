@@ -4,23 +4,28 @@ namespace Web.Domain
 {
     public record Distance
     {
-        private readonly float metres;
+        public static readonly Distance Zero = new Distance(0);
 
-        private Distance(float metres)
+        private Distance() { } // EF
+
+        private Distance(float km)
         {
-            if (metres < 0)
+            if (km < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(metres));
+                throw new ArgumentOutOfRangeException(nameof(km));
             }
 
-            this.metres = metres;
+            Km = km;
         }
 
-        public float Km => metres / 1000;
+        public float Km { get; }
 
-        public static Distance FromMetres(float metres)
-        {
-            return new Distance(metres);
-        }
+        public static Distance FromMetres(float metres) => new Distance(metres / 1000);
+
+        public static Distance FromKm(float km) => new Distance(km);
+
+        public static bool operator >(Distance a, Distance b) => a?.Km > b?.Km;
+
+        public static bool operator <(Distance a, Distance b) => b > a;
     }
 }

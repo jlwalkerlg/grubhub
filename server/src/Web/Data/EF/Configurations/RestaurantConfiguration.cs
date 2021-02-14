@@ -109,9 +109,12 @@ namespace Web.Data.EF.Configurations
                     .HasColumnName("minimum_delivery_spend");
             });
 
-            builder.Property(x => x.MaxDeliveryDistanceInKm)
-                .IsRequired()
-                .HasColumnName("max_delivery_distance_in_km");
+            builder.OwnsOne(x => x.MaxDeliveryDistance, x =>
+            {
+                x.Property(y => y.Km)
+                    .IsRequired()
+                    .HasColumnName("max_delivery_distance_in_km");
+            });
 
             builder.Property(x => x.EstimatedDeliveryTimeInMinutes)
                 .IsRequired()
