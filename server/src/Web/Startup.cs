@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Web.Data;
 using Web.Features.Restaurants.SearchRestaurants;
+using Web.Filters;
 using Web.Hubs;
 using Web.ServiceRegistration;
 using Web.Services;
@@ -49,7 +50,10 @@ namespace Web
                 });
 
             services
-                .AddControllers()
+                .AddControllers(options =>
+                {
+                    options.Filters.Add(new ExceptionFilter());
+                })
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
