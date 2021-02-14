@@ -26,7 +26,7 @@ namespace WebTests.Domain.Restaurants
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = new Money(10.00m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
             restaurant.MaxDeliveryDistanceInKm = 5;
 
             var billingAccount = new BillingAccount(
@@ -38,7 +38,7 @@ namespace WebTests.Domain.Restaurants
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(10m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),
@@ -96,7 +96,7 @@ namespace WebTests.Domain.Restaurants
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = new Money(10.00m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
             restaurant.MaxDeliveryDistanceInKm = 5;
 
             var billingAccount = new BillingAccount(
@@ -108,7 +108,7 @@ namespace WebTests.Domain.Restaurants
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(10m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),
@@ -151,7 +151,7 @@ namespace WebTests.Domain.Restaurants
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = new Money(10.00m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
             restaurant.MaxDeliveryDistanceInKm = 5;
 
             var billingAccount = new BillingAccount(
@@ -163,7 +163,7 @@ namespace WebTests.Domain.Restaurants
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(10m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),
@@ -206,7 +206,7 @@ namespace WebTests.Domain.Restaurants
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = new Money(10.00m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
             restaurant.MaxDeliveryDistanceInKm = 5;
 
             var billingAccount = new BillingAccount(
@@ -218,7 +218,7 @@ namespace WebTests.Domain.Restaurants
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(10m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),
@@ -259,7 +259,7 @@ namespace WebTests.Domain.Restaurants
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = null;
-            restaurant.MinimumDeliverySpend = new Money(10.00m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
             restaurant.MaxDeliveryDistanceInKm = 5;
 
             var billingAccount = new BillingAccount(
@@ -271,7 +271,7 @@ namespace WebTests.Domain.Restaurants
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(10m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),
@@ -314,7 +314,7 @@ namespace WebTests.Domain.Restaurants
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = new Money(20m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(20m);
             restaurant.MaxDeliveryDistanceInKm = 5;
 
             var billingAccount = new BillingAccount(
@@ -326,7 +326,7 @@ namespace WebTests.Domain.Restaurants
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(10m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),

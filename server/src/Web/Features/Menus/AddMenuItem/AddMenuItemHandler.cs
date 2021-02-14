@@ -45,7 +45,7 @@ namespace Web.Features.Menus.AddMenuItem
                 Guid.NewGuid(),
                 command.Name,
                 command.Description,
-                new Money(command.Price));
+                Money.FromPounds(command.Price));
 
             if (result)
             {

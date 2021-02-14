@@ -169,7 +169,7 @@ namespace WebTests.Features.Menus.AddMenuItem
                 Guid.NewGuid(),
                 "Margherita",
                 "Cheese & tomato",
-                new Money(9.99m));
+                Money.FromPounds(9.99m));
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);

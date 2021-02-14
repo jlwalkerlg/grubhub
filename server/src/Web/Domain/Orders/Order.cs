@@ -42,7 +42,7 @@ namespace Web.Domain.Orders
         public RestaurantId RestaurantId { get; }
         public Money Subtotal { get; }
         public Money DeliveryFee { get; }
-        public Money ServiceFee { get; } = new Money(0.50m);
+        public Money ServiceFee { get; } = Money.FromPounds(0.50m);
         public OrderStatus Status { get; private set; } = OrderStatus.Placed;
         public MobileNumber MobileNumber { get; }
         public Address Address { get; }

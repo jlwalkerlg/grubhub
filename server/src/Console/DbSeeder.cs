@@ -71,8 +71,8 @@ namespace Console
                     restaurant.MaxDeliveryDistanceInKm = restaurantEl.GetProperty("max_delivery_distance_in_km").GetInt32();
                     restaurant.EstimatedDeliveryTimeInMinutes =
                         restaurantEl.GetProperty("estimated_delivery_time_in_minutes").GetInt32();
-                    restaurant.MinimumDeliverySpend = new Money(restaurantEl.GetProperty("minimum_delivery_spend").GetDecimal());
-                    restaurant.DeliveryFee = new Money(restaurantEl.GetProperty("delivery_fee").GetDecimal());
+                    restaurant.MinimumDeliverySpend = Money.FromPounds(restaurantEl.GetProperty("minimum_delivery_spend").GetDecimal());
+                    restaurant.DeliveryFee = Money.FromPounds(restaurantEl.GetProperty("delivery_fee").GetDecimal());
 
                     if (restaurantEl.GetProperty("status").GetString() == "Approved")
                     {
@@ -127,7 +127,7 @@ namespace Console
                                 Guid.NewGuid(),
                                 itemEl.GetProperty("name").GetString(),
                                 itemEl.GetProperty("description").GetString(),
-                                new Money(itemEl.GetProperty("price").GetDecimal())
+                                Money.FromPounds(itemEl.GetProperty("price").GetDecimal())
                             );
                         }
                     }

@@ -51,13 +51,13 @@ namespace WebTests.TestData
         }
 
         [Column("subtotal")]
-        public decimal Subtotal { get; set; } = 12.12m;
+        public int Subtotal { get; set; } = 1212;
 
         [Column("delivery_fee")]
-        public decimal DeliveryFee { get; set; } = 1.51m;
+        public int DeliveryFee { get; set; } = 151;
 
         [Column("service_fee")]
-        public decimal ServiceFee { get; set; } = 0.56m;
+        public int ServiceFee { get; set; } = 56;
 
         [Column("status")]
         public OrderStatus Status { get; set; } = OrderStatus.Placed;

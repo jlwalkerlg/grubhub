@@ -42,8 +42,8 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             found.Name.ShouldBe(request.Name);
             found.Description.ShouldBe(request.Description);
             found.PhoneNumber.ShouldBe(request.PhoneNumber);
-            found.MinimumDeliverySpend.ShouldBe(request.MinimumDeliverySpend);
-            found.DeliveryFee.ShouldBe(request.DeliveryFee);
+            found.MinimumDeliverySpend.ShouldBe((int)(request.MinimumDeliverySpend * 100));
+            found.DeliveryFee.ShouldBe((int)(request.DeliveryFee * 100));
             found.MaxDeliveryDistanceInKm.ShouldBe(request.MaxDeliveryDistanceInKm);
             found.EstimatedDeliveryTimeInMinutes.ShouldBe(request.EstimatedDeliveryTimeInMinutes);
         }

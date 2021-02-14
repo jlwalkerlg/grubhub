@@ -10,7 +10,8 @@ namespace WebTests.Domain
         [Fact]
         public void Cant_Have_Less_Than_1p()
         {
-            Should.Throw<ArgumentException>(() => new Money(1.001m));
+            Should.Throw<ArgumentException>(() => Money.FromPence(-1));
+            Should.Throw<ArgumentException>(() => Money.FromPounds(1.001m));
         }
     }
 }

@@ -32,21 +32,21 @@ namespace WebTests.Domain.Baskets
                 Guid.NewGuid(),
                 "Margherita",
                 null,
-                new Money(9.99m)
+                Money.FromPounds(9.99m)
             ).Value;
 
             var hawaiian = pizza.AddItem(
                 Guid.NewGuid(),
                 "Hawaiian",
                 null,
-                new Money(12.99m)
+                Money.FromPounds(12.99m)
             ).Value;
 
             var masala = curry.AddItem(
                 Guid.NewGuid(),
                 "Masala",
                 null,
-                new Money(11.99m)
+                Money.FromPounds(11.99m)
             ).Value;
 
             var basket = new Basket(
@@ -58,7 +58,7 @@ namespace WebTests.Domain.Baskets
             basket.AddItem(hawaiian.Id, 1);
             basket.AddItem(masala.Id, 3);
 
-            basket.CalculateSubtotal(menu).ShouldBe(new Money(68.94m));
+            basket.CalculateSubtotal(menu).ShouldBe(Money.FromPounds(68.94m));
         }
 
         [Fact]

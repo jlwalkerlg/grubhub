@@ -49,13 +49,13 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new Coordinates(54, -2));
 
             restaurant.MaxDeliveryDistanceInKm = 10;
-            restaurant.MinimumDeliverySpend = new Money(10m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10m);
             restaurant.OpeningTimes = OpeningTimes.Always;
 
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(15m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(15m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),
@@ -129,13 +129,13 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new Coordinates(54, -2));
 
             restaurant.MaxDeliveryDistanceInKm = 10;
-            restaurant.MinimumDeliverySpend = new Money(10m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10m);
             restaurant.OpeningTimes = OpeningTimes.Always;
 
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(15m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(15m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),
@@ -212,13 +212,13 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new Coordinates(54, -2));
 
             restaurant.MaxDeliveryDistanceInKm = 10;
-            restaurant.MinimumDeliverySpend = new Money(10m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10m);
             restaurant.OpeningTimes = OpeningTimes.Always;
 
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(15m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(15m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),

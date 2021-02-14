@@ -59,7 +59,7 @@ namespace Web.Features.Menus.UpdateMenuItem
                 ? null
                 : command.Description;
 
-            item.Price = new Money(command.Price);
+            item.Price = Money.FromPounds(command.Price);
 
             await unitOfWork.Commit();
 

@@ -43,7 +43,7 @@ namespace WebTests.Features.Orders
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = new Money(10.00m);
+            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
             restaurant.MaxDeliveryDistanceInKm = 5;
 
             var billingAccount = new BillingAccount(
@@ -55,7 +55,7 @@ namespace WebTests.Features.Orders
             var menu = new Menu(restaurant.Id);
             var menuItem = menu
                 .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, new Money(10m)).Value;
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
 
             var user = new Customer(
                 new UserId(Guid.NewGuid()),

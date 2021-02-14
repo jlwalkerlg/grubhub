@@ -4,41 +4,40 @@ namespace Web.Domain
 {
     public record Money
     {
-        public static readonly Money Zero = new Money(0m);
+        public static readonly Money Zero = new Money(0);
 
-        public Money(decimal amount)
+        public Money(int pence)
         {
-            if (amount < 0)
+            if (pence < 0)
             {
-                throw new ArgumentException("Amount must not be less than 0.");
+                throw new ArgumentException("Pence must not be less than 0.");
             }
 
-            if (amount.ToString().Contains('.'))
-            {
-                var precision = amount.ToString()
-                    .Split('.')[1]
-                    .Length;
-
-                if (precision > 2)
-                {
-                    throw new ArgumentException("Amount must not be more precise than 1p.");
-                }
-            }
-
-            Amount = amount;
+            Pence = pence;
         }
 
-        public decimal Amount { get; }
+        public int Pence { get; }
+
+        public static Money FromPence(int pence) => new Money(pence);
+
+        public static Money FromPounds(decimal pounds)
+        {
+            var pence = (int)(pounds * 100);
+
+            if ((decimal)pence != pounds * 100)
+            {
+                throw new ArgumentException("Money has minimum precision of 1p.");
+            }
+
+            return new Money(pence);
+        }
 
         public static bool operator <(Money a, Money b)
         {
-            return a?.Amount < b?.Amount;
+            return a?.Pence < b?.Pence;
         }
 
-        public static bool operator >(Money a, Money b)
-        {
-            return a?.Amount > b?.Amount;
-        }
+        public static bool operator >(Money a, Money b) => b < a;
 
         public static Money operator +(Money a, Money b)
         {
@@ -52,7 +51,7 @@ namespace Web.Domain
                 throw new ArgumentNullException(nameof(b));
             }
 
-            return new Money(a.Amount + b.Amount);
+            return new Money(a.Pence + b.Pence);
         }
 
         public static Money operator *(Money money, int multiplier)
@@ -67,12 +66,9 @@ namespace Web.Domain
                 throw new ArgumentOutOfRangeException(nameof(multiplier));
             }
 
-            return new Money(money.Amount * multiplier);
+            return new Money(money.Pence * multiplier);
         }
 
-        public static Money operator *(int multiplier, Money money)
-        {
-            return money * multiplier;
-        }
+        public static Money operator *(int multiplier, Money money) => money * multiplier;
     }
 }

@@ -18,7 +18,7 @@ namespace WebTests.TestData
         public string Description { get; set; } = Guid.NewGuid().ToString();
 
         [Column("price")]
-        public decimal Price { get; set; } = 9.99m;
+        public int Price { get; set; } = 999;
 
         [Column("is_deleted")]
         public bool IsDeleted { get; set; } = false;

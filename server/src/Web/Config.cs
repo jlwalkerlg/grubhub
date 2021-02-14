@@ -6,7 +6,6 @@ namespace Web
         public string ClientUrl { get; set; }
         public string DbConnectionString { get; set; }
         public string GoogleGeocodingApiKey { get; set; }
-        public string JWTSecret { get; set; }
         public string[] CorsOrigins { get; set; }
         public string StripePublishableKey { get; set; }
         public string StripeSecretKey { get; set; }

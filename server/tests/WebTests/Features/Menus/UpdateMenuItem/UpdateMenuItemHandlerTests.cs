@@ -161,10 +161,10 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Guid.NewGuid(),
                 "Margherita",
                 "Cheese & tomato",
-                new Money(9.99m))
+                Money.FromPounds(9.99m))
                 .Value;
 
-            category.AddItem(Guid.NewGuid(), "Hawaiian", "Ham & pineapple", new Money(11.99m));
+            category.AddItem(Guid.NewGuid(), "Hawaiian", "Ham & pineapple", Money.FromPounds(11.99m));
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);
             await unitOfWorkSpy.RestaurantRepositorySpy.Add(restaurant);

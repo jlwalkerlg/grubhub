@@ -75,7 +75,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
                 Guid.NewGuid(),
                 "Margherita",
                 null,
-                new Money(9.99m))
+                Money.FromPounds(9.99m))
                 .Value;
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);

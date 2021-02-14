@@ -74,7 +74,7 @@ namespace WebTests.Features.Baskets.AddToBasket
         {
             var menu = new Menu(new RestaurantId(Guid.NewGuid()));
             var menuCategory = menu.AddCategory(Guid.NewGuid(), "Pizza").Value;
-            var menuItem = menuCategory.AddItem(Guid.NewGuid(), "Margherita", null, new Money(9.99m)).Value;
+            var menuItem = menuCategory.AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(9.99m)).Value;
 
             var basket = new Basket(
                 new UserId(Guid.NewGuid()),

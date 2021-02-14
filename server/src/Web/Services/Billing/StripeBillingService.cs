@@ -58,17 +58,14 @@ namespace Web.Services.Billing
         {
             var service = new PaymentIntentService();
 
-            var amountInPence = (int)(order.CalculateTotal().Amount * 100);
-            var applicationFeeInPence = 50;
-
             var intent = await service.CreateAsync(
                 new PaymentIntentCreateOptions()
                 {
                     CaptureMethod = "manual",
                     PaymentMethodTypes = new List<string>() { "card" },
-                    Amount = amountInPence,
+                    Amount = order.CalculateTotal().Pence,
                     Currency = "gbp",
-                    ApplicationFeeAmount = applicationFeeInPence,
+                    ApplicationFeeAmount = 50,
                     TransferData = new PaymentIntentTransferDataOptions()
                     {
                         Destination = account.Id.Value.ToString(),

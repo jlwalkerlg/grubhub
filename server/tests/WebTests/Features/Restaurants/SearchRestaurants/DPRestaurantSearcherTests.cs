@@ -175,7 +175,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
-                MinimumDeliverySpend = 15.00m,
+                MinimumDeliverySpend = 1500,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
@@ -186,7 +186,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
-                MinimumDeliverySpend = 6.00m,
+                MinimumDeliverySpend = 600,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
@@ -197,7 +197,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Latitude = 54.0f,
                 Longitude = -2.0f,
                 MaxDeliveryDistanceInKm = 10,
-                MinimumDeliverySpend = 10.00m,
+                MinimumDeliverySpend = 1000,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
             };
@@ -230,7 +230,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 MaxDeliveryDistanceInKm = 10,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
-                DeliveryFee = 3.00m,
+                DeliveryFee = 300,
             };
             r1.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
@@ -252,7 +252,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 MaxDeliveryDistanceInKm = 10,
                 TuesdayOpen = TimeSpan.Zero,
                 TuesdayClose = null,
-                DeliveryFee = 1.50m,
+                DeliveryFee = 150,
             };
             r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 

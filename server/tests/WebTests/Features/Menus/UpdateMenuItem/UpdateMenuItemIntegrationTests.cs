@@ -43,7 +43,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
 
             found.Name.ShouldBe(request.Name);
             found.Description.ShouldBe(request.Description);
-            found.Price.ShouldBe(request.Price);
+            found.Price.ShouldBe((int)(request.Price * 100));
         }
     }
 }
