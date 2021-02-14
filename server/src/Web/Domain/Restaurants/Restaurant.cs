@@ -15,8 +15,8 @@ namespace Web.Domain.Restaurants
         private string name;
         private string description;
         private PhoneNumber phoneNumber;
-        private Money minimumDeliverySpend = new(0);
-        private Money deliveryFee = new(0);
+        private Money minimumDeliverySpend = Money.Zero;
+        private Money deliveryFee = Money.Zero;
         public Distance maxDeliveryDistance = Distance.Zero;
         private int estimatedDeliveryTime = 30;
         private readonly List<Cuisine> _cuisines = new();

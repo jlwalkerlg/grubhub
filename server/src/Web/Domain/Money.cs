@@ -4,9 +4,7 @@ namespace Web.Domain
 {
     public record Money
     {
-        public static readonly Money Zero = new Money(0);
-
-        public Money(int pence)
+        private Money(int pence)
         {
             if (pence < 0)
             {
@@ -17,6 +15,8 @@ namespace Web.Domain
         }
 
         public int Pence { get; }
+
+        public static Money Zero => new Money(0);
 
         public static Money FromPence(int pence) => new Money(pence);
 
