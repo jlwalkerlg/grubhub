@@ -137,6 +137,13 @@ namespace Web
 
             app.UseRouting();
 
+            app.UseCookiePolicy(
+                new CookiePolicyOptions()
+                {
+                    // TODO: uncomment in production
+                    // Secure = CookieSecurePolicy.Always,
+                });
+
             // TODO: how to put this in test server?
             if (env.IsTesting())
             {
