@@ -4,6 +4,7 @@ import Axios, {
   AxiosResponse,
   Method,
 } from "axios";
+import cookie from "cookie";
 
 interface DataEnvelope<T> {
   data: T;
@@ -89,6 +90,13 @@ class Api {
         url,
         method,
       });
+
+      var cookies = cookie.parse(document.cookie);
+
+      if (cookies["XSRF-TOKEN"]) {
+        this.client.defaults.headers.common["X-XSRF-TOKEN"] =
+          cookies["XSRF-TOKEN"];
+      }
 
       return new ApiResult<T>(response);
     } catch (e) {

@@ -79,7 +79,7 @@ namespace WebTests.Features.Orders.GetOrderById
             data.ServiceFee.ShouldBe(order.ServiceFee);
             data.Status.ShouldBe(order.Status);
             data.Address.ShouldBe(order.Address);
-            data.PlacedAt.ShouldBe(order.PlacedAt);
+            data.PlacedAt.ShouldBe(order.PlacedAt, TimeSpan.FromSeconds(0.000001));
             data.RestaurantAddress.ShouldBe(restaurant.Address);
             data.PaymentIntentClientSecret.ShouldBe(order.PaymentIntentClientSecret);
             data.Items.ShouldHaveSingleItem();

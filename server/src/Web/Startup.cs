@@ -1,10 +1,9 @@
 using Autofac;
 using MediatR;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +14,7 @@ using Web.Data;
 using Web.Features.Restaurants.SearchRestaurants;
 using Web.Filters;
 using Web.Hubs;
+using Web.Middleware;
 using Web.ServiceRegistration;
 using Web.Services;
 using Web.Services.Authentication;
@@ -90,6 +90,12 @@ namespace Web
             services.AddSingleton<INotifier, Notifier>();
 
             services.AddScoped<EventProcessor>();
+
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-XSRF-TOKEN"; // as expected from the client
+                options.Cookie.Name = "csrf_token"; // set automatically by asp.net as http only
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -113,7 +119,7 @@ namespace Web
                 .InstancePerLifetimeScope();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAntiforgery antiforgery, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -124,13 +130,10 @@ namespace Web
 
             app.UseRouting();
 
-            app.UseCookiePolicy(
-                new CookiePolicyOptions()
-                {
-                    MinimumSameSitePolicy = SameSiteMode.Strict,
-                    HttpOnly = HttpOnlyPolicy.Always,
-                    Secure = CookieSecurePolicy.None,
-                });
+            if (env.IsProduction())
+            {
+                app.UseMiddleware<AntiforgeryMiddleware>();
+            }
 
             // TODO: how to put this in test server?
             if (env.IsTesting())
