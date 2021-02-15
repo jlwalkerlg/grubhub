@@ -5,7 +5,7 @@ using Web.Envelopes;
 
 namespace Web.Filters
 {
-    public class ExceptionFilter : IActionFilter
+    public class ExceptionFilter : IExceptionFilter
     {
         private readonly ILogger<ExceptionFilter> logger;
 
@@ -14,23 +14,18 @@ namespace Web.Filters
             this.logger = logger;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context) { }
-
-        public void OnActionExecuted(ActionExecutedContext context)
+        public void OnException(ExceptionContext context)
         {
-            if (context.Exception != null)
+            logger.LogCritical(context.Exception.ToString());
+
+            var envelope = new ErrorEnvelope("Server error.");
+
+            context.Result = new ObjectResult(envelope)
             {
-                logger.LogCritical(context.Exception.ToString());
+                StatusCode = 500,
+            };
 
-                var envelope = new ErrorEnvelope("Server error.");
-
-                context.Result = new ObjectResult(envelope)
-                {
-                    StatusCode = 500,
-                };
-
-                context.ExceptionHandled = true;
-            }
+            context.ExceptionHandled = true;
         }
     }
 }
