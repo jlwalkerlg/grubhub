@@ -50,6 +50,8 @@ namespace Web.Services.Authentication
                     principal,
                     properties
                 );
+
+            HttpContext.User = principal;
         }
 
         public async Task SignOut()

@@ -91,7 +91,7 @@ class Api {
         method,
       });
 
-      var cookies = cookie.parse(document.cookie);
+      const cookies = cookie.parse(document.cookie);
 
       if (cookies["XSRF-TOKEN"]) {
         this.client.defaults.headers.common["X-XSRF-TOKEN"] =

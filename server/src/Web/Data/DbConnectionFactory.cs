@@ -6,16 +6,16 @@ namespace Web.Data
 {
     public class DbConnectionFactory : IDbConnectionFactory
     {
-        private readonly string connectionString;
+        private readonly Config config;
 
-        public DbConnectionFactory(string connectionString)
+        public DbConnectionFactory(Config config)
         {
-            this.connectionString = connectionString;
+            this.config = config;
         }
 
         public async Task<IDbConnection> OpenConnection()
         {
-            var connection = new NpgsqlConnection(connectionString);
+            var connection = new NpgsqlConnection(config.DbConnectionString);
             await connection.OpenAsync();
 
             return connection;

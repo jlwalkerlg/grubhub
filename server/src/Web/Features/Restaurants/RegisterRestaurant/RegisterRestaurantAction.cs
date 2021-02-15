@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Web.Services.Antiforgery;
 
 namespace Web.Features.Restaurants.RegisterRestaurant
 {
@@ -14,6 +15,7 @@ namespace Web.Features.Restaurants.RegisterRestaurant
             this.sender = sender;
         }
 
+        [IgnoreAntiforgeryValidation]
         [HttpPost("/restaurants/register")]
         public async Task<IActionResult> Execute(RegisterRestaurantCommand command)
         {

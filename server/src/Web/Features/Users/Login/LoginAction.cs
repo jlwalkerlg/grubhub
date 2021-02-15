@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Web.Services.Antiforgery;
 
 namespace Web.Features.Users.Login
 {
@@ -17,6 +18,7 @@ namespace Web.Features.Users.Login
             this.antiforgery = antiforgery;
         }
 
+        [IgnoreAntiforgeryValidation]
         [HttpPost("/auth/login")]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Stripe;
 using Web.Features.Billing.UpdateBillingDetails;
 using Web.Features.Orders.ConfirmOrder;
+using Web.Services.Antiforgery;
 
 namespace Web.Features.Billing.EnableBilling
 {
@@ -25,10 +26,12 @@ namespace Web.Features.Billing.EnableBilling
             this.sender = sender;
         }
 
+        [IgnoreAntiforgeryValidation]
         [HttpPost("/stripe/webhooks")]
         public Task<IActionResult> Webhook() =>
             Execute(config.StripeWebhookSigningSecret);
 
+        [IgnoreAntiforgeryValidation]
         [HttpPost("/stripe/connect/webhooks")]
         public Task<IActionResult> ConnectWebhook() =>
             Execute(config.StripeConnectWebhookSigningSecret);

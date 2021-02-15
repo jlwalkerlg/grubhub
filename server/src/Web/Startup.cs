@@ -14,9 +14,9 @@ using Web.Data;
 using Web.Features.Restaurants.SearchRestaurants;
 using Web.Filters;
 using Web.Hubs;
-using Web.Middleware;
 using Web.ServiceRegistration;
 using Web.Services;
+using Web.Services.Antiforgery;
 using Web.Services.Authentication;
 using Web.Services.Hashing;
 using Web.Services.Notifications;
@@ -25,16 +25,18 @@ namespace Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            configuration.Bind(Config);
-        }
+        public readonly Config config = new();
+        private readonly IHostEnvironment env;
 
-        public Config Config { get; } = new();
+        public Startup(IConfiguration configuration, IHostEnvironment env)
+        {
+            configuration.Bind(config);
+            this.env = env;
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(Config);
+            services.AddSingleton(config);
 
             services.AddLogging(builder =>
             {
@@ -52,7 +54,12 @@ namespace Web
             services
                 .AddControllers(options =>
                 {
-                    options.Filters.Add(new ExceptionFilter());
+                    options.Filters.Add<ExceptionFilter>();
+
+                    if (env.IsProduction())
+                    {
+                        options.Filters.Add<AntiforgeryFilter>();
+                    }
                 })
                 .AddJsonOptions(options =>
                 {
@@ -65,7 +72,7 @@ namespace Web
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins(Config.CorsOrigins)
+                        .WithOrigins(config.CorsOrigins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -74,7 +81,7 @@ namespace Web
 
             services.AddHttpContextAccessor();
 
-            services.AddEntityFramework(Config);
+            services.AddEntityFramework(config);
 
             services.AddMediatR(typeof(Startup).Assembly);
 
@@ -82,7 +89,7 @@ namespace Web
 
             services.AddSingleton<IClock, Clock>();
 
-            services.AddStripe(Config);
+            services.AddStripe(config);
 
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, UserIdProvider>();
@@ -103,7 +110,7 @@ namespace Web
             builder.AddGeocoder();
             builder.AddMiddleware();
 
-            builder.Register(ctx => new DbConnectionFactory(Config.DbConnectionString))
+            builder.RegisterType<DbConnectionFactory>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
@@ -129,11 +136,6 @@ namespace Web
             app.UseCors();
 
             app.UseRouting();
-
-            if (env.IsProduction())
-            {
-                app.UseMiddleware<AntiforgeryMiddleware>();
-            }
 
             // TODO: how to put this in test server?
             if (env.IsTesting())
