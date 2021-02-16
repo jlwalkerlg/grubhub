@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -35,7 +36,7 @@ namespace Web.BackgroundServices
                     logger.LogCritical(e.ToString());
                 }
 
-                await Task.Delay(5000, stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
 
@@ -44,19 +45,21 @@ namespace Web.BackgroundServices
             using var scope = services.CreateScope();
             var sp = scope.ServiceProvider;
 
-            var processor = sp.GetRequiredService<EventProcessor>();
+            var dispatcher = sp.GetRequiredService<EventDispatcher>();
+
             var db = sp.GetRequiredService<AppDbContext>();
 
-            var events = db.Events
+            var events = await db.Events
                 .Where(x => !x.Handled)
                 .OrderBy(x => x.CreatedAt)
-                .Take(10);
+                .Take(10)
+                .ToListAsync(stoppingToken);
 
-            // TODO: wrap in transaction?
+            var i = 0;
 
-            foreach (var e in events)
+            while (!stoppingToken.IsCancellationRequested && i < events.Count)
             {
-                await processor.ProcessEvent(e);
+                await dispatcher.Dispatch(events[i], stoppingToken);
             }
 
             await db.SaveChangesAsync(stoppingToken);

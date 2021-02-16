@@ -7,11 +7,11 @@ namespace WebTests.Doubles
 {
     public class PublisherSpy : IPublisher
     {
-        public List<object> PublishedNotifications { get; } = new();
+        public List<object> Notifications { get; } = new();
 
         public Task Publish(object notification, CancellationToken cancellationToken = default)
         {
-            PublishedNotifications.Add(notification);
+            Notifications.Add(notification);
             return Task.CompletedTask;
         }
 
@@ -20,8 +20,7 @@ namespace WebTests.Doubles
             CancellationToken cancellationToken = default)
             where TNotification : INotification
         {
-            PublishedNotifications.Add(notification);
-            return Task.CompletedTask;
+            return Publish(notification as object, cancellationToken);
         }
     }
 }

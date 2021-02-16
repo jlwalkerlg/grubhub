@@ -19,6 +19,7 @@ using Web.Services;
 using Web.Services.Antiforgery;
 using Web.Services.Authentication;
 using Web.Services.Hashing;
+using Web.Services.Jobs;
 using Web.Services.Notifications;
 
 namespace Web
@@ -94,9 +95,10 @@ namespace Web
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
-            services.AddSingleton<INotifier, Notifier>();
+            services.AddSingleton<INotifier, HubNotifier>();
 
-            services.AddScoped<EventProcessor>();
+            services.AddScoped<EventDispatcher>();
+            services.AddScoped<IJobQueue, MediatRJobQueue>();
 
             services.AddAntiforgery(options =>
             {

@@ -10,7 +10,7 @@ namespace Web.Data.EF
         public string EventType { get; }
         public string Data { get; }
         public DateTime CreatedAt { get; }
-        public bool Handled { get; set; } = false;
+        public bool Handled { get; private set; } = false;
 
         public EventDto(Event ev)
         {
@@ -24,6 +24,11 @@ namespace Web.Data.EF
         public TEvent ToEvent<TEvent>() where TEvent : Event
         {
             return JsonSerializer.Deserialize<TEvent>(Data);
+        }
+
+        public void MarkHandled()
+        {
+            Handled = true;
         }
     }
 }

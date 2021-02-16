@@ -9,26 +9,27 @@ using Web.Domain.Menus;
 using Web.Domain.Orders;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Web.Features.Orders;
 using Web.Features.Orders.ConfirmOrder;
 using WebTests.Doubles;
 using Xunit;
 
-namespace WebTests.Features.Orders
+namespace WebTests.Features.Orders.ConfirmOrder
 {
-    public class OrderConfirmedEventHandlerTests
+    public class NotifyUserOrderConfirmedProcessorTests
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
-        private readonly NotifierSpy notifier;
-        private readonly OrderConfirmedEventHandler handler;
+        private readonly NotifierSpy notifierSpy;
+        private readonly NotifyUserOrderConfirmedProcessor processor;
 
-        public OrderConfirmedEventHandlerTests()
+        public NotifyUserOrderConfirmedProcessorTests()
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            notifier = new NotifierSpy();
+            notifierSpy = new NotifierSpy();
 
-            handler = new OrderConfirmedEventHandler(unitOfWorkSpy, notifier);
+            processor = new NotifyUserOrderConfirmedProcessor(
+                unitOfWorkSpy,
+                notifierSpy);
         }
 
         [Fact]
@@ -69,7 +70,7 @@ namespace WebTests.Features.Orders
 
             basket.AddItem(menuItem.Id, 1);
 
-            var result = restaurant.PlaceOrder(
+            var order = restaurant.PlaceOrder(
                 new OrderId(Guid.NewGuid().ToString()),
                 basket,
                 menu,
@@ -78,24 +79,16 @@ namespace WebTests.Features.Orders
                     new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
                     new Coordinates(54, -2)),
                 billingAccount,
-                DateTime.Now);
+                DateTime.Now).Value;
 
-            var order = result.Value;
-
-            await unitOfWorkSpy.Users.Add(user);
             await unitOfWorkSpy.Orders.Add(order);
+            await unitOfWorkSpy.Users.Add(user);
 
-            var ocEvent = new OrderConfirmedEvent(
-                order.Id,
-                DateTime.UtcNow);
+            var job = new NotifyUserOrderConfirmedJob(order.Id);
 
-            await handler.Handle(ocEvent, default);
+            await processor.Handle(job, default);
 
-            notifier.Users.ShouldHaveSingleItem();
-            notifier.ConfirmedOrders.ShouldHaveSingleItem();
-
-            notifier.Users.Single().ShouldBe(user);
-            notifier.ConfirmedOrders.Single().ShouldBe(order);
+            notifierSpy.Customers[user].Single().ShouldBe(order);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace Web.Services.Notifications
 {
     public interface INotifier
     {
-        Task NotifyOrderConfirmed(User user, Order order);
+        Task NotifyCustomerOrderConfirmed(User customer, Order order);
+        Task NotifyRestaurantOrderConfirmed(RestaurantManager manager, Order order);
     }
 }

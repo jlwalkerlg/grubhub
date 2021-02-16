@@ -8,13 +8,30 @@ namespace WebTests.Doubles
 {
     public class NotifierSpy : INotifier
     {
-        public List<User> Users { get; } = new();
-        public List<Order> ConfirmedOrders { get; } = new();
+        public Dictionary<User, List<Order>> Customers { get; } = new();
+        public Dictionary<RestaurantManager, List<Order>> Managers { get; } = new();
 
-        public Task NotifyOrderConfirmed(User user, Order order)
+        public Task NotifyRestaurantOrderConfirmed(RestaurantManager manager, Order order)
         {
-            Users.Add(user);
-            ConfirmedOrders.Add(order);
+            if (!Managers.ContainsKey(manager))
+            {
+                Managers.Add(manager, new());
+            }
+
+            Managers[manager].Add(order);
+
+            return Task.CompletedTask;
+        }
+
+        public Task NotifyCustomerOrderConfirmed(User customer, Order order)
+        {
+            if (!Customers.ContainsKey(customer))
+            {
+                Customers.Add(customer, new());
+            }
+
+            Customers[customer].Add(order);
+
             return Task.CompletedTask;
         }
     }

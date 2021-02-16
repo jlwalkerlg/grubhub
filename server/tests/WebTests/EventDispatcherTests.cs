@@ -11,20 +11,20 @@ using Xunit;
 
 namespace WebTests
 {
-    public class EventProcessorTests
+    public class EventDispatcherTests
     {
         private readonly PublisherSpy publisherSpy;
-        private readonly EventProcessor processor;
+        private readonly EventDispatcher dispatcher;
 
-        public EventProcessorTests()
+        public EventDispatcherTests()
         {
             publisherSpy = new PublisherSpy();
 
-            processor = new EventProcessor(publisherSpy);
+            dispatcher = new EventDispatcher(publisherSpy);
         }
 
         [Fact]
-        public async Task It_Processes_OrderConfirmedEvents()
+        public async Task It_Dispatches_OrderConfirmedEvents()
         {
             var ocEvent = new OrderConfirmedEvent(
                 new OrderId(Guid.NewGuid().ToString()),
@@ -32,17 +32,13 @@ namespace WebTests
 
             var e = new EventDto(ocEvent);
 
-            await processor.ProcessEvent(e);
+            await dispatcher.Dispatch(e, default);
 
             e.Handled.ShouldBeTrue();
 
-            publisherSpy.PublishedNotifications.ShouldHaveSingleItem();
+            var oce = publisherSpy.Notifications.Single() as OrderConfirmedEvent;
 
-            var notification = publisherSpy.PublishedNotifications.Single();
-            notification.ShouldBeOfType<OrderConfirmedEvent>();
-
-            var oceNotification = notification as OrderConfirmedEvent;
-            oceNotification.ShouldBe(ocEvent);
+            oce.ShouldBe(ocEvent);
         }
     }
 }

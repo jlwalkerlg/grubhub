@@ -39,5 +39,10 @@ namespace Web.Data.EF.Repositories
         {
             await context.Users.AddAsync(user);
         }
+
+        public async Task<RestaurantManager> GetManagerById(UserId id)
+        {
+            return await context.RestaurantManagers.FindAsync(id);
+        }
     }
 }
