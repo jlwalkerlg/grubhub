@@ -34,6 +34,7 @@ namespace Web
                     if (!ctx.HostingEnvironment.IsTesting())
                     {
                         services.AddHostedService<EventWorker>();
+                        services.AddHostedService<JobWorker>();
                     }
                 });
     }

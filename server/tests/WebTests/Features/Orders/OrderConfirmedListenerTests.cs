@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
 using Web.Domain.Orders;
+using Web.Features.Events;
 using Web.Features.Orders.ConfirmOrder;
 using WebTests.Doubles;
 using Xunit;
@@ -11,36 +12,38 @@ namespace WebTests.Features.Orders
 {
     public class OrderConfirmedListenerTests
     {
-        private readonly JobQueueSpy jobQueueSpy;
+        private readonly JobQueueSpy queue;
         private readonly OrderConfirmedListener listener;
 
         public OrderConfirmedListenerTests()
         {
-            jobQueueSpy = new JobQueueSpy();
+            queue = new JobQueueSpy();
 
-            listener = new OrderConfirmedListener(jobQueueSpy);
+            listener = new OrderConfirmedListener(queue);
         }
 
         [Fact]
         public async Task It_Adds_Jobs_To_The_Queue()
         {
-            var ocEvent = new OrderConfirmedEvent(
+            var ev = new OrderConfirmedEvent(
                 new OrderId(Guid.NewGuid().ToString()),
                 DateTime.UtcNow);
 
-            await listener.Handle(ocEvent, default);
+            await listener.Handle(
+                new HandleEventCommand<OrderConfirmedEvent>(ev),
+                default);
 
-            jobQueueSpy.Jobs
+            queue.Jobs
                 .OfType<NotifyRestaurantOrderConfirmedJob>()
                 .Single()
                 .OrderId
-                .ShouldBe(ocEvent.OrderId);
+                .ShouldBe(ev.OrderId);
 
-            jobQueueSpy.Jobs
+            queue.Jobs
                 .OfType<NotifyUserOrderConfirmedJob>()
                 .Single()
                 .OrderId
-                .ShouldBe(ocEvent.OrderId);
+                .ShouldBe(ev.OrderId);
         }
     }
 }

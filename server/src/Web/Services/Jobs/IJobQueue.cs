@@ -6,5 +6,6 @@ namespace Web.Services
     {
         Task Enqueue(Job job);
         Task<Job> Dequeue();
+        Task Save();
     }
 }

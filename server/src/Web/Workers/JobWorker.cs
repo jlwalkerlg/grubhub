@@ -1,23 +1,21 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Web.Data.EF;
+using Web.Services;
 
 namespace Web.BackgroundServices
 {
-    public class EventWorker : BackgroundService
+    public class JobWorker : BackgroundService
     {
         private readonly IServiceProvider services;
-        private readonly ILogger<EventWorker> logger;
+        private readonly ILogger<JobWorker> logger;
 
-        public EventWorker(
+        public JobWorker(
             IServiceProvider services,
-            ILogger<EventWorker> logger)
+            ILogger<JobWorker> logger)
         {
             this.services = services;
             this.logger = logger;
@@ -45,35 +43,14 @@ namespace Web.BackgroundServices
             using var scope = services.CreateScope();
             var sp = scope.ServiceProvider;
 
-            var dispatcher = sp.GetRequiredService<EventDispatcher>();
+            var queue = sp.GetRequiredService<IJobQueue>();
 
-            var db = sp.GetRequiredService<AppDbContext>();
-
-            var events = await db.Events
-                .Where(x => !x.Handled)
-                .OrderBy(x => x.CreatedAt)
-                .Take(10)
-                .ToListAsync(stoppingToken);
-
-            var i = 0;
-
-            while (!stoppingToken.IsCancellationRequested && i < events.Count)
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var ev = events[i];
-
                 try
                 {
-                    var result = await dispatcher.Dispatch(ev, stoppingToken);
-
-                    if (result)
-                    {
-                        ev.MarkHandled();
-                        await db.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        logger.LogError(result.Error.Message);
-                    }
+                    var job = await queue.Dequeue();
+                    await queue.Save();
                 }
                 catch (System.Exception ex)
                 {

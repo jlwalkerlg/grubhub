@@ -2,29 +2,33 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Web.Data.EF;
+using Web.Features.Events;
 using Web.Features.Orders.ConfirmOrder;
 
 namespace Web
 {
     public class EventDispatcher
     {
-        private readonly IPublisher publisher;
+        private readonly ISender sender;
 
-        public EventDispatcher(IPublisher publisher)
+        public EventDispatcher(ISender sender)
         {
-            this.publisher = publisher;
+            this.sender = sender;
         }
 
-        public async Task Dispatch(EventDto e, CancellationToken cancellationToken)
+        public async Task<Result> Dispatch(EventDto ev, CancellationToken cancellationToken)
         {
-            if (e.EventType == typeof(OrderConfirmedEvent).FullName)
+            var result = Result.Ok();
+
+            if (ev.EventType == typeof(OrderConfirmedEvent).FullName)
             {
-                await publisher.Publish(
-                    e.ToEvent<OrderConfirmedEvent>(),
+                result = await sender.Send(
+                    new HandleEventCommand<OrderConfirmedEvent>(
+                        ev.ToEvent<OrderConfirmedEvent>()),
                     cancellationToken);
             }
 
-            e.MarkHandled();
+            return result;
         }
     }
 }

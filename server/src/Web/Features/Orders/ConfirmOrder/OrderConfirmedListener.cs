@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Web.Features.Events;
 using Web.Services;
 
 namespace Web.Features.Orders.ConfirmOrder
@@ -13,11 +14,14 @@ namespace Web.Features.Orders.ConfirmOrder
             this.queue = queue;
         }
 
-        public async Task Handle(
-            OrderConfirmedEvent ocEvent, CancellationToken cancellationToken)
+        public async Task<Result> Handle(HandleEventCommand<OrderConfirmedEvent> command, CancellationToken cancellationToken)
         {
-            await queue.Enqueue(new NotifyUserOrderConfirmedJob(ocEvent.OrderId));
-            await queue.Enqueue(new NotifyRestaurantOrderConfirmedJob(ocEvent.OrderId));
+            var ev = command.Event;
+
+            await queue.Enqueue(new NotifyUserOrderConfirmedJob(ev.OrderId));
+            await queue.Enqueue(new NotifyRestaurantOrderConfirmedJob(ev.OrderId));
+
+            return Result.Ok();
         }
     }
 }

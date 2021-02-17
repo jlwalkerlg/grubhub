@@ -5,6 +5,7 @@ using Shouldly;
 using Web;
 using Web.Data.EF;
 using Web.Domain.Orders;
+using Web.Features.Events;
 using Web.Features.Orders.ConfirmOrder;
 using WebTests.Doubles;
 using Xunit;
@@ -13,32 +14,34 @@ namespace WebTests
 {
     public class EventDispatcherTests
     {
-        private readonly PublisherSpy publisherSpy;
+        private readonly SenderSpy sender;
         private readonly EventDispatcher dispatcher;
 
         public EventDispatcherTests()
         {
-            publisherSpy = new PublisherSpy();
+            sender = new SenderSpy();
 
-            dispatcher = new EventDispatcher(publisherSpy);
+            dispatcher = new EventDispatcher(sender);
         }
 
         [Fact]
         public async Task It_Dispatches_OrderConfirmedEvents()
         {
-            var ocEvent = new OrderConfirmedEvent(
+            var ev = new OrderConfirmedEvent(
                 new OrderId(Guid.NewGuid().ToString()),
                 DateTime.UtcNow);
 
-            var e = new EventDto(ocEvent);
+            var evDto = new EventDto(ev);
 
-            await dispatcher.Dispatch(e, default);
+            sender.Response = Result.Ok();
 
-            e.Handled.ShouldBeTrue();
+            await dispatcher.Dispatch(evDto, default);
 
-            var oce = publisherSpy.Notifications.Single() as OrderConfirmedEvent;
+            var command = sender.Requests
+                .OfType<HandleEventCommand<OrderConfirmedEvent>>()
+                .Single();
 
-            oce.ShouldBe(ocEvent);
+            command.Event.ShouldBe(ev);
         }
     }
 }

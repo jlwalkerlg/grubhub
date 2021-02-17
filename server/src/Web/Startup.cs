@@ -98,7 +98,7 @@ namespace Web
             services.AddSingleton<INotifier, HubNotifier>();
 
             services.AddScoped<EventDispatcher>();
-            services.AddScoped<IJobQueue, MediatRJobQueue>();
+            services.AddScoped<IJobQueue, EFJobQueue>();
 
             services.AddAntiforgery(options =>
             {

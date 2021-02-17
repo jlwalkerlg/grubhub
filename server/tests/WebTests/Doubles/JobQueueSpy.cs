@@ -19,5 +19,10 @@ namespace WebTests.Doubles
             Jobs.Add(job);
             return Task.CompletedTask;
         }
+
+        public Task Save()
+        {
+            return Task.CompletedTask;
+        }
     }
 }
