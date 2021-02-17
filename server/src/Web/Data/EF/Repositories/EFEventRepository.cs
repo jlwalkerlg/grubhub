@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Threading.Tasks;
 using Web.Features.Events;
 
@@ -14,7 +15,17 @@ namespace Web.Data.EF.Repositories
 
         public async Task Add<TEvent>(TEvent ev) where TEvent : Event
         {
-            await context.Events.AddAsync(new EventDto(ev));
+            var type = ev.GetType().AssemblyQualifiedName;
+            var json = JsonSerializer.Serialize(ev, ev.GetType());
+
+            var serialized = new SerialisedEvent()
+            {
+                CreatedAt = ev.CreatedAt,
+                Type = type,
+                Json = json,
+            };
+
+            await context.Events.AddAsync(serialized);
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace Web.Data.EF
 {
-    public class SerialisedJob
+    public record SerialisedJob
     {
         public long Id { get; set; }
         public int Retries { get; set; }

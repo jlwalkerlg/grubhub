@@ -100,14 +100,12 @@ namespace WebTests.Features.Orders.PlaceOrder
             item.MenuItemId.ShouldBe(basketItem.MenuItemId);
             item.Quantity.ShouldBe(basketItem.Quantity);
 
-            var @event = fixture.UseTestDbContext(db => db.Events.Single());
+            var ev = fixture.UseTestDbContext(db => db.Events.Single());
 
-            @event.Type.ShouldBe(typeof(OrderPlacedEvent).ToString());
+            var opEv = ev.ToEvent() as OrderPlacedEvent;
 
-            var opEvent = @event.ToEvent<OrderPlacedEvent>();
-
-            opEvent.OrderId.Value.ShouldBe(order.Id);
-            opEvent.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            opEv.OrderId.Value.ShouldBe(order.Id);
+            opEv.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }

@@ -64,14 +64,12 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             found.Status.ShouldBe(Web.Domain.Orders.OrderStatus.PaymentConfirmed);
 
-            var @event = fixture.UseTestDbContext(db => db.Events.Single());
+            var ev = fixture.UseTestDbContext(db => db.Events.Single());
 
-            @event.Type.ShouldBe(typeof(OrderConfirmedEvent).ToString());
+            var ocEv = ev.ToEvent() as OrderConfirmedEvent;
 
-            var ocEvent = @event.ToEvent<OrderConfirmedEvent>();
-
-            ocEvent.OrderId.Value.ShouldBe(order.Id);
-            ocEvent.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            ocEv.OrderId.Value.ShouldBe(order.Id);
+            ocEv.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }

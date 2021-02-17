@@ -12,21 +12,23 @@ namespace WebTests.TestData
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("type")]
-        public string Type { get; set; }
-
-        [Column("data")]
-        public string Data { get; set; }
-
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
         [Column("handled")]
         public bool Handled { get; set; }
 
-        public TEvent ToEvent<TEvent>() where TEvent : Web.Features.Events.Event
+        [Column("type")]
+        public string Type { get; set; }
+
+        [Column("json")]
+        public string Json { get; set; }
+
+        public Web.Features.Events.Event ToEvent()
         {
-            return JsonSerializer.Deserialize<TEvent>(Data);
+            return (Web.Features.Events.Event)JsonSerializer.Deserialize(
+                Json,
+                System.Type.GetType(Type));
         }
     }
 }

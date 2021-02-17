@@ -3,28 +3,23 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Web.Data.EF.Configurations
 {
-    public class SerialisedJobConfiguration : IEntityTypeConfiguration<SerialisedJob>
+    public class SerialisedEventConfiguration : IEntityTypeConfiguration<SerialisedEvent>
     {
-        public void Configure(EntityTypeBuilder<SerialisedJob> builder)
+        public void Configure(EntityTypeBuilder<SerialisedEvent> builder)
         {
-            builder.ToTable("jobs");
+            builder.ToTable("events");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
                 .HasColumnName("id");
 
-            builder.Property(x => x.Retries)
-                .HasColumnName("retries")
+            builder.Property(x => x.CreatedAt)
+                .HasColumnName("created_at")
                 .IsRequired();
 
-            builder.Property(x => x.Attempts)
-                .HasColumnName("attempts")
-                .IsRequired()
-                .HasDefaultValue(0);
-
-            builder.Property(x => x.IsComplete)
-                .HasColumnName("is_complete")
+            builder.Property(x => x.Handled)
+                .HasColumnName("handled")
                 .IsRequired()
                 .HasDefaultValue(false);
 

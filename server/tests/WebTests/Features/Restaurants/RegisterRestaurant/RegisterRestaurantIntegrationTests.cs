@@ -81,16 +81,13 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             fixture.VerifyHash(request.ManagerPassword, manager.Password).ShouldBe(true);
 
-            var @event = fixture.UseTestDbContext(db => db.Events.Single());
+            var ev = fixture.UseTestDbContext(db => db.Events.Single());
 
-            @event.Type.ShouldBe(typeof(RestaurantRegisteredEvent).ToString());
-            @event.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            var rEv = ev.ToEvent() as RestaurantRegisteredEvent;
 
-            var rEvent = @event.ToEvent<RestaurantRegisteredEvent>();
-
-            rEvent.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
-            rEvent.ManagerId.Value.ShouldBe(manager.Id);
-            rEvent.RestaurantId.Value.ShouldBe(restaurant.Id);
+            rEv.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            rEv.ManagerId.Value.ShouldBe(manager.Id);
+            rEv.RestaurantId.Value.ShouldBe(restaurant.Id);
         }
     }
 }

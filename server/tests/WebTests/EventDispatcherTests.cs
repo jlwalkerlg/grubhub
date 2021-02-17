@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
 using Web;
-using Web.Data.EF;
 using Web.Domain.Orders;
 using Web.Features.Events;
 using Web.Features.Orders.ConfirmOrder;
@@ -31,11 +30,9 @@ namespace WebTests
                 new OrderId(Guid.NewGuid().ToString()),
                 DateTime.UtcNow);
 
-            var evDto = new EventDto(ev);
-
             sender.Response = Result.Ok();
 
-            await dispatcher.Dispatch(evDto, default);
+            await dispatcher.Dispatch(ev, default);
 
             var command = sender.Requests
                 .OfType<HandleEventCommand<OrderConfirmedEvent>>()

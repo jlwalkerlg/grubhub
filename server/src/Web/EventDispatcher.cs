@@ -16,15 +16,14 @@ namespace Web
             this.sender = sender;
         }
 
-        public async Task<Result> Dispatch(EventDto ev, CancellationToken cancellationToken)
+        public async Task<Result> Dispatch(Event ev, CancellationToken cancellationToken)
         {
             var result = Result.Ok();
 
-            if (ev.EventType == typeof(OrderConfirmedEvent).FullName)
+            if (ev is OrderConfirmedEvent ocEv)
             {
                 result = await sender.Send(
-                    new HandleEventCommand<OrderConfirmedEvent>(
-                        ev.ToEvent<OrderConfirmedEvent>()),
+                    new HandleEventCommand<OrderConfirmedEvent>(ocEv),
                     cancellationToken);
             }
 

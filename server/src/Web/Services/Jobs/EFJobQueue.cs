@@ -18,35 +18,36 @@ namespace Web.Services.Jobs
 
         public async Task<Job> Dequeue()
         {
-            var serialized = await context.Jobs
+            var serialised = await context.Jobs
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync();
 
-            if (serialized is null) return null;
+            if (serialised is null) return null;
 
-            context.Jobs.Remove(serialized);
+            context.Jobs.Remove(serialised);
 
             var job = (Job)JsonSerializer.Deserialize(
-                serialized.Json,
-                Type.GetType(serialized.Type));
+                serialised.Json,
+                Type.GetType(serialised.Type));
 
             return job;
         }
 
         public async Task Enqueue(Job job)
         {
+            var type = job.GetType().AssemblyQualifiedName;
             var json = JsonSerializer.Serialize(job, job.GetType());
 
-            var serialized = new SerialisedJob()
+            var serialised = new SerialisedJob()
             {
                 Retries = job.Retries,
                 Attempts = job.Attempts,
                 IsComplete = job.IsComplete,
-                Type = job.GetType().AssemblyQualifiedName,
+                Type = type,
                 Json = json,
             };
 
-            await context.Jobs.AddAsync(serialized);
+            await context.Jobs.AddAsync(serialised);
         }
 
         public Task Save()

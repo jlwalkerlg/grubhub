@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Web.Data.EF;
+using Web.Features.Events;
 
 namespace Web.BackgroundServices
 {
@@ -59,15 +61,19 @@ namespace Web.BackgroundServices
 
             while (!stoppingToken.IsCancellationRequested && i < events.Count)
             {
-                var ev = events[i];
+                var serialised = events[i];
 
                 try
                 {
+                    var ev = (Event)JsonSerializer.Deserialize(
+                        serialised.Json,
+                        Type.GetType(serialised.Type));
+
                     var result = await dispatcher.Dispatch(ev, stoppingToken);
 
                     if (result)
                     {
-                        ev.MarkHandled();
+                        serialised.Handled = true;
                         await db.SaveChangesAsync();
                     }
                     else

@@ -158,15 +158,20 @@ namespace Console
                         await context.AddAsync(account);
                     }
 
-                    var eventDto = new EventDto(
-                        new RestaurantRegisteredEvent(restaurant.Id, user.Id, DateTime.UtcNow)
-                    );
+                    var ev = new RestaurantRegisteredEvent(restaurant.Id, user.Id, DateTime.UtcNow);
+
+                    var serialised = new SerialisedEvent()
+                    {
+                        CreatedAt = ev.CreatedAt,
+                        Type = ev.GetType().AssemblyQualifiedName,
+                        Json = JsonSerializer.Serialize(ev),
+                    };
 
                     await context.AddRangeAsync(
                         user,
                         restaurant,
                         menu,
-                        eventDto);
+                        serialised);
                 }
 
                 await context.SaveChangesAsync();
