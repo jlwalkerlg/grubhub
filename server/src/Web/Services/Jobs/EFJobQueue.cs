@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Web.Data.EF;
@@ -16,43 +18,71 @@ namespace Web.Services.Jobs
             this.context = context;
         }
 
-        public async Task<Job> Dequeue()
+        public Task Enqueue(Job job, CancellationToken cancellationToken = default)
+        {
+            return Enqueue(new[] { job }, cancellationToken);
+        }
+
+        public async Task Enqueue(
+            IEnumerable<Job> jobs, CancellationToken cancellationToken = default)
+        {
+            foreach (var job in jobs)
+            {
+                var type = job.GetType().AssemblyQualifiedName;
+                var json = JsonSerializer.Serialize(job, job.GetType());
+
+                var serialised = new SerialisedJob()
+                {
+                    Retries = job.Retries,
+                    Type = type,
+                    Json = json,
+                };
+
+                await context.Jobs.AddAsync(serialised, cancellationToken);
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<Job> GetNextJob(CancellationToken cancellationToken = default)
         {
             var serialised = await context.Jobs
+                .Where(x => x.Attempts < x.Retries)
                 .OrderBy(x => x.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (serialised is null) return null;
-
-            context.Jobs.Remove(serialised);
 
             var job = (Job)JsonSerializer.Deserialize(
                 serialised.Json,
                 Type.GetType(serialised.Type));
 
+            job.Id = serialised.Id;
+
             return job;
         }
 
-        public async Task Enqueue(Job job)
+        public async Task RegisterFailedAttempt(
+            Job job, CancellationToken cancellationToken = default)
         {
-            var type = job.GetType().AssemblyQualifiedName;
-            var json = JsonSerializer.Serialize(job, job.GetType());
+            var serialised = await context.Jobs.FindAsync(job.Id);
 
-            var serialised = new SerialisedJob()
-            {
-                Retries = job.Retries,
-                Attempts = job.Attempts,
-                IsComplete = job.IsComplete,
-                Type = type,
-                Json = json,
-            };
+            if (serialised is null) return;
 
-            await context.Jobs.AddAsync(serialised);
+            serialised.Attempts++;
+
+            await context.SaveChangesAsync(cancellationToken);
         }
 
-        public Task Save()
+        public async Task MarkComplete(Job job, CancellationToken cancellationToken = default)
         {
-            return context.SaveChangesAsync();
+            var serialised = await context.Jobs.FindAsync(job.Id);
+
+            if (serialised is null) return;
+
+            context.Jobs.Remove(serialised);
+
+            await context.SaveChangesAsync(cancellationToken);
         }
     }
 }

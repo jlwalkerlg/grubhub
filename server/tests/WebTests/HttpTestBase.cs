@@ -43,6 +43,8 @@ namespace WebTests
             this.factory = factory;
         }
 
+        public IServiceProvider Services => factory.Services;
+
         public T GetService<T>()
         {
             using (var scope = factory.Services.CreateScope())

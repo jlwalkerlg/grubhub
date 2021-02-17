@@ -49,8 +49,18 @@ namespace Web.BackgroundServices
             {
                 try
                 {
-                    var job = await queue.Dequeue();
-                    await queue.Save();
+                    var job = await queue.GetNextJob(stoppingToken);
+
+                    var result = Result.Ok();
+
+                    if (result)
+                    {
+                        await queue.MarkComplete(job, stoppingToken);
+                    }
+                    else
+                    {
+                        await queue.RegisterFailedAttempt(job, stoppingToken);
+                    }
                 }
                 catch (System.Exception ex)
                 {

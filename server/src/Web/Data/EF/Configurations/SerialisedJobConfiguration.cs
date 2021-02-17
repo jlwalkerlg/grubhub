@@ -23,11 +23,6 @@ namespace Web.Data.EF.Configurations
                 .IsRequired()
                 .HasDefaultValue(0);
 
-            builder.Property(x => x.IsComplete)
-                .HasColumnName("is_complete")
-                .IsRequired()
-                .HasDefaultValue(false);
-
             builder.Property(x => x.Type)
                 .HasColumnName("type")
                 .IsRequired();
