@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,9 @@ namespace Web.BackgroundServices
     {
         private readonly IServiceProvider services;
         private readonly ILogger<JobWorker> logger;
+        private IServiceScope scope;
+        private IJobQueue queue;
+        private ISender sender;
 
         public JobWorker(
             IServiceProvider services,
@@ -21,51 +25,62 @@ namespace Web.BackgroundServices
             this.logger = logger;
         }
 
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            scope = services.CreateScope();
+            queue = scope.ServiceProvider.GetRequiredService<IJobQueue>();
+            sender = scope.ServiceProvider.GetRequiredService<ISender>();
+
+            return base.StartAsync(cancellationToken);
+        }
+
+        public override void Dispose()
+        {
+            scope.Dispose();
+            base.Dispose();
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    await DoWork(stoppingToken);
+                    var jobs = await queue.GetNextNJobs(10, stoppingToken);
+
+                    foreach (var job in jobs)
+                    {
+                        await ProcessJob(job, stoppingToken);
+                    }
                 }
                 catch (System.Exception ex)
                 {
-                    logger.LogCritical(ex.ToString());
+                    logger.LogError(ex.ToString());
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
 
-        private async Task DoWork(CancellationToken stoppingToken)
+        private async Task ProcessJob(Job job, CancellationToken stoppingToken)
         {
-            using var scope = services.CreateScope();
-            var sp = scope.ServiceProvider;
-
-            var queue = sp.GetRequiredService<IJobQueue>();
-
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                try
-                {
-                    var job = await queue.GetNextJob(stoppingToken);
+                var result = await sender.Send(job);
 
-                    var result = Result.Ok();
-
-                    if (result)
-                    {
-                        await queue.MarkComplete(job, stoppingToken);
-                    }
-                    else
-                    {
-                        await queue.RegisterFailedAttempt(job, stoppingToken);
-                    }
-                }
-                catch (System.Exception ex)
+                if (result)
                 {
-                    logger.LogCritical(ex.ToString());
+                    await queue.MarkComplete(job, stoppingToken);
                 }
+                else
+                {
+                    await queue.RegisterFailedAttempt(job, stoppingToken);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                await queue.RegisterFailedAttempt(job, stoppingToken);
+                logger.LogError(ex.ToString());
             }
         }
     }

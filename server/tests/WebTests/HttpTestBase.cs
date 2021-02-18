@@ -115,41 +115,20 @@ namespace WebTests
 
         protected virtual void ConfigureServices(IServiceCollection services)
         {
-            var handlers = typeof(Startup).Assembly
-                .GetTypes()
-                .Where(x => !x.IsInterface
-                    && x.GetInterfaces().Any(
-                        i => i.IsGenericType
-                        && i.GetGenericTypeDefinition() == typeof(MediatR.IRequestHandler<,>)
-                ));
-
-            foreach (var handler in handlers)
-            {
-                var interfaces = handler.GetInterfaces()
-                    .Where(x => x.IsGenericType
-                        && x.GetGenericTypeDefinition() == typeof(MediatR.IRequestHandler<,>));
-
-                foreach (var i in interfaces)
-                {
-                    var handlerStub = Activator.CreateInstance(
-                        typeof(FailRequestHandlerStub<,>)
-                            .MakeGenericType(i.GetGenericArguments()));
-
-                    services.AddTransient(i, sp => handlerStub);
-                }
-            }
+            services.AddTransient(
+                typeof(MediatR.IPipelineBehavior<,>),
+                typeof(BadRequestBehavior<,>));
         }
 
-        private class FailRequestHandlerStub<TRequest, TResponse>
-            : MediatR.IRequestHandler<TRequest, TResponse>
-            where TRequest : MediatR.IRequest<TResponse>
+        private class BadRequestBehavior<TRequest, TResponse>
+            : MediatR.IPipelineBehavior<TRequest, TResponse>
             where TResponse : Result, new()
         {
-            public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
+            public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, MediatR.RequestHandlerDelegate<TResponse> next)
             {
                 return Task.FromResult(new TResponse()
                 {
-                    Error = Error.BadRequest(FailRequestHandlerError)
+                    Error = Error.BadRequest(FailRequestHandlerError),
                 });
             }
         }

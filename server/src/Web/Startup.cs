@@ -21,6 +21,7 @@ using Web.Services.Authentication;
 using Web.Services.Hashing;
 using Web.Services.Jobs;
 using Web.Services.Notifications;
+using Web.Services.Validation;
 
 namespace Web
 {
@@ -86,6 +87,14 @@ namespace Web
 
             services.AddMediatR(typeof(Startup).Assembly);
 
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(AuthenticationMiddleware<,>));
+
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(ValidationMiddleware<,>));
+
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
             services.AddSingleton<IClock, Clock>();
@@ -110,7 +119,8 @@ namespace Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.AddGeocoder();
-            builder.AddMiddleware();
+
+            builder.AddValidators();
 
             builder.RegisterType<DbConnectionFactory>()
                 .AsImplementedInterfaces()

@@ -28,13 +28,14 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<Job> GetNextJob(CancellationToken cancellationToken = default)
+        public Task<IEnumerable<Job>> GetNextNJobs(
+            int n, CancellationToken cancellationToken = default)
         {
-            var job = Jobs
+            var jobs = Jobs
                 .Where(x => Attempts[x] < x.Retries)
-                .FirstOrDefault();
+                .Take(n);
 
-            return Task.FromResult(job);
+            return Task.FromResult(jobs);
         }
 
         public Task MarkComplete(Job job, CancellationToken cancellationToken = default)

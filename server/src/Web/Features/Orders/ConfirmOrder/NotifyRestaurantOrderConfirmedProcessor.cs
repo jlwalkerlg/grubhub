@@ -16,19 +16,24 @@ namespace Web.Features.Orders.ConfirmOrder
             this.notifier = notifier;
         }
 
-        protected override async Task Process(
+        public async Task<Result> Handle(
             NotifyRestaurantOrderConfirmedJob job, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(job.OrderId);
-            if (order is null) return;
+
+            if (order is null) return Error.NotFound("Order not found.");
 
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
-            if (restaurant is null) return;
+
+            if (restaurant is null) return Error.NotFound("Restaurant not found.");
 
             var manager = await unitOfWork.Users.GetManagerById(restaurant.ManagerId);
-            if (manager is null) return;
+
+            if (manager is null) return Error.NotFound("Manager not found.");
 
             await notifier.NotifyRestaurantOrderConfirmed(manager, order);
+
+            return Result.Ok();
         }
     }
 }

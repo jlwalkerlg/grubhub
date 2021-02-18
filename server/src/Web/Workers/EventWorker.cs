@@ -16,6 +16,9 @@ namespace Web.BackgroundServices
     {
         private readonly IServiceProvider services;
         private readonly ILogger<EventWorker> logger;
+        private IServiceScope scope;
+        private EventDispatcher dispatcher;
+        private AppDbContext db;
 
         public EventWorker(
             IServiceProvider services,
@@ -25,66 +28,70 @@ namespace Web.BackgroundServices
             this.logger = logger;
         }
 
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            scope = services.CreateScope();
+            dispatcher = services.GetRequiredService<EventDispatcher>();
+            db = services.GetRequiredService<AppDbContext>();
+
+            return base.StartAsync(cancellationToken);
+        }
+
+        public override void Dispose()
+        {
+            scope.Dispose();
+            base.Dispose();
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    await DoWork(stoppingToken);
+                    var events = await db.Events
+                        .Where(x => !x.Handled)
+                        .OrderBy(x => x.CreatedAt)
+                        .Take(10)
+                        .ToListAsync(stoppingToken);
+
+                    foreach (var ev in events)
+                    {
+                        await ProcessEvent(ev, stoppingToken);
+                    }
                 }
                 catch (System.Exception ex)
                 {
                     logger.LogCritical(ex.ToString());
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
 
-        private async Task DoWork(CancellationToken stoppingToken)
+        private async Task ProcessEvent(SerialisedEvent serialised, CancellationToken stoppingToken)
         {
-            using var scope = services.CreateScope();
-            var sp = scope.ServiceProvider;
+            var ev = (Event)JsonSerializer.Deserialize(
+                serialised.Json,
+                Type.GetType(serialised.Type));
 
-            var dispatcher = sp.GetRequiredService<EventDispatcher>();
-
-            var db = sp.GetRequiredService<AppDbContext>();
-
-            var events = await db.Events
-                .Where(x => !x.Handled)
-                .OrderBy(x => x.CreatedAt)
-                .Take(10)
-                .ToListAsync(stoppingToken);
-
-            var i = 0;
-
-            while (!stoppingToken.IsCancellationRequested && i < events.Count)
+            try
             {
-                var serialised = events[i];
+                var result = await dispatcher.Dispatch(ev, stoppingToken);
 
-                try
+                if (result)
                 {
-                    var ev = (Event)JsonSerializer.Deserialize(
-                        serialised.Json,
-                        Type.GetType(serialised.Type));
-
-                    var result = await dispatcher.Dispatch(ev, stoppingToken);
-
-                    if (result)
-                    {
-                        serialised.Handled = true;
-                        await db.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        logger.LogError(result.Error.Message);
-                    }
+                    serialised.Handled = true;
+                    await db.SaveChangesAsync(stoppingToken);
                 }
-                catch (System.Exception ex)
+                else
                 {
-                    logger.LogCritical(ex.ToString());
+                    logger.LogError(result.Error.Message);
                 }
+            }
+            catch (System.Exception ex)
+            {
+                logger.LogError(ex.ToString());
             }
         }
     }

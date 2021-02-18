@@ -6,6 +6,7 @@ using Web.Services.Jobs;
 using Xunit;
 using Shouldly;
 using System;
+using System.Linq;
 
 namespace WebTests.Services.Jobs
 {
@@ -37,7 +38,11 @@ namespace WebTests.Services.Jobs
 
             await queue.Enqueue(dummy);
 
-            var job = await queue.GetNextJob() as DummyJob;
+            var jobs = await queue.GetNextNJobs(1);
+
+            jobs.ShouldHaveSingleItem();
+
+            var job = jobs.First() as DummyJob;
 
             job.Retries.ShouldBe(dummy.Retries);
             job.Value.ShouldBe(dummy.Value);
@@ -53,15 +58,15 @@ namespace WebTests.Services.Jobs
 
             await queue.Enqueue(dummy);
 
-            var job = await queue.GetNextJob() as DummyJob;
+            var job = (await queue.GetNextNJobs(1)).Single();
 
             await queue.RegisterFailedAttempt(job);
 
-            (await queue.GetNextJob() as DummyJob).ShouldNotBeNull();
+            (await queue.GetNextNJobs(1)).ShouldNotBeEmpty();
 
             await queue.RegisterFailedAttempt(job);
 
-            (await queue.GetNextJob() as DummyJob).ShouldBeNull();
+            (await queue.GetNextNJobs(1)).ShouldBeEmpty();
         }
 
         [Fact]
@@ -74,11 +79,11 @@ namespace WebTests.Services.Jobs
 
             await queue.Enqueue(dummy);
 
-            var job = await queue.GetNextJob() as DummyJob;
+            var job = (await queue.GetNextNJobs(1)).Single();
 
             await queue.MarkComplete(job);
 
-            (await queue.GetNextJob() as DummyJob).ShouldBeNull();
+            (await queue.GetNextNJobs(1)).ShouldBeEmpty();
         }
     }
 

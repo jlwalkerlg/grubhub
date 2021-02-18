@@ -44,22 +44,25 @@ namespace Web.Services.Jobs
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Job> GetNextJob(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Job>> GetNextNJobs(
+            int n, CancellationToken cancellationToken = default)
         {
-            var serialised = await context.Jobs
+            var serialisedJobs = await context.Jobs
                 .Where(x => x.Attempts < x.Retries)
                 .OrderBy(x => x.Id)
-                .FirstOrDefaultAsync(cancellationToken);
+                .Take(n)
+                .ToListAsync(cancellationToken);
 
-            if (serialised is null) return null;
+            return serialisedJobs.Select(x =>
+            {
+                var job = (Job)JsonSerializer.Deserialize(
+                    x.Json,
+                    Type.GetType(x.Type));
 
-            var job = (Job)JsonSerializer.Deserialize(
-                serialised.Json,
-                Type.GetType(serialised.Type));
+                job.Id = x.Id;
 
-            job.Id = serialised.Id;
-
-            return job;
+                return job;
+            });
         }
 
         public async Task RegisterFailedAttempt(

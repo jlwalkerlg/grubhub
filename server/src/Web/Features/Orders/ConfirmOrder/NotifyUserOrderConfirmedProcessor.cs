@@ -15,16 +15,20 @@ namespace Web.Features.Orders.ConfirmOrder
             this.notifier = notifier;
         }
 
-        protected override async Task Process(
+        public async Task<Result> Handle(
             NotifyUserOrderConfirmedJob job, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(job.OrderId);
-            if (order is null) return;
+
+            if (order is null) return Error.NotFound("Order not found.");
 
             var user = await unitOfWork.Users.GetById(order.UserId);
-            if (user is null) return;
+
+            if (user is null) return Error.NotFound("User not found.");
 
             await notifier.NotifyCustomerOrderConfirmed(user, order);
+
+            return Result.Ok();
         }
     }
 }
