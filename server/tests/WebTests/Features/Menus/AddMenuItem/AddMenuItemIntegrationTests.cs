@@ -22,7 +22,7 @@ namespace WebTests.Features.Menus.AddMenuItem
 
             menu.Categories.Add(category);
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
             var request = new AddMenuItemRequest()
             {
@@ -31,13 +31,13 @@ namespace WebTests.Features.Menus.AddMenuItem
                 Price = 10m,
             };
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Post(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Post(
                 $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items",
                 request);
 
             response.StatusCode.ShouldBe(201);
 
-            var item = fixture.UseTestDbContext(db => db.MenuItems.Single());
+            var item = UseTestDbContext(db => db.MenuItems.Single());
 
             item.MenuCategoryId.ShouldBe(category.Id);
             item.Name.ShouldBe(request.Name);

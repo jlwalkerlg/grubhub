@@ -18,9 +18,9 @@ namespace WebTests.Features.Billing.GetBillingDetails
             var restaurant = new Restaurant();
             var billingAccount = restaurant.BillingAccount;
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture.GetClient().Get(
+            var response = await factory.GetClient().Get(
                 $"/restaurants/{restaurant.Id}/billing");
 
             response.StatusCode.ShouldBe(401);
@@ -32,9 +32,9 @@ namespace WebTests.Features.Billing.GetBillingDetails
             var restaurant = new Restaurant();
             var billingAccount = restaurant.BillingAccount;
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture.GetAuthenticatedClient().Get(
+            var response = await factory.GetAuthenticatedClient().Get(
                 $"/restaurants/{restaurant.Id}/billing");
 
             response.StatusCode.ShouldBe(403);
@@ -46,9 +46,9 @@ namespace WebTests.Features.Billing.GetBillingDetails
             var restaurant = new Restaurant();
             var billingAccount = restaurant.BillingAccount;
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture
+            var response = await factory
                 .GetAuthenticatedClient(restaurant.ManagerId)
                 .Get($"/restaurants/{restaurant.Id}/billing");
 
@@ -69,9 +69,9 @@ namespace WebTests.Features.Billing.GetBillingDetails
                 BillingAccount = null,
             };
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture
+            var response = await factory
                 .GetAuthenticatedClient(restaurant.ManagerId)
                 .Get($"/restaurants/{restaurant.Id}/billing");
 

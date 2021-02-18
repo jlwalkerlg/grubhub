@@ -21,14 +21,14 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
 
             menu.Categories.Add(category);
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Delete(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Delete(
                 $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}");
 
             response.StatusCode.ShouldBe(204);
 
-            var categories = fixture.UseTestDbContext(db => db.MenuCategories.ToArray());
+            var categories = UseTestDbContext(db => db.MenuCategories.ToArray());
 
             categories.ShouldHaveSingleItem();
 

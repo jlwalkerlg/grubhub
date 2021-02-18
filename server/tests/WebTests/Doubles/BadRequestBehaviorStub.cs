@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Web;
 
-namespace WebTests
+namespace WebTests.Doubles
 {
-    public class BadRequestBehavior<TRequest, TResponse>
+    public class BadRequestBehaviorStub<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse>
         where TResponse : Result, new()
     {

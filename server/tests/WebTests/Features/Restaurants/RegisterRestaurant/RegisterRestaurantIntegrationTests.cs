@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Services;
+using Web.Services.Hashing;
 using WebTests.Doubles;
 using Xunit;
 
@@ -12,8 +13,11 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 {
     public class RegisterRestaurantIntegrationTests : IntegrationTestBase
     {
+        private readonly IHasher hasher;
+
         public RegisterRestaurantIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
+            hasher = factory.Services.GetRequiredService<IHasher>();
         }
 
         [Fact]
@@ -21,14 +25,17 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         {
             var now = DateTime.UtcNow;
 
-            var fixture = this.fixture.WithServices(services =>
+            var factory = this.factory.WithWebHostBuilder(builder =>
             {
-                services.AddSingleton<IClock>(
-                    new ClockStub()
-                    {
-                        UtcNow = now,
-                    }
-                );
+                builder.ConfigureServices(services =>
+                {
+                    services.AddSingleton<IClock>(
+                        new ClockStub()
+                        {
+                            UtcNow = now,
+                        }
+                    );
+                });
             });
 
             var request = new RegisterRestaurantCommand()
@@ -41,11 +48,11 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 Address = "1 Maine Road, Manchester, UK",
             };
 
-            var response = await fixture.GetClient().Post("/restaurants/register", request);
+            var response = await factory.GetClient().Post("/restaurants/register", request);
 
             response.StatusCode.ShouldBe(201);
 
-            var restaurant = fixture.UseTestDbContext(db => db.Restaurants.Single());
+            var restaurant = UseTestDbContext(db => db.Restaurants.Single());
 
             restaurant.Name.ShouldBe(request.RestaurantName);
             restaurant.PhoneNumber.ShouldBe(request.RestaurantPhoneNumber);
@@ -72,16 +79,16 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             restaurant.MaxDeliveryDistanceInKm.ShouldBe(0);
             restaurant.EstimatedDeliveryTimeInMinutes.ShouldBe(30);
 
-            var manager = fixture.UseTestDbContext(db => db.Users.Single());
+            var manager = UseTestDbContext(db => db.Users.Single());
 
             manager.Id.ShouldBe(restaurant.ManagerId);
             manager.Email.ShouldBe(request.ManagerEmail);
             manager.Name.ShouldBe(request.ManagerName);
             manager.Role.ShouldBe(Web.Domain.Users.UserRole.RestaurantManager);
 
-            fixture.VerifyHash(request.ManagerPassword, manager.Password).ShouldBe(true);
+            hasher.CheckMatch(request.ManagerPassword, manager.Password).ShouldBe(true);
 
-            var ev = fixture.UseTestDbContext(db => db.Events.Single());
+            var ev = UseTestDbContext(db => db.Events.Single());
 
             var rEv = ev.ToEvent() as RestaurantRegisteredEvent;
 

@@ -23,19 +23,22 @@ namespace WebTests.Features.Billing.GetOnboardingLink
             var restaurant = new Restaurant();
             var billingAccount = restaurant.BillingAccount;
 
-            var fixture = this.fixture.WithServices(services =>
+            using var factory = this.factory.WithWebHostBuilder(builder =>
             {
-                services.AddSingleton<IBillingService>(
-                    new BillingServiceSpy()
-                    {
-                        AccountId = billingAccount.Id,
-                        OnboardingLink = onboardingLink,
-                    });
+                builder.ConfigureServices(services =>
+                {
+                    services.AddSingleton<IBillingService>(
+                        new BillingServiceSpy()
+                        {
+                            AccountId = billingAccount.Id,
+                            OnboardingLink = onboardingLink,
+                        });
+                });
             });
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture
+            var response = await factory
                 .GetAuthenticatedClient(restaurant.ManagerId)
                 .Get($"/restaurants/{restaurant.Id}/billing/onboarding/link");
 

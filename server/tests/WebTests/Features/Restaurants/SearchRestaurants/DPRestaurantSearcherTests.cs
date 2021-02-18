@@ -20,7 +20,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             clock = new ClockStub();
 
             repository = new DPRestaurantSearcher(
-                new TestDbConnectionFactory(),
+                new TestDbConnectionFactory(config),
                 clock
             );
         }
@@ -107,7 +107,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
             expected.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3, r4, r5, expected);
+            Insert(r1, r2, r3, r4, r5, expected);
 
             var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f));
 
@@ -150,7 +150,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
             r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3);
+            Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -203,7 +203,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
             r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3);
+            Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -256,7 +256,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
             r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3);
+            Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -309,7 +309,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
             r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3);
+            Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),
@@ -366,7 +366,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
             r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3);
+            Insert(r1, r2, r3);
 
             var restaurants = await repository.Search(
                 new Coordinates(54.0f, -2.0f),

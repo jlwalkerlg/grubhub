@@ -26,7 +26,7 @@ namespace WebTests.Features.Baskets.AddToBasket
 
             var user = new User();
 
-            fixture.Insert(restaurant, user);
+            Insert(restaurant, user);
 
             var request = new AddToBasketRequest()
             {
@@ -34,18 +34,18 @@ namespace WebTests.Features.Baskets.AddToBasket
                 Quantity = 1,
             };
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Post(
+            var response = await factory.GetAuthenticatedClient(user.Id).Post(
                 $"/restaurants/{menu.RestaurantId}/basket",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var basket = fixture.UseTestDbContext(db => db.Baskets.Single());
+            var basket = UseTestDbContext(db => db.Baskets.Single());
 
             basket.UserId.ShouldBe(user.Id);
             basket.RestaurantId.ShouldBe(menu.RestaurantId);
 
-            var basketItem = fixture.UseTestDbContext(db => db.BasketItems.Single());
+            var basketItem = UseTestDbContext(db => db.BasketItems.Single());
 
             basketItem.MenuItemId.ShouldBe(request.MenuItemId);
             basketItem.Quantity.ShouldBe(request.Quantity);
@@ -70,7 +70,7 @@ namespace WebTests.Features.Baskets.AddToBasket
                 User = user,
             };
 
-            fixture.Insert(restaurant, user, basket);
+            Insert(restaurant, user, basket);
 
             var request = new AddToBasketRequest()
             {
@@ -78,13 +78,13 @@ namespace WebTests.Features.Baskets.AddToBasket
                 Quantity = 3,
             };
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Post(
+            var response = await factory.GetAuthenticatedClient(user.Id).Post(
                 $"/restaurants/{basket.RestaurantId}/basket",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var basketItem = fixture.UseTestDbContext(db => db.BasketItems.Single());
+            var basketItem = UseTestDbContext(db => db.BasketItems.Single());
 
             basketItem.MenuItemId.ShouldBe(request.MenuItemId);
             basketItem.Quantity.ShouldBe(request.Quantity);

@@ -41,11 +41,11 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             menu.Categories.Add(pizza);
             menu.Categories.Add(burgers);
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var items = fixture.UseTestDbContext(db => db.MenuItems.ToArray());
+            var items = UseTestDbContext(db => db.MenuItems.ToArray());
 
-            var response = await fixture.GetClient().Get($"/restaurants/{restaurant.Id}");
+            var response = await factory.GetClient().Get($"/restaurants/{restaurant.Id}");
 
             response.StatusCode.ShouldBe(200);
 
@@ -97,9 +97,9 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
                 Menu = null,
             };
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture.GetClient().Get($"/restaurants/{restaurant.Id}");
+            var response = await factory.GetClient().Get($"/restaurants/{restaurant.Id}");
 
             response.StatusCode.ShouldBe(200);
 
@@ -112,7 +112,7 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
         [Fact]
         public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
         {
-            var response = await fixture.GetClient().Get($"/restaurants/{Guid.NewGuid()}");
+            var response = await factory.GetClient().Get($"/restaurants/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(404);
         }

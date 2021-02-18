@@ -1,6 +1,5 @@
 using Autofac;
 using MediatR;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +22,8 @@ using Web.Services.Hashing;
 using Web.Services.Jobs;
 using Web.Services.Notifications;
 using Web.Services.Validation;
+using Web.Services.Geocoding;
+using Microsoft.AspNetCore.Http;
 
 namespace Web
 {
@@ -118,12 +119,12 @@ namespace Web
 
             services.AddHostedService<EventWorker>();
             services.AddHostedService<JobWorker>();
+
+            services.AddSingleton<IGeocoder, GoogleGeocoder>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.AddGeocoder();
-
             builder.AddValidators();
 
             builder.RegisterType<DbConnectionFactory>()
@@ -142,7 +143,7 @@ namespace Web
                 .InstancePerLifetimeScope();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAntiforgery antiforgery, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -156,15 +157,10 @@ namespace Web
             app.UseCookiePolicy(
                 new CookiePolicyOptions()
                 {
-                    // TODO: uncomment in production
-                    // Secure = CookieSecurePolicy.Always,
+                    Secure = env.IsProduction()
+                        ? CookieSecurePolicy.Always
+                        : CookieSecurePolicy.None,
                 });
-
-            // TODO: how to put this in test server?
-            if (env.IsTesting())
-            {
-                app.UseMiddleware<AuthenticationTestMiddleware>();
-            }
 
             app.UseAuthentication();
             app.UseAuthorization();

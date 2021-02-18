@@ -24,19 +24,22 @@ namespace WebTests.Features.Orders.ConfirmOrder
         {
             var now = DateTime.UtcNow;
 
-            var fixture = this.fixture.WithServices(services =>
+            var factory = this.factory.WithWebHostBuilder(builder =>
             {
-                services.AddSingleton<IClock>(
+                builder.ConfigureServices(services =>
+                {
+                    services.AddSingleton<IClock>(
                     new ClockStub()
                     {
                         UtcNow = now,
                     });
 
-                services.AddSingleton<IBillingService>(
-                    new BillingServiceSpy()
-                    {
-                        ConfirmResult = Result.Ok(),
-                    });
+                    services.AddSingleton<IBillingService>(
+                        new BillingServiceSpy()
+                        {
+                            ConfirmResult = Result.Ok(),
+                        });
+                });
             });
 
             var basket = new Basket();
@@ -45,26 +48,26 @@ namespace WebTests.Features.Orders.ConfirmOrder
             order.User = basket.User;
             order.Restaurant = basket.Restaurant;
 
-            fixture.Insert(basket, order);
+            Insert(basket, order);
 
             var command = new ConfirmOrderCommand()
             {
                 PaymentIntentId = order.PaymentIntentId,
             };
 
-            var result = await fixture.Send(command);
+            var result = await factory.Send(command);
 
             result.ShouldBeSuccessful();
 
-            var baskets = fixture.UseTestDbContext(db => db.Baskets.ToArray());
+            var baskets = UseTestDbContext(db => db.Baskets.ToArray());
 
             baskets.ShouldBeEmpty();
 
-            var found = fixture.UseTestDbContext(db => db.Orders.Single());
+            var found = UseTestDbContext(db => db.Orders.Single());
 
             found.Status.ShouldBe(Web.Domain.Orders.OrderStatus.PaymentConfirmed);
 
-            var ev = fixture.UseTestDbContext(db => db.Events.Single());
+            var ev = UseTestDbContext(db => db.Events.Single());
 
             var ocEv = ev.ToEvent() as OrderConfirmedEvent;
 

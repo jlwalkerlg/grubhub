@@ -38,14 +38,14 @@ namespace WebTests.Features.Baskets.RemoveFromBasket
                 Items = { basketItem },
             };
 
-            fixture.Insert(restaurant, user, basket);
+            Insert(restaurant, user, basket);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Delete(
+            var response = await factory.GetAuthenticatedClient(user.Id).Delete(
                 $"/restaurants/{basket.RestaurantId}/basket/items/{menuItem.Id}");
 
             response.StatusCode.ShouldBe(204);
 
-            var items = fixture.UseTestDbContext(db => db.BasketItems.ToArray());
+            var items = UseTestDbContext(db => db.BasketItems.ToArray());
 
             items.ShouldBeEmpty();
         }

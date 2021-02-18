@@ -23,19 +23,22 @@ namespace WebTests.Features.Billing.SetupBilling
 
             var onboardingLink = Guid.NewGuid().ToString();
 
-            var fixture = this.fixture.WithServices(services =>
+            var factory = this.factory.WithWebHostBuilder(builder =>
             {
-                services.AddSingleton<IBillingService>(
-                    new BillingServiceSpy()
-                    {
-                        AccountId = billingAccount.Id,
-                        OnboardingLink = onboardingLink,
-                    });
+                builder.ConfigureServices(services =>
+                {
+                    services.AddSingleton<IBillingService>(
+                        new BillingServiceSpy()
+                        {
+                            AccountId = billingAccount.Id,
+                            OnboardingLink = onboardingLink,
+                        });
+                });
             });
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
-            var response = await fixture
+            var response = await factory
                 .GetAuthenticatedClient(restaurant.ManagerId)
                 .Post($"/restaurants/{restaurant.Id}/billing/setup");
 

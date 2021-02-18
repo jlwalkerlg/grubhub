@@ -24,7 +24,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
             category.Items.Add(item);
             menu.Categories.Add(category);
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
             var request = new UpdateMenuItemRequest()
             {
@@ -33,13 +33,13 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}/items/{item.Id}",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var found = fixture.UseTestDbContext(db => db.MenuItems.Single());
+            var found = UseTestDbContext(db => db.MenuItems.Single());
 
             found.Name.ShouldBe(request.Name);
             found.Description.ShouldBe(request.Description);

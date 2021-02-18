@@ -30,19 +30,22 @@ namespace WebTests.Features.Orders.PlaceOrder
                 ClientSecret = Guid.NewGuid().ToString(),
             };
 
-            var fixture = this.fixture.WithServices(services =>
+            var factory = this.factory.WithWebHostBuilder(builder =>
             {
-                services.AddSingleton<IClock>(
-                    new ClockStub()
-                    {
-                        UtcNow = now,
-                    });
+                builder.ConfigureServices(services =>
+                {
+                    services.AddSingleton<IClock>(
+                        new ClockStub()
+                        {
+                            UtcNow = now,
+                        });
 
-                services.AddSingleton<IBillingService>(
-                    new BillingServiceSpy()
-                    {
-                        PaymentIntentResult = Result.Ok(paymentIntent),
-                    });
+                    services.AddSingleton<IBillingService>(
+                        new BillingServiceSpy()
+                        {
+                            PaymentIntentResult = Result.Ok(paymentIntent),
+                        });
+                });
             });
 
             var restaurant = new Restaurant();
@@ -62,7 +65,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             basketItem.Quantity = 2;
             basket.Items.Add(basketItem);
 
-            fixture.Insert(restaurant, user, basket);
+            Insert(restaurant, user, basket);
 
             var request = new PlaceOrderRequest()
             {
@@ -73,7 +76,7 @@ namespace WebTests.Features.Orders.PlaceOrder
                 Postcode = "MN12 1NM",
             };
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Post(
+            var response = await factory.GetAuthenticatedClient(user.Id).Post(
                 $"/restaurants/{restaurant.Id}/orders",
                 request);
 
@@ -81,7 +84,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             var orderId = await response.GetData<string>();
 
-            var order = fixture.UseTestDbContext(db => db.Orders.Single());
+            var order = UseTestDbContext(db => db.Orders.Single());
 
             order.Id.ShouldBe(orderId);
             order.UserId.ShouldBe(user.Id);
@@ -95,12 +98,12 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.PaymentIntentId.ShouldBe(paymentIntent.Id);
             order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
-            var item = fixture.UseTestDbContext(db => db.OrderItems.Single());
+            var item = UseTestDbContext(db => db.OrderItems.Single());
 
             item.MenuItemId.ShouldBe(basketItem.MenuItemId);
             item.Quantity.ShouldBe(basketItem.Quantity);
 
-            var ev = fixture.UseTestDbContext(db => db.Events.Single());
+            var ev = UseTestDbContext(db => db.Events.Single());
 
             var opEv = ev.ToEvent() as OrderPlacedEvent;
 

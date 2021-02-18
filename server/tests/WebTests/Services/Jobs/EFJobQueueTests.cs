@@ -5,12 +5,11 @@ using Web.Data.EF;
 using Web.Services.Jobs;
 using Xunit;
 using Shouldly;
-using System;
 using System.Linq;
 
 namespace WebTests.Services.Jobs
 {
-    public class EFJobQueueTests : IntegrationTestBase, IDisposable
+    public class EFJobQueueTests : IntegrationTestBase
     {
         private readonly IServiceScope scope;
         private readonly AppDbContext db;
@@ -18,14 +17,9 @@ namespace WebTests.Services.Jobs
 
         public EFJobQueueTests(IntegrationTestFixture fixture) : base(fixture)
         {
-            scope = fixture.Services.CreateScope();
+            scope = factory.Services.CreateScope();
             db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             queue = new EFJobQueue(db);
-        }
-
-        public void Dispose()
-        {
-            scope.Dispose();
         }
 
         [Fact]

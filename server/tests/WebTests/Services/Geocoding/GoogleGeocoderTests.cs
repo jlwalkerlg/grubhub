@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Shouldly;
 using System.Threading.Tasks;
 using Web;
@@ -12,10 +13,12 @@ namespace WebTests.Services.Geocoding
 
         public GoogleGeocoderTests()
         {
-            var config = new Config()
-            {
-                GoogleGeocodingApiKey = TestConfig.GoogleGeocodingApiKey,
-            };
+            var config = new Config();
+
+            new ConfigurationBuilder()
+                .AddJsonFile("config.json")
+                .Build()
+                .Bind(config);
 
             geocoder = new GoogleGeocoder(config);
         }

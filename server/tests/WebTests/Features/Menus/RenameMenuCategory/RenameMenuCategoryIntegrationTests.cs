@@ -22,20 +22,20 @@ namespace WebTests.Features.Menus.RenameMenuCategory
 
             menu.Categories.Add(category);
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
             var request = new RenameMenuCategoryRequest()
             {
                 NewName = "Curry",
             };
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}/menu/categories/{category.Id}",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var found = fixture.UseTestDbContext(db => db.MenuCategories.Single());
+            var found = UseTestDbContext(db => db.MenuCategories.Single());
 
             found.Name.ShouldBe(request.NewName);
         }

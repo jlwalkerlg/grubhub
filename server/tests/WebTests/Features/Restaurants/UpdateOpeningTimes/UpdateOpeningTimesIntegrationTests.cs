@@ -19,7 +19,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
         {
             var restaurant = new Restaurant();
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
             var request = new UpdateOpeningTimesRequest()
             {
@@ -27,13 +27,13 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
                 MondayClose = "16:00",
             };
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}/opening-times",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var found = fixture.UseTestDbContext(db => db.Restaurants.Single());
+            var found = UseTestDbContext(db => db.Restaurants.Single());
 
             found.MondayOpen.Value.ShouldBe(TimeSpan.Parse(request.MondayOpen));
             found.MondayClose.Value.ShouldBe(TimeSpan.Parse(request.MondayClose));

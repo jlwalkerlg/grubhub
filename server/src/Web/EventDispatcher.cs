@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Web.Data.EF;
 using Web.Features.Events;
 using Web.Features.Orders.ConfirmOrder;
 
@@ -16,18 +15,16 @@ namespace Web
             this.sender = sender;
         }
 
-        public async Task<Result> Dispatch(Event ev, CancellationToken cancellationToken)
+        public Task<Result> Dispatch(Event ev, CancellationToken cancellationToken)
         {
-            var result = Result.Ok();
-
-            if (ev is OrderConfirmedEvent ocEv)
+            return ev switch
             {
-                result = await sender.Send(
+                OrderConfirmedEvent ocEv => sender.Send(
                     new HandleEventCommand<OrderConfirmedEvent>(ocEv),
-                    cancellationToken);
-            }
+                    cancellationToken),
 
-            return result;
+                _ => Task.FromResult(Result.Ok()),
+            };
         }
     }
 }

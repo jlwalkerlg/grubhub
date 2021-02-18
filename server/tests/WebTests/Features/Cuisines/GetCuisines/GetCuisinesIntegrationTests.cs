@@ -31,9 +31,9 @@ namespace WebTests.Features.Cuisines.GetCuisines
                 Name = "Indian",
             };
 
-            fixture.Insert(italian, thai, indian);
+            Insert(italian, thai, indian);
 
-            var response = await fixture.GetClient().Get("/cuisines");
+            var response = await factory.GetClient().Get("/cuisines");
 
             response.StatusCode.ShouldBe(200);
 

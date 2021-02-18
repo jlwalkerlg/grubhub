@@ -25,20 +25,20 @@ namespace WebTests.Features.Restaurants.UpdateCuisines
                 Cuisines = new() { indian },
             };
 
-            fixture.Insert(restaurant, italian, thai, indian);
+            Insert(restaurant, italian, thai, indian);
 
             var request = new UpdateCuisinesRequest()
             {
                 Cuisines = new() { italian.Name, thai.Name },
             };
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}/cuisines",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var found = fixture.UseTestDbContext(db => db.RestaurantCuisines.ToList());
+            var found = UseTestDbContext(db => db.RestaurantCuisines.ToList());
 
             found.Count.ShouldBe(2);
             found.ShouldContain(x => x.RestaurantId == restaurant.Id && x.CuisineName == italian.Name);

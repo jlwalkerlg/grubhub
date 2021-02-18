@@ -39,9 +39,9 @@ namespace WebTests.Features.Baskets.GetBasketByRestaurantId
                 Items = { basketItem },
             };
 
-            fixture.Insert(restaurant, user, basket);
+            Insert(restaurant, user, basket);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get(
+            var response = await factory.GetAuthenticatedClient(user.Id).Get(
                 $"/restaurants/{basket.RestaurantId}/basket");
 
             response.StatusCode.ShouldBe(200);
@@ -68,9 +68,9 @@ namespace WebTests.Features.Baskets.GetBasketByRestaurantId
 
             var user = new User();
 
-            fixture.Insert(restaurant, user);
+            Insert(restaurant, user);
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Get(
+            var response = await factory.GetAuthenticatedClient(user.Id).Get(
                 $"/restaurants/{restaurant.Id}/basket");
 
             response.StatusCode.ShouldBe(200);

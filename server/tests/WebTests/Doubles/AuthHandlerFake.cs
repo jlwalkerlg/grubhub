@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace WebTests
+namespace WebTests.Doubles
 {
-    public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class AuthHandlerFake : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public TestAuthHandler(
+        public AuthHandlerFake(
             IHttpContextAccessor httpContextAccessor,
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,

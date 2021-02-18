@@ -22,7 +22,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
                 Email = "walker.jlg@gmail.com",
             };
 
-            fixture.Insert(user);
+            Insert(user);
 
             var request = new UpdateAuthUserDetailsCommand()
             {
@@ -30,11 +30,11 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
                 Email = "bruno@gmail.com",
             };
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Put(
+            var response = await factory.GetAuthenticatedClient(user.Id).Put(
                 "/auth/user",
                 request);
 
-            var found = fixture.UseTestDbContext(db => db.Users.Single());
+            var found = UseTestDbContext(db => db.Users.Single());
 
             found.Name.ShouldBe(request.Name);
             found.Email.ShouldBe(request.Email);

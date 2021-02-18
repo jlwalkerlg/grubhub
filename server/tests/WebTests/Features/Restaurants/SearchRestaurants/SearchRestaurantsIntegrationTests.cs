@@ -68,9 +68,9 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             };
             r3.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });
 
-            fixture.Insert(r1, r2, r3, italian, thai, greek, indian);
+            Insert(r1, r2, r3, italian, thai, greek, indian);
 
-            var response = await fixture.GetClient().Get(
+            var response = await factory.GetClient().Get(
                 "/restaurants?postcode=BD181LT&sort_by=distance&cuisines=Thai,Greek");
 
             var restaurants = await response.GetData<List<RestaurantSearchResult>>();

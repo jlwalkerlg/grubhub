@@ -18,7 +18,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         {
             var restaurant = new Restaurant();
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
             var request = new UpdateRestaurantDetailsRequest()
             {
@@ -31,13 +31,13 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Put(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Put(
                 $"/restaurants/{restaurant.Id}",
                 request);
 
             response.StatusCode.ShouldBe(200);
 
-            var found = fixture.UseTestDbContext(db => db.Restaurants.Single());
+            var found = UseTestDbContext(db => db.Restaurants.Single());
 
             found.Name.ShouldBe(request.Name);
             found.Description.ShouldBe(request.Description);

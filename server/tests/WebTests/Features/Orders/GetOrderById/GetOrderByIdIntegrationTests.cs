@@ -17,7 +17,7 @@ namespace WebTests.Features.Orders.GetOrderById
         [Fact]
         public async Task It_Fails_If_The_User_Is_Unauthenticated()
         {
-            var response = await fixture.GetClient().Get(
+            var response = await factory.GetClient().Get(
                 $"/orders/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(401);
@@ -26,7 +26,7 @@ namespace WebTests.Features.Orders.GetOrderById
         [Fact]
         public async Task It_Fails_If_The_Order_Is_Not_Found()
         {
-            var response = await fixture.GetAuthenticatedClient().Get(
+            var response = await factory.GetAuthenticatedClient().Get(
                 $"/orders/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(404);
@@ -37,9 +37,9 @@ namespace WebTests.Features.Orders.GetOrderById
         {
             var order = new Order();
 
-            fixture.Insert(order);
+            Insert(order);
 
-            var response = await fixture.GetAuthenticatedClient(Guid.NewGuid()).Get(
+            var response = await factory.GetAuthenticatedClient(Guid.NewGuid()).Get(
                 $"/orders/{order.Id}");
 
             response.StatusCode.ShouldBe(403);
@@ -62,9 +62,9 @@ namespace WebTests.Features.Orders.GetOrderById
             orderItem.Quantity = 1;
             order.Items.Add(orderItem);
 
-            fixture.Insert(restaurant, order);
+            Insert(restaurant, order);
 
-            var response = await fixture.GetAuthenticatedClient(order.UserId).Get(
+            var response = await factory.GetAuthenticatedClient(order.UserId).Get(
                 $"/orders/{order.Id}");
 
             response.StatusCode.ShouldBe(200);

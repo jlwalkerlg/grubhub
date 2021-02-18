@@ -24,7 +24,7 @@ namespace WebTests.Features.Billing.UpdateBillingDetails
                 IsBillingEnabled = true,
             };
 
-            var result = await fixture.Send(command);
+            var result = await factory.Send(command);
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.NotFound);
@@ -43,7 +43,7 @@ namespace WebTests.Features.Billing.UpdateBillingDetails
                 BillingAccount = billingAccount,
             };
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
             var command = new UpdateBillingDetailsCommand()
             {
@@ -51,11 +51,11 @@ namespace WebTests.Features.Billing.UpdateBillingDetails
                 IsBillingEnabled = true,
             };
 
-            var result = await fixture.Send(command);
+            var result = await factory.Send(command);
 
             result.ShouldBeSuccessful();
 
-            var found = fixture.UseTestDbContext(db => db.BillingAccounts.Single());
+            var found = UseTestDbContext(db => db.BillingAccounts.Single());
 
             found.IsBillingEnabled.ShouldBe(true);
         }

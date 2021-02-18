@@ -18,24 +18,24 @@ namespace WebTests.Features.Menus.AddMenuCategory
         {
             var restaurant = new Restaurant();
 
-            fixture.Insert(restaurant);
+            Insert(restaurant);
 
             var request = new AddMenuCategoryRequest()
             {
                 Name = "Pizza",
             };
 
-            var response = await fixture.GetAuthenticatedClient(restaurant.ManagerId).Post(
+            var response = await factory.GetAuthenticatedClient(restaurant.ManagerId).Post(
                 $"/restaurants/{restaurant.Id}/menu/categories",
                 request);
 
             response.StatusCode.ShouldBe(201);
 
-            var menu = fixture.UseTestDbContext(db => db.Menus.Single());
+            var menu = UseTestDbContext(db => db.Menus.Single());
 
             menu.RestaurantId.ShouldBe(restaurant.Id);
 
-            var category = fixture.UseTestDbContext(db => db.MenuCategories.Single());
+            var category = UseTestDbContext(db => db.MenuCategories.Single());
 
             category.MenuId.ShouldBe(menu.Id);
             category.Name.ShouldBe(request.Name);
