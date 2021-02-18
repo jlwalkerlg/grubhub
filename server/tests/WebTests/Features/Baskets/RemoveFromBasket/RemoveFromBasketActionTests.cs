@@ -5,16 +5,16 @@ using Xunit;
 
 namespace WebTests.Features.Baskets.RemoveFromBasket
 {
-    public class RemoveFromBasketActionTests : HttpTestBase
+    public class RemoveFromBasketActionTests : ActionTestBase
     {
-        public RemoveFromBasketActionTests(HttpTestFixture fixture) : base(fixture)
+        public RemoveFromBasketActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await fixture.GetClient().Delete(
+            var response = await GetClient().Delete(
                 $"/restaurants/{Guid.NewGuid()}/basket/items/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(401);
@@ -23,11 +23,10 @@ namespace WebTests.Features.Baskets.RemoveFromBasket
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            var response = await fixture.GetAuthenticatedClient().Delete(
+            var response = await GetAuthenticatedClient().Delete(
                 $"/restaurants/{Guid.NewGuid()}/basket/items/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

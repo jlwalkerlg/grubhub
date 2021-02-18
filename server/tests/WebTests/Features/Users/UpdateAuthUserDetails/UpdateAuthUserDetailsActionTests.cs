@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Users.UpdateAuthUserDetails
 {
-    public class UpdateAuthUserDetailsActionTests : HttpTestBase
+    public class UpdateAuthUserDetailsActionTests : ActionTestBase
     {
-        public UpdateAuthUserDetailsActionTests(HttpTestFixture fixture) : base(fixture)
+        public UpdateAuthUserDetailsActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -21,7 +21,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
                 Email = "bruno@gmail.com",
             };
 
-            var response = await fixture.GetClient().Put(
+            var response = await GetClient().Put(
                 "/auth/user",
                 request);
 
@@ -39,7 +39,7 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
                 Email = "",
             };
 
-            var response = await fixture.GetAuthenticatedClient(user.Id).Put(
+            var response = await GetAuthenticatedClient(user.Id).Put(
                 "/auth/user",
                 request);
 

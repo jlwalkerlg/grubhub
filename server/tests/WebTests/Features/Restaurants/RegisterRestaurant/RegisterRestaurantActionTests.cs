@@ -5,9 +5,9 @@ using Xunit;
 
 namespace WebTests.Features.Restaurants.RegisterRestaurant
 {
-    public class RegisterRestaurantActionTests : HttpTestBase
+    public class RegisterRestaurantActionTests : ActionTestBase
     {
-        public RegisterRestaurantActionTests(HttpTestFixture fixture) : base(fixture)
+        public RegisterRestaurantActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -24,7 +24,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 Address = ""
             };
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 "/restaurants/register",
                 command);
 
@@ -53,12 +53,11 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 Address = "12 Maine Road, Madchester, MN12 1NM",
             };
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 "/restaurants/register",
                 command);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Web.BackgroundServices;
+using Web.Workers;
 
 namespace Web
 {
@@ -17,7 +17,7 @@ namespace Web
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureAppConfiguration((hostingContext, config) =>
+                .ConfigureAppConfiguration(config =>
                 {
                     config.AddConfiguration(
                         new ConfigurationBuilder()
@@ -28,14 +28,6 @@ namespace Web
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                })
-                .ConfigureServices((ctx, services) =>
-                {
-                    if (!ctx.HostingEnvironment.IsTesting())
-                    {
-                        services.AddHostedService<EventWorker>();
-                        services.AddHostedService<JobWorker>();
-                    }
                 });
     }
 }

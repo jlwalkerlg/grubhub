@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Web.Services;
 
-namespace Web.BackgroundServices
+namespace Web.Workers
 {
     public class JobWorker : BackgroundService
     {

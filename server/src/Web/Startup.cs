@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Web.Workers;
 using Web.Data;
 using Web.Features.Restaurants.SearchRestaurants;
 using Web.Filters;
@@ -106,14 +107,17 @@ namespace Web
 
             services.AddSingleton<INotifier, HubNotifier>();
 
-            services.AddScoped<EventDispatcher>();
-            services.AddScoped<IJobQueue, EFJobQueue>();
-
             services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-XSRF-TOKEN"; // as expected from the client
                 options.Cookie.Name = "csrf_token"; // set automatically by asp.net as http only
             });
+
+            services.AddScoped<EventDispatcher>();
+            services.AddScoped<IJobQueue, EFJobQueue>();
+
+            services.AddHostedService<EventWorker>();
+            services.AddHostedService<JobWorker>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

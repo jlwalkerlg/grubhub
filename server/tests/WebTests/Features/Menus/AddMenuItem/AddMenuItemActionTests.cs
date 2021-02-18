@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Menus.AddMenuItem
 {
-    public class AddMenuItemActionTests : HttpTestBase
+    public class AddMenuItemActionTests : ActionTestBase
     {
-        public AddMenuItemActionTests(HttpTestFixture fixture) : base(fixture)
+        public AddMenuItemActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -22,7 +22,7 @@ namespace WebTests.Features.Menus.AddMenuItem
                 Price = 10m,
             };
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items",
                 request);
 
@@ -39,7 +39,7 @@ namespace WebTests.Features.Menus.AddMenuItem
                 Price = -10m,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items",
                 request);
 
@@ -60,12 +60,11 @@ namespace WebTests.Features.Menus.AddMenuItem
                 Price = 10m,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
 
             response.StatusCode.ShouldBe(400);
         }

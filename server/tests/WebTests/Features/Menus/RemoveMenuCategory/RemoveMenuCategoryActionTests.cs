@@ -5,16 +5,16 @@ using Xunit;
 
 namespace WebTests.Features.Menus.RemoveMenuCategory
 {
-    public class RemoveMenuCategoryActionTests : HttpTestBase
+    public class RemoveMenuCategoryActionTests : ActionTestBase
     {
-        public RemoveMenuCategoryActionTests(HttpTestFixture fixture) : base(fixture)
+        public RemoveMenuCategoryActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await fixture.GetClient().Delete(
+            var response = await GetClient().Delete(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(401);
@@ -23,11 +23,10 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            var response = await fixture.GetAuthenticatedClient().Delete(
+            var response = await GetAuthenticatedClient().Delete(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}");
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

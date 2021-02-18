@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Menus.RenameMenuCategory
 {
-    public class RenameMenuCategoryActionTests : HttpTestBase
+    public class RenameMenuCategoryActionTests : ActionTestBase
     {
-        public RenameMenuCategoryActionTests(HttpTestFixture fixture) : base(fixture)
+        public RenameMenuCategoryActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -20,7 +20,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "Curry",
             };
 
-            var response = await fixture.GetClient().Put(
+            var response = await GetClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}",
                 request);
 
@@ -35,7 +35,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "",
             };
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}",
                 request);
 
@@ -51,12 +51,11 @@ namespace WebTests.Features.Menus.RenameMenuCategory
                 NewName = "Curry",
             };
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

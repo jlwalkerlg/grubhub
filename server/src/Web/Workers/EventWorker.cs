@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Web.Data.EF;
 using Web.Features.Events;
 
-namespace Web.BackgroundServices
+namespace Web.Workers
 {
     public class EventWorker : BackgroundService
     {

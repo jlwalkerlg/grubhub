@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Baskets.AddToBasket
 {
-    public class AddToBasketActionTests : HttpTestBase
+    public class AddToBasketActionTests : ActionTestBase
     {
-        public AddToBasketActionTests(HttpTestFixture fixture) : base(fixture)
+        public AddToBasketActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -17,7 +17,7 @@ namespace WebTests.Features.Baskets.AddToBasket
         {
             var request = new AddToBasketRequest();
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/basket",
                 request);
 
@@ -33,7 +33,7 @@ namespace WebTests.Features.Baskets.AddToBasket
                 Quantity = 0,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.Empty}/basket",
                 request);
 
@@ -54,12 +54,11 @@ namespace WebTests.Features.Baskets.AddToBasket
                 Quantity = 1,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/basket",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

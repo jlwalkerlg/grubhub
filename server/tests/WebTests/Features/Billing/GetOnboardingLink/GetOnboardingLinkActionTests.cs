@@ -5,16 +5,16 @@ using Xunit;
 
 namespace WebTests.Features.Billing.GetOnboardingLink
 {
-    public class GetOnboardingLinkActionTests : HttpTestBase
+    public class GetOnboardingLinkActionTests : ActionTestBase
     {
-        public GetOnboardingLinkActionTests(HttpTestFixture fixture) : base(fixture)
+        public GetOnboardingLinkActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await fixture.GetClient().Get(
+            var response = await GetClient().Get(
                 $"/restaurants/{Guid.NewGuid()}/billing/onboarding/link");
 
             response.StatusCode.ShouldBe(401);
@@ -23,11 +23,10 @@ namespace WebTests.Features.Billing.GetOnboardingLink
         [Fact]
         public async Task It_Returns_Handler_Errors()
         {
-            var response = await fixture.GetAuthenticatedClient().Get(
+            var response = await GetAuthenticatedClient().Get(
                 $"/restaurants/{Guid.NewGuid()}/billing/onboarding/link");
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

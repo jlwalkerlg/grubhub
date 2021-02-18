@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 {
-    public class UpdateOpeningTimesActionTests : HttpTestBase
+    public class UpdateOpeningTimesActionTests : ActionTestBase
     {
-        public UpdateOpeningTimesActionTests(HttpTestFixture fixture) : base(fixture)
+        public UpdateOpeningTimesActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -17,7 +17,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
         {
             var request = new UpdateOpeningTimesRequest();
 
-            var response = await fixture.GetClient().Put(
+            var response = await GetClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/opening-times",
                 request);
 
@@ -32,7 +32,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
                 MondayOpen = "45:00",
             };
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/opening-times",
                 request);
 
@@ -45,12 +45,11 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
         {
             var request = new UpdateOpeningTimesRequest();
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/opening-times",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

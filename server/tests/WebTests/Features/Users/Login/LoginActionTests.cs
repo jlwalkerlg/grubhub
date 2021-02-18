@@ -5,9 +5,9 @@ using Xunit;
 
 namespace WebTests.Features.Users.Login
 {
-    public class LoginActionTests : HttpTestBase
+    public class LoginActionTests : ActionTestBase
     {
-        public LoginActionTests(HttpTestFixture fixture) : base(fixture)
+        public LoginActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -20,7 +20,7 @@ namespace WebTests.Features.Users.Login
                 Password = "",
             };
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 "/auth/login",
                 request);
 
@@ -41,14 +41,13 @@ namespace WebTests.Features.Users.Login
                 Password = "password123",
             };
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 "/auth/login",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
 
-            (await fixture.GetClient().Get("/auth/user")).StatusCode.ShouldBe(401);
+            (await GetClient().Get("/auth/user")).StatusCode.ShouldBe(401);
         }
     }
 }

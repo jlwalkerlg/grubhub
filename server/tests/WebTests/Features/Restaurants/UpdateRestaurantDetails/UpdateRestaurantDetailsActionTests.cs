@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
 {
-    public class UpdateRestaurantDetailsActionTests : HttpTestBase
+    public class UpdateRestaurantDetailsActionTests : ActionTestBase
     {
-        public UpdateRestaurantDetailsActionTests(HttpTestFixture fixture) : base(fixture)
+        public UpdateRestaurantDetailsActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -17,7 +17,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
         {
             var request = new UpdateRestaurantDetailsRequest();
 
-            var response = await fixture.GetClient().Put(
+            var response = await GetClient().Put(
                 $"/restaurants/{Guid.NewGuid()}",
                 request);
 
@@ -38,7 +38,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 EstimatedDeliveryTimeInMinutes = -40,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}",
                 request);
 
@@ -68,12 +68,11 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
                 EstimatedDeliveryTimeInMinutes = 40,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

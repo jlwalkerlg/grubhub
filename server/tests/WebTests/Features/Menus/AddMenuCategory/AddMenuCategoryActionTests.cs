@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Menus.AddMenuCategory
 {
-    public class AddMenuCategoryActionTests : HttpTestBase
+    public class AddMenuCategoryActionTests : ActionTestBase
     {
-        public AddMenuCategoryActionTests(HttpTestFixture fixture) : base(fixture)
+        public AddMenuCategoryActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -17,7 +17,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
         {
             var request = new AddMenuCategoryRequest();
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories",
                 request);
 
@@ -32,7 +32,7 @@ namespace WebTests.Features.Menus.AddMenuCategory
                 Name = "",
             };
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories",
                 request);
 
@@ -48,12 +48,11 @@ namespace WebTests.Features.Menus.AddMenuCategory
                 Name = "Pizza"
             };
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

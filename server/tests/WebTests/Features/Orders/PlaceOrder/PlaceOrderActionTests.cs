@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Orders.PlaceOrder
 {
-    public class PlaceOrderActionTests : HttpTestBase
+    public class PlaceOrderActionTests : ActionTestBase
     {
-        public PlaceOrderActionTests(HttpTestFixture fixture) : base(fixture)
+        public PlaceOrderActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -17,7 +17,7 @@ namespace WebTests.Features.Orders.PlaceOrder
         {
             var request = new PlaceOrderRequest();
 
-            var response = await fixture.GetClient().Post(
+            var response = await GetClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/orders",
                 request);
 
@@ -29,7 +29,7 @@ namespace WebTests.Features.Orders.PlaceOrder
         {
             var request = new PlaceOrderRequest();
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/orders",
                 request);
 
@@ -54,12 +54,11 @@ namespace WebTests.Features.Orders.PlaceOrder
                 Postcode = "MN12 1NM",
             };
 
-            var response = await fixture.GetAuthenticatedClient().Post(
+            var response = await GetAuthenticatedClient().Post(
                 $"/restaurants/{Guid.NewGuid()}/orders",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }

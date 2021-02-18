@@ -1,20 +1,19 @@
 using System;
 using System.Threading.Tasks;
-using Web.Features.Baskets.AddToBasket;
 using Xunit;
 
 namespace WebTests.Features.Baskets.GetBasketByRestaurantId
 {
-    public class GetBasketByRestaurantIdActionTests : HttpTestBase
+    public class GetBasketByRestaurantIdActionTests : ActionTestBase
     {
-        public GetBasketByRestaurantIdActionTests(HttpTestFixture fixture) : base(fixture)
+        public GetBasketByRestaurantIdActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
         [Fact]
         public async Task It_Requires_Authentication()
         {
-            var response = await fixture.GetClient().Get(
+            var response = await GetClient().Get(
                 $"/restaurants/{Guid.NewGuid()}/basket");
 
             response.StatusCode.ShouldBe(401);

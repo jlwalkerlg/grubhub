@@ -6,9 +6,9 @@ using Xunit;
 
 namespace WebTests.Features.Menus.UpdateMenuItem
 {
-    public class UpdateMenuItemActionTests : HttpTestBase
+    public class UpdateMenuItemActionTests : ActionTestBase
     {
-        public UpdateMenuItemActionTests(HttpTestFixture fixture) : base(fixture)
+        public UpdateMenuItemActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -22,7 +22,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var response = await fixture.GetClient().Put(
+            var response = await GetClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items/{Guid.NewGuid()}",
                 request);
 
@@ -39,7 +39,7 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = -1m,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items/{Guid.NewGuid()}",
                 request);
 
@@ -62,12 +62,11 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 Price = 11.99m,
             };
 
-            var response = await fixture.GetAuthenticatedClient().Put(
+            var response = await GetAuthenticatedClient().Put(
                 $"/restaurants/{Guid.NewGuid()}/menu/categories/{Guid.NewGuid()}/items/{Guid.NewGuid()}",
                 request);
 
             response.StatusCode.ShouldBe(400);
-            response.GetErrorMessage().ShouldBe(fixture.HandlerErrorMessage);
         }
     }
 }
