@@ -46,7 +46,7 @@ namespace Web.Workers
             {
                 try
                 {
-                    var jobs = await queue.GetNextNJobs(10, stoppingToken);
+                    var jobs = await queue.GetNextNJobs(5, stoppingToken);
 
                     foreach (var job in jobs)
                     {

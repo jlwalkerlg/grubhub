@@ -10,18 +10,28 @@ namespace WebTests.Doubles
     public class JobQueueSpy : IJobQueue
     {
         public List<Job> Jobs { get; } = new();
+        public Dictionary<Job, int?> MaxAttempts { get; } = new();
         public Dictionary<Job, int> Attempts { get; } = new();
 
-        public Task Enqueue(Job job, CancellationToken cancellationToken = default)
+        public Task Enqueue(
+            Job job,
+            EnqueueOptions options = null,
+            CancellationToken cancellationToken = default)
         {
-            return Enqueue(new[] { job }, cancellationToken);
+            return Enqueue(new[] { job }, options, cancellationToken);
         }
 
-        public Task Enqueue(IEnumerable<Job> jobs, CancellationToken cancellationToken = default)
+        public Task Enqueue(
+            IEnumerable<Job> jobs,
+            EnqueueOptions options = null,
+            CancellationToken cancellationToken = default)
         {
+            options = options ?? new EnqueueOptions();
+
             foreach (var job in jobs)
             {
                 Jobs.Add(job);
+                MaxAttempts.Add(job, options.MaxAttempts);
                 Attempts.Add(job, 0);
             }
 
@@ -32,7 +42,7 @@ namespace WebTests.Doubles
             int n, CancellationToken cancellationToken = default)
         {
             var jobs = Jobs
-                .Where(x => Attempts[x] < x.Retries)
+                .Where(x => MaxAttempts[x] is null || Attempts[x] < MaxAttempts[x])
                 .Take(n);
 
             return Task.FromResult(jobs);
@@ -41,6 +51,7 @@ namespace WebTests.Doubles
         public Task MarkComplete(Job job, CancellationToken cancellationToken = default)
         {
             Jobs.Remove(job);
+            MaxAttempts.Remove(job);
             Attempts.Remove(job);
             return Task.CompletedTask;
         }

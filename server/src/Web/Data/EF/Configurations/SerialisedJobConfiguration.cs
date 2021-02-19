@@ -12,11 +12,15 @@ namespace Web.Data.EF.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                .HasColumnName("id");
+                .HasColumnName("id")
+                .ValueGeneratedNever();
 
-            builder.Property(x => x.Retries)
-                .HasColumnName("retries")
+            builder.Property(x => x.ScheduledAt)
+                .HasColumnName("scheduled_at")
                 .IsRequired();
+
+            builder.Property(x => x.MaxAttempts)
+                .HasColumnName("max_attempts");
 
             builder.Property(x => x.Attempts)
                 .HasColumnName("attempts")

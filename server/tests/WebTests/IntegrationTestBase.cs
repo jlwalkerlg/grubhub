@@ -9,7 +9,7 @@ namespace WebTests
 {
     [Trait("Category", "IntegrationTest")]
     [Collection("IntegrationTest")]
-    public class IntegrationTestBase : IDisposable
+    public class IntegrationTestBase
     {
         protected readonly IntegrationTestFixture fixture;
         protected readonly IntegrationTestWebApplicationFactory factory;
@@ -20,10 +20,7 @@ namespace WebTests
             this.fixture = fixture;
             factory = fixture.Factory;
             config = factory.Services.GetRequiredService<Config>();
-        }
 
-        public virtual void Dispose()
-        {
             ResetDatabase();
         }
 

@@ -52,7 +52,7 @@ namespace Web.Workers
                     var events = await db.Events
                         .Where(x => !x.Handled)
                         .OrderBy(x => x.CreatedAt)
-                        .Take(10)
+                        .Take(5)
                         .ToListAsync(stoppingToken);
 
                     foreach (var ev in events)
@@ -62,7 +62,7 @@ namespace Web.Workers
                 }
                 catch (System.Exception ex)
                 {
-                    logger.LogCritical(ex.ToString());
+                    logger.LogError(ex.ToString());
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);

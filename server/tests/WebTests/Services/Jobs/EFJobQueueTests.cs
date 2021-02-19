@@ -6,6 +6,7 @@ using Web.Services.Jobs;
 using Xunit;
 using Shouldly;
 using System.Linq;
+using Web.Services;
 
 namespace WebTests.Services.Jobs
 {
@@ -30,7 +31,7 @@ namespace WebTests.Services.Jobs
                 Value = "Hello.",
             };
 
-            await queue.Enqueue(dummy);
+            await queue.Enqueue(dummy, new EnqueueOptions() { MaxAttempts = int.MaxValue });
 
             var jobs = await queue.GetNextNJobs(1);
 
@@ -38,19 +39,19 @@ namespace WebTests.Services.Jobs
 
             var job = jobs.First() as DummyJob;
 
-            job.Retries.ShouldBe(dummy.Retries);
+            job.Id.ShouldBe(dummy.Id);
             job.Value.ShouldBe(dummy.Value);
         }
 
         [Fact]
-        public async Task It_Ignores_Jobs_That_Have_Failed_More_Than_The_Max_Retries()
+        public async Task It_Ignores_Jobs_That_Have_Been_Attempted_More_Than_The_Max()
         {
             var dummy = new DummyJob()
             {
                 Value = "Hello.",
             };
 
-            await queue.Enqueue(dummy);
+            await queue.Enqueue(dummy, new EnqueueOptions() { MaxAttempts = 2 });
 
             var job = (await queue.GetNextNJobs(1)).Single();
 
@@ -71,7 +72,7 @@ namespace WebTests.Services.Jobs
                 Value = "Hello.",
             };
 
-            await queue.Enqueue(dummy);
+            await queue.Enqueue(dummy, new EnqueueOptions() { MaxAttempts = int.MaxValue });
 
             var job = (await queue.GetNextNJobs(1)).Single();
 
@@ -83,7 +84,6 @@ namespace WebTests.Services.Jobs
 
     public class DummyJob : Job
     {
-        public override int Retries => 2;
         public string Value { get; set; }
     }
 }

@@ -18,14 +18,21 @@ namespace Web.Services.Jobs
             this.context = context;
         }
 
-        public Task Enqueue(Job job, CancellationToken cancellationToken = default)
+        public Task Enqueue(
+            Job job,
+            EnqueueOptions options = null,
+            CancellationToken cancellationToken = default)
         {
-            return Enqueue(new[] { job }, cancellationToken);
+            return Enqueue(new[] { job }, options, cancellationToken);
         }
 
         public async Task Enqueue(
-            IEnumerable<Job> jobs, CancellationToken cancellationToken = default)
+            IEnumerable<Job> jobs,
+            EnqueueOptions options = null,
+            CancellationToken cancellationToken = default)
         {
+            options = options ?? new EnqueueOptions();
+
             foreach (var job in jobs)
             {
                 var type = job.GetType().AssemblyQualifiedName;
@@ -33,7 +40,9 @@ namespace Web.Services.Jobs
 
                 var serialised = new SerialisedJob()
                 {
-                    Retries = job.Retries,
+                    Id = job.Id,
+                    MaxAttempts = options.MaxAttempts,
+                    Attempts = 0,
                     Type = type,
                     Json = json,
                 };
@@ -48,8 +57,8 @@ namespace Web.Services.Jobs
             int n, CancellationToken cancellationToken = default)
         {
             var serialisedJobs = await context.Jobs
-                .Where(x => x.Attempts < x.Retries)
-                .OrderBy(x => x.Id)
+                .Where(x => x.MaxAttempts == null || x.Attempts < x.MaxAttempts)
+                .OrderBy(x => x.ScheduledAt)
                 .Take(n)
                 .ToListAsync(cancellationToken);
 
@@ -58,8 +67,6 @@ namespace Web.Services.Jobs
                 var job = (Job)JsonSerializer.Deserialize(
                     x.Json,
                     Type.GetType(x.Type));
-
-                job.Id = x.Id;
 
                 return job;
             });
