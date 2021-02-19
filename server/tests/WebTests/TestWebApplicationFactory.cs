@@ -15,6 +15,8 @@ using Web.Services.Geocoding;
 using Web.Workers;
 using WebTests.Doubles;
 using WebTests.TestData;
+using Hangfire;
+using Hangfire.PostgreSql;
 
 namespace WebTests
 {
@@ -47,14 +49,20 @@ namespace WebTests
                     services.Single(x => x.ImplementationType == typeof(EventWorker))
                 );
 
-                var hangfireBackgroundService = services.SingleOrDefault(x =>
-                    x.ImplementationFactory?.Method.ReturnType ==
-                        typeof(Hangfire.BackgroundJobServerHostedService));
-
-                if (hangfireBackgroundService != null)
+                services.AddHangfire(hangfire =>
                 {
-                    services.Remove(hangfireBackgroundService);
-                }
+                    hangfire.UsePostgreSqlStorage(
+                        config.DbConnectionString,
+                        new PostgreSqlStorageOptions()
+                        {
+                            PrepareSchemaIfNecessary = false,
+                        });
+                });
+
+                services.Remove(
+                    services.SingleOrDefault(x =>
+                        x.ImplementationFactory?.Method.ReturnType ==
+                            typeof(Hangfire.BackgroundJobServerHostedService)));
 
                 // Set the default authentication scheme to "Test",
                 // and register the handler for it.

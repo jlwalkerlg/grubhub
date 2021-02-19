@@ -53,23 +53,19 @@ namespace Web
                 builder.AddFilter("Hangfire", LogLevel.Information);
             });
 
-            // Hangfire
-            if (!env.IsTesting())
-            {
-                services.AddHangfire(configuration => configuration
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .UsePostgreSqlStorage(config.DbConnectionString));
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(config.DbConnectionString));
 
-                GlobalJobFilters.Filters.Remove(
-                    GlobalJobFilters.Filters.Single(x =>
-                        x.Instance is AutomaticRetryAttribute));
+            GlobalJobFilters.Filters.Remove(
+                GlobalJobFilters.Filters.Single(x =>
+                    x.Instance is AutomaticRetryAttribute));
 
-                services.AddHangfireServer();
+            services.AddHangfireServer();
 
-                services.AddScoped<HangfireJobProcessor>();
-            }
+            services.AddScoped<HangfireJobProcessor>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -190,11 +186,7 @@ namespace Web
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<OrderHub>("/hubs/orders");
-
-                if (!env.IsTesting())
-                {
-                    endpoints.MapHangfireDashboard();
-                }
+                endpoints.MapHangfireDashboard();
             });
         }
     }
