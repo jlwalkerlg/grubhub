@@ -46,9 +46,15 @@ namespace WebTests
                 services.Remove(
                     services.Single(x => x.ImplementationType == typeof(EventWorker))
                 );
-                services.Remove(
-                    services.Single(x => x.ImplementationType == typeof(JobWorker))
-                );
+
+                var hangfireBackgroundService = services.SingleOrDefault(x =>
+                    x.ImplementationFactory?.Method.ReturnType ==
+                        typeof(Hangfire.BackgroundJobServerHostedService));
+
+                if (hangfireBackgroundService != null)
+                {
+                    services.Remove(hangfireBackgroundService);
+                }
 
                 // Set the default authentication scheme to "Test",
                 // and register the handler for it.

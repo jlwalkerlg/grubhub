@@ -27,7 +27,6 @@ namespace Web.Data.EF
         public DbSet<Order> Orders { get; protected set; }
         public DbSet<BillingAccount> BillingAccounts { get; protected set; }
         public DbSet<SerialisedEvent> Events { get; protected set; }
-        public DbSet<SerialisedJob> Jobs { get; protected set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

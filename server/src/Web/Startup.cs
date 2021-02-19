@@ -24,6 +24,9 @@ using Web.Services.Notifications;
 using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
+using Hangfire;
+using Hangfire.PostgreSql;
+using System.Linq;
 
 namespace Web
 {
@@ -47,7 +50,26 @@ namespace Web
                 builder.AddFilter("Default", LogLevel.Information);
                 builder.AddFilter("Microsoft", LogLevel.Warning);
                 builder.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
+                builder.AddFilter("Hangfire", LogLevel.Information);
             });
+
+            // Hangfire
+            if (!env.IsTesting())
+            {
+                services.AddHangfire(configuration => configuration
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UsePostgreSqlStorage(config.DbConnectionString));
+
+                GlobalJobFilters.Filters.Remove(
+                    GlobalJobFilters.Filters.Single(x =>
+                        x.Instance is AutomaticRetryAttribute));
+
+                services.AddHangfireServer();
+
+                services.AddScoped<HangfireJobProcessor>();
+            }
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -115,10 +137,9 @@ namespace Web
             });
 
             services.AddScoped<EventDispatcher>();
-            services.AddScoped<IJobQueue, EFJobQueue>();
-
             services.AddHostedService<EventWorker>();
-            services.AddHostedService<JobWorker>();
+
+            services.AddScoped<IJobQueue, HangfireJobQueue>();
 
             services.AddSingleton<IGeocoder, GoogleGeocoder>();
         }
@@ -169,6 +190,11 @@ namespace Web
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<OrderHub>("/hubs/orders");
+
+                if (!env.IsTesting())
+                {
+                    endpoints.MapHangfireDashboard();
+                }
             });
         }
     }

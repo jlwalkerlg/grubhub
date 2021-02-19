@@ -1,16 +1,22 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Shouldly;
 using Web.Features.Baskets.AddToBasket;
 using WebTests.TestData;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace WebTests.Features.Baskets.AddToBasket
 {
     public class AddToBasketIntegrationTests : IntegrationTestBase
     {
-        public AddToBasketIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
+        private readonly ITestOutputHelper output;
+
+        public AddToBasketIntegrationTests(IntegrationTestFixture fixture, ITestOutputHelper output) : base(fixture)
         {
+            this.output = output;
         }
 
         [Fact]
