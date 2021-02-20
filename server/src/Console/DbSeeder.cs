@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Npgsql;
+using Web;
+using Web.Data;
 using Web.Data.EF;
 using Web.Domain;
 using Web.Domain.Billing;
@@ -17,11 +20,16 @@ namespace Console
 {
     public class DbSeeder
     {
+        private readonly IDbConnectionFactory dbConnectionFactory;
         private readonly AppDbContext context;
         private readonly IHasher hasher;
 
-        public DbSeeder(AppDbContext context, IHasher hasher)
+        public DbSeeder(
+            IDbConnectionFactory dbConnectionFactory,
+            AppDbContext context,
+            IHasher hasher)
         {
+            this.dbConnectionFactory = dbConnectionFactory;
             this.context = context;
             this.hasher = hasher;
         }
@@ -30,6 +38,13 @@ namespace Console
         {
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
+
+            using (var connection = await dbConnectionFactory.OpenConnection())
+            {
+                var sql = await File.ReadAllTextAsync("quartz.sql");
+                var command = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
+                command.ExecuteNonQuery();
+            }
 
             var json = await File.ReadAllTextAsync("seed.json");
             var jdoc = JsonDocument.Parse(json);

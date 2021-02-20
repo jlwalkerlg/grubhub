@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using Web.Workers;
 using Web.Data;
 using Web.Features.Restaurants.SearchRestaurants;
 using Web.Filters;
@@ -19,14 +18,14 @@ using Web.Services;
 using Web.Services.Antiforgery;
 using Web.Services.Authentication;
 using Web.Services.Hashing;
-using Web.Services.Jobs;
 using Web.Services.Notifications;
 using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
-using Hangfire;
-using Hangfire.PostgreSql;
-using System.Linq;
+using Quartz;
+using Quartz.Impl;
+using Web.Services.Jobs;
+using Web.Workers;
 
 namespace Web
 {
@@ -50,22 +49,37 @@ namespace Web
                 builder.AddFilter("Default", LogLevel.Information);
                 builder.AddFilter("Microsoft", LogLevel.Warning);
                 builder.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
-                builder.AddFilter("Hangfire", LogLevel.Information);
             });
 
-            services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UsePostgreSqlStorage(config.DbConnectionString));
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
 
-            GlobalJobFilters.Filters.Remove(
-                GlobalJobFilters.Filters.Single(x =>
-                    x.Instance is AutomaticRetryAttribute));
+                // Default name.
+                q.SchedulerName = "QuartzScheduler";
 
-            services.AddHangfireServer();
+                q.UsePersistentStore(store =>
+                {
+                    store.UsePostgres(config.DbConnectionString);
 
-            services.AddScoped<HangfireJobProcessor>();
+                    store.UseJsonSerializer();
+                });
+            });
+
+            services.AddSingleton<IScheduler>(sp =>
+                SchedulerRepository
+                    .Instance
+                    .Lookup("QuartzScheduler")
+                    .Result);
+
+            services.AddScoped<QuartzJobProcessor>();
+            services.AddScoped<IJobQueue, QuartzJobQueue>();
+
+            services.AddQuartzHostedService(options =>
+            {
+                // when shutting down we want jobs to complete gracefully
+                options.WaitForJobsToComplete = true;
+            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -135,8 +149,6 @@ namespace Web
             services.AddScoped<EventDispatcher>();
             services.AddHostedService<EventWorker>();
 
-            services.AddScoped<IJobQueue, HangfireJobQueue>();
-
             services.AddSingleton<IGeocoder, GoogleGeocoder>();
         }
 
@@ -174,9 +186,7 @@ namespace Web
             app.UseCookiePolicy(
                 new CookiePolicyOptions()
                 {
-                    Secure = env.IsProduction()
-                        ? CookieSecurePolicy.Always
-                        : CookieSecurePolicy.None,
+                    Secure = CookieSecurePolicy.None,
                 });
 
             app.UseAuthentication();
@@ -186,7 +196,6 @@ namespace Web
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<OrderHub>("/hubs/orders");
-                endpoints.MapHangfireDashboard();
             });
         }
     }

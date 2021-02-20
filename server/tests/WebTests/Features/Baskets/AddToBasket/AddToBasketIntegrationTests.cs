@@ -20,6 +20,9 @@ namespace WebTests.Features.Baskets.AddToBasket
         }
 
         [Fact]
+        public void Test() { }
+
+        [Fact]
         public async Task It_Creates_A_New_Basket()
         {
             var restaurant = new Restaurant();

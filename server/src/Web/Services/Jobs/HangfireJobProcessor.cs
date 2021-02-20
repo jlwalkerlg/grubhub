@@ -46,7 +46,9 @@ namespace Web.Services.Jobs
 
             if (exception is null) return; // success
 
-            client.ChangeState(context.BackgroundJob.Id, new Hangfire.States.FailedState(exception));
+            client.ChangeState(
+                context.BackgroundJob.Id,
+                new Hangfire.States.FailedState(exception));
 
             TimeSpan? delay = null;
 
@@ -55,7 +57,9 @@ namespace Web.Services.Jobs
                 var delayInSeconds = CalculateDelayInSeconds(attempt, options);
                 delay = TimeSpan.FromSeconds(delayInSeconds);
 
-                client.ChangeState(context.BackgroundJob.Id, new Hangfire.States.ScheduledState(delay.Value));
+                client.ChangeState(
+                    context.BackgroundJob.Id,
+                    new Hangfire.States.ScheduledState(delay.Value));
             }
 
             LogFailure(attempt, options, delay, result, exception, context);
@@ -80,7 +84,7 @@ namespace Web.Services.Jobs
 
         private static int CalculateDelayInSeconds(int attempt, EnqueueOptions options)
         {
-            if (options.DelaysInSeconds?.Length < 1)
+            if (options.DelaysInSeconds is null || options.DelaysInSeconds.Length == 0)
             {
                 // https://github.com/HangfireIO/Hangfire/blob/master/src/Hangfire.Core/AutomaticRetryAttribute.cs
                 var random = new Random();
