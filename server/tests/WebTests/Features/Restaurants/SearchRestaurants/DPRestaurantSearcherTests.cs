@@ -1,7 +1,9 @@
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Data;
 using Web.Domain;
 using Web.Features.Restaurants.SearchRestaurants;
 using WebTests.Doubles;
@@ -20,7 +22,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             clock = new ClockStub();
 
             repository = new DPRestaurantSearcher(
-                new TestDbConnectionFactory(config),
+                factory.Services.GetRequiredService<IDbConnectionFactory>(),
                 clock
             );
         }
