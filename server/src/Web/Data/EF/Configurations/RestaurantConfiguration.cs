@@ -97,14 +97,18 @@ namespace Web.Data.EF.Configurations
 
             builder.OwnsOne(x => x.DeliveryFee, x =>
             {
-                x.Property(y => y.Pence)
+                x.Ignore(y => y.Pence);
+
+                x.Property(y => y.Pounds)
                     .IsRequired()
                     .HasColumnName("delivery_fee");
             });
 
             builder.OwnsOne(x => x.MinimumDeliverySpend, x =>
             {
-                x.Property(y => y.Pence)
+                x.Ignore(y => y.Pence);
+
+                x.Property(y => y.Pounds)
                     .IsRequired()
                     .HasColumnName("minimum_delivery_spend");
             });

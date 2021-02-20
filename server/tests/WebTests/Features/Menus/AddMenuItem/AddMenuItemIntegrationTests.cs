@@ -42,7 +42,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             item.MenuCategoryId.ShouldBe(category.Id);
             item.Name.ShouldBe(request.Name);
             item.Description.ShouldBe(request.Description);
-            item.Price.ShouldBe((int)(request.Price * 100));
+            item.Price.ShouldBe(request.Price);
         }
     }
 }

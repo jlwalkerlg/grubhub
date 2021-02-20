@@ -4,24 +4,26 @@ namespace Web.Domain
 {
     public record Money
     {
-        private Money(int pence)
+        private Money(decimal pounds)
         {
-            if (pence < 0)
-            {
-                throw new ArgumentException("Pence must not be less than 0.");
-            }
-
-            Pence = pence;
+            Pounds = pounds;
         }
 
-        public int Pence { get; }
+        public decimal Pounds { get; }
+
+        public int Pence => (int)(Pounds * 100);
 
         public static Money Zero => new Money(0);
 
-        public static Money FromPence(int pence) => new Money(pence);
+        public static Money FromPence(int pence) => FromPounds((decimal)(pence) / 100);
 
         public static Money FromPounds(decimal pounds)
         {
+            if (pounds < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pounds));
+            }
+
             var pence = (int)(pounds * 100);
 
             if ((decimal)pence != pounds * 100)
@@ -29,12 +31,12 @@ namespace Web.Domain
                 throw new ArgumentException("Money has minimum precision of 1p.");
             }
 
-            return new Money(pence);
+            return new Money(pounds);
         }
 
         public static bool operator <(Money a, Money b)
         {
-            return a?.Pence < b?.Pence;
+            return a?.Pounds < b?.Pounds;
         }
 
         public static bool operator >(Money a, Money b) => b < a;
@@ -51,7 +53,7 @@ namespace Web.Domain
                 throw new ArgumentNullException(nameof(b));
             }
 
-            return new Money(a.Pence + b.Pence);
+            return new Money(a.Pounds + b.Pounds);
         }
 
         public static Money operator *(Money money, int multiplier)
@@ -66,7 +68,7 @@ namespace Web.Domain
                 throw new ArgumentOutOfRangeException(nameof(multiplier));
             }
 
-            return new Money(money.Pence * multiplier);
+            return new Money(money.Pounds * multiplier);
         }
 
         public static Money operator *(int multiplier, Money money) => money * multiplier;

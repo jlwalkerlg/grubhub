@@ -112,10 +112,10 @@ namespace WebTests.TestData
         public TimeSpan? SundayClose { get; set; }
 
         [Column("minimum_delivery_spend")]
-        public int MinimumDeliverySpend { get; set; } = 1000;
+        public decimal MinimumDeliverySpend { get; set; } = 10.00m;
 
         [Column("delivery_fee")]
-        public int DeliveryFee { get; set; } = 1500;
+        public decimal DeliveryFee { get; set; } = 15.00m;
 
         [Column("max_delivery_distance_in_km")]
         public float MaxDeliveryDistanceInKm { get; set; } = 5;

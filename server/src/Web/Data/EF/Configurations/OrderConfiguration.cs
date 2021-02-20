@@ -41,21 +41,27 @@ namespace Web.Data.EF.Configurations
 
             builder.OwnsOne(x => x.Subtotal, x =>
             {
-                x.Property(y => y.Pence)
+                x.Ignore(y => y.Pence);
+
+                x.Property(y => y.Pounds)
                     .HasColumnName("subtotal")
                     .IsRequired();
             });
 
             builder.OwnsOne(x => x.DeliveryFee, x =>
             {
-                x.Property(y => y.Pence)
+                x.Ignore(y => y.Pence);
+
+                x.Property(y => y.Pounds)
                     .HasColumnName("delivery_fee")
                     .IsRequired();
             });
 
             builder.OwnsOne(x => x.ServiceFee, x =>
             {
-                x.Property(y => y.Pence)
+                x.Ignore(y => y.Pence);
+
+                x.Property(y => y.Pounds)
                     .HasColumnName("service_fee")
                     .IsRequired();
             });

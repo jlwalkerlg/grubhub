@@ -26,7 +26,9 @@ namespace Web.Data.EF.Configurations
 
             builder.OwnsOne(x => x.Price, y =>
             {
-                y.Property(z => z.Pence)
+                y.Ignore(z => z.Pence);
+
+                y.Property(z => z.Pounds)
                     .HasColumnName("price")
                     .IsRequired();
             });
