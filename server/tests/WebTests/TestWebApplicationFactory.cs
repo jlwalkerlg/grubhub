@@ -36,6 +36,7 @@ namespace WebTests
 
                 config = config with
                 {
+                    Environment = "Testing",
                     DbConnectionString = ctx.Configuration
                         .GetSection("TestDbConnectionString")
                         .Value,

@@ -2,6 +2,7 @@ namespace Web
 {
     public record Config
     {
+        public string Environment { get; init; } = "Production";
         public string ServerUrl { get; set; }
         public string ClientUrl { get; set; }
         public string DbConnectionString { get; set; }

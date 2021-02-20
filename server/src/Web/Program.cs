@@ -1,9 +1,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Web.Workers;
 
 namespace Web
 {
@@ -17,17 +15,17 @@ namespace Web
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureAppConfiguration(config =>
+                .ConfigureAppConfiguration(builder =>
                 {
-                    config.AddConfiguration(
-                        new ConfigurationBuilder()
+                    var config = new ConfigurationBuilder()
                             .AddJsonFile("config.json")
-                            .Build()
-                    );
+                            .Build();
+
+                    builder.AddConfiguration(config);
                 })
-                .ConfigureWebHostDefaults(webBuilder =>
+                .ConfigureWebHostDefaults(builder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    builder.UseStartup<Startup>();
                 });
     }
 }

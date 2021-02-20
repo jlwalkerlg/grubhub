@@ -37,6 +37,8 @@ namespace Web
         public Startup(IConfiguration configuration, IHostEnvironment env)
         {
             configuration.Bind(config);
+
+            env.EnvironmentName = config.Environment;
             this.env = env;
         }
 
@@ -186,7 +188,9 @@ namespace Web
             app.UseCookiePolicy(
                 new CookiePolicyOptions()
                 {
-                    Secure = CookieSecurePolicy.None,
+                    Secure = env.IsProduction()
+                        ? CookieSecurePolicy.Always
+                        : CookieSecurePolicy.None,
                 });
 
             app.UseAuthentication();
