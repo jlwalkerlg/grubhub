@@ -57,9 +57,9 @@ namespace Web.Features.Orders.PlaceOrder
                 return Error.NotFound("Restaurant not currently accepting orders.");
             }
 
-            var coordinatesResult = await geocoder.LookupCoordinates(command.Postcode);
+            var (coordinates, lookupError) = await geocoder.LookupCoordinates(command.Postcode);
 
-            if (!coordinatesResult)
+            if (lookupError)
             {
                 return Error.BadRequest("Address not recognised.");
             }
@@ -71,7 +71,7 @@ namespace Web.Features.Orders.PlaceOrder
                     command.City,
                     new Postcode(command.Postcode)
                 ),
-                coordinatesResult.Value
+                coordinates
             );
 
             var restaurant = await unitOfWork
@@ -82,7 +82,7 @@ namespace Web.Features.Orders.PlaceOrder
                 .Menus
                 .GetByRestaurantId(restaurant.Id);
 
-            var orderResult = restaurant.PlaceOrder(
+            var (order, placeOrderError) = restaurant.PlaceOrder(
                 new OrderId(Guid.NewGuid().ToString()),
                 basket,
                 menu,
@@ -91,23 +91,21 @@ namespace Web.Features.Orders.PlaceOrder
                 billingAccount,
                 clock.UtcNow);
 
-            if (!orderResult)
+            if (placeOrderError)
             {
-                return orderResult.Error;
+                return placeOrderError;
             }
 
-            var order = orderResult.Value;
-
-            var paymentIntentResult = await billingService
+            var (paymentIntent, paymentIntentError) = await billingService
                 .GeneratePaymentIntent(order, billingAccount);
 
-            if (!paymentIntentResult)
+            if (paymentIntentError)
             {
                 return Error.Internal("Failed to generate payment intent.");
             }
 
-            order.PaymentIntentId = paymentIntentResult.Value.Id;
-            order.PaymentIntentClientSecret = paymentIntentResult.Value.ClientSecret;
+            order.PaymentIntentId = paymentIntent.Id;
+            order.PaymentIntentClientSecret = paymentIntent.ClientSecret;
 
             var opEvent = new OrderPlacedEvent(order.Id, clock.UtcNow);
 

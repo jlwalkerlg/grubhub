@@ -22,9 +22,9 @@ namespace Web.Features.Billing.SetupBilling
                 RestaurantId = restaurantId,
             };
 
-            var result = await sender.Send(query);
+            var (link, error) = await sender.Send(query);
 
-            return result ? Ok(result.Value) : Problem(result.Error);
+            return error ? Problem(error) : Ok(link);
         }
     }
 }

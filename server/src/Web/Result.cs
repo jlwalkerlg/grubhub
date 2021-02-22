@@ -75,6 +75,12 @@ namespace Web
             }
         }
 
+        public void Deconstruct(out T value, out Error error)
+        {
+            value = Value;
+            error = Error;
+        }
+
         public static Result<T> Ok(T value)
         {
             return new Result<T>(value);

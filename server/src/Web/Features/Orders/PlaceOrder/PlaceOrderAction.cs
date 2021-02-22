@@ -29,9 +29,9 @@ namespace Web.Features.Orders.PlaceOrder
                 Postcode = request.Postcode,
             };
 
-            var result = await sender.Send(command);
+            var (orderId, error) = await sender.Send(command);
 
-            return result ? Ok(result.Value) : Problem(result.Error);
+            return error ? Problem(error) : Ok(orderId);
         }
     }
 }

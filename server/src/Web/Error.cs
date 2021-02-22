@@ -67,6 +67,7 @@ namespace Web
         }
 
         public static implicit operator string(Error error) => error.ToString();
+        public static implicit operator bool(Error error) => error != null;
     }
 
     public enum ErrorType

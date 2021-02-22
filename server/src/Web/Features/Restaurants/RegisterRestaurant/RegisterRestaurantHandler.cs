@@ -40,9 +40,9 @@ namespace Web.Features.Restaurants.RegisterRestaurant
                 });
             }
 
-            var geocodingResult = await geocoder.Geocode(command.Address);
+            var (geocodingResult, geocodingError) = await geocoder.Geocode(command.Address);
 
-            if (!geocodingResult)
+            if (geocodingError)
             {
                 return Error.BadRequest("Address is not a valid postal address.");
             }
@@ -58,8 +58,8 @@ namespace Web.Features.Restaurants.RegisterRestaurant
                 manager.Id,
                 command.RestaurantName,
                 new PhoneNumber(command.RestaurantPhoneNumber),
-                new Address(geocodingResult.Value.FormattedAddress),
-                geocodingResult.Value.Coordinates);
+                new Address(geocodingResult.FormattedAddress),
+                geocodingResult.Coordinates);
 
             var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id, clock.UtcNow);
 

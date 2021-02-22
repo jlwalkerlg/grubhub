@@ -33,9 +33,9 @@ namespace Web.Features.Restaurants.SearchRestaurants
                 },
             };
 
-            var result = await sender.Send(query);
+            var (restaurants, error) = await sender.Send(query);
 
-            return result ? Ok(result.Value) : Problem(result.Error);
+            return error ? Problem(error) : Ok(restaurants);
         }
     }
 }

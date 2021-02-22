@@ -35,9 +35,9 @@ namespace Web.Features.Billing.RefreshOnboarding
                 RestaurantId = restaurantId,
             };
 
-            var result = await sender.Send(command);
+            var (link, error) = await sender.Send(command);
 
-            return result ? Redirect(result.Value) : Problem(result.Error);
+            return error ? Problem(error) : Redirect(link);
         }
     }
 }

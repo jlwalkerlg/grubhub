@@ -30,15 +30,15 @@ namespace Web.Features.Restaurants.SearchRestaurants
                 return Error.BadRequest("Invalid postcode.");
             }
 
-            var geocodingResult = await geocoder.Geocode(query.Postcode);
+            var (geocodingResult, geocodingError) = await geocoder.Geocode(query.Postcode);
 
-            if (!geocodingResult)
+            if (geocodingError)
             {
                 return Error.BadRequest("Sorry, we don't recognise that postcode.");
             }
 
             var restaurants = await searcher.Search(
-                geocodingResult.Value.Coordinates,
+                geocodingResult.Coordinates,
                 query.Options);
 
             return Result.Ok(restaurants);
