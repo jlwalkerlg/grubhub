@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Stripe;
 using Web.Features.Billing;
-using Web.Services.Billing;
 
-namespace Web.ServiceRegistration
+namespace Web.Services.Billing
 {
     public static class StripeRegistrar
     {

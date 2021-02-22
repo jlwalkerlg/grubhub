@@ -1,6 +1,6 @@
 using System;
 
-namespace Web.Services
+namespace Web.Services.Clocks
 {
     public interface IClock
     {

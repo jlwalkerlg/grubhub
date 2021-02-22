@@ -1,5 +1,5 @@
 using System;
-using Web.Services;
+using Web.Services.Clocks;
 
 namespace WebTests.Doubles
 {

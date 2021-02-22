@@ -1,5 +1,4 @@
 using Autofac;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,10 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Web.Data;
-using Web.Features.Restaurants.SearchRestaurants;
 using Web.Filters;
 using Web.Hubs;
-using Web.ServiceRegistration;
 using Web.Services;
 using Web.Services.Antiforgery;
 using Web.Services.Authentication;
@@ -23,9 +20,11 @@ using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
 using Quartz;
-using Quartz.Impl;
 using Web.Services.Jobs;
 using Web.Workers;
+using Web.Data.EF;
+using Web.Services.Billing;
+using Web.Services.Clocks;
 
 namespace Web
 {
@@ -52,42 +51,6 @@ namespace Web
                 builder.AddFilter("Microsoft", LogLevel.Warning);
                 builder.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
             });
-
-            services.AddQuartz(q =>
-            {
-                q.UseMicrosoftDependencyInjectionScopedJobFactory();
-
-                // Default name.
-                q.SchedulerName = "QuartzScheduler";
-
-                q.UsePersistentStore(store =>
-                {
-                    store.UsePostgres(config.DbConnectionString);
-
-                    store.UseJsonSerializer();
-                });
-            });
-
-            services.AddSingleton<IScheduler>(sp =>
-                SchedulerRepository
-                    .Instance
-                    .Lookup("QuartzScheduler")
-                    .Result);
-
-            services.AddScoped<QuartzJobProcessor>();
-            services.AddScoped<IJobQueue, QuartzJobQueue>();
-
-            services.AddQuartzHostedService(options =>
-            {
-                // when shutting down we want jobs to complete gracefully
-                options.WaitForJobsToComplete = true;
-            });
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.Cookie.Name = "auth_cookie";
-                });
 
             services
                 .AddControllers(options =>
@@ -117,61 +80,45 @@ namespace Web
                 });
             });
 
-            services.AddHttpContextAccessor();
-
-            services.AddEntityFramework(config);
-
-            services.AddMediatR(typeof(Startup).Assembly);
-
-            services.AddTransient(
-                typeof(IPipelineBehavior<,>),
-                typeof(AuthenticationMiddleware<,>));
-
-            services.AddTransient(
-                typeof(IPipelineBehavior<,>),
-                typeof(ValidationMiddleware<,>));
-
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-            services.AddSingleton<IClock, Clock>();
-
-            services.AddStripe(config);
-
-            services.AddSignalR();
-            services.AddSingleton<IUserIdProvider, UserIdProvider>();
-
-            services.AddSingleton<INotifier, HubNotifier>();
-
             services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-XSRF-TOKEN"; // as expected from the client
                 options.Cookie.Name = "csrf_token"; // set automatically by asp.net as http only
             });
 
-            services.AddScoped<EventDispatcher>();
-            services.AddHostedService<EventWorker>();
+            services.AddHttpContextAccessor();
 
-            services.AddSingleton<IGeocoder, GoogleGeocoder>();
+            services.AddAuth();
+
+            services.AddMediatR();
+
+            services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, UserIdProvider>();
+
+            services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
+
+            services.AddEntityFramework(config);
+
+            services.AddDapper();
+
+            services.AddClock();
+
+            services.AddStripe(config);
+
+            services.AddNotifier();
+
+            services.AddQuartz(config);
+
+            services.AddEventWorker();
+
+            services.AddGeocoding();
+
+            services.AddHashing();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.AddValidators();
-
-            builder.RegisterType<DbConnectionFactory>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
-            builder.RegisterType<DPRestaurantSearcher>()
-                .AsImplementedInterfaces();
-
-            builder.RegisterType<Hasher>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
-            builder.RegisterType<Authenticator>()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Web.Data.EF;
 
-namespace Web.ServiceRegistration
+namespace Web.Data.EF
 {
     public static class EntityFrameworkRegistrar
     {

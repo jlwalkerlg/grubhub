@@ -7,7 +7,7 @@ using Web.Data;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Features.Cuisines;
-using Web.Services;
+using Web.Services.Clocks;
 
 namespace Web.Features.Restaurants.SearchRestaurants
 {

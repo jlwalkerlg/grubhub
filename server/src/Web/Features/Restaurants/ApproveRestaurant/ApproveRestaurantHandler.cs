@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
-using Web.Services;
+using Web.Services.Clocks;
 
 namespace Web.Features.Restaurants.ApproveRestaurant
 {

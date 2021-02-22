@@ -1,7 +1,6 @@
 using Autofac;
-using Web.Services.Validation;
 
-namespace Web.ServiceRegistration
+namespace Web.Services.Validation
 {
     public static class ValidationRegistrar
     {

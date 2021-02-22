@@ -6,7 +6,7 @@ using Shouldly;
 using Web;
 using Web.Features.Billing;
 using Web.Features.Orders.ConfirmOrder;
-using Web.Services;
+using Web.Services.Clocks;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;

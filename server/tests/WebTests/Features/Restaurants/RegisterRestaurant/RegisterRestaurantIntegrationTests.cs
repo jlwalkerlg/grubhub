@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Features.Restaurants.RegisterRestaurant;
-using Web.Services;
+using Web.Services.Clocks;
 using Web.Services.Hashing;
 using WebTests.Doubles;
 using Xunit;
