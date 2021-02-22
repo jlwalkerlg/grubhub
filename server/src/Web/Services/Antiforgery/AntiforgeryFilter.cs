@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Web.Envelopes;
 
 namespace Web.Services.Antiforgery
 {
@@ -26,11 +25,15 @@ namespace Web.Services.Antiforgery
                 return;
             }
 
-            var envelope = new ErrorEnvelope("Antiforgery token mismatch.");
-
-            context.Result = new ObjectResult(envelope)
+            var details = new ProblemDetails()
             {
-                StatusCode = 419,
+                Detail = "Antiforgery token mismatch.",
+                Status = 419,
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = details.Status,
             };
         }
 

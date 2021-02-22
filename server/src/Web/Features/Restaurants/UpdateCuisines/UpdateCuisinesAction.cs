@@ -28,7 +28,7 @@ namespace Web.Features.Restaurants.UpdateCuisines
 
             var result = await sender.Send(command);
 
-            return result ? Ok() : Error(result.Error);
+            return result ? Ok() : Problem(result.Error);
         }
     }
 }

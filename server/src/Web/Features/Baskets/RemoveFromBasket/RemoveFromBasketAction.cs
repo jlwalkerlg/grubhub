@@ -27,7 +27,7 @@ namespace Web.Features.Baskets.RemoveFromBasket
 
             var result = await sender.Send(command);
 
-            return result ? StatusCode(204) : Error(result.Error);
+            return result ? StatusCode(204) : Problem(result.Error);
         }
     }
 }

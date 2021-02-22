@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Web.Envelopes;
 
 namespace Web
 {
     [ApiController]
     public abstract class Action : ControllerBase
     {
-        private readonly Dictionary<ErrorType, int> codes = new()
+        private readonly Dictionary<ErrorType, int> statuses = new()
         {
             { ErrorType.BadRequest, 400 },
             { ErrorType.Unauthenticated, 401 },
@@ -19,40 +18,50 @@ namespace Web
 
         protected IActionResult NotFound(string message)
         {
-            return Error(Web.Error.NotFound(message));
+            return Problem(Error.NotFound(message));
         }
 
         protected IActionResult Unauthenticated()
         {
-            return Error(Web.Error.Unauthenticated());
+            return Problem(Error.Unauthenticated());
         }
 
         protected IActionResult Unauthorised(string message = null)
         {
-            return Error(Web.Error.Unauthorised(message));
+            return Problem(Error.Unauthorised(message));
         }
 
-        protected IActionResult Error(Error error)
+        protected IActionResult Problem(Error error)
         {
-            var envelope = new ErrorEnvelope(error.Message)
+            if (!statuses.TryGetValue(error.Type, out var status))
             {
-                Errors = error.Errors,
-            };
-
-            if (!codes.TryGetValue(error.Type, out var code))
-            {
-                code = 500;
+                status = 500;
             }
 
-            return new ObjectResult(envelope)
+            if (error.Type != ErrorType.ValidationError)
             {
-                StatusCode = code,
+                return Problem(error.Message, null, status, null, null);
+            }
+
+            var errors = new Dictionary<string, string[]>();
+
+            foreach (var err in error.Errors)
+            {
+                errors.Add(ToCamelCase(err.Key), new[] { err.Value });
+            }
+
+            var details = new ValidationProblemDetails(errors)
+            {
+                Detail = error.Message,
+                Status = status,
             };
+
+            return StatusCode(status, details);
         }
 
-        protected OkObjectResult Ok<T>(T data)
+        private static string ToCamelCase(string err)
         {
-            return base.Ok(new DataEnvelope<T>(data));
+            return err.Substring(0, 1).ToLower() + err.Substring(1);
         }
     }
 }

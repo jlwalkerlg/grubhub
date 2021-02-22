@@ -29,7 +29,7 @@ namespace Web.Features.Menus.AddMenuCategory
 
             if (!result)
             {
-                return Error(result.Error);
+                return Problem(result.Error);
             }
 
             return StatusCode(201);

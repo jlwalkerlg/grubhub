@@ -20,7 +20,7 @@ namespace Web.Features.Users.UpdateAuthUserDetails
 
             if (!result)
             {
-                return Error(result.Error);
+                return Problem(result.Error);
             }
 
             return Ok();

@@ -26,7 +26,7 @@ namespace Web.Features.Users.Login
 
             if (!result)
             {
-                return Error(result.Error);
+                return Problem(result.Error);
             }
 
             var token = antiforgery.GetAndStoreTokens(HttpContext);

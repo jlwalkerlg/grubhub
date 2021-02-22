@@ -5,34 +5,34 @@ import Axios, {
   Method,
 } from "axios";
 
-interface DataEnvelope<T> {
-  data: T;
-}
-
-interface ErrorEnvelope {
-  message: string;
-  errors: { [key: string]: string } | null;
+interface ProblemDetails {
+  type?: string;
+  title?: string;
+  status?: string;
+  detail?: string;
+  instance?: string;
+  errors?: { [key: string]: string[] };
 }
 
 export class ApiResult<T = void> {
   readonly data?: T;
   readonly statusCode: number;
 
-  public constructor(response: AxiosResponse<DataEnvelope<T> | null>) {
-    this.data = response.data.data;
+  public constructor(response: AxiosResponse<T>) {
+    this.data = response.data;
     this.statusCode = response.status;
   }
 }
 
 export class ApiError {
   readonly message: string;
-  readonly errors?: { [key: string]: string };
   readonly statusCode: number;
+  readonly errors?: { [key: string]: string[] };
 
-  public constructor(response: AxiosResponse<ErrorEnvelope>) {
-    this.message = response?.data?.message || "Something went wrong.";
-    this.errors = response?.data?.errors;
+  public constructor(response: AxiosResponse<ProblemDetails>) {
+    this.message = response?.data?.detail || "Server error.";
     this.statusCode = response?.status || 500;
+    this.errors = response?.data?.errors;
   }
 
   get isValidationError() {
@@ -86,7 +86,7 @@ class Api {
     config?: AxiosRequestConfig
   ) {
     try {
-      const response = await this.client.request<DataEnvelope<T> | null>({
+      const response = await this.client.request<T>({
         ...config,
         url,
         method,

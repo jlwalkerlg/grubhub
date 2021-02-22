@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Web.Envelopes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebTests
 {
@@ -10,22 +11,11 @@ namespace WebTests
     {
         public static async Task<TData> GetData<TData>(this HttpResponseMessage response)
         {
-            var json = await response.Content.ReadAsStreamAsync();
+            var json = await response.Content.ReadAsStringAsync();
 
-            var envelope = await JsonSerializer.DeserializeAsync<DataEnvelope<TData>>(
-                json,
-                new JsonSerializerOptions()
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                });
+            if (string.IsNullOrEmpty(json)) return default;
 
-            return envelope.Data;
-        }
-
-        private static ErrorEnvelope GetErrorEnvelope(this HttpResponseMessage response)
-        {
-            var json = response.Content.ReadAsStringAsync().Result;
-            return JsonSerializer.Deserialize<ErrorEnvelope>(
+            return JsonSerializer.Deserialize<TData>(
                 json,
                 new JsonSerializerOptions()
                 {
@@ -35,14 +25,22 @@ namespace WebTests
 
         public static string GetErrorMessage(this HttpResponseMessage response)
         {
-            var envelope = response.GetErrorEnvelope();
-            return envelope.Message;
+            var details = response.GetData<ProblemDetails>().Result;
+            return details.Detail;
         }
 
         public static Dictionary<string, string> GetErrors(this HttpResponseMessage response)
         {
-            var envelope = response.GetErrorEnvelope();
-            return envelope.Errors;
+            var details = response.GetData<ValidationProblemDetails>().Result;
+
+            var errors = new Dictionary<string, string>();
+
+            foreach (var error in details.Errors)
+            {
+                errors.Add(error.Key, error.Value.First());
+            }
+
+            return errors;
         }
     }
 }

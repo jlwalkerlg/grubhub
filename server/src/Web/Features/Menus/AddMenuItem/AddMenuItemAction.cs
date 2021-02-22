@@ -31,7 +31,7 @@ namespace Web.Features.Menus.AddMenuItem
 
             var result = await sender.Send(command);
 
-            return result ? StatusCode(201) : Error(result.Error);
+            return result ? StatusCode(201) : Problem(result.Error);
         }
     }
 }

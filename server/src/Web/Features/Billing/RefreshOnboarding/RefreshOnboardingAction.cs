@@ -37,7 +37,7 @@ namespace Web.Features.Billing.RefreshOnboarding
 
             var result = await sender.Send(command);
 
-            return result ? Redirect(result.Value) : Error(result.Error);
+            return result ? Redirect(result.Value) : Problem(result.Error);
         }
     }
 }

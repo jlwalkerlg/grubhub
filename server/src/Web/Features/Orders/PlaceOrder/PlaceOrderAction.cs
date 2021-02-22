@@ -31,7 +31,7 @@ namespace Web.Features.Orders.PlaceOrder
 
             var result = await sender.Send(command);
 
-            return result ? Ok(result.Value) : Error(result.Error);
+            return result ? Ok(result.Value) : Problem(result.Error);
         }
     }
 }

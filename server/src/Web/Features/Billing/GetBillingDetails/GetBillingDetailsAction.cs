@@ -47,7 +47,7 @@ namespace Web.Features.Billing.GetBillingDetails
 
                 if (billingDetailsEntry == null)
                 {
-                    return Ok<BillingDetails>(null);
+                    return StatusCode(200);
                 }
 
                 if (authenticator.UserId != billingDetailsEntry.manager_id)

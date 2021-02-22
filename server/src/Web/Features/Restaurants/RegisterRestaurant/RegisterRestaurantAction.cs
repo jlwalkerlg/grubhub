@@ -23,7 +23,7 @@ namespace Web.Features.Restaurants.RegisterRestaurant
 
             if (!result)
             {
-                return Error(result.Error);
+                return Problem(result.Error);
             }
 
             return StatusCode(201);

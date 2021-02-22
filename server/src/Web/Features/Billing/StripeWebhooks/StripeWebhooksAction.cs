@@ -61,7 +61,7 @@ namespace Web.Features.Billing.EnableBilling
                 if (!result)
                 {
                     logger.LogError(result.Error);
-                    return Error(result.Error);
+                    return Problem(result.Error);
                 }
 
                 return Ok();

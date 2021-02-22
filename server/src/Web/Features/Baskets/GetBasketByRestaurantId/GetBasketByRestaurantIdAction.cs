@@ -51,7 +51,7 @@ namespace Web.Features.Baskets.GetBasketByRestaurantId
 
                 if (basketEntry == null)
                 {
-                    return Ok<BasketDto>(null);
+                    return StatusCode(200);
                 }
 
                 var basketItemEntries = await connection

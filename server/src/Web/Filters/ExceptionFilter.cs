@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Web.Envelopes;
 
 namespace Web.Filters
 {
@@ -18,11 +17,15 @@ namespace Web.Filters
         {
             logger.LogCritical(context.Exception.ToString());
 
-            var envelope = new ErrorEnvelope("Server error.");
-
-            context.Result = new ObjectResult(envelope)
+            var details = new ProblemDetails()
             {
-                StatusCode = 500,
+                Detail = "Server error.",
+                Status = 500,
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = details.Status,
             };
 
             context.ExceptionHandled = true;

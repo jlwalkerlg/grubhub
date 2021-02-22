@@ -24,7 +24,7 @@ namespace Web.Features.Billing.GetOnboardingLink
 
             var result = await sender.Send(query);
 
-            return result ? Ok(result.Value) : Error(result.Error);
+            return result ? Ok(result.Value) : Problem(result.Error);
         }
     }
 }
