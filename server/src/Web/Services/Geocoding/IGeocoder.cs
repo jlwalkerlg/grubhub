@@ -6,6 +6,6 @@ namespace Web.Services.Geocoding
     public interface IGeocoder
     {
         Task<Result<GeocodingResult>> Geocode(string address);
-        Task<Result<GeocodingResult>> Geocode(AddressDetails address);
+        Task<Result<Coordinates>> LookupCoordinates(string postcode);
     }
 }

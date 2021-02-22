@@ -50,18 +50,11 @@ namespace Web.Services.Geocoding
                 });
         }
 
-        public async Task<Result<GeocodingResult>> Geocode(AddressDetails address)
+        public async Task<Result<Coordinates>> LookupCoordinates(string postcode)
         {
-            var fullAddress = string.Join(
-                ", ",
-                new[] { address.Line1, address.Line2 }
-                    .Where(x => !string.IsNullOrWhiteSpace(x)));
-
             var url = string.Format(
-                "https://maps.googleapis.com/maps/api/geocode/json?address={0}&components=postal_code={1}|locality={2}|country:GB&key={3}",
-                WebUtility.UrlEncode(fullAddress),
-                WebUtility.UrlEncode(address.Postcode),
-                WebUtility.UrlEncode(address.City),
+                "https://maps.googleapis.com/maps/api/geocode/json?components=postal_code={0}|country:GB&key={1}",
+                WebUtility.UrlEncode(postcode),
                 key);
 
             var json = await GetResponseAsJson(url);
@@ -74,42 +67,17 @@ namespace Web.Services.Geocoding
                 return Error.BadRequest("Address not recognised.");
             }
 
-            var trimmedPostcode = address.Postcode.Replace(" ", "").ToLower();
-
-            var results = doc.RootElement
+            var result = doc.RootElement
                 .GetProperty("results")
-                .EnumerateArray();
+                .EnumerateArray()
+                .First();
 
-            foreach (var result in results)
-            {
-                var components = result
-                    .GetProperty("address_components")
-                    .EnumerateArray();
+            var location = result.GetProperty("geometry").GetProperty("location");
 
-                var postalCode = components
-                    .Where(x => x.GetProperty("types")
-                        .EnumerateArray()
-                        .Select(x => x.GetString())
-                        .Any(x => x.Contains("postal_code")))
-                    .Select(x => x.GetProperty("long_name").GetString())
-                    .FirstOrDefault();
-
-                if (postalCode?.Replace(" ", "").ToLower() == trimmedPostcode)
-                {
-                    var location = result.GetProperty("geometry").GetProperty("location");
-
-                    return Result.Ok(
-                        new GeocodingResult()
-                        {
-                            FormattedAddress = result.GetProperty("formatted_address").GetString(),
-                            Coordinates = new Coordinates(
-                                (float)location.GetProperty("lat").GetDouble(),
-                                (float)location.GetProperty("lng").GetDouble()),
-                        });
-                }
-            }
-
-            return Error.BadRequest("Address not recognised.");
+            return Result.Ok(new Coordinates(
+                (float)location.GetProperty("lat").GetDouble(),
+                (float)location.GetProperty("lng").GetDouble())
+            );
         }
 
         private async Task<string> GetResponseAsJson(string url)

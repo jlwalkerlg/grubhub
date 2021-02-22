@@ -5,14 +5,12 @@ using Web;
 using Web.Features.Orders.PlaceOrder;
 using Xunit;
 using WebTests.Doubles;
-using Web.Domain.Orders;
 using Web.Domain.Users;
 using Web.Domain.Restaurants;
 using Web.Domain;
 using System.Linq;
 using Web.Domain.Menus;
 using Web.Domain.Billing;
-using Web.Services.Geocoding;
 using Web.Features.Billing;
 using Web.Domain.Baskets;
 
@@ -105,12 +103,8 @@ namespace WebTests.Features.Orders.PlaceOrder
             };
             billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
 
-            geocoderSpy.Result = Result.Ok(
-                new GeocodingResult()
-                {
-                    FormattedAddress = "12 Maine Road, Manchester, UK, MN12 1NM",
-                    Coordinates = new Coordinates(54, -2),
-                }
+            geocoderSpy.LookupCoordinatesResult = Result.Ok(
+                new Coordinates(54, -2)
             );
 
             var command = new PlaceOrderCommand()
@@ -204,7 +198,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             };
             billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
 
-            geocoderSpy.Result = Error.NotFound("Geocoding failed.");
+            geocoderSpy.LookupCoordinatesResult = Error.NotFound("Lookup failed.");
 
             var command = new PlaceOrderCommand()
             {
@@ -268,12 +262,8 @@ namespace WebTests.Features.Orders.PlaceOrder
             };
             billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
 
-            geocoderSpy.Result = Result.Ok(
-                new GeocodingResult()
-                {
-                    FormattedAddress = "12 Maine Road, Manchester, UK, MN12 1NM",
-                    Coordinates = new Coordinates(54, -2),
-                }
+            geocoderSpy.LookupCoordinatesResult = Result.Ok(
+                new Coordinates(54, -2)
             );
 
             var command = new PlaceOrderCommand()
@@ -344,12 +334,8 @@ namespace WebTests.Features.Orders.PlaceOrder
             };
             billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
 
-            geocoderSpy.Result = Result.Ok(
-                new GeocodingResult()
-                {
-                    FormattedAddress = "12 Maine Road, Manchester, UK, MN12 1NM",
-                    Coordinates = new Coordinates(54, -2),
-                }
+            geocoderSpy.LookupCoordinatesResult = Result.Ok(
+                new Coordinates(54, -2)
             );
 
             var command = new PlaceOrderCommand()
@@ -416,12 +402,8 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             billingServiceSpy.PaymentIntentResult = Error.Internal("Billing service failed.");
 
-            geocoderSpy.Result = Result.Ok(
-                new GeocodingResult()
-                {
-                    FormattedAddress = "12 Maine Road, Manchester, UK, MN12 1NM",
-                    Coordinates = new Coordinates(54, -2),
-                }
+            geocoderSpy.LookupCoordinatesResult = Result.Ok(
+                new Coordinates(54, -2)
             );
 
             var command = new PlaceOrderCommand()

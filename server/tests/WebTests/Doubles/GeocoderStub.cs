@@ -20,13 +20,10 @@ namespace WebTests.Doubles
             }));
         }
 
-        public Task<Result<GeocodingResult>> Geocode(AddressDetails address)
+        public Task<Result<Coordinates>> LookupCoordinates(string postcode)
         {
-            return Task.FromResult(Result.Ok(new GeocodingResult()
-            {
-                FormattedAddress = Address,
-                Coordinates = new Coordinates(Latitude, Longitude),
-            }));
+            return Task.FromResult(Result.Ok(
+                new Coordinates(Latitude, Longitude)));
         }
     }
 }

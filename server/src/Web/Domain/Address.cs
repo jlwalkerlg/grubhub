@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Web.Domain
 {
@@ -8,14 +9,36 @@ namespace Web.Domain
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Address must not be empty.");
+                throw new ArgumentNullException(nameof(value));
             }
 
             Value = value;
         }
 
-        public string Value { get; }
+        public Address(string line1, string line2, string city, Postcode postcode)
+        {
+            if (string.IsNullOrWhiteSpace(line1))
+            {
+                throw new ArgumentNullException(nameof(line1));
+            }
+
+            if (string.IsNullOrWhiteSpace(city))
+            {
+                throw new ArgumentNullException(nameof(city));
+            }
+
+            if (postcode is null)
+            {
+                throw new ArgumentNullException(nameof(postcode));
+            }
+
+            Value = string.Join(", ",
+                (new[] { line1, line2, city, postcode.Value })
+                    .Where(x => x != null));
+        }
 
         private Address() { } // EF Core
+
+        public string Value { get; }
     }
 }

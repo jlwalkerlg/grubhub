@@ -39,7 +39,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 new Email("taken@gmail.com"),
                 "password123"));
 
-            geocoderSpy.Result = Result.Ok(new GeocodingResult()
+            geocoderSpy.GeocodeResult = Result.Ok(new GeocodingResult()
             {
                 FormattedAddress = "1 Maine Road, Manchester, UK",
                 Coordinates = new Coordinates(54.0f, -2.0f),
@@ -65,7 +65,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Fails_If_Geocoding_Fails()
         {
-            geocoderSpy.Result = Error.Internal("Geocoding failed.");
+            geocoderSpy.GeocodeResult = Error.Internal("Geocoding failed.");
 
             var command = new RegisterRestaurantCommand()
             {

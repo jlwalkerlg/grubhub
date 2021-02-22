@@ -57,22 +57,21 @@ namespace Web.Features.Orders.PlaceOrder
                 return Error.NotFound("Restaurant not currently accepting orders.");
             }
 
-            var address = new AddressDetails(
-                command.AddressLine1,
-                command.AddressLine2,
-                command.City,
-                command.Postcode);
+            var coordinatesResult = await geocoder.LookupCoordinates(command.Postcode);
 
-            var geocodingResult = await geocoder.Geocode(address);
-
-            if (!geocodingResult)
+            if (!coordinatesResult)
             {
                 return Error.BadRequest("Address not recognised.");
             }
 
             var deliveryLocation = new DeliveryLocation(
-                address.ToAddress(),
-                geocodingResult.Value.Coordinates
+                new Address(
+                    command.AddressLine1,
+                    command.AddressLine2,
+                    command.City,
+                    new Postcode(command.Postcode)
+                ),
+                coordinatesResult.Value
             );
 
             var restaurant = await unitOfWork
