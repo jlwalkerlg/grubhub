@@ -88,7 +88,7 @@ namespace Web
 
             services.AddHttpContextAccessor();
 
-            services.AddAuth();
+            services.AddAuth(env);
 
             services.AddMediatR();
 

@@ -17,6 +17,12 @@ namespace WebTests
         {
             result.IsSuccess.ShouldBe(false);
         }
+        
+        public static void ShouldBeAnError(this Result result, ErrorType type)
+        {
+            result.IsSuccess.ShouldBe(false);
+            result.Error.Type.ShouldBe(type);
+        }
 
         public static void ShouldBe(this HttpStatusCode code, int expected)
         {

@@ -19,7 +19,7 @@ export class ApiResult<T = void> {
   readonly statusCode: number;
 
   public constructor(response: AxiosResponse<T>) {
-    this.data = response.data;
+    this.data = response.data || undefined;
     this.statusCode = response.status;
   }
 }

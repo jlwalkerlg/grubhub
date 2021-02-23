@@ -1,26 +1,17 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Shouldly;
 using Web.Features.Baskets.AddToBasket;
 using WebTests.TestData;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace WebTests.Features.Baskets.AddToBasket
 {
     public class AddToBasketIntegrationTests : IntegrationTestBase
     {
-        private readonly ITestOutputHelper output;
-
-        public AddToBasketIntegrationTests(IntegrationTestFixture fixture, ITestOutputHelper output) : base(fixture)
+        public AddToBasketIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
-            this.output = output;
         }
-
-        [Fact]
-        public void Test() { }
 
         [Fact]
         public async Task It_Creates_A_New_Basket()
@@ -79,6 +70,13 @@ namespace WebTests.Features.Baskets.AddToBasket
                 User = user,
             };
 
+            var basketItem = new BasketItem()
+            {
+                MenuItem = menuItem,
+                Quantity = 1,
+            };
+            basket.Items.Add(basketItem);
+
             Insert(restaurant, user, basket);
 
             var request = new AddToBasketRequest()
@@ -93,10 +91,10 @@ namespace WebTests.Features.Baskets.AddToBasket
 
             response.StatusCode.ShouldBe(200);
 
-            var basketItem = UseTestDbContext(db => db.BasketItems.Single());
+            var found = UseTestDbContext(db => db.BasketItems.Single());
 
-            basketItem.MenuItemId.ShouldBe(request.MenuItemId);
-            basketItem.Quantity.ShouldBe(request.Quantity);
+            found.MenuItemId.ShouldBe(request.MenuItemId);
+            found.Quantity.ShouldBe(4);
         }
     }
 }

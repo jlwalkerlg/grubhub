@@ -1,18 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { ApiError } from "~/api/Api";
 import { BasketDto, BasketItemDto } from "~/api/baskets/BasketDto";
-import { useAddToBasket } from "~/api/baskets/useAddToBasket";
 import useBasket from "~/api/baskets/useBasket";
 import useRemoveFromBasket from "~/api/baskets/useRemoveFromBasket";
+import { useUpdateBasketItemQuantity } from "~/api/baskets/useUpdateBasketItemQuantity";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
@@ -27,7 +20,7 @@ import useEscapeKeyListener from "~/services/useEscapeKeyListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
 
-export const OrderItemModal: FC<{
+const OrderItemModal: FC<{
   restaurantId: string;
   menuItemId: string;
   menuItemName: string;
@@ -42,32 +35,30 @@ export const OrderItemModal: FC<{
   menuItemPrice,
   closeModal,
 }) => {
-  const { data: order } = useBasket(restaurantId);
+  const { data: basket } = useBasket(restaurantId);
 
   const closeButtonRef = useRef<HTMLButtonElement>();
-  const addToOrderButtonRef = useRef<HTMLButtonElement>();
-  useFocusTrap(true, closeButtonRef, addToOrderButtonRef);
+  const updateBasketItemButtonRef = useRef<HTMLButtonElement>();
+  useFocusTrap(true, closeButtonRef, updateBasketItemButtonRef);
 
   usePreventBodyScroll(true);
 
-  const alreadyInOrder = useMemo(
-    () => order?.items.some((x) => x.menuItemId === menuItemId) || false,
-    []
-  );
-
   const [quantity, setQuantity] = useState(() => {
-    return order?.items.find((x) => x.menuItemId === menuItemId)?.quantity || 1;
+    return basket.items.find((x) => x.menuItemId === menuItemId).quantity;
   });
 
   const incrementQuantity = () => setQuantity(quantity + 1);
   const decrementQuantity = () => setQuantity(quantity - 1 || quantity);
 
-  const [addToOrder, { isLoading, isError, error }] = useAddToBasket();
+  const [
+    updateItemQuantity,
+    { isLoading, isError, error },
+  ] = useUpdateBasketItemQuantity();
 
   const submit = () => {
     if (isLoading) return;
 
-    addToOrder(
+    updateItemQuantity(
       {
         restaurantId,
         menuItemId,
@@ -145,14 +136,13 @@ export const OrderItemModal: FC<{
         <div className="p-4 bg-white -shadow-lg">
           {isLoggedIn ? (
             <button
-              ref={addToOrderButtonRef}
+              ref={updateBasketItemButtonRef}
               onClick={submit}
               className={`btn btn-primary w-full ${
                 isLoading ? "disabled" : ""
               }`}
             >
-              {alreadyInOrder ? "Update" : "Add to order"} £
-              {(menuItemPrice * quantity).toFixed(2)}
+              Update £{(menuItemPrice * quantity).toFixed(2)}
             </button>
           ) : (
             <p>

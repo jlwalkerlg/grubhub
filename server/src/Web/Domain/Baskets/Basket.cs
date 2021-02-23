@@ -29,13 +29,14 @@ namespace Web.Domain.Baskets
         {
             var item = items.SingleOrDefault(x => x.MenuItemId == menuItemId);
 
-            if (item == null)
+            if (item is null)
             {
-                item = new BasketItem(menuItemId);
-                items.Add(item);
+                items.Add(new BasketItem(menuItemId, quantity));
             }
-
-            item.Quantity = quantity;
+            else
+            {
+                item.Quantity += quantity;
+            }
         }
 
         public Result RemoveItem(Guid menuItemId)
@@ -84,6 +85,25 @@ namespace Web.Domain.Baskets
             }
 
             return amount;
+        }
+        
+        public Result UpdateQuantity(Guid menuItemId, int quantity)
+        {
+            if (quantity < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Must not be less than 1.");
+            }
+            
+            var orderItem = items.SingleOrDefault(x => x.MenuItemId == menuItemId);
+
+            if (orderItem == null)
+            {
+                return Error.NotFound("Item not found in basket.");
+            }
+
+            orderItem.Quantity = quantity;
+
+            return Result.Ok();
         }
 
         public override int GetHashCode()
