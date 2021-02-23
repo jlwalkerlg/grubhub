@@ -8,12 +8,14 @@ export interface OrderDto {
   status: OrderStatus;
   address: string;
   placedAt: string;
+  restaurantName: string;
   restaurantAddress: string;
+  restaurantPhoneNumber: string;
   paymentIntentClientSecret: string;
   items: OrderItemDto[];
 }
 
-type OrderStatus = "Placed" | "PaymentConfirmed";
+export type OrderStatus = "Placed" | "PaymentConfirmed";
 
 export interface OrderItemDto {
   menuItemId: string;

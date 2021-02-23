@@ -18,22 +18,19 @@ namespace Web.Features.Orders.PlaceOrder
         private readonly IClock clock;
         private readonly IBillingService billingService;
         private readonly IGeocoder geocoder;
-        private readonly Config config;
 
         public PlaceOrderHandler(
             IUnitOfWork unitOfWork,
             IAuthenticator authenticator,
             IClock clock,
             IBillingService billingService,
-            IGeocoder geocoder,
-            Config config)
+            IGeocoder geocoder)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
             this.clock = clock;
             this.billingService = billingService;
             this.geocoder = geocoder;
-            this.config = config;
         }
 
         public async Task<Result<string>> Handle(
@@ -69,8 +66,7 @@ namespace Web.Features.Orders.PlaceOrder
                     command.AddressLine1,
                     command.AddressLine2,
                     command.City,
-                    new Postcode(command.Postcode)
-                ),
+                    new Postcode(command.Postcode)),
                 coordinates
             );
 

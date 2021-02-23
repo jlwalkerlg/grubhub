@@ -53,7 +53,7 @@ namespace Web.Services.Geocoding
         public async Task<Result<Coordinates>> LookupCoordinates(string postcode)
         {
             var url = string.Format(
-                "https://maps.googleapis.com/maps/api/geocode/json?components=postal_code={0}|country:GB&key={1}",
+                "https://maps.googleapis.com/maps/api/geocode/json?components=postal_code:{0}|country:GB&key={1}",
                 WebUtility.UrlEncode(postcode),
                 key);
 

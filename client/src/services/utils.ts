@@ -1,3 +1,4 @@
+import { padStart } from "lodash";
 import { OpeningHours, OpeningTimes } from "~/api/restaurants/OpeningTimes";
 import Coordinates from "./geolocation/Coordinates";
 import { daysOfWeek } from "./useDate";
@@ -73,4 +74,14 @@ export function nextOpenDay(openingTimes: OpeningTimes) {
   }
 
   return null;
+}
+
+export function formatDate(date: Date) {
+  return (
+    padStart(date.getDate().toString(), 2, "0") +
+    "/" +
+    padStart((date.getMonth() + 1).toString(), 2, "0") +
+    "/" +
+    date.getFullYear().toString()
+  );
 }

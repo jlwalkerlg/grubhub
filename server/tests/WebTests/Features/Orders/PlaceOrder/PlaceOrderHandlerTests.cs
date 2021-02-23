@@ -23,7 +23,6 @@ namespace WebTests.Features.Orders.PlaceOrder
         private readonly ClockStub clockStub;
         private readonly BillingServiceSpy billingServiceSpy;
         private readonly GeocoderSpy geocoderSpy;
-        private readonly Config config;
         private readonly PlaceOrderHandler handler;
 
         public PlaceOrderHandlerTests()
@@ -38,15 +37,12 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             geocoderSpy = new GeocoderSpy();
 
-            config = new Config();
-
             handler = new PlaceOrderHandler(
                 unitOfWorkSpy,
                 authenticatorSpy,
                 clockStub,
                 billingServiceSpy,
-                geocoderSpy,
-                config
+                geocoderSpy
             );
         }
 

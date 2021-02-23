@@ -34,7 +34,7 @@ namespace Web.Domain
 
             Value = string.Join(", ",
                 (new[] { line1, line2, city, postcode.Value })
-                    .Where(x => x != null));
+                    .Where(x => !string.IsNullOrWhiteSpace(x)));
         }
 
         private Address() { } // EF Core

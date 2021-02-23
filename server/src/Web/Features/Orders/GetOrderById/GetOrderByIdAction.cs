@@ -45,7 +45,9 @@ namespace Web.Features.Orders.GetOrderById
                             o.address,
                             o.placed_at,
                             o.payment_intent_client_secret,
-                            r.address AS restaurant_address
+                            r.name AS restaurant_name,
+                            r.address AS restaurant_address,
+                            r.phone_number as restaurant_phone_number
                         FROM
                             orders o
                             INNER JOIN restaurants r ON r.id = o.restaurant_id
@@ -57,7 +59,7 @@ namespace Web.Features.Orders.GetOrderById
                             Id = id,
                         });
 
-                if (orderEntry == null)
+                if (orderEntry is null)
                 {
                     return NotFound();
                 }
@@ -105,7 +107,9 @@ namespace Web.Features.Orders.GetOrderById
             public string status { get; init; }
             public string address { get; init; }
             public DateTime placed_at { get; init; }
+            public string restaurant_name { get; init; }
             public string restaurant_address { get; init; }
+            public string restaurant_phone_number { get; init; }
             public string payment_intent_client_secret { get; init; }
 
             public OrderDto ToDto()
@@ -122,7 +126,9 @@ namespace Web.Features.Orders.GetOrderById
                     Address = address,
                     PlacedAt = placed_at,
                     PaymentIntentClientSecret = payment_intent_client_secret,
+                    RestaurantName = restaurant_name,
                     RestaurantAddress = restaurant_address,
+                    RestaurantPhoneNumber = restaurant_phone_number,
                 };
             }
         }
