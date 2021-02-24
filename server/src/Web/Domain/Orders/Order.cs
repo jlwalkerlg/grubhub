@@ -52,7 +52,7 @@ namespace Web.Domain.Orders
 
         public IReadOnlyList<OrderItem> Items => items;
 
-        public bool IsConfirmed => Status == OrderStatus.PaymentConfirmed;
+        public bool AlreadyConfirmed => Status != OrderStatus.Placed;
 
         public Money CalculateTotal()
         {

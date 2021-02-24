@@ -18,13 +18,13 @@ namespace WebTests.Doubles
         public Money PaymentIntentAmount { get; private set; }
         public BillingAccount PaymentIntentAccount { get; private set; }
 
-        public Result ConfirmResult { get; set; }
+        public bool PaymentAccepted { get; set; }
         public Order ConfirmedOrder { get; private set; }
 
-        public Task<Result> EnsurePaymentWasAccepted(Order order)
+        public Task<bool> CheckPaymentWasAccepted(Order order)
         {
             ConfirmedOrder = order;
-            return Task.FromResult(ConfirmResult);
+            return Task.FromResult(PaymentAccepted);
         }
 
         public Task<string> CreateAccount(Restaurant restaurant)

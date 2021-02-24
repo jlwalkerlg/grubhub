@@ -10,6 +10,6 @@ namespace Web.Features.Billing
         public Task<string> CreateAccount(Restaurant restaurant);
         Task<string> GenerateOnboardingLink(BillingAccountId id, RestaurantId restaurantId);
         Task<Result<PaymentIntent>> GeneratePaymentIntent(Order order, BillingAccount account);
-        Task<Result> EnsurePaymentWasAccepted(Order order);
+        Task<bool> CheckPaymentWasAccepted(Order order);
     }
 }

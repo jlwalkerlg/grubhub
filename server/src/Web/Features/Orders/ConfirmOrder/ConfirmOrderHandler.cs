@@ -27,23 +27,23 @@ namespace Web.Features.Orders.ConfirmOrder
             var order = await unitOfWork.Orders
                 .GetByPaymentIntentId(command.PaymentIntentId);
 
-            if (order == null)
+            if (order is null)
             {
                 return Error.NotFound("Order not found.");
             }
 
-            if (order.IsConfirmed)
+            if (order.AlreadyConfirmed)
             {
                 return Result.Ok();
             }
 
             var now = clock.UtcNow;
 
-            var billingServiceResult = await billingService.EnsurePaymentWasAccepted(order);
+            var accepted = await billingService.CheckPaymentWasAccepted(order);
 
-            if (!billingServiceResult)
+            if (!accepted)
             {
-                return billingServiceResult.Error;
+                return Error.BadRequest("Payment not accepted.");
             }
 
             order.Confirm();

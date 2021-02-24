@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Stripe;
@@ -68,12 +67,12 @@ namespace Web.Services.Billing
                     ApplicationFeeAmount = 50,
                     TransferData = new PaymentIntentTransferDataOptions()
                     {
-                        Destination = account.Id.Value.ToString(),
+                        Destination = account.Id.Value,
                     },
                 },
                 new RequestOptions()
                 {
-                    IdempotencyKey = order.Id.Value.ToString(),
+                    IdempotencyKey = order.Id.Value,
                 }
             );
 
@@ -85,36 +84,32 @@ namespace Web.Services.Billing
                 });
         }
 
-        public async Task<Result> EnsurePaymentWasAccepted(Domain.Orders.Order order)
+        public async Task<bool> CheckPaymentWasAccepted(Domain.Orders.Order order)
         {
             var service = new PaymentIntentService();
-
-            var whitelist = new[]
-            {
-                "requires_capture",
-                "canceled",
-                "succeeded",
-            };
 
             try
             {
                 var intent = await service.GetAsync(order.PaymentIntentId);
 
-                if (whitelist.Contains(intent.Status))
+                switch (intent.Status)
                 {
-                    return Result.Ok();
+                    case "requires_capture":
+                    case "canceled":
+                    case "succeeded":
+                        return true;
+                    default:
+                        return false;
                 }
-
-                return Error.BadRequest("Payment not confirmed.");
             }
-            catch (Stripe.StripeException e)
+            catch (StripeException e)
             {
                 if (e.HttpStatusCode == HttpStatusCode.NotFound)
                 {
-                    return Web.Error.NotFound("Payment details not found.");
+                    return false;
                 }
 
-                return Web.Error.BadRequest("Failed to confirm order.");
+                throw;
             }
         }
     }

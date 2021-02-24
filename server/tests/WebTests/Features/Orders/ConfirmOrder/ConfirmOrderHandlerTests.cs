@@ -91,7 +91,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             clockStub.UtcNow = now;
 
-            billingServiceSpy.ConfirmResult = Result.Ok();
+            billingServiceSpy.PaymentAccepted = true;
 
             var command = new ConfirmOrderCommand()
             {
@@ -253,7 +253,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             clockStub.UtcNow = now;
 
-            billingServiceSpy.ConfirmResult = Error.BadRequest("Order not confirmed.");
+            billingServiceSpy.PaymentAccepted = false;
 
             var command = new ConfirmOrderCommand()
             {
@@ -262,8 +262,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             var result = await handler.Handle(command, default);
 
-            result.ShouldBeAnError();
-            result.Error.ShouldBe(billingServiceSpy.ConfirmResult.Error);
+            result.ShouldBeAnError(ErrorType.BadRequest);
         }
     }
 }

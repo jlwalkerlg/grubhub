@@ -37,7 +37,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
                     services.AddSingleton<IBillingService>(
                         new BillingServiceSpy()
                         {
-                            ConfirmResult = Result.Ok(),
+                            PaymentAccepted = Result.Ok(),
                         });
                 });
             });
