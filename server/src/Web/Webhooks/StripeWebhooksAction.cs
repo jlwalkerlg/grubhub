@@ -8,7 +8,7 @@ using Web.Features.Billing.UpdateBillingDetails;
 using Web.Features.Orders.ConfirmOrder;
 using Web.Services.Antiforgery;
 
-namespace Web.Features.Billing.EnableBilling
+namespace Web.Webhooks
 {
     public class StripeWebhooksAction : Action
     {
@@ -44,27 +44,21 @@ namespace Web.Features.Billing.EnableBilling
 
                 logger.LogInformation("Stripe event: " + stripeEvent.Type);
 
-                var result = Result.Ok();
-
-                if (stripeEvent.Type == Stripe.Events.AccountUpdated)
+                var result = stripeEvent.Type switch
                 {
-                    var account = stripeEvent.Data.Object as Account;
-                    result = await HandleAccountUpdate(account);
-                }
+                    Events.AccountUpdated => await HandleAccountUpdate(
+                        stripeEvent.Data.Object as Account),
 
-                if (stripeEvent.Type == Stripe.Events.PaymentIntentAmountCapturableUpdated)
-                {
-                    var intent = stripeEvent.Data.Object as Stripe.PaymentIntent;
-                    result = await HandlePaymentConfirmed(intent);
-                }
+                    Events.PaymentIntentAmountCapturableUpdated => await HandlePaymentConfirmed(
+                        stripeEvent.Data.Object as PaymentIntent),
 
-                if (!result)
-                {
-                    logger.LogError(result.Error);
-                    return Problem(result.Error);
-                }
+                    _ => Result.Ok(),
+                };
 
-                return Ok();
+                if (result) return Ok();
+
+                logger.LogError(result.Error);
+                return Problem(result.Error);
             }
             catch (StripeException e)
             {
@@ -94,7 +88,7 @@ namespace Web.Features.Billing.EnableBilling
             return await sender.Send(command);
         }
 
-        private async Task<Result> HandlePaymentConfirmed(Stripe.PaymentIntent intent)
+        private async Task<Result> HandlePaymentConfirmed(PaymentIntent intent)
         {
             if (intent.Status != "requires_capture")
             {
