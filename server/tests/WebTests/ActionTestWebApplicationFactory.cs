@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Web.Data;
 using WebTests.Doubles;
 
 namespace WebTests
@@ -21,6 +22,8 @@ namespace WebTests
                     typeof(IPipelineBehavior<,>),
                     typeof(BadRequestBehaviorStub<,>)
                 );
+
+                services.AddSingleton<IDbConnectionFactory, NoopDbConnectionFactory>();
             });
         }
     }

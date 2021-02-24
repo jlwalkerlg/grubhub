@@ -29,6 +29,7 @@ namespace WebTests
             // Before ASP.NET Core 3.0, this was executed before Startup.ConfigureServices.
             // For systems still using Web Host instead of Generic Host, this
             // is executed before Startup.ConfigureServices.
+            // Can be used to override other services registered in Startup.
             builder.ConfigureServices((ctx, services) =>
             {
                 var config = new Config();
@@ -59,9 +60,9 @@ namespace WebTests
                     .AddScheme<AuthenticationSchemeOptions, AuthHandlerFake>(
                         "Test", options => { });
 
-                services.AddLogging(builder =>
+                services.AddLogging(logging =>
                 {
-                    builder.AddFilter(
+                    logging.AddFilter(
                         typeof(WebTests.Doubles.AuthHandlerFake).FullName,
                         LogLevel.Warning);
                 });
@@ -95,7 +96,7 @@ namespace WebTests
             // Also executed after Startup.ConfigureServices.
             // Only necessary if a version earlier than ASP.NET Core 3.0,
             // or still using the Web Host instead of the Generic Host,
-            // otherwise rudundant.
+            // otherwise redundant.
             builder.ConfigureTestServices(services =>
             {
             });
