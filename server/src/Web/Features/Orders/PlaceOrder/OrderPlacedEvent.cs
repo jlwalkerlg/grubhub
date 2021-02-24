@@ -1,6 +1,6 @@
 using System;
 using Web.Domain.Orders;
-using Web.Features.Events;
+using Web.Services.Events;
 
 namespace Web.Features.Orders.PlaceOrder
 {

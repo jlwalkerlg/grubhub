@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Web.Features.Events;
 using Web.Features.Orders.ConfirmOrder;
+using Web.Services.Events;
 
 namespace Web
 {

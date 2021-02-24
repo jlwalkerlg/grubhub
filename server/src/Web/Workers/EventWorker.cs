@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Web.Data.EF;
-using Web.Features.Events;
+using Web.Services.Events;
 
 namespace Web.Workers
 {

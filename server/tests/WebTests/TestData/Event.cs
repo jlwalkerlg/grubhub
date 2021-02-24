@@ -24,9 +24,9 @@ namespace WebTests.TestData
         [Column("json")]
         public string Json { get; set; }
 
-        public Web.Features.Events.Event ToEvent()
+        public Web.Services.Events.Event ToEvent()
         {
-            return (Web.Features.Events.Event)JsonSerializer.Deserialize(
+            return (Web.Services.Events.Event)JsonSerializer.Deserialize(
                 Json,
                 System.Type.GetType(Type));
         }

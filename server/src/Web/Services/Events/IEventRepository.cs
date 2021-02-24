@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Web.Features.Events
+namespace Web.Services.Events
 {
     public interface IEventRepository
     {

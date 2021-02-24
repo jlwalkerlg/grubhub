@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Web.Features.Events
+namespace Web.Services.Events
 {
     public abstract record Event(DateTime CreatedAt) : IRequest;
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Web.Features.Events
+namespace Web.Services.Events
 {
     public record HandleEventCommand<TEvent> : IRequest where TEvent : Event
     {

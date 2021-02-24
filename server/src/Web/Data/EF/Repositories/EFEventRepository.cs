@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Threading.Tasks;
-using Web.Features.Events;
+using Web.Services.Events;
 
 namespace Web.Data.EF.Repositories
 {

@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Features.Events;
 using Web.Services;
+using Web.Services.Events;
 
 namespace Web.Features.Orders.ConfirmOrder
 {

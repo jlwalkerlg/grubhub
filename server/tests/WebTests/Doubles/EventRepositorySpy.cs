@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Features.Events;
+using Web.Services.Events;
 
 namespace WebTests.Doubles
 {

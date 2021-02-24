@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
 using Web.Domain.Orders;
-using Web.Features.Events;
 using Web.Features.Orders.ConfirmOrder;
+using Web.Services.Events;
 using WebTests.Doubles;
 using Xunit;
 
