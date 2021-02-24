@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Web.Services.Clocks;
 using Web.Services.Geocoding;
 using Web.Services.Hashing;
 
@@ -16,18 +15,15 @@ namespace Web.Features.Restaurants.RegisterRestaurant
         private readonly IHasher hasher;
         private readonly IUnitOfWork unitOfWork;
         private readonly IGeocoder geocoder;
-        private readonly IClock clock;
 
         public RegisterRestaurantHandler(
             IHasher hasher,
             IUnitOfWork unitOfWork,
-            IGeocoder geocoder,
-            IClock clock)
+            IGeocoder geocoder)
         {
             this.hasher = hasher;
             this.unitOfWork = unitOfWork;
             this.geocoder = geocoder;
-            this.clock = clock;
         }
 
         public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
@@ -61,11 +57,8 @@ namespace Web.Features.Restaurants.RegisterRestaurant
                 new Address(geocodingResult.FormattedAddress),
                 geocodingResult.Coordinates);
 
-            var ev = new RestaurantRegisteredEvent(restaurant.Id, manager.Id, clock.UtcNow);
-
             await unitOfWork.Users.Add(manager);
             await unitOfWork.Restaurants.Add(restaurant);
-            await unitOfWork.Events.Add(ev);
 
             await unitOfWork.Commit();
 

@@ -87,14 +87,6 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             manager.Role.ShouldBe(Web.Domain.Users.UserRole.RestaurantManager);
 
             hasher.CheckMatch(request.ManagerPassword, manager.Password).ShouldBe(true);
-
-            var ev = UseTestDbContext(db => db.Events.Single());
-
-            var rEv = ev.ToEvent() as RestaurantRegisteredEvent;
-
-            rEv.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
-            rEv.ManagerId.Value.ShouldBe(manager.Id);
-            rEv.RestaurantId.Value.ShouldBe(restaurant.Id);
         }
     }
 }

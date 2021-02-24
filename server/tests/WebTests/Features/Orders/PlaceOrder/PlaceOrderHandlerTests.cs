@@ -132,13 +132,6 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             billingServiceSpy.PaymentIntentAmount.ShouldBe(order.CalculateTotal());
             billingServiceSpy.PaymentIntentAccount.ShouldBe(billingAccount);
-
-            var opEvent = unitOfWorkSpy.EventRepositorySpy.Events
-                .OfType<OrderPlacedEvent>()
-                .Single();
-
-            opEvent.OrderId.ShouldBe(order.Id);
-            opEvent.CreatedAt.ShouldBe(now);
         }
 
         [Fact]

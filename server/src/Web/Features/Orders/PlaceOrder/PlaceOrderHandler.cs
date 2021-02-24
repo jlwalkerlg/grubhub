@@ -103,10 +103,7 @@ namespace Web.Features.Orders.PlaceOrder
             order.PaymentIntentId = paymentIntent.Id;
             order.PaymentIntentClientSecret = paymentIntent.ClientSecret;
 
-            var opEvent = new OrderPlacedEvent(order.Id, clock.UtcNow);
-
             await unitOfWork.Orders.Add(order);
-            await unitOfWork.Events.Add(opEvent);
             await unitOfWork.Commit();
 
             return Result.Ok(order.Id.Value);

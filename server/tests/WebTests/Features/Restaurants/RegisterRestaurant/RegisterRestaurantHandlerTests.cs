@@ -26,8 +26,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             handler = new RegisterRestaurantHandler(
                 new HasherFake(),
                 unitOfWorkSpy,
-                geocoderSpy,
-                new ClockStub());
+                geocoderSpy);
         }
 
         [Fact]

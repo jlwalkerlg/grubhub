@@ -102,13 +102,6 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             item.MenuItemId.ShouldBe(basketItem.MenuItemId);
             item.Quantity.ShouldBe(basketItem.Quantity);
-
-            var ev = UseTestDbContext(db => db.Events.Single());
-
-            var opEv = ev.ToEvent() as OrderPlacedEvent;
-
-            opEv.OrderId.Value.ShouldBe(order.Id);
-            opEv.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }

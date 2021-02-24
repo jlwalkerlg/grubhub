@@ -173,20 +173,10 @@ namespace Console
                         await context.AddAsync(account);
                     }
 
-                    var ev = new RestaurantRegisteredEvent(restaurant.Id, user.Id, DateTime.UtcNow);
-
-                    var serialised = new SerialisedEvent()
-                    {
-                        CreatedAt = ev.CreatedAt,
-                        Type = ev.GetType().AssemblyQualifiedName,
-                        Json = JsonSerializer.Serialize(ev),
-                    };
-
                     await context.AddRangeAsync(
                         user,
                         restaurant,
-                        menu,
-                        serialised);
+                        menu);
                 }
 
                 await context.SaveChangesAsync();
