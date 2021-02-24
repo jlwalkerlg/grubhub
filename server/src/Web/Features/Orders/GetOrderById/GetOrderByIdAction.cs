@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
 using Web.Features.Orders.GetActiveOrder;
@@ -22,14 +23,10 @@ namespace Web.Features.Orders.GetOrderById
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
+        [Authorize]
         [HttpGet("/orders/{id}")]
         public async Task<IActionResult> Execute([FromRoute] string id)
         {
-            if (!authenticator.IsAuthenticated)
-            {
-                return Unauthenticated();
-            }
-
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
                 var orderEntry = await connection

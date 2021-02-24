@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
 using Web.Services.Authentication;
@@ -21,14 +22,10 @@ namespace Web.Features.Baskets.GetBasketByRestaurantId
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
+        [Authorize]
         [HttpGet("/restaurants/{restaurantId:guid}/basket")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
-            if (!authenticator.IsAuthenticated)
-            {
-                return Unauthenticated();
-            }
-
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
                 var basketEntry = await connection

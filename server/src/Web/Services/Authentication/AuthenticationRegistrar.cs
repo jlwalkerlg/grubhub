@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,12 @@ namespace Web.Services.Authentication
                     options.Cookie.SecurePolicy = env.IsProduction()
                         ? CookieSecurePolicy.Always
                         : CookieSecurePolicy.None;
+
+                    options.Events.OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.CompletedTask;
+                    };
                 });
 
             services.AddScoped<IAuthenticator, Authenticator>();

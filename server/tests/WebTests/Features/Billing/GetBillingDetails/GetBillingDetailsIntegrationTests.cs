@@ -13,24 +13,9 @@ namespace WebTests.Features.Billing.GetBillingDetails
         }
 
         [Fact]
-        public async Task It_Fails_If_The_User_Is_Unauthenticated()
-        {
-            var restaurant = new Restaurant();
-            var billingAccount = restaurant.BillingAccount;
-
-            Insert(restaurant);
-
-            var response = await factory.GetClient().Get(
-                $"/restaurants/{restaurant.Id}/billing");
-
-            response.StatusCode.ShouldBe(401);
-        }
-
-        [Fact]
         public async Task It_Fails_If_The_User_Is_Unauthorised()
         {
             var restaurant = new Restaurant();
-            var billingAccount = restaurant.BillingAccount;
 
             Insert(restaurant);
 

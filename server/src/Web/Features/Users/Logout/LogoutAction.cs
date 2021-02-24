@@ -19,7 +19,7 @@ namespace Web.Features.Users.Logout
         [HttpPost("/auth/logout")]
         public async Task<IActionResult> Execute()
         {
-            var result = await sender.Send(new LogoutCommand());
+            await sender.Send(new LogoutCommand());
 
             HttpContext.Response.Cookies.Delete(
                 "XSRF-TOKEN",

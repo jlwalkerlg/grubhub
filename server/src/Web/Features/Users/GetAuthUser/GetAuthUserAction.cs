@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Web.Data;
 using Web.Services.Authentication;
 
@@ -17,14 +18,10 @@ namespace Web.Features.Users.GetAuthUser
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
+        [Authorize]
         [HttpGet("/auth/user")]
         public async Task<IActionResult> Execute()
         {
-            if (!authenticator.IsAuthenticated)
-            {
-                return Unauthenticated();
-            }
-
             var sql = @"
                 SELECT
                     u.id,
@@ -46,7 +43,7 @@ namespace Web.Features.Users.GetAuthUser
                         sql,
                         new { Id = authenticator.UserId.Value });
 
-                return user == null
+                return user is null
                     ? NotFound("User not found.")
                     : Ok(user);
             }

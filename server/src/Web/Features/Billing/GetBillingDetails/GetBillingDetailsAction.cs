@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
 using Web.Services.Authentication;
@@ -18,14 +19,10 @@ namespace Web.Features.Billing.GetBillingDetails
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
+        [Authorize]
         [HttpGet("/restaurants/{restaurantId:guid}/billing")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
-            if (!authenticator.IsAuthenticated)
-            {
-                return Unauthenticated();
-            }
-
             var sql = @"
                 SELECT
                     ba.id,

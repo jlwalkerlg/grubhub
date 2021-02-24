@@ -15,15 +15,6 @@ namespace WebTests.Features.Orders.GetOrderById
         }
 
         [Fact]
-        public async Task It_Fails_If_The_User_Is_Unauthenticated()
-        {
-            var response = await factory.GetClient().Get(
-                $"/orders/{Guid.NewGuid()}");
-
-            response.StatusCode.ShouldBe(401);
-        }
-
-        [Fact]
         public async Task It_Fails_If_The_Order_Is_Not_Found()
         {
             var response = await factory.GetAuthenticatedClient().Get(
