@@ -4,8 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Data;
-using Web.Features.Cuisines;
-using Web.Features.Menus;
+using Web.Data.Models;
 
 namespace Web.Features.Restaurants.GetRestaurantById
 {
@@ -58,7 +57,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             using (var connection = await dbConnectionFactory.OpenConnection())
             {
                 var restaurantEntry = await connection
-                    .QuerySingleOrDefaultAsync<RestaurantEntry>(
+                    .QuerySingleOrDefaultAsync<RestaurantModel>(
                         sql,
                         new { Id = id });
 
@@ -68,7 +67,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                 }
 
                 var menuEntry = await connection
-                    .QuerySingleOrDefaultAsync<MenuEntry>(
+                    .QuerySingleOrDefaultAsync<MenuModel>(
                         @"SELECT
                             m.id,
                             m.restaurant_id
@@ -85,7 +84,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                 {
 
                     var categoryEntries = await connection
-                        .QueryAsync<MenuCategoryEntry>(
+                        .QueryAsync<MenuCategoryModel>(
                             @"SELECT
                             mc.id,
                             mc.menu_id,
@@ -100,7 +99,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             });
 
                     var itemEntries = await connection
-                        .QueryAsync<MenuItemEntry>(
+                        .QueryAsync<MenuItemModel>(
                             @"SELECT
                             i.id,
                             i.menu_category_id,
@@ -142,7 +141,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                 }
 
                 var cuisineEntries = await connection
-                    .QueryAsync<RestaurantCuisine>(
+                    .QueryAsync<RestaurantCuisineModel>(
                         @"SELECT
                             rc.restaurant_id,
                             rc.cuisine_name
@@ -160,170 +159,6 @@ namespace Web.Features.Restaurants.GetRestaurantById
                 restaurant.Cuisines.AddRange(cuisineEntries.Select(x => x.ToCuisineDto()));
 
                 return Ok(restaurant);
-            }
-        }
-
-        private record RestaurantEntry
-        {
-            public Guid id { get; init; }
-            public Guid manager_id { get; init; }
-            public string name { get; init; }
-            public string description { get; init; }
-            public string phone_number { get; init; }
-            public string address { get; init; }
-            public float latitude { get; init; }
-            public float longitude { get; init; }
-            public string status { get; init; }
-            public TimeSpan? monday_open { get; init; }
-            public TimeSpan? monday_close { get; init; }
-            public TimeSpan? tuesday_open { get; init; }
-            public TimeSpan? tuesday_close { get; init; }
-            public TimeSpan? wednesday_open { get; init; }
-            public TimeSpan? wednesday_close { get; init; }
-            public TimeSpan? thursday_open { get; init; }
-            public TimeSpan? thursday_close { get; init; }
-            public TimeSpan? friday_open { get; init; }
-            public TimeSpan? friday_close { get; init; }
-            public TimeSpan? saturday_open { get; init; }
-            public TimeSpan? saturday_close { get; init; }
-            public TimeSpan? sunday_open { get; init; }
-            public TimeSpan? sunday_close { get; init; }
-            public decimal delivery_fee { get; init; }
-            public decimal minimum_delivery_spend { get; init; }
-            public int max_delivery_distance_in_km { get; init; }
-            public int estimated_delivery_time_in_minutes { get; init; }
-            public MenuDto Menu { get; set; }
-
-            public RestaurantDto ToDto()
-            {
-                return new RestaurantDto()
-                {
-                    Id = id,
-                    ManagerId = manager_id,
-                    Name = name,
-                    Description = description,
-                    PhoneNumber = phone_number,
-                    Address = address,
-                    Latitude = latitude,
-                    Longitude = longitude,
-                    Status = status,
-                    OpeningTimes = new OpeningTimesDto()
-                    {
-                        Monday = monday_open.HasValue ? new OpeningHoursDto()
-                        {
-                            Open = FormatTimeSpan(monday_open),
-                            Close = FormatTimeSpan(monday_close),
-                        } : null,
-                        Tuesday = tuesday_open.HasValue ? new OpeningHoursDto()
-                        {
-                            Open = FormatTimeSpan(tuesday_open),
-                            Close = FormatTimeSpan(tuesday_close),
-                        } : null,
-                        Wednesday = wednesday_open.HasValue ? new OpeningHoursDto()
-                        {
-                            Open = FormatTimeSpan(wednesday_open),
-                            Close = FormatTimeSpan(wednesday_close),
-                        } : null,
-                        Thursday = thursday_open.HasValue ? new OpeningHoursDto()
-                        {
-                            Open = FormatTimeSpan(thursday_open),
-                            Close = FormatTimeSpan(thursday_close),
-                        } : null,
-                        Friday = friday_open.HasValue ? new OpeningHoursDto()
-                        {
-                            Open = FormatTimeSpan(friday_open),
-                            Close = FormatTimeSpan(friday_close),
-                        } : null,
-                        Saturday = saturday_open.HasValue ? new OpeningHoursDto()
-                        {
-                            Open = FormatTimeSpan(saturday_open),
-                            Close = FormatTimeSpan(saturday_close),
-                        } : null,
-                        Sunday = sunday_open.HasValue ? new OpeningHoursDto()
-                        {
-                            Open = FormatTimeSpan(sunday_open),
-                            Close = FormatTimeSpan(sunday_close),
-                        } : null,
-                    },
-                    DeliveryFee = delivery_fee,
-                    MinimumDeliverySpend = minimum_delivery_spend,
-                    MaxDeliveryDistanceInKm = max_delivery_distance_in_km,
-                    EstimatedDeliveryTimeInMinutes = estimated_delivery_time_in_minutes,
-                    Menu = Menu,
-                };
-            }
-
-            private string FormatTimeSpan(TimeSpan? span)
-            {
-                if (!span.HasValue)
-                {
-                    return null;
-                }
-
-                return $"{span?.Hours.ToString().PadLeft(2, '0')}:{span?.Minutes.ToString().PadLeft(2, '0')}";
-            }
-        }
-
-        private record MenuEntry
-        {
-            public int id { get; init; }
-            public Guid restaurant_id { get; init; }
-
-            public MenuDto ToDto()
-            {
-                return new MenuDto()
-                {
-                    RestaurantId = restaurant_id,
-                };
-            }
-        }
-
-        private record MenuCategoryEntry
-        {
-            public Guid id { get; init; }
-            public int menu_id { get; init; }
-            public string name { get; init; }
-
-            public MenuCategoryDto ToDto()
-            {
-                return new MenuCategoryDto()
-                {
-                    Id = id,
-                    Name = name,
-                };
-            }
-        }
-
-        private record MenuItemEntry
-        {
-            public Guid id { get; init; }
-            public Guid menu_category_id { get; init; }
-            public string name { get; init; }
-            public string description { get; init; }
-            public decimal price { get; init; }
-
-            public MenuItemDto ToDto()
-            {
-                return new MenuItemDto()
-                {
-                    Id = id,
-                    Name = name,
-                    Description = description,
-                    Price = price,
-                };
-            }
-        }
-
-        private record RestaurantCuisine
-        {
-            public string cuisine_name { get; init; }
-
-            public CuisineDto ToCuisineDto()
-            {
-                return new CuisineDto()
-                {
-                    Name = cuisine_name,
-                };
             }
         }
     }
