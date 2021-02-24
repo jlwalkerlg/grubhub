@@ -1,5 +1,6 @@
 export interface OrderDto {
   id: string;
+  number: number;
   userId: string;
   restaurantId: string;
   subtotal: number;

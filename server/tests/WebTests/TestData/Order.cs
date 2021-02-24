@@ -19,6 +19,9 @@ namespace WebTests.TestData
         }
 
         [Key]
+        [Column("number")]
+        public int Number { get; }
+
         [Column("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 

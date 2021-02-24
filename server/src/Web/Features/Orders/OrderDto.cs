@@ -6,6 +6,7 @@ namespace Web.Features.Orders.GetActiveOrder
     public record OrderDto
     {
         public string Id { get; init; }
+        public int Number { get; init; }
         public Guid UserId { get; init; }
         public Guid RestaurantId { get; init; }
         public decimal Subtotal { get; init; }

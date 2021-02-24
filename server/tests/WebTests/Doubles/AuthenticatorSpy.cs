@@ -11,33 +11,39 @@ namespace WebTests.Doubles
 
         public UserId UserId { get; private set; }
 
-        public Task SignIn()
+        public UserRole? UserRole { get; private set; }
+
+        public Task SignIn(UserRole role = Web.Domain.Users.UserRole.Customer)
         {
             UserId = new UserId(Guid.NewGuid());
             return Task.CompletedTask;
         }
 
-        public Task SignIn(Guid userId)
+        public Task SignIn(Guid userId, UserRole role = Web.Domain.Users.UserRole.Customer)
         {
             UserId = new UserId(userId);
+            UserRole = role;
+            return Task.CompletedTask;
+        }
+
+        public Task SignIn(UserId userId, UserRole role = Web.Domain.Users.UserRole.Customer)
+        {
+            UserId = userId;
+            UserRole = role;
             return Task.CompletedTask;
         }
 
         public Task SignIn(User user)
         {
             UserId = user.Id;
-            return Task.CompletedTask;
-        }
-
-        public Task SignIn(UserId userId)
-        {
-            UserId = userId;
+            UserRole = user.Role;
             return Task.CompletedTask;
         }
 
         public Task SignOut()
         {
             UserId = null;
+            UserRole = null;
             return Task.CompletedTask;
         }
     }

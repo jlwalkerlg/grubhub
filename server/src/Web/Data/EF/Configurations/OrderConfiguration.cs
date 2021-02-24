@@ -13,6 +13,10 @@ namespace Web.Data.EF.Configurations
         {
             builder.ToTable("orders");
 
+            builder.Property<int>("number")
+                .HasColumnName("number")
+                .ValueGeneratedOnAdd();
+
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .HasConversion(

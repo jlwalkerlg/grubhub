@@ -76,12 +76,24 @@ export function nextOpenDay(openingTimes: OpeningTimes) {
   return null;
 }
 
-export function formatDate(date: Date) {
+type DateFormat = "dd/mm/yyyy" | "hh:mm:ss";
+
+export function formatDate(date: Date, format: DateFormat = "dd/mm/yyyy") {
+  if (format === "dd/mm/yyyy") {
+    return (
+      padStart(date.getDate().toString(), 2, "0") +
+      "/" +
+      padStart((date.getMonth() + 1).toString(), 2, "0") +
+      "/" +
+      date.getFullYear().toString()
+    );
+  }
+
   return (
-    padStart(date.getDate().toString(), 2, "0") +
-    "/" +
-    padStart((date.getMonth() + 1).toString(), 2, "0") +
-    "/" +
-    date.getFullYear().toString()
+    padStart(date.getHours().toString(), 2, "0") +
+    ":" +
+    padStart(date.getMinutes().toString(), 2, "0") +
+    ":" +
+    padStart(date.getSeconds().toString(), 2, "0")
   );
 }

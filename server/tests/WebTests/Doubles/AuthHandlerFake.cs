@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Web.Domain.Users;
 
 namespace WebTests.Doubles
 {
@@ -28,7 +30,16 @@ namespace WebTests.Doubles
 
             if (headers.TryGetValue("X-USER-ID", out var id))
             {
-                var claims = new[] { new Claim(ClaimTypes.Name, id) };
+                if (!headers.TryGetValue("X-USER-ROLE", out var role))
+                {
+                    role = UserRole.Customer.ToString();
+                }
+
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, id),
+                    new Claim(ClaimTypes.Role, role),
+                };
                 var identity = new ClaimsIdentity(claims, "Test");
                 var principal = new ClaimsPrincipal(identity);
                 var ticket = new AuthenticationTicket(principal, "Test");

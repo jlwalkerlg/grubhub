@@ -7,8 +7,8 @@ module.exports = {
     return [
       {
         source: "/dashboard",
-        destination: "/dashboard/restaurant-details",
-        permanent: true,
+        destination: "/dashboard/orders",
+        permanent: false,
       },
     ];
   },

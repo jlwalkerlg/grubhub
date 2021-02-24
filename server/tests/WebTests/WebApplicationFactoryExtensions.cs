@@ -4,6 +4,8 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Web.Domain.Users;
+using User = WebTests.TestData.User;
 
 namespace WebTests
 {
@@ -27,17 +29,33 @@ namespace WebTests
         }
 
         public static HttpClient GetAuthenticatedClient<TEntryPoint>(
-            this WebApplicationFactory<TEntryPoint> factory) where TEntryPoint : class
+            this WebApplicationFactory<TEntryPoint> factory,
+            UserRole role = UserRole.Customer) where TEntryPoint : class
         {
-            return factory.GetAuthenticatedClient(Guid.NewGuid());
+            return factory.GetAuthenticatedClient(Guid.NewGuid(), role);
         }
 
         public static HttpClient GetAuthenticatedClient<TEntryPoint>(
-            this WebApplicationFactory<TEntryPoint> factory, Guid userId) where TEntryPoint : class
+            this WebApplicationFactory<TEntryPoint> factory,
+            Guid userId,
+            UserRole role = UserRole.Customer) where TEntryPoint : class
         {
             var client = factory.GetClient();
 
             client.DefaultRequestHeaders.Add("X-USER-ID", userId.ToString());
+            client.DefaultRequestHeaders.Add("X-USER-ROLE", role.ToString());
+
+            return client;
+        }
+
+        public static HttpClient GetAuthenticatedClient<TEntryPoint>(
+            this WebApplicationFactory<TEntryPoint> factory,
+            User user) where TEntryPoint : class
+        {
+            var client = factory.GetClient();
+
+            client.DefaultRequestHeaders.Add("X-USER-ID", user.Id.ToString());
+            client.DefaultRequestHeaders.Add("X-USER-ROLE", user.Role.ToString());
 
             return client;
         }

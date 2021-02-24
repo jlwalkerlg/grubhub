@@ -1,40 +1,37 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
+using Web.Domain.Users;
 using Web.Features.Orders.GetActiveOrder;
 using Web.Services.Authentication;
 
-namespace Web.Features.Orders.GetOrderById
+namespace Web.Features.Orders.GetRestaurantOrders
 {
-    public class GetOrderByIdAction : Action
+    public class GetRestaurantOrdersAction : Action
     {
         private readonly IAuthenticator authenticator;
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetOrderByIdAction(
-            IAuthenticator authenticator,
-            IDbConnectionFactory dbConnectionFactory)
+        public GetRestaurantOrdersAction(IAuthenticator authenticator, IDbConnectionFactory dbConnectionFactory)
         {
             this.authenticator = authenticator;
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [HttpGet("/orders/{id}")]
-        public async Task<IActionResult> Execute([FromRoute] string id)
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
+        [HttpGet("/restaurant/orders")]
+        public async Task<IActionResult> Execute()
         {
-            if (!authenticator.IsAuthenticated)
-            {
-                return Unauthenticated();
-            }
+            using var connection = await dbConnectionFactory.OpenConnection();
 
-            using (var connection = await dbConnectionFactory.OpenConnection())
-            {
-                var orderEntry = await connection
-                    .QueryFirstOrDefaultAsync<OrderEntry>(
-                        @"SELECT
+            var orderEntries = await connection
+                .QueryAsync<OrderEntry>(
+                    @"
+                        SELECT
                             o.id,
                             o.number,
                             o.user_id,
@@ -45,34 +42,25 @@ namespace Web.Features.Orders.GetOrderById
                             o.status,
                             o.address,
                             o.placed_at,
-                            o.payment_intent_client_secret,
                             r.name AS restaurant_name,
                             r.address AS restaurant_address,
                             r.phone_number as restaurant_phone_number
                         FROM
                             orders o
-                            INNER JOIN restaurants r ON r.id = o.restaurant_id
+                            INNER JOIN restaurants r on o.restaurant_id = r.id
                         WHERE
-                            o.id = @Id
-                        ORDER BY o.id",
-                        new
-                        {
-                            Id = id,
-                        });
+                            r.manager_id = @UserId
+                            ORDER BY o.placed_at",
+                    new
+                    {
+                        UserId = authenticator.UserId.Value,
+                    });
 
-                if (orderEntry is null)
-                {
-                    return NotFound();
-                }
+            var orders = orderEntries.Select(x => x.ToDto()).ToArray();
 
-                if (orderEntry.user_id != authenticator.UserId)
-                {
-                    return Unauthorised();
-                }
-
-                var orderItemEntries = await connection
-                    .QueryAsync<OrderItemEntry>(
-                        @"SELECT
+            var orderItemEntries = await connection
+                .QueryAsync<OrderItemEntry>(
+                    @"SELECT
                             oi.id,
                             oi.order_id,
                             oi.menu_item_id,
@@ -84,17 +72,20 @@ namespace Web.Features.Orders.GetOrderById
                             order_items oi
                             INNER JOIN menu_items mi ON mi.id = oi.menu_item_id
                         WHERE
-                            oi.order_id = @OrderId",
-                        new
-                        {
-                            OrderId = orderEntry.id,
-                        });
+                            oi.order_id = Any(@OrderIds)",
+                    new
+                    {
+                        OrderIds = orders.Select(x => x.Id).ToArray(),
+                    });
 
-                var order = orderEntry.ToDto();
-                order.Items.AddRange(orderItemEntries.Select(x => x.ToDto()));
+            var ordersMap = orders.ToDictionary(x => x.Id);
 
-                return Ok(order);
+            foreach (var item in orderItemEntries)
+            {
+                ordersMap[item.order_id].Items.Add(item.ToDto());
             }
+
+            return Ok(orders);
         }
 
         private record OrderEntry
@@ -112,7 +103,6 @@ namespace Web.Features.Orders.GetOrderById
             public string restaurant_name { get; init; }
             public string restaurant_address { get; init; }
             public string restaurant_phone_number { get; init; }
-            public string payment_intent_client_secret { get; init; }
 
             public OrderDto ToDto()
             {
@@ -128,7 +118,6 @@ namespace Web.Features.Orders.GetOrderById
                     Status = status,
                     Address = address,
                     PlacedAt = placed_at,
-                    PaymentIntentClientSecret = payment_intent_client_secret,
                     RestaurantName = restaurant_name,
                     RestaurantAddress = restaurant_address,
                     RestaurantPhoneNumber = restaurant_phone_number,
@@ -139,6 +128,7 @@ namespace Web.Features.Orders.GetOrderById
         private record OrderItemEntry
         {
             public int id { get; init; }
+            public string order_id { get; init; }
             public Guid menu_item_id { get; init; }
             public string menu_item_name { get; init; }
             public string menu_item_description { get; init; }

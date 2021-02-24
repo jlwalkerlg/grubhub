@@ -55,7 +55,7 @@ const Nav: React.FC = () => {
           {!isLoading && isLoggedIn && (
             <div className="hidden md:block ml-auto">
               {user.role === "RestaurantManager" && (
-                <Link href="/dashboard/restaurant-details">
+                <Link href="/dashboard/orders">
                   <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
                     Dashboard
                   </a>

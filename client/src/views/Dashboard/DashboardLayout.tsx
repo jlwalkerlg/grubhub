@@ -11,6 +11,7 @@ import ClockIcon from "~/components/Icons/ClockIcon";
 import CutleryIcon from "~/components/Icons/CutleryIcon";
 import IdentificationIcon from "~/components/Icons/IdentificationIcon";
 import InfoIcon from "~/components/Icons/InfoIcon";
+import OrdersIcon from "~/components/Icons/OrdersIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
 
@@ -21,6 +22,11 @@ interface DashboardRoute {
 }
 
 const routes: DashboardRoute[] = [
+  {
+    title: "Orders",
+    pathname: "/dashboard/orders",
+    icon: OrdersIcon,
+  },
   {
     title: "Restaurant Details",
     pathname: "/dashboard/restaurant-details",
