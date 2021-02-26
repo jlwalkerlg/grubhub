@@ -9,6 +9,7 @@ export interface OrderDto {
   status: OrderStatus;
   address: string;
   placedAt: string;
+  confirmedAt?: string;
   restaurantName: string;
   restaurantAddress: string;
   restaurantPhoneNumber: string;

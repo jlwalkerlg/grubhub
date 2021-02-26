@@ -47,23 +47,25 @@ namespace Web.Domain.Orders
         public MobileNumber MobileNumber { get; }
         public Address Address { get; }
         public DateTime PlacedAt { get; }
+        public DateTime? ConfirmedAt { get; private set; }
         public string PaymentIntentId { get; set; }
         public string PaymentIntentClientSecret { get; set; }
 
         public IReadOnlyList<OrderItem> Items => items;
 
-        public bool AlreadyConfirmed => Status != OrderStatus.Placed;
+        public bool AlreadyConfirmed => ConfirmedAt.HasValue;
 
         public Money CalculateTotal()
         {
             return Subtotal + DeliveryFee + ServiceFee;
         }
 
-        public void Confirm()
+        public void Confirm(DateTime now)
         {
             if (Status == OrderStatus.Placed)
             {
                 Status = OrderStatus.PaymentConfirmed;
+                ConfirmedAt = now;
             }
         }
 

@@ -18,10 +18,11 @@ namespace WebTests.TestData
             Restaurant = new Restaurant();
         }
 
-        [Key]
         [Column("number")]
-        public int Number { get; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Number { get; private set; }
 
+        [Key]
         [Column("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
@@ -73,6 +74,9 @@ namespace WebTests.TestData
 
         [Column("placed_at")]
         public DateTime PlacedAt { get; set; } = DateTime.UtcNow;
+
+        [Column("confirmed_at")]
+        public DateTime? ConfirmedAt { get; set; }
 
         [Column("payment_intent_id")]
         public string PaymentIntentId { get; set; } = Guid.NewGuid().ToString();

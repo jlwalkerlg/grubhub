@@ -15,6 +15,7 @@ namespace Web.Data.Models
         public string status { get; init; }
         public string address { get; init; }
         public DateTime placed_at { get; init; }
+        public DateTime? confirmed_at { get; init; }
         public string restaurant_name { get; init; }
         public string restaurant_address { get; init; }
         public string restaurant_phone_number { get; init; }
@@ -34,6 +35,7 @@ namespace Web.Data.Models
                 Status = status,
                 Address = address,
                 PlacedAt = placed_at,
+                ConfirmedAt = confirmed_at,
                 PaymentIntentClientSecret = payment_intent_client_secret,
                 RestaurantName = restaurant_name,
                 RestaurantAddress = restaurant_address,

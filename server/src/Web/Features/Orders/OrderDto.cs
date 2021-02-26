@@ -15,6 +15,7 @@ namespace Web.Features.Orders.GetActiveOrder
         public string Status { get; init; }
         public string Address { get; init; }
         public DateTime PlacedAt { get; init; }
+        public DateTime? ConfirmedAt { get; init; }
         public string RestaurantName { get; init; }
         public string RestaurantAddress { get; init; }
         public string RestaurantPhoneNumber { get; init; }

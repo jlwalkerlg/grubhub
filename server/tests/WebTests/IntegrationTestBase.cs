@@ -55,7 +55,10 @@ namespace WebTests
         {
             UseTestDbContext(db =>
             {
-                db.AddRange(entities);
+                foreach (var entity in entities)
+                {
+                    db.Add(entity);
+                }
                 db.SaveChanges();
             });
         }

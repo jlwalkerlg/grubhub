@@ -2,11 +2,11 @@
 using Web.Domain.Users;
 using Xunit;
 
-namespace WebTests.Features.Orders.GetRestaurantOrders
+namespace WebTests.Features.Orders.GetActiveRestaurantOrders
 {
-    public class GetRestaurantOrdersActionTests : ActionTestBase
+    public class GetActiveRestaurantOrdersActionTests : ActionTestBase
     {
-        public GetRestaurantOrdersActionTests(ActionTestWebApplicationFactory factory) : base(factory)
+        public GetActiveRestaurantOrdersActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
@@ -14,7 +14,7 @@ namespace WebTests.Features.Orders.GetRestaurantOrders
         public async Task It_Requires_Authentication()
         {
             var response = await factory.GetClient().Get(
-                "/restaurant/orders");
+                "/restaurant/active-orders");
 
             response.StatusCode.ShouldBe(401);
         }
@@ -23,7 +23,7 @@ namespace WebTests.Features.Orders.GetRestaurantOrders
         public async Task It_Returns_Unauthorized_If_The_User_Is_Not_A_Manager()
         {
             var response = await factory.GetAuthenticatedClient(UserRole.Customer).Get(
-                "/restaurant/orders");
+                "/restaurant/active-orders");
 
             response.StatusCode.ShouldBe(403);
         }

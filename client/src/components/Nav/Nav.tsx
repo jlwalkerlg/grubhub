@@ -7,6 +7,7 @@ import LogoutIcon from "~/components/Icons/LogoutIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
 import RegisterIcon from "~/components/Icons/RegisterIcon";
 import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
+import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
 import DashboardIcon from "../Icons/DashboardIcon";
 import { useToasts } from "../Toaster/Toaster";
 
@@ -17,6 +18,8 @@ const Nav: React.FC = () => {
   const toggleNav = () => {
     setIsOpen(!isOpen);
   };
+
+  usePreventBodyScroll(isOpen);
 
   const { user, isLoggedIn, isLoading } = useAuth();
   const [logout] = useLogout();
@@ -55,7 +58,7 @@ const Nav: React.FC = () => {
           {!isLoading && isLoggedIn && (
             <div className="hidden md:block ml-auto">
               {user.role === "RestaurantManager" && (
-                <Link href="/dashboard/orders">
+                <Link href="/dashboard/active-orders">
                   <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
                     Dashboard
                   </a>
@@ -102,7 +105,7 @@ const Nav: React.FC = () => {
           {!isLoading && isLoggedIn && (
             <li>
               {user.role === "RestaurantManager" && (
-                <Link href="/dashboard/restaurant-details">
+                <Link href="/dashboard/active-orders">
                   <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
                     <DashboardIcon className="w-6 h-6 inline" />
                     <span className="ml-2 align-middle">Dashboard</span>

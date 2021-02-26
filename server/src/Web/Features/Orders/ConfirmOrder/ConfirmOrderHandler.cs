@@ -46,7 +46,7 @@ namespace Web.Features.Orders.ConfirmOrder
                 return Error.BadRequest("Payment not accepted.");
             }
 
-            order.Confirm();
+            order.Confirm(clock.UtcNow);
 
             var basket = await unitOfWork.Baskets.Get(order.UserId, order.RestaurantId);
 

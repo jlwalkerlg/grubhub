@@ -23,8 +23,8 @@ interface DashboardRoute {
 
 const routes: DashboardRoute[] = [
   {
-    title: "Orders",
-    pathname: "/dashboard/orders",
+    title: "Active Orders",
+    pathname: "/dashboard/active-orders",
     icon: OrdersIcon,
   },
   {

@@ -7,25 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Data;
 using Web.Data.Models;
 using Web.Domain.Users;
-using Web.Features.Orders.GetActiveOrder;
 using Web.Services.Authentication;
 
-namespace Web.Features.Orders.GetRestaurantOrders
+namespace Web.Features.Orders.GetActiveRestaurantOrders
 {
-    public class GetRestaurantOrdersAction : Action
+    public class GetActiveRestaurantOrdersAction : Action
     {
         private readonly IAuthenticator authenticator;
         private readonly IDbConnectionFactory dbConnectionFactory;
 
-        public GetRestaurantOrdersAction(IAuthenticator authenticator, IDbConnectionFactory dbConnectionFactory)
+        public GetActiveRestaurantOrdersAction(IAuthenticator authenticator, IDbConnectionFactory dbConnectionFactory)
         {
             this.authenticator = authenticator;
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
         [Authorize(Roles = nameof(UserRole.RestaurantManager))]
-        [HttpGet("/restaurant/orders")]
-        public async Task<IActionResult> Execute()
+        [HttpGet("/restaurant/active-orders")]
+        public async Task<IActionResult> Execute([FromQuery] DateTime confirmedAfter = default)
         {
             using var connection = await dbConnectionFactory.OpenConnection();
 
@@ -43,6 +42,7 @@ namespace Web.Features.Orders.GetRestaurantOrders
                             o.status,
                             o.address,
                             o.placed_at,
+                            o.confirmed_at,
                             r.name AS restaurant_name,
                             r.address AS restaurant_address,
                             r.phone_number as restaurant_phone_number
@@ -51,10 +51,12 @@ namespace Web.Features.Orders.GetRestaurantOrders
                             INNER JOIN restaurants r on o.restaurant_id = r.id
                         WHERE
                             r.manager_id = @UserId
-                            ORDER BY o.placed_at",
+                            AND o.confirmed_at > @ConfirmedAfter
+                        ORDER BY o.confirmed_at",
                     new
                     {
                         UserId = authenticator.UserId.Value,
+                        ConfirmedAfter = confirmedAfter,
                     });
 
             var orders = orderEntries.Select(x => x.ToDto()).ToArray();

@@ -1,0 +1,27 @@
+.order-item-row {
+  animation-name: item;
+  animation-duration: 2.5s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-delay: 0;
+  animation-fill-mode: none;
+  animation-direction: alternate;
+}
+
+@keyframes item {
+  0% {
+    background: none;
+  }
+
+  5% {
+    background: #fefcbf;
+  }
+
+  20% {
+    background: #fefcbf;
+  }
+
+  100% {
+    background: none;
+  }
+}

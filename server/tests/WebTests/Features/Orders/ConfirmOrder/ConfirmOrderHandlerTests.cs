@@ -103,6 +103,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
             result.ShouldBeSuccessful();
 
             order.Status.ShouldBe(OrderStatus.PaymentConfirmed);
+            order.ConfirmedAt.ShouldBe(now);
 
             unitOfWorkSpy.BasketRepositorySpy.Baskets.ShouldBeEmpty();
 
@@ -166,7 +167,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             order.PaymentIntentId = Guid.NewGuid().ToString();
 
-            order.Confirm();
+            order.Confirm(DateTime.UtcNow);
 
             await unitOfWorkSpy.Orders.Add(order);
 

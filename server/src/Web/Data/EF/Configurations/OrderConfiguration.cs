@@ -93,6 +93,9 @@ namespace Web.Data.EF.Configurations
                 .HasColumnName("placed_at")
                 .IsRequired();
 
+            builder.Property(x => x.ConfirmedAt)
+                .HasColumnName("confirmed_at");
+
             builder.Property(x => x.PaymentIntentId)
                 .HasColumnName("payment_intent_id")
                 .IsRequired();

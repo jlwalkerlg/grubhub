@@ -28,7 +28,7 @@ namespace Web.Services.Notifications
             await orderHubContext
                 .Clients
                 .Users(customer.Id.Value.ToString())
-                .SendAsync($"order_{order.Id.Value}.updated");
+                .SendAsync($"new-order", order.Id.Value);
         }
     }
 }
