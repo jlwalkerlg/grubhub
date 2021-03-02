@@ -28,7 +28,7 @@ namespace WebTests.Features.Users.Login
 
             Insert(user);
 
-            var factory = this.factory.WithWebHostBuilder(builder =>
+            using var factory = this.factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {

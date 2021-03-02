@@ -76,7 +76,7 @@ export function nextOpenDay(openingTimes: OpeningTimes) {
   return null;
 }
 
-type DateFormat = "dd/mm/yyyy" | "hh:mm:ss";
+type DateFormat = "dd/mm/yyyy" | "hh:mm:ss" | "hh:mm";
 
 export function formatDate(date: Date, format: DateFormat = "dd/mm/yyyy") {
   if (format === "dd/mm/yyyy") {
@@ -86,6 +86,14 @@ export function formatDate(date: Date, format: DateFormat = "dd/mm/yyyy") {
       padStart((date.getMonth() + 1).toString(), 2, "0") +
       "/" +
       date.getFullYear().toString()
+    );
+  }
+
+  if (format === "hh:mm") {
+    return (
+      padStart(date.getHours().toString(), 2, "0") +
+      ":" +
+      padStart(date.getMinutes().toString(), 2, "0")
     );
   }
 

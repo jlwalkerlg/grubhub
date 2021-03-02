@@ -48,12 +48,15 @@ namespace Web.Domain.Orders
         public Address Address { get; }
         public DateTime PlacedAt { get; }
         public DateTime? ConfirmedAt { get; private set; }
+        public DateTime? AcceptedAt { get; private set; }
         public string PaymentIntentId { get; set; }
         public string PaymentIntentClientSecret { get; set; }
 
         public IReadOnlyList<OrderItem> Items => items;
 
         public bool AlreadyConfirmed => ConfirmedAt.HasValue;
+
+        public bool AlreadyAccepted => AcceptedAt.HasValue;
 
         public Money CalculateTotal()
         {
@@ -62,10 +65,19 @@ namespace Web.Domain.Orders
 
         public void Confirm(DateTime now)
         {
-            if (Status == OrderStatus.Placed)
+            if (!AlreadyConfirmed)
             {
-                Status = OrderStatus.PaymentConfirmed;
                 ConfirmedAt = now;
+                Status = OrderStatus.PaymentConfirmed;
+            }
+        }
+
+        public void Accept(DateTime now)
+        {
+            if (!AlreadyAccepted)
+            {
+                AcceptedAt = now;
+                Status = OrderStatus.Accepted;
             }
         }
 

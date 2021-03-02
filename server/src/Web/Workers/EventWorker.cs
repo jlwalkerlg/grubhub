@@ -16,9 +16,6 @@ namespace Web.Workers
     {
         private readonly IServiceProvider services;
         private readonly ILogger<EventWorker> logger;
-        private IServiceScope scope;
-        private EventDispatcher dispatcher;
-        private AppDbContext db;
 
         public EventWorker(
             IServiceProvider services,
@@ -28,27 +25,16 @@ namespace Web.Workers
             this.logger = logger;
         }
 
-        public override Task StartAsync(CancellationToken cancellationToken)
-        {
-            scope = services.CreateScope();
-            dispatcher = services.GetRequiredService<EventDispatcher>();
-            db = services.GetRequiredService<AppDbContext>();
-
-            return base.StartAsync(cancellationToken);
-        }
-
-        public override void Dispose()
-        {
-            scope.Dispose();
-            base.Dispose();
-        }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
+                    using var scope = services.CreateScope();
+                    var dispatcher = scope.ServiceProvider.GetRequiredService<EventDispatcher>();
+                    await using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
                     var events = await db.Events
                         .Where(x => !x.Handled)
                         .OrderBy(x => x.CreatedAt)
@@ -57,7 +43,7 @@ namespace Web.Workers
 
                     foreach (var ev in events)
                     {
-                        await ProcessEvent(ev, stoppingToken);
+                        await ProcessEvent(ev, dispatcher, db, stoppingToken);
                     }
                 }
                 catch (System.Exception ex)
@@ -69,8 +55,14 @@ namespace Web.Workers
             }
         }
 
-        private async Task ProcessEvent(SerialisedEvent serialised, CancellationToken stoppingToken)
+        private async Task ProcessEvent(
+            SerialisedEvent serialised,
+            EventDispatcher dispatcher,
+            AppDbContext db,
+            CancellationToken stoppingToken)
         {
+            logger.LogInformation($"Processing event: {serialised.Type}");
+
             var ev = (Event)JsonSerializer.Deserialize(
                 serialised.Json,
                 Type.GetType(serialised.Type));

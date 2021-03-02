@@ -78,6 +78,9 @@ namespace WebTests.TestData
         [Column("confirmed_at")]
         public DateTime? ConfirmedAt { get; set; }
 
+        [Column("accepted_at")]
+        public DateTime? AcceptedAt { get; set; }
+
         [Column("payment_intent_id")]
         public string PaymentIntentId { get; set; } = Guid.NewGuid().ToString();
 

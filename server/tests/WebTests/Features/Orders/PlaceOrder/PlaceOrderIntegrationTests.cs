@@ -30,7 +30,7 @@ namespace WebTests.Features.Orders.PlaceOrder
                 ClientSecret = Guid.NewGuid().ToString(),
             };
 
-            var factory = this.factory.WithWebHostBuilder(builder =>
+            using var factory = this.factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {

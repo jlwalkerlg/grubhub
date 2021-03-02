@@ -3,8 +3,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useMemo } from "react";
 import { useQueryCache } from "react-query";
-import { OrderDto, OrderStatus } from "~/api/orders/OrderDto";
-import useOrder, { getOrderQueryKey } from "~/api/orders/useOrder";
+import useOrder, {
+  getOrderQueryKey,
+  OrderDto,
+  OrderStatus,
+} from "~/api/orders/useOrder";
 import useAuth from "~/api/users/useAuth";
 import { UserDto } from "~/api/users/UserDto";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
@@ -15,32 +18,70 @@ import { AuthLayout } from "~/components/Layout/Layout";
 import { formatDate } from "~/services/utils";
 import { useOrdersHub } from "../../../api/orders/useOrdersHub";
 
-const statusTexts: Map<OrderStatus, string> = new Map([
-  ["Placed", "Processing"],
-  ["PaymentConfirmed", "Awaiting confirmation"],
-]);
-
-const statusDescriptions: Map<OrderStatus, string> = new Map([
+const statuses: Map<
+  OrderStatus,
+  {
+    title: string;
+  }
+> = new Map([
   [
     "Placed",
-    "Your order has been received and we are currently processing your payment details.",
+    {
+      title: "Processing",
+    },
   ],
   [
     "PaymentConfirmed",
-    "We're currently awaiting confirmation from the restaurant.",
+    {
+      title: "Awaiting confirmation",
+    },
+  ],
+  [
+    "Accepted",
+    {
+      title: "Accepted",
+    },
   ],
 ]);
 
+const OrderStatusTitle: FC<{ order: OrderDto }> = ({ order }) => {
+  return <>{statuses.get(order.status).title}</>;
+};
+
+const OrderStatusDescription: FC<{ order: OrderDto }> = ({ order }) => {
+  const estimatedDeliveryTime = useMemo(() => {
+    if (order.status !== "Accepted") return null;
+
+    const date = new Date(order.estimatedDeliveryTime);
+    return formatDate(date, "hh:mm");
+  }, [order.status, order.estimatedDeliveryTime]);
+
+  if (order.status === "Accepted") {
+    return (
+      <>
+        The restaurant is currently preparing your order and expect to delivery
+        it around {estimatedDeliveryTime}.
+      </>
+    );
+  }
+
+  if (order.status === "PaymentConfirmed") {
+    return <>We're currently awaiting confirmation from the restaurant.</>;
+  }
+
+  return (
+    <>
+      Your order has been received and we are currently processing your payment
+      details.
+    </>
+  );
+};
+
 const OrderHeader: FC<{ order: OrderDto }> = ({ order }) => {
   const formattedPlacedAt = useMemo(() => {
-    var date = new Date(order.placedAt);
+    const date = new Date(order.placedAt);
     return formatDate(date);
   }, [order.placedAt]);
-
-  order.status = "PaymentConfirmed";
-
-  const statusText = statusTexts.get(order.status);
-  const statusDescription = statusDescriptions.get(order.status);
 
   return (
     <div className="bg-primary-600 px-4 py-4">
@@ -55,14 +96,18 @@ const OrderHeader: FC<{ order: OrderDto }> = ({ order }) => {
 
       <div className="bg-white rounded p-4 md:p-8 max-w-2xl mx-auto">
         <div className="flex items-center justify-between">
-          <p className="font-semibold text-2xl md:text-4xl">{statusText}</p>
+          <p className="font-semibold text-2xl md:text-4xl">
+            <OrderStatusTitle order={order} />
+          </p>
           <p className="font-semibold md:text-xl ml-3">{formattedPlacedAt}</p>
         </div>
 
         <hr className="my-4 md:my-6 border-gray-300" />
 
         <div className="text-sm md:text-base">
-          <p>{statusDescription}</p>
+          <p>
+            <OrderStatusDescription order={order} />
+          </p>
         </div>
       </div>
     </div>
@@ -315,6 +360,11 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
   useOrdersHub({
     configure: (connection) => {
       connection.on(`order_${order.id}.updated`, () => {
+        cache.invalidateQueries(getOrderQueryKey(order.id));
+      });
+
+      connection.on(`order_${order.id}.accepted`, () => {
+        console.log({ accepted: order.id });
         cache.invalidateQueries(getOrderQueryKey(order.id));
       });
     },

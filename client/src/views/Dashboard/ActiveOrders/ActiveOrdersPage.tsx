@@ -1,52 +1,103 @@
 import React, { FC, useMemo, useState } from "react";
-import { OrderDto, OrderStatus } from "~/api/orders/OrderDto";
-import useActiveRestaurantOrders from "~/api/orders/useActiveRestaurantOrders";
+import { useAcceptOrder } from "~/api/orders/useAcceptOrder";
+import useActiveRestaurantOrders, {
+  ActiveOrderDto,
+} from "~/api/orders/useActiveRestaurantOrders";
+import { OrderStatus } from "~/api/orders/useOrder";
 import { useOrdersHub } from "~/api/orders/useOrdersHub";
 import CheckIcon from "~/components/Icons/CheckIcon";
 import CloseIcon from "~/components/Icons/CloseIcon";
 import InfoIcon from "~/components/Icons/InfoIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
+import LoadingIconWrapper from "~/components/LoadingIconWrapper";
+import { useToasts } from "~/components/Toaster/Toaster";
 import { formatDate } from "~/services/utils";
 import { DashboardLayout } from "../DashboardLayout";
 import styles from "./ActiveOrdersPage.module.css";
+import OrderDetailsModal from "./OrderDetailsModal";
 
 const statusBadgeTexts: Map<OrderStatus, string> = new Map([
   ["PaymentConfirmed", "Confirmed"],
+  ["Accepted", "Accepted"],
 ]);
 
-const OrderTableRow: FC<{ order: OrderDto }> = ({ order }) => {
-  const formattedTime = useMemo(
-    () => formatDate(new Date(order.placedAt), "hh:mm:ss"),
-    [order.placedAt]
+const StatusBadge: FC<{ order: ActiveOrderDto }> = ({ order }) => {
+  return (
+    <span className="bg-yellow-200 text-yellow-700 py-1 px-3 rounded-full text-xs font-semibold">
+      {statusBadgeTexts.get(order.status)}
+    </span>
+  );
+};
+
+const OrderTableRow: FC<{ order: ActiveOrderDto }> = ({ order }) => {
+  const estimatedDeliveryTime = useMemo(
+    () => formatDate(new Date(order.estimatedDeliveryTime), "hh:mm"),
+    [order.estimatedDeliveryTime]
   );
 
-  const received = order.subtotal + order.deliveryFee;
+  const { addToast } = useToasts();
+
+  const [accept, { isLoading: isAccepting }] = useAcceptOrder();
+
+  const onAccept = async () => {
+    if (isAccepting) return;
+
+    await accept(
+      { orderId: order.id },
+      {
+        onError: (error) => {
+          addToast("Failed to accept order: " + error.message);
+        },
+      }
+    );
+  };
+
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
+  const openDetailsModal = () => setIsDetailsModalOpen(true);
+  const closeDetailsModal = () => setIsDetailsModalOpen(false);
 
   return (
     <tr
       className={`border-b border-gray-200 hover:bg-gray-100 ${styles["order-item-row"]}`}
     >
-      <td className="py-3 px-3 text-left whitespace-nowrap">{order.number}</td>
-      <td className="py-3 px-3 text-left whitespace-nowrap">{formattedTime}</td>
+      <td className="py-3 px-3 text-left whitespace-nowrap">
+        <div>
+          <button className="btn-link" onClick={openDetailsModal}>
+            {order.number}
+          </button>
+
+          {isDetailsModalOpen && (
+            <OrderDetailsModal order={order} onClose={closeDetailsModal} />
+          )}
+        </div>
+      </td>
+      <td className="py-3 px-3 text-left whitespace-nowrap">
+        {estimatedDeliveryTime}
+      </td>
       <td className="py-3 px-3 text-left whitespace-nowrap">{order.address}</td>
       <td className="py-3 px-3 text-left whitespace-nowrap">
-        £{received.toFixed(2)}
+        £{order.subtotal.toFixed(2)}
       </td>
       <td className="py-3 px-3 text-left whitespace-nowrap">
-        <span className="bg-yellow-200 text-yellow-700 py-1 px-3 rounded-full text-xs font-semibold">
-          {statusBadgeTexts.get(order.status)}
-        </span>
+        <StatusBadge order={order} />
       </td>
       <td className="py-3 px-3 text-left whitespace-nowrap">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center">
+          {order.status !== "Accepted" && (
+            <button
+              className="mr-1 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
+              title="Accept order"
+              onClick={onAccept}
+              disabled={isAccepting}
+            >
+              <LoadingIconWrapper isLoading={isAccepting} className="h-5">
+                <CheckIcon className="h-5" />
+              </LoadingIconWrapper>
+            </button>
+          )}
           <button
-            className="mr-2 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
-            title="Accept order"
-          >
-            <CheckIcon className="h-5" />
-          </button>
-          <button
-            className="mr-2 text-red-500 hover:text-red-800 transition-colors transform hover:scale-110"
+            className="mr-1 text-red-500 hover:text-red-800 transition-colors transform hover:scale-110"
             title="Reject order"
           >
             <CloseIcon className="h-5" />
@@ -57,16 +108,16 @@ const OrderTableRow: FC<{ order: OrderDto }> = ({ order }) => {
   );
 };
 
-const OrdersTable: FC<{ orders: OrderDto[] }> = ({ orders }) => {
+const OrdersTable: FC<{ orders: ActiveOrderDto[] }> = ({ orders }) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full table-auto">
         <thead>
           <tr className="bg-primary-700 text-gray-100 uppercase text-sm leading-normal">
             <th className="py-3 px-3 text-left">#</th>
-            <th className="py-3 px-3 text-left">Time</th>
+            <th className="py-3 px-3 text-left">Deliver At</th>
             <th className="py-3 px-3 text-left">Address</th>
-            <th className="py-3 px-3 text-left">Total</th>
+            <th className="py-3 px-3 text-left">Subtotal</th>
             <th className="py-3 px-3 text-left">Status</th>
             <th className="py-3 px-3 text-left">Actions</th>
           </tr>
@@ -83,21 +134,23 @@ const OrdersTable: FC<{ orders: OrderDto[] }> = ({ orders }) => {
 };
 
 const ActiveOrdersPage: FC = () => {
-  const [ordersMap, setOrdersMap] = useState<{ [id: string]: OrderDto }>({});
+  const [ordersMap, setOrdersMap] = useState<{ [id: string]: ActiveOrderDto }>(
+    {}
+  );
 
   const sortedOrders = useMemo(() => {
     return Object.values(ordersMap).sort((a, b) =>
-      new Date(a.confirmedAt) > new Date(b.confirmedAt) ? -1 : 1
+      new Date(a.placedAt) > new Date(b.placedAt) ? -1 : 1
     );
   }, [ordersMap]);
 
-  const ordersSortedByConfirmedAt = useMemo(() => {
+  const ordersSortedByPlacedAt = useMemo(() => {
     return Object.values(ordersMap).sort((a, b) =>
-      new Date(a.confirmedAt) > new Date(b.confirmedAt) ? -1 : 1
+      new Date(a.placedAt) > new Date(b.placedAt) ? -1 : 1
     );
   }, [ordersMap]);
 
-  const latestOrderConfirmed = ordersSortedByConfirmedAt[0]?.confirmedAt;
+  const latestOrderConfirmed = ordersSortedByPlacedAt[0]?.placedAt;
 
   const [hasNewOrders, setHasNewOrders] = useState(false);
 
@@ -134,6 +187,10 @@ const ActiveOrdersPage: FC = () => {
   } = useOrdersHub({
     configure: (connection) => {
       connection.on("new-order", () => setHasNewOrders(true));
+
+      connection.on("order-accepted", (orderId) => {
+        console.log({ accepted: orderId });
+      });
     },
 
     onConnect: async () => {

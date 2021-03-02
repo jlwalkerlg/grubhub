@@ -23,7 +23,7 @@ namespace WebTests.Features.Billing.SetupBilling
 
             var onboardingLink = Guid.NewGuid().ToString();
 
-            var factory = this.factory.WithWebHostBuilder(builder =>
+            using var factory = this.factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {

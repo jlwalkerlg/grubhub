@@ -1,6 +1,39 @@
 import { QueryConfig, useQuery } from "react-query";
 import Api, { ApiError } from "../Api";
-import { OrderDto } from "./OrderDto";
+
+export interface OrderDto {
+  id: string;
+  number: number;
+  userId: string;
+  restaurantId: string;
+  subtotal: number;
+  deliveryFee: number;
+  serviceFee: number;
+  status: OrderStatus;
+  address: string;
+  placedAt: string;
+  confirmedAt?: string;
+  acceptedAt?: string;
+  estimatedDeliveryTime: string;
+  restaurantName: string;
+  restaurantAddress: string;
+  restaurantPhoneNumber: string;
+  paymentIntentClientSecret: string;
+  customerName: string;
+  customerEmail: string;
+  customerMobile: string;
+  items: OrderItemDto[];
+}
+
+export type OrderStatus = "Placed" | "PaymentConfirmed" | "Accepted";
+
+export interface OrderItemDto {
+  menuItemId: string;
+  menuItemName: string;
+  menuItemDescription: string;
+  menuItemPrice: number;
+  quantity: number;
+}
 
 export function getOrderQueryKey(orderId: string) {
   return `/orders/${orderId}`;

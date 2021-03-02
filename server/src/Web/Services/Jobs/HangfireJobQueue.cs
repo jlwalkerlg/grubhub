@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
@@ -21,6 +22,16 @@ namespace Web.Services.Jobs
                 processor.Process(job, options, default, default));
 
             return Task.CompletedTask;
+        }
+
+        public async Task Enqueue(
+            IDictionary<Job, EnqueueOptions> jobs,
+            CancellationToken cancellationToken = default)
+        {
+            foreach (var (job, options) in jobs)
+            {
+                await Enqueue(job, options, cancellationToken);
+            }
         }
     }
 }

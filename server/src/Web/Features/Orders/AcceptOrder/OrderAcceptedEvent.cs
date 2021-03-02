@@ -1,0 +1,16 @@
+using System;
+using Web.Domain.Orders;
+using Web.Services.Events;
+
+namespace Web.Features.Orders.AcceptOrder
+{
+    public record OrderAcceptedEvent : Event
+    {
+        public OrderAcceptedEvent(OrderId orderId, DateTime createdAt) : base(createdAt)
+        {
+            OrderId = orderId ?? throw new ArgumentNullException(nameof(orderId));
+        }
+
+        public OrderId OrderId { get; }
+    }
+}

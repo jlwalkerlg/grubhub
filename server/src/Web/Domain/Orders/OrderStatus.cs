@@ -4,5 +4,6 @@ namespace Web.Domain.Orders
     {
         Placed,
         PaymentConfirmed,
+        Accepted,
     }
 }

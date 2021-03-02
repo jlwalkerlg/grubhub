@@ -25,7 +25,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         {
             var now = DateTime.UtcNow;
 
-            var factory = this.factory.WithWebHostBuilder(builder =>
+            using var factory = this.factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {

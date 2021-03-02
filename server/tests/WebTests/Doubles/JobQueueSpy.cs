@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web;
 using Web.Services;
+using Web.Services.Jobs;
 
 namespace WebTests.Doubles
 {
@@ -17,13 +18,23 @@ namespace WebTests.Doubles
             EnqueueOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            options = options ?? new EnqueueOptions();
+            options ??= new EnqueueOptions();
 
             Jobs.Add(job);
             MaxAttempts.Add(job, options.MaxAttempts);
             Attempts.Add(job, 0);
 
             return Task.CompletedTask;
+        }
+
+        public async Task Enqueue(
+            IDictionary<Job, EnqueueOptions> jobs,
+            CancellationToken cancellationToken = default)
+        {
+            foreach (var (job, options) in jobs)
+            {
+                await Enqueue(job, options, cancellationToken);
+            }
         }
     }
 }
