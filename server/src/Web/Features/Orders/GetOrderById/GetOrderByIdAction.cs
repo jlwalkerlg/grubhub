@@ -45,6 +45,7 @@ namespace Web.Features.Orders.GetOrderById
                             o.placed_at,
                             o.confirmed_at,
                             o.accepted_at,
+                            o.delivered_at,
                             o.payment_intent_client_secret,
                             r.name AS restaurant_name,
                             r.address AS restaurant_address,
@@ -114,6 +115,7 @@ namespace Web.Features.Orders.GetOrderById
             public DateTime PlacedAt { get; set; }
             public DateTime? ConfirmedAt { get; set; }
             public DateTime? AcceptedAt { get; set; }
+            public DateTime? DeliveredAt { get; set; }
             public string PaymentIntentClientSecret { get; set; }
             public string RestaurantName { get; set; }
             public string RestaurantAddress { get; set; }

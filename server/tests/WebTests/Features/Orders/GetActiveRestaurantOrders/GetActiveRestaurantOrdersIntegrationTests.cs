@@ -32,40 +32,12 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
             menuCategory.Items.Add(menuItem);
             menu.Categories.Add(menuCategory);
 
+            // second
             var order1 = new Order()
             {
-                Restaurant = restaurant,
-                Status = OrderStatus.PaymentConfirmed,
-                ConfirmedAt = DateTime.UtcNow.AddSeconds(-10),
-                Items = new()
-                {
-                    new OrderItem()
-                    {
-                        MenuItem = menuItem,
-                        Quantity = 1,
-                    }
-                }
-            };
-
-            var order2 = new Order()
-            {
-                Restaurant = restaurant,
-                Status = OrderStatus.Placed,
-                Items = new()
-                {
-                    new OrderItem()
-                    {
-                        MenuItem = menuItem,
-                        Quantity = 2,
-                    }
-                }
-            };
-
-            var order3 = new Order()
-            {
-                Restaurant = restaurant,
                 Status = OrderStatus.PaymentConfirmed,
                 ConfirmedAt = DateTime.UtcNow,
+                Restaurant = restaurant,
                 Items = new()
                 {
                     new OrderItem()
@@ -76,11 +48,12 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
                 }
             };
 
-            var order4 = new Order()
+            // first
+            var order2 = new Order()
             {
-                Restaurant = restaurant,
                 Status = OrderStatus.PaymentConfirmed,
                 ConfirmedAt = DateTime.UtcNow.AddSeconds(-5),
+                Restaurant = restaurant,
                 Items = new()
                 {
                     new OrderItem()
@@ -91,14 +64,66 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
                 }
             };
 
-            Insert(restaurant, order1, order2, order3, order4);
+            // skipped
+            var order3 = new Order()
+            {
+                Status = OrderStatus.PaymentConfirmed,
+                ConfirmedAt = DateTime.UtcNow.AddSeconds(-10),
+                Restaurant = restaurant,
+                Items = new()
+                {
+                    new OrderItem()
+                    {
+                        MenuItem = menuItem,
+                        Quantity = 1,
+                    }
+                }
+            };
 
-            var confirmedAfter = order1.ConfirmedAt.Value.ToString("O");
+            // not confirmed
+            var order4 = new Order()
+            {
+                Status = OrderStatus.Placed,
+                PlacedAt = DateTime.UtcNow,
+                Restaurant = restaurant,
+                Items = new()
+                {
+                    new OrderItem()
+                    {
+                        MenuItem = menuItem,
+                        Quantity = 2,
+                    }
+                }
+            };
+
+            // delivered
+            var order5 = new Order()
+            {
+                Status = OrderStatus.Delivered,
+                ConfirmedAt = DateTime.UtcNow,
+                DeliveredAt = DateTime.UtcNow,
+                Restaurant = restaurant,
+                Items = new()
+                {
+                    new OrderItem()
+                    {
+                        MenuItem = menuItem,
+                        Quantity = 2,
+                    }
+                }
+            };
+
+            Insert(restaurant, order1, order2, order3, order4, order5);
+
+            var confirmedAfter = order3.ConfirmedAt.Value.ToString("O");
 
             var response = await factory.GetAuthenticatedClient(restaurant.Manager).Get(
                 $"/restaurant/active-orders?confirmedAfter={confirmedAfter}");
 
-            output.WriteLine(response.Content.ReadAsStringAsync().Result);
+            if (!response.IsSuccessStatusCode)
+            {
+                output.WriteLine(response.Content.ReadAsStringAsync().Result);
+            }
 
             response.StatusCode.ShouldBe(200);
 
@@ -106,8 +131,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
 
             data.Length.ShouldBe(2);
 
-            data[0].Id.ShouldBe(order4.Id);
-            data[1].Id.ShouldBe(order3.Id);
+            data[0].Id.ShouldBe(order2.Id);
+            data[1].Id.ShouldBe(order1.Id);
         }
     }
 }

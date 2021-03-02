@@ -23,7 +23,12 @@ namespace Web.Features.Orders.AcceptOrder
             HandleEventCommand<OrderAcceptedEvent> command, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(command.Event.OrderId);
+
+            if (order is null) return Error.NotFound("Order not found.");
+
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
+
+            if (restaurant is null) return Error.NotFound("Restaurant not found.");
 
             await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
             {

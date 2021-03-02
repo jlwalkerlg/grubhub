@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
 using Web.Data.Models;
+using Web.Domain.Orders;
 using Web.Domain.Users;
 using Web.Services.Authentication;
 
@@ -43,14 +44,18 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
                             r.estimated_delivery_time_in_minutes
                         FROM
                             orders o
-                            INNER JOIN restaurants r ON r.manager_id = o.user_id
+                            INNER JOIN restaurants r ON r.id = o.restaurant_id
                         WHERE
                             r.manager_id = @UserId
+                            AND o.status = ANY(@ActiveStatuses)
                             AND o.confirmed_at > @ConfirmedAfter
                         ORDER BY o.confirmed_at",
                     new
                     {
                         UserId = authenticator.UserId.Value,
+                        ActiveStatuses = (new[] {OrderStatus.PaymentConfirmed, OrderStatus.Accepted})
+                            .Select(x => x.ToString())
+                            .ToArray(),
                         ConfirmedAfter = confirmedAfter,
                     });
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Web.Features.Orders.AcceptOrder;
 using Web.Features.Orders.ConfirmOrder;
+using Web.Features.Orders.DeliverOrder;
 using Web.Services.Events;
 
 namespace Web
@@ -16,16 +17,20 @@ namespace Web
             this.sender = sender;
         }
 
-        public async Task<Result> Dispatch(Event ev, CancellationToken cancellationToken)
+        public async Task<Result> Dispatch(Event evnt, CancellationToken cancellationToken)
         {
-            return ev switch
+            return evnt switch
             {
-                OrderConfirmedEvent ocEv => await sender.Send(
-                    new HandleEventCommand<OrderConfirmedEvent>(ocEv),
+                OrderConfirmedEvent ev => await sender.Send(
+                    new HandleEventCommand<OrderConfirmedEvent>(ev),
                     cancellationToken),
 
-                OrderAcceptedEvent oaEv => await sender.Send(
-                    new HandleEventCommand<OrderAcceptedEvent>(oaEv),
+                OrderAcceptedEvent ev => await sender.Send(
+                    new HandleEventCommand<OrderAcceptedEvent>(ev),
+                    cancellationToken),
+
+                OrderDeliveredEvent ev => await sender.Send(
+                    new HandleEventCommand<OrderDeliveredEvent>(ev),
                     cancellationToken),
 
                 _ => Result.Ok(),

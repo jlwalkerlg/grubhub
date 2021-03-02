@@ -42,6 +42,12 @@ const statuses: Map<
       title: "Accepted",
     },
   ],
+  [
+    "Delivered",
+    {
+      title: "Delivered",
+    },
+  ],
 ]);
 
 const OrderStatusTitle: FC<{ order: OrderDto }> = ({ order }) => {
@@ -56,10 +62,17 @@ const OrderStatusDescription: FC<{ order: OrderDto }> = ({ order }) => {
     return formatDate(date, "hh:mm");
   }, [order.status, order.estimatedDeliveryTime]);
 
+  const deliveredAt = useMemo(() => {
+    if (order.status !== "Delivered") return null;
+
+    const date = new Date(order.deliveredAt);
+    return formatDate(date, "hh:mm");
+  }, [order.status, order.deliveredAt]);
+
   if (order.status === "Accepted") {
     return (
       <>
-        The restaurant is currently preparing your order and expect to delivery
+        The restaurant is currently preparing your order and expect to deliver
         it around {estimatedDeliveryTime}.
       </>
     );
@@ -67,6 +80,10 @@ const OrderStatusDescription: FC<{ order: OrderDto }> = ({ order }) => {
 
   if (order.status === "PaymentConfirmed") {
     return <>We're currently awaiting confirmation from the restaurant.</>;
+  }
+
+  if (order.status === "Delivered") {
+    return <>Your order was delivered at {deliveredAt}. Enjoy!</>;
   }
 
   return (
@@ -163,7 +180,7 @@ const MobileOrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
         <div>
           <h2 className="font-semibold">Delivering to</h2>
 
-          <p className="font-semibold mt-3">{user.name}</p>
+          <p className="font-semibold mt-3">{order.customerName}</p>
           <p>{order.address}</p>
         </div>
       </div>
@@ -359,13 +376,17 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
 
   useOrdersHub({
     configure: (connection) => {
-      connection.on(`order_${order.id}.updated`, () => {
+      connection.on(`order_${order.id}.confirmed`, () => {
         cache.invalidateQueries(getOrderQueryKey(order.id));
       });
 
       connection.on(`order_${order.id}.accepted`, () => {
-        console.log({ accepted: order.id });
         cache.invalidateQueries(getOrderQueryKey(order.id));
+      });
+
+      connection.on(`order_${order.id}.delivered`, () => {
+        cache.invalidateQueries(getOrderQueryKey(order.id));
+        connection.stop();
       });
     },
 

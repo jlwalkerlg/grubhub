@@ -14,6 +14,7 @@ export interface OrderDto {
   placedAt: string;
   confirmedAt?: string;
   acceptedAt?: string;
+  deliveredAt?: string;
   estimatedDeliveryTime: string;
   restaurantName: string;
   restaurantAddress: string;
@@ -25,7 +26,11 @@ export interface OrderDto {
   items: OrderItemDto[];
 }
 
-export type OrderStatus = "Placed" | "PaymentConfirmed" | "Accepted";
+export type OrderStatus =
+  | "Placed"
+  | "PaymentConfirmed"
+  | "Accepted"
+  | "Delivered";
 
 export interface OrderItemDto {
   menuItemId: string;

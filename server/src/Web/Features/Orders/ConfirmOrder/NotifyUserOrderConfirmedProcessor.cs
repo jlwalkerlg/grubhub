@@ -1,18 +1,19 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services.Notifications;
+using Microsoft.AspNetCore.SignalR;
+using Web.Hubs;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
     public class NotifyUserOrderConfirmedProcessor : JobProcessor<NotifyUserOrderConfirmedJob>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly INotifier notifier;
+        private readonly IHubContext<OrderHub> hubContext;
 
-        public NotifyUserOrderConfirmedProcessor(IUnitOfWork unitOfWork, INotifier notifier)
+        public NotifyUserOrderConfirmedProcessor(IUnitOfWork unitOfWork, IHubContext<OrderHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
-            this.notifier = notifier;
+            this.hubContext = hubContext;
         }
 
         public async Task<Result> Handle(
@@ -22,11 +23,10 @@ namespace Web.Features.Orders.ConfirmOrder
 
             if (order is null) return Error.NotFound("Order not found.");
 
-            var user = await unitOfWork.Users.GetById(order.UserId);
-
-            if (user is null) return Error.NotFound("User not found.");
-
-            await notifier.NotifyCustomerOrderConfirmed(user, order);
+            await hubContext
+                .Clients
+                .Users(order.UserId.Value.ToString())
+                .SendAsync($"order_{order.Id.Value}.confirmed", cancellationToken);
 
             return Result.Ok();
         }

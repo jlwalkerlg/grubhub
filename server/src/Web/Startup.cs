@@ -1,5 +1,4 @@
 using Autofac;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
@@ -11,17 +10,13 @@ using System.Text.Json;
 using Web.Data;
 using Web.Filters;
 using Web.Hubs;
-using Web.Services;
 using Web.Services.Antiforgery;
 using Web.Services.Authentication;
 using Web.Services.Hashing;
-using Web.Services.Notifications;
 using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
-using Quartz;
 using Web.Services.Jobs;
-using Web.Workers;
 using Web.Data.EF;
 using Web.Services.Billing;
 using Web.Services.Clocks;
@@ -104,8 +99,6 @@ namespace Web
             services.AddClock();
 
             services.AddStripe(config);
-
-            services.AddNotifier();
 
             services.AddQuartz(config);
 

@@ -49,6 +49,7 @@ namespace Web.Domain.Orders
         public DateTime PlacedAt { get; }
         public DateTime? ConfirmedAt { get; private set; }
         public DateTime? AcceptedAt { get; private set; }
+        public DateTime? DeliveredAt { get; private set; }
         public string PaymentIntentId { get; set; }
         public string PaymentIntentClientSecret { get; set; }
 
@@ -57,6 +58,7 @@ namespace Web.Domain.Orders
         public bool AlreadyConfirmed => ConfirmedAt.HasValue;
 
         public bool AlreadyAccepted => AcceptedAt.HasValue;
+        public bool AlreadyDelivered => DeliveredAt.HasValue;
 
         public Money CalculateTotal()
         {
@@ -79,6 +81,22 @@ namespace Web.Domain.Orders
                 AcceptedAt = now;
                 Status = OrderStatus.Accepted;
             }
+        }
+
+        public Result Deliver(DateTime now)
+        {
+            if (!AlreadyAccepted)
+            {
+                return Error.BadRequest("Order must be accepted before it can be delivered.");
+            }
+
+            if (!AlreadyDelivered)
+            {
+                DeliveredAt = now;
+                Status = OrderStatus.Delivered;
+            }
+
+            return Result.Ok();
         }
 
         public override int GetHashCode()

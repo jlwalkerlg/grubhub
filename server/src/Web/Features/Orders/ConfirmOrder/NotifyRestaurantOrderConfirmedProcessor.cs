@@ -1,19 +1,19 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services.Notifications;
+using Microsoft.AspNetCore.SignalR;
+using Web.Hubs;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
     public class NotifyRestaurantOrderConfirmedProcessor : JobProcessor<NotifyRestaurantOrderConfirmedJob>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly INotifier notifier;
+        private readonly IHubContext<OrderHub> hubContext;
 
-        public NotifyRestaurantOrderConfirmedProcessor(
-            IUnitOfWork unitOfWork, INotifier notifier)
+        public NotifyRestaurantOrderConfirmedProcessor(IUnitOfWork unitOfWork, IHubContext<OrderHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
-            this.notifier = notifier;
+            this.hubContext = hubContext;
         }
 
         public async Task<Result> Handle(
@@ -27,11 +27,10 @@ namespace Web.Features.Orders.ConfirmOrder
 
             if (restaurant is null) return Error.NotFound("Restaurant not found.");
 
-            var manager = await unitOfWork.Users.GetManagerById(restaurant.ManagerId);
-
-            if (manager is null) return Error.NotFound("Manager not found.");
-
-            await notifier.NotifyRestaurantOrderConfirmed(manager, order);
+            await hubContext
+                .Clients
+                .Users(restaurant.ManagerId.Value.ToString())
+                .SendAsync("new-order", order.Id.Value, cancellationToken);
 
             return Result.Ok();
         }

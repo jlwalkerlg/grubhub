@@ -3,7 +3,7 @@ import { useAcceptOrder } from "~/api/orders/useAcceptOrder";
 import useActiveRestaurantOrders, {
   ActiveOrderDto,
 } from "~/api/orders/useActiveRestaurantOrders";
-import { OrderStatus } from "~/api/orders/useOrder";
+import { useDeliverOrder } from "~/api/orders/useDeliverOrder";
 import { useOrdersHub } from "~/api/orders/useOrdersHub";
 import CheckIcon from "~/components/Icons/CheckIcon";
 import CloseIcon from "~/components/Icons/CloseIcon";
@@ -16,20 +16,26 @@ import { DashboardLayout } from "../DashboardLayout";
 import styles from "./ActiveOrdersPage.module.css";
 import OrderDetailsModal from "./OrderDetailsModal";
 
-const statusBadgeTexts: Map<OrderStatus, string> = new Map([
-  ["PaymentConfirmed", "Confirmed"],
-  ["Accepted", "Accepted"],
-]);
-
 const StatusBadge: FC<{ order: ActiveOrderDto }> = ({ order }) => {
+  if (order.status === "PaymentConfirmed") {
+    return (
+      <span className="bg-yellow-200 text-yellow-900 py-1 px-3 rounded-full text-xs font-semibold">
+        Confirmed
+      </span>
+    );
+  }
+
   return (
-    <span className="bg-yellow-200 text-yellow-700 py-1 px-3 rounded-full text-xs font-semibold">
-      {statusBadgeTexts.get(order.status)}
+    <span className="bg-green-200 text-green-900 py-1 px-3 rounded-full text-xs font-semibold">
+      Accepted
     </span>
   );
 };
 
-const OrderTableRow: FC<{ order: ActiveOrderDto }> = ({ order }) => {
+const OrderTableRow: FC<{
+  order: ActiveOrderDto;
+  onOrderStatusChanged: (id: string) => any;
+}> = ({ order, onOrderStatusChanged }) => {
   const estimatedDeliveryTime = useMemo(
     () => formatDate(new Date(order.estimatedDeliveryTime), "hh:mm"),
     [order.estimatedDeliveryTime]
@@ -45,8 +51,31 @@ const OrderTableRow: FC<{ order: ActiveOrderDto }> = ({ order }) => {
     await accept(
       { orderId: order.id },
       {
+        onSuccess: async () => {
+          await onOrderStatusChanged(order.id);
+        },
+
         onError: (error) => {
           addToast("Failed to accept order: " + error.message);
+        },
+      }
+    );
+  };
+
+  const [deliver, { isLoading: isDelivering }] = useDeliverOrder();
+
+  const onDeliver = async () => {
+    if (isAccepting) return;
+
+    await deliver(
+      { orderId: order.id },
+      {
+        onSuccess: async () => {
+          await onOrderStatusChanged(order.id);
+        },
+
+        onError: (error) => {
+          addToast("Failed to deliver order: " + error.message);
         },
       }
     );
@@ -84,7 +113,7 @@ const OrderTableRow: FC<{ order: ActiveOrderDto }> = ({ order }) => {
       </td>
       <td className="py-3 px-3 text-left whitespace-nowrap">
         <div className="flex items-center">
-          {order.status !== "Accepted" && (
+          {order.status === "PaymentConfirmed" && (
             <button
               className="mr-1 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
               title="Accept order"
@@ -92,6 +121,18 @@ const OrderTableRow: FC<{ order: ActiveOrderDto }> = ({ order }) => {
               disabled={isAccepting}
             >
               <LoadingIconWrapper isLoading={isAccepting} className="h-5">
+                <CheckIcon className="h-5" />
+              </LoadingIconWrapper>
+            </button>
+          )}
+          {order.status === "Accepted" && (
+            <button
+              className="mr-1 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
+              title="Deliver order"
+              onClick={onDeliver}
+              disabled={isDelivering}
+            >
+              <LoadingIconWrapper isLoading={isDelivering} className="h-5">
                 <CheckIcon className="h-5" />
               </LoadingIconWrapper>
             </button>
@@ -108,7 +149,10 @@ const OrderTableRow: FC<{ order: ActiveOrderDto }> = ({ order }) => {
   );
 };
 
-const OrdersTable: FC<{ orders: ActiveOrderDto[] }> = ({ orders }) => {
+const OrdersTable: FC<{
+  orders: ActiveOrderDto[];
+  onOrderStatusChanged: (id: string) => any;
+}> = ({ orders, onOrderStatusChanged }) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full table-auto">
@@ -125,7 +169,13 @@ const OrdersTable: FC<{ orders: ActiveOrderDto[] }> = ({ orders }) => {
 
         <tbody className="text-gray-700 text-sm">
           {orders.map((order) => {
-            return <OrderTableRow key={order.id} order={order} />;
+            return (
+              <OrderTableRow
+                key={order.id}
+                order={order}
+                onOrderStatusChanged={onOrderStatusChanged}
+              />
+            );
           })}
         </tbody>
       </table>
@@ -150,9 +200,11 @@ const ActiveOrdersPage: FC = () => {
     );
   }, [ordersMap]);
 
-  const latestOrderConfirmed = ordersSortedByPlacedAt[0]?.placedAt;
-
   const [hasNewOrders, setHasNewOrders] = useState(false);
+
+  const onOrderStatusChanged = (orderId: string) => {
+    refetch();
+  };
 
   const {
     isLoading: isLoadingOrders,
@@ -161,17 +213,17 @@ const ActiveOrdersPage: FC = () => {
     refetch,
   } = useActiveRestaurantOrders(
     {
-      confirmedAfter: latestOrderConfirmed,
+      // confirmedAfter: ordersSortedByPlacedAt[0]?.placedAt,
     },
     {
-      onSuccess: (newOrders) => {
-        const orders = { ...ordersMap };
+      onSuccess: (orders) => {
+        const ordersMap: { [id: string]: ActiveOrderDto } = {};
 
-        for (const order of newOrders) {
-          orders[order.id] = order;
+        for (const order of orders) {
+          ordersMap[order.id] = order;
         }
 
-        setOrdersMap(orders);
+        setOrdersMap(ordersMap);
         setHasNewOrders(false);
       },
 
@@ -189,7 +241,11 @@ const ActiveOrdersPage: FC = () => {
       connection.on("new-order", () => setHasNewOrders(true));
 
       connection.on("order-accepted", (orderId) => {
-        console.log({ accepted: orderId });
+        refetch();
+      });
+
+      connection.on("order-delivered", (orderId) => {
+        refetch();
       });
     },
 
@@ -236,7 +292,10 @@ const ActiveOrdersPage: FC = () => {
       {!isLoading && !isError && (
         <div className="mt-4">
           {sortedOrders.length ? (
-            <OrdersTable orders={sortedOrders} />
+            <OrdersTable
+              orders={sortedOrders}
+              onOrderStatusChanged={onOrderStatusChanged}
+            />
           ) : (
             <p>No orders yet.</p>
           )}

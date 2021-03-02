@@ -30,9 +30,12 @@ export class ApiError {
   readonly errors?: { [key: string]: string[] };
 
   public constructor(response: AxiosResponse<ProblemDetails>) {
-    this.message = response?.data?.detail || "Server error.";
     this.statusCode = response?.status || 500;
     this.errors = response?.data?.errors;
+
+    this.message =
+      response?.data?.detail ??
+      (this.statusCode === 404 ? "Resource not found." : "Server error.");
   }
 
   get isValidationError() {
