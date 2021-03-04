@@ -59,6 +59,7 @@ namespace Web.Domain.Orders
 
         public bool Accepted => AcceptedAt.HasValue;
         public bool Delivered => DeliveredAt.HasValue;
+        public bool Rejected => Status == OrderStatus.Rejected;
 
         public Money CalculateTotal()
         {
@@ -102,6 +103,17 @@ namespace Web.Domain.Orders
                 DeliveredAt = now;
                 Status = OrderStatus.Delivered;
             }
+
+            return Result.Ok();
+        }
+
+        public Result Reject()
+        {
+            if (!Confirmed) return Error.BadRequest("Order must be confirmed before it can be rejected.");
+
+            if (Accepted) return Error.BadRequest("Order was already accepted.");
+
+            Status = OrderStatus.Rejected;
 
             return Result.Ok();
         }

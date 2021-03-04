@@ -5,8 +5,8 @@ import useActiveRestaurantOrders, {
 } from "~/api/orders/useActiveRestaurantOrders";
 import { useDeliverOrder } from "~/api/orders/useDeliverOrder";
 import { useOrdersHub } from "~/api/orders/useOrdersHub";
+import { useRejectOrder } from "~/api/orders/useRejectOrder";
 import CheckIcon from "~/components/Icons/CheckIcon";
-import CloseIcon from "~/components/Icons/CloseIcon";
 import InfoIcon from "~/components/Icons/InfoIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import LoadingIconWrapper from "~/components/LoadingIconWrapper";
@@ -57,6 +57,25 @@ const OrderTableRow: FC<{
 
         onError: (error) => {
           addToast("Failed to accept order: " + error.message);
+        },
+      }
+    );
+  };
+
+  const [reject, { isLoading: isRejecting }] = useRejectOrder();
+
+  const onReject = async () => {
+    if (isRejecting) return;
+
+    await reject(
+      { orderId: order.id },
+      {
+        onSuccess: async () => {
+          await onOrderStatusChanged(order.id);
+        },
+
+        onError: (error) => {
+          addToast("Failed to reject order: " + error.message);
         },
       }
     );
@@ -114,16 +133,29 @@ const OrderTableRow: FC<{
       <td className="py-3 px-3 text-left whitespace-nowrap">
         <div className="flex items-center">
           {order.status === "PaymentConfirmed" && (
-            <button
-              className="mr-1 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
-              title="Accept order"
-              onClick={onAccept}
-              disabled={isAccepting}
-            >
-              <LoadingIconWrapper isLoading={isAccepting} className="h-5">
-                <CheckIcon className="h-5" />
-              </LoadingIconWrapper>
-            </button>
+            <>
+              <button
+                className="mr-1 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
+                title="Accept order"
+                onClick={onAccept}
+                disabled={isAccepting}
+              >
+                <LoadingIconWrapper isLoading={isAccepting} className="h-5">
+                  <CheckIcon className="h-5" />
+                </LoadingIconWrapper>
+              </button>
+
+              <button
+                className="mr-1 text-red-500 hover:text-red-800 transition-colors transform hover:scale-110"
+                title="Reject order"
+                onClick={onReject}
+                disabled={isRejecting}
+              >
+                <LoadingIconWrapper isLoading={isRejecting} className="h-5">
+                  <CheckIcon className="h-5" />
+                </LoadingIconWrapper>
+              </button>
+            </>
           )}
           {order.status === "Accepted" && (
             <button
@@ -137,12 +169,6 @@ const OrderTableRow: FC<{
               </LoadingIconWrapper>
             </button>
           )}
-          <button
-            className="mr-1 text-red-500 hover:text-red-800 transition-colors transform hover:scale-110"
-            title="Reject order"
-          >
-            <CloseIcon className="h-5" />
-          </button>
         </div>
       </td>
     </tr>
@@ -194,12 +220,6 @@ const ActiveOrdersPage: FC = () => {
     );
   }, [ordersMap]);
 
-  const ordersSortedByPlacedAt = useMemo(() => {
-    return Object.values(ordersMap).sort((a, b) =>
-      new Date(a.placedAt) > new Date(b.placedAt) ? -1 : 1
-    );
-  }, [ordersMap]);
-
   const [hasNewOrders, setHasNewOrders] = useState(false);
 
   const onOrderStatusChanged = (orderId: string) => {
@@ -213,7 +233,7 @@ const ActiveOrdersPage: FC = () => {
     refetch,
   } = useActiveRestaurantOrders(
     {
-      // confirmedAfter: ordersSortedByPlacedAt[0]?.placedAt,
+      // confirmedAfter: sortedOrders[0]?.placedAt,
     },
     {
       onSuccess: (orders) => {
@@ -241,6 +261,10 @@ const ActiveOrdersPage: FC = () => {
       connection.on("new-order", () => setHasNewOrders(true));
 
       connection.on("order-accepted", (orderId) => {
+        refetch();
+      });
+
+      connection.on("order-rejected", (orderId) => {
         refetch();
       });
 

@@ -43,6 +43,12 @@ const statuses: Map<
     },
   ],
   [
+    "Rejected",
+    {
+      title: "Rejected",
+    },
+  ],
+  [
     "Delivered",
     {
       title: "Delivered",
@@ -75,6 +81,12 @@ const OrderStatusDescription: FC<{ order: OrderDto }> = ({ order }) => {
         The restaurant is currently preparing your order and expect to deliver
         it around {estimatedDeliveryTime}.
       </>
+    );
+  }
+
+  if (order.status === "Rejected") {
+    return (
+      <>Unfortunately the restaurant cannot take your order at this time.</>
     );
   }
 
@@ -375,6 +387,11 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
   const cache = useQueryCache();
 
   useOrdersHub({
+    enabled:
+      order.status === "Placed" ||
+      order.status === "PaymentConfirmed" ||
+      order.status === "Accepted",
+
     configure: (connection) => {
       connection.on(`order_${order.id}.confirmed`, () => {
         cache.invalidateQueries(getOrderQueryKey(order.id));
@@ -384,9 +401,12 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
         cache.invalidateQueries(getOrderQueryKey(order.id));
       });
 
+      connection.on(`order_${order.id}.rejected`, () => {
+        cache.invalidateQueries(getOrderQueryKey(order.id));
+      });
+
       connection.on(`order_${order.id}.delivered`, () => {
         cache.invalidateQueries(getOrderQueryKey(order.id));
-        connection.stop();
       });
     },
 

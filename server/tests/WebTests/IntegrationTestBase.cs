@@ -11,11 +11,11 @@ namespace WebTests
     [Collection("IntegrationTest")]
     public class IntegrationTestBase
     {
-        protected readonly IntegrationTestFixture fixture;
+        private readonly IntegrationTestFixture fixture;
         protected readonly IntegrationTestWebApplicationFactory factory;
-        protected readonly Config config;
+        private readonly Config config;
 
-        public IntegrationTestBase(IntegrationTestFixture fixture)
+        protected IntegrationTestBase(IntegrationTestFixture fixture)
         {
             this.fixture = fixture;
             factory = fixture.Factory;
@@ -26,32 +26,26 @@ namespace WebTests
 
         private void ResetDatabase()
         {
-            using (var conn = new NpgsqlConnection(config.DbConnectionString))
-            {
-                conn.Open();
-                fixture.Checkpoint.Reset(conn).Wait();
-            }
+            using var conn = new NpgsqlConnection(config.DbConnectionString);
+            conn.Open();
+            fixture.Checkpoint.Reset(conn).Wait();
         }
 
-        public void UseTestDbContext(Action<TestDbContext> action)
+        protected void UseTestDbContext(Action<TestDbContext> action)
         {
-            using (var scope = factory.Services.CreateScope())
-            using (var db = scope.ServiceProvider.GetRequiredService<TestDbContext>())
-            {
-                action(db);
-            };
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+            action(db);
         }
 
-        public T UseTestDbContext<T>(Func<TestDbContext, T> action)
+        protected T UseTestDbContext<T>(Func<TestDbContext, T> action)
         {
-            using (var scope = factory.Services.CreateScope())
-            using (var db = scope.ServiceProvider.GetRequiredService<TestDbContext>())
-            {
-                return action(db);
-            };
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+            return action(db);
         }
 
-        public void Insert(params object[] entities)
+        protected void Insert(params object[] entities)
         {
             UseTestDbContext(db =>
             {
@@ -60,6 +54,17 @@ namespace WebTests
                     db.Add(entity);
                 }
                 db.SaveChanges();
+            });
+        }
+
+        protected void Reload(params object[] entities)
+        {
+            UseTestDbContext(db =>
+            {
+                foreach (var entity in entities)
+                {
+                    db.Entry(entity).Reload();
+                }
             });
         }
     }

@@ -4,6 +4,7 @@ using MediatR;
 using Web.Features.Orders.AcceptOrder;
 using Web.Features.Orders.ConfirmOrder;
 using Web.Features.Orders.DeliverOrder;
+using Web.Features.Orders.RejectOrder;
 using Web.Services.Events;
 
 namespace Web
@@ -31,6 +32,10 @@ namespace Web
 
                 OrderDeliveredEvent ev => await sender.Send(
                     new HandleEventCommand<OrderDeliveredEvent>(ev),
+                    cancellationToken),
+
+                OrderRejectedEvent ev => await sender.Send(
+                    new HandleEventCommand<OrderRejectedEvent>(ev),
                     cancellationToken),
 
                 _ => Result.Ok(),

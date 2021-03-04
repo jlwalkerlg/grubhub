@@ -30,6 +30,7 @@ export type OrderStatus =
   | "Placed"
   | "PaymentConfirmed"
   | "Accepted"
+  | "Rejected"
   | "Delivered";
 
 export interface OrderItemDto {

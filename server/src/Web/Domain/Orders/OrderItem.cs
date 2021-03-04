@@ -9,7 +9,7 @@ namespace Web.Domain.Orders
         {
             MenuItemId = menuItem.Id;
             Name = menuItem.Name;
-            Price = menuItem.Price;
+            Price = menuItem.Price with {}; // removes EF warning
             Quantity = quantity;
         }
 

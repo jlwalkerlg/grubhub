@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useIsMounted } from "../../services/useIsMounted";
 
 interface Options {
+  enabled?: boolean;
   configure?: (connection: signalR.HubConnection) => any;
   onConnect?: () => any;
   onError?: (error: Error) => any;
@@ -14,7 +15,11 @@ export function useOrdersHub(options?: Options) {
   const [isLoading, setIsLoading] = useState(true);
   const [connectionError, setConnectionError] = useState<Error>();
 
+  const enabled = options?.enabled ?? true;
+
   useEffect(() => {
+    if (!enabled) return;
+
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hubs/orders`)
       .build();
@@ -32,8 +37,8 @@ export function useOrdersHub(options?: Options) {
       })
       .finally(() => isMounted && setIsLoading(false));
 
-    return () => connection.stop();
-  }, []);
+    return () => enabled && connection.stop();
+  }, [enabled]);
 
   return { isLoading, isConnectionError: !!connectionError, connectionError };
 }

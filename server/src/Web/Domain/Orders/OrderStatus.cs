@@ -6,5 +6,6 @@ namespace Web.Domain.Orders
         PaymentConfirmed,
         Accepted,
         Delivered,
+        Rejected,
     }
 }
