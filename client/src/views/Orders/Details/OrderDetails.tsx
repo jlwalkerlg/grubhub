@@ -114,7 +114,7 @@ const OrderHeader: FC<{ order: OrderDto }> = ({ order }) => {
 
   return (
     <div className="bg-primary-600 px-4 py-4">
-      <Link href="/orders">
+      <Link href="/order-history">
         <a className="mb-4 inline-flex items-center rounded-full bg-primary-800 text-white px-3 py-1">
           <ChevronIcon direction="left" className="h-4" />
           <span className="ml-1 text-sm font-semibold hover:underline">

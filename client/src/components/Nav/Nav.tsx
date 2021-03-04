@@ -9,6 +9,7 @@ import RegisterIcon from "~/components/Icons/RegisterIcon";
 import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
 import DashboardIcon from "../Icons/DashboardIcon";
+import OrdersIcon from "../Icons/OrdersIcon";
 import { useToasts } from "../Toaster/Toaster";
 
 const Nav: React.FC = () => {
@@ -58,12 +59,17 @@ const Nav: React.FC = () => {
           {!isLoading && isLoggedIn && (
             <div className="hidden md:block ml-auto">
               {user.role === "RestaurantManager" && (
-                <Link href="/dashboard/active-orders">
+                <Link href="/dashboard">
                   <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
                     Dashboard
                   </a>
                 </Link>
               )}
+              <Link href="/order-history">
+                <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  Orders
+                </a>
+              </Link>
               <button
                 type="button"
                 onClick={onLogout}
@@ -105,13 +111,19 @@ const Nav: React.FC = () => {
           {!isLoading && isLoggedIn && (
             <li>
               {user.role === "RestaurantManager" && (
-                <Link href="/dashboard/active-orders">
+                <Link href="/dashboard">
                   <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
                     <DashboardIcon className="w-6 h-6 inline" />
                     <span className="ml-2 align-middle">Dashboard</span>
                   </a>
                 </Link>
               )}
+              <Link href="/order-history">
+                <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  <OrdersIcon className="w-6 h-6 inline" />
+                  <span className="ml-2 align-middle">Orders</span>
+                </a>
+              </Link>
               <button
                 type="button"
                 onClick={onLogout}

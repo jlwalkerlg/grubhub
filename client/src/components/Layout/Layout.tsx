@@ -12,7 +12,7 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ title, children }) => {
   return (
-    <div className="py-16 text-gray-900">
+    <div className="py-16">
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
         <title>{title}</title>
@@ -24,7 +24,7 @@ const Layout: React.FC<Props> = ({ title, children }) => {
   );
 };
 
-export const AuthLayout: FC<Props> = ({ title, children }) => {
+export const AuthLayout: FC<Props> = ({ children, ...rest }) => {
   const { isLoggedIn, isLoading } = useAuth();
   const router = useRouter();
 
@@ -32,7 +32,7 @@ export const AuthLayout: FC<Props> = ({ title, children }) => {
     router.push(`/login?redirect_to=${window.location.href}`);
   }
 
-  return <Layout title={title}>{isLoggedIn && children}</Layout>;
+  return <Layout {...rest}>{isLoggedIn && children}</Layout>;
 };
 
 export default Layout;
