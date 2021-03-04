@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Web.Domain.Baskets;
+using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
 
@@ -13,25 +15,24 @@ namespace Web.Domain.Orders
         internal Order(
             OrderId id,
             Basket basket,
-            Money subtotal,
+            Menu menu,
             Money deliveryFee,
             MobileNumber mobileNumber,
             Address address,
             DateTime placedAt)
         {
-            foreach (var basketItem in basket.Items)
-            {
-                items.Add(new OrderItem(basketItem));
-            }
-
             Id = id;
             UserId = basket.UserId;
             RestaurantId = basket.RestaurantId;
-            Subtotal = subtotal;
             DeliveryFee = deliveryFee with { }; // removes EF warning
             MobileNumber = mobileNumber ?? throw new ArgumentNullException(nameof(mobileNumber));
             Address = address;
             PlacedAt = placedAt;
+
+            foreach (var basketItem in basket.Items)
+            {
+                items.Add(new OrderItem(menu.GetItem(basketItem.MenuItemId), basketItem.Quantity));
+            }
         }
 
         private Order() { } // EF
@@ -39,7 +40,6 @@ namespace Web.Domain.Orders
         public OrderId Id { get; }
         public UserId UserId { get; }
         public RestaurantId RestaurantId { get; }
-        public Money Subtotal { get; }
         public Money DeliveryFee { get; }
         public Money ServiceFee { get; } = Money.FromPounds(0.50m);
         public OrderStatus Status { get; private set; } = OrderStatus.Placed;
@@ -53,6 +53,7 @@ namespace Web.Domain.Orders
         public string PaymentIntentClientSecret { get; set; }
 
         public IReadOnlyList<OrderItem> Items => items;
+        public Money Subtotal => items.Aggregate(Money.Zero, (acc, item) => acc + item.Price * item.Quantity);
 
         public bool Confirmed => ConfirmedAt.HasValue;
 

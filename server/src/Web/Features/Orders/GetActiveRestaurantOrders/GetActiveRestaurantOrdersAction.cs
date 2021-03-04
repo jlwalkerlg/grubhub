@@ -37,18 +37,20 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
                         SELECT
                             o.id,
                             o.number,
-                            o.subtotal,
                             o.status,
                             o.address,
                             o.placed_at,
-                            r.estimated_delivery_time_in_minutes
+                            r.estimated_delivery_time_in_minutes,
+                            SUM(oi.price * oi.quantity) as subtotal
                         FROM
                             orders o
+                            INNER JOIN order_items oi ON o.id = oi.order_id
                             INNER JOIN restaurants r ON r.id = o.restaurant_id
                         WHERE
                             r.manager_id = @UserId
                             AND o.status = ANY(@ActiveStatuses)
                             AND o.confirmed_at > @ConfirmedAfter
+                        GROUP BY o.id, r.estimated_delivery_time_in_minutes
                         ORDER BY o.confirmed_at",
                     new
                     {

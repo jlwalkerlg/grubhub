@@ -138,13 +138,13 @@ const Pay: FC = () => {
           {order.items.map((item) => {
             return (
               <li
-                key={item.menuItemId}
+                key={item.id}
                 className="flex items-center justify-between text-sm"
               >
                 <span>
-                  {item.quantity} x {item.menuItemName}
+                  {item.quantity} x {item.name}
                 </span>
-                <span>{(item.quantity * item.menuItemPrice).toFixed(2)}</span>
+                <span>{(item.quantity * item.price).toFixed(2)}</span>
               </li>
             );
           })}

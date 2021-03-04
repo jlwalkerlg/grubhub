@@ -33,10 +33,9 @@ export type OrderStatus =
   | "Delivered";
 
 export interface OrderItemDto {
-  menuItemId: string;
-  menuItemName: string;
-  menuItemDescription: string;
-  menuItemPrice: number;
+  id: number;
+  name: string;
+  price: number;
   quantity: number;
 }
 

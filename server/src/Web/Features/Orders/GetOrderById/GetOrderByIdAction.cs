@@ -37,7 +37,6 @@ namespace Web.Features.Orders.GetOrderById
                             o.number,
                             o.user_id,
                             o.restaurant_id,
-                            o.subtotal,
                             o.delivery_fee,
                             o.service_fee,
                             o.status,
@@ -80,15 +79,11 @@ namespace Web.Features.Orders.GetOrderById
                 .QueryAsync<OrderItemModel>(
                     @"SELECT
                             oi.id,
-                            oi.order_id,
-                            oi.menu_item_id,
-                            mi.name as menu_item_name,
-                            mi.description as menu_item_description,
-                            mi.price as menu_item_price,
+                            oi.name,
+                            oi.price,
                             oi.quantity
                         FROM
                             order_items oi
-                            INNER JOIN menu_items mi ON mi.id = oi.menu_item_id
                         WHERE
                             oi.order_id = @OrderId",
                     new
@@ -107,7 +102,6 @@ namespace Web.Features.Orders.GetOrderById
             public int Number { get; set; }
             public Guid UserId { get; set; }
             public Guid RestaurantId { get; set; }
-            public decimal Subtotal { get; set; }
             public decimal DeliveryFee { get; set; }
             public decimal ServiceFee { get; set; }
             public string Status { get; set; }
@@ -128,16 +122,16 @@ namespace Web.Features.Orders.GetOrderById
             public string CustomerMobile { get; set; }
 
             public List<OrderItemModel> Items { get; set; }
+            public decimal Subtotal => Items.Aggregate(
+                0m,
+                (acc, item) => acc + item.Price * item.Quantity);
         }
 
         public record OrderItemModel
         {
             public int Id { get; set; }
-            public string OrderId { get; set; }
-            public Guid MenuItemId { get; set; }
-            public string MenuItemName { get; set; }
-            public string MenuItemDescription { get; set; }
-            public decimal MenuItemPrice { get; set; }
+            public string Name { get; set; }
+            public decimal Price { get; set; }
             public int Quantity { get; set; }
         }
     }

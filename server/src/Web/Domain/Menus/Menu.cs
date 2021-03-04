@@ -30,6 +30,19 @@ namespace Web.Domain.Menus
             return categories.SingleOrDefault(x => x.Id == id);
         }
 
+        public MenuItem GetItem(Guid id)
+        {
+            foreach (var category in categories)
+            {
+                foreach (var item in category.Items)
+                {
+                    if (item.Id == id) return item;
+                }
+            }
+
+            return null;
+        }
+
         public Result<MenuCategory> AddCategory(Guid id, string name)
         {
             if (categories.Any(x => x.Name == name))

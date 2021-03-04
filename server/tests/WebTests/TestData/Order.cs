@@ -54,9 +54,6 @@ namespace WebTests.TestData
             }
         }
 
-        [Column("subtotal")]
-        public decimal Subtotal { get; set; } = 12.12m;
-
         [Column("delivery_fee")]
         public decimal DeliveryFee { get; set; } = 1.51m;
 

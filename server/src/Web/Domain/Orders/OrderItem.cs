@@ -1,19 +1,23 @@
 using System;
-using Web.Domain.Baskets;
+using Web.Domain.Menus;
 
 namespace Web.Domain.Orders
 {
     public record OrderItem
     {
-        internal OrderItem(BasketItem basketItem)
+        internal OrderItem(MenuItem menuItem, int quantity)
         {
-            MenuItemId = basketItem.MenuItemId;
-            Quantity = basketItem.Quantity;
+            MenuItemId = menuItem.Id;
+            Name = menuItem.Name;
+            Price = menuItem.Price;
+            Quantity = quantity;
         }
 
         private OrderItem() { } // EF Core
 
         public Guid MenuItemId { get; }
+        public string Name { get; }
+        public Money Price { get; }
         public int Quantity { get; }
     }
 }

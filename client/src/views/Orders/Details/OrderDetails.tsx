@@ -200,16 +200,16 @@ const MobileOrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
 
         <ul className="mt-3 text-sm">
           {order.items.map((item) => {
-            const total = item.quantity * item.menuItemPrice;
+            const total = item.quantity * item.price;
 
             return (
               <li
-                key={item.menuItemId}
+                key={item.id}
                 className="flex items-center justify-between font-semibold mt-3"
               >
                 <p>
                   {+item.quantity > 1 && <span>{+item.quantity}x </span>}
-                  <span>{item.menuItemName}</span>
+                  <span>{item.name}</span>
                 </p>
 
                 <p>{total.toFixed(2)}</p>
@@ -304,16 +304,16 @@ const OrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
 
             <ul className="mt-3 text-sm">
               {order.items.map((item) => {
-                const total = item.quantity * item.menuItemPrice;
+                const total = item.quantity * item.price;
 
                 return (
                   <li
-                    key={item.menuItemId}
+                    key={item.id}
                     className="flex items-center justify-between font-semibold mt-3"
                   >
                     <p>
                       {+item.quantity > 1 && <span>{+item.quantity}x </span>}
-                      <span>{item.menuItemName}</span>
+                      <span>{item.name}</span>
                     </p>
 
                     <p>{total.toFixed(2)}</p>

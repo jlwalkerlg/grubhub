@@ -233,15 +233,16 @@ namespace Web.Domain.Restaurants
                 return Error.BadRequest("Order subtotal not enough for delivery.");
             }
 
-            return Result.Ok(
-                new Order(
-                    orderId,
-                    basket,
-                    subtotal,
-                    DeliveryFee,
-                    mobileNumber,
-                    deliveryLocation.Address,
-                    time));
+            var order = new Order(
+                orderId,
+                basket,
+                menu,
+                DeliveryFee,
+                mobileNumber,
+                deliveryLocation.Address,
+                time);
+
+            return Result.Ok(order);
         }
 
         protected override bool IdentityEquals(Restaurant other)

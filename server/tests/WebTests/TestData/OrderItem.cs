@@ -7,6 +7,8 @@ namespace WebTests.TestData
     [Table("order_items")]
     public record OrderItem
     {
+        private MenuItem menuItem;
+
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -18,7 +20,22 @@ namespace WebTests.TestData
         public Guid MenuItemId { get; set; }
 
         [ForeignKey(nameof(MenuItemId))]
-        public MenuItem MenuItem { get; set; }
+        public MenuItem MenuItem
+        {
+            get => menuItem;
+            set
+            {
+                menuItem = value;
+                Name = menuItem.Name;
+                Price = menuItem.Price;
+            }
+        }
+
+        [Column("name")]
+        public string Name { get; set; }
+
+        [Column("price")]
+        public decimal Price { get; set; }
 
         [Column("quantity")]
         public int Quantity { get; set; } = 1;

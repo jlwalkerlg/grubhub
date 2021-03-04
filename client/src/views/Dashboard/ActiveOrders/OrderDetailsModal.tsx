@@ -88,16 +88,16 @@ const OrderDetails: FC<{
             {order.items.map((item) => {
               return (
                 <li
-                  key={item.menuItemId}
+                  key={item.id}
                   className="flex items-center justify-between mt-2"
                 >
                   <p>
                     {item.quantity > 1 ? `${item.quantity}x ` : ""}
-                    {item.menuItemName}
+                    {item.name}
                   </p>
 
                   <p className="font-semibold text-lg">
-                    {item.menuItemPrice.toFixed(2)}
+                    {item.price.toFixed(2)}
                   </p>
                 </li>
               );

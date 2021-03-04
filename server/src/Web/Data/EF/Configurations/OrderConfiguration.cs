@@ -28,8 +28,7 @@ namespace Web.Data.EF.Configurations
             builder.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(x => x.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.Property(x => x.UserId)
                 .HasColumnName("user_id");
@@ -37,20 +36,10 @@ namespace Web.Data.EF.Configurations
             builder.HasOne<Restaurant>()
                 .WithMany()
                 .HasForeignKey(x => x.RestaurantId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.Property(x => x.RestaurantId)
                 .HasColumnName("restaurant_id");
-
-            builder.OwnsOne(x => x.Subtotal, x =>
-            {
-                x.Ignore(y => y.Pence);
-
-                x.Property(y => y.Pounds)
-                    .HasColumnName("subtotal")
-                    .IsRequired();
-            });
 
             builder.OwnsOne(x => x.DeliveryFee, x =>
             {

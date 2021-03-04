@@ -89,7 +89,6 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.Id.ShouldBe(orderId);
             order.UserId.ShouldBe(user.Id);
             order.RestaurantId.ShouldBe(restaurant.Id);
-            order.Subtotal.ShouldBe(menuItem.Price * basketItem.Quantity);
             order.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
             order.Status.ShouldBe(Web.Domain.Orders.OrderStatus.Placed);
             order.MobileNumber.ShouldBe(request.Mobile);
@@ -98,10 +97,12 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.PaymentIntentId.ShouldBe(paymentIntent.Id);
             order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
-            var item = UseTestDbContext(db => db.OrderItems.Single());
+            var orderItem = UseTestDbContext(db => db.OrderItems.Single());
 
-            item.MenuItemId.ShouldBe(basketItem.MenuItemId);
-            item.Quantity.ShouldBe(basketItem.Quantity);
+            orderItem.MenuItemId.ShouldBe(basketItem.MenuItemId);
+            orderItem.Name.ShouldBe(menuItem.Name);
+            orderItem.Price.ShouldBe(menuItem.Price);
+            orderItem.Quantity.ShouldBe(basketItem.Quantity);
         }
     }
 }

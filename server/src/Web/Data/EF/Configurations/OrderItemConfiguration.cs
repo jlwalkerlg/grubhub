@@ -24,11 +24,24 @@ namespace Web.Data.EF.Configurations
 
             builder.HasOne<MenuItem>()
                 .WithMany()
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasForeignKey(x => x.MenuItemId);
 
             builder.Property(x => x.MenuItemId)
-                .IsRequired()
                 .HasColumnName("menu_item_id");
+
+            builder.Property(x => x.Name)
+                .IsRequired()
+                .HasColumnName("name");
+
+            builder.OwnsOne(x => x.Price, x =>
+            {
+                x.Ignore(y => y.Pence);
+
+                x.Property(y => y.Pounds)
+                    .HasColumnName("price")
+                    .IsRequired();
+            });
 
             builder.Property(x => x.Quantity)
                 .IsRequired()
