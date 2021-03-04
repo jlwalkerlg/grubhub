@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Web.Domain.Orders;
 using Web.Services.Authentication;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Orders.DeliverOrder
 {
@@ -10,13 +10,13 @@ namespace Web.Features.Orders.DeliverOrder
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
-        private readonly IClock clock;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public DeliverOrderHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator, IClock clock)
+        public DeliverOrderHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator, IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
-            this.clock = clock;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(DeliverOrderCommand command, CancellationToken cancellationToken)
@@ -31,13 +31,13 @@ namespace Web.Features.Orders.DeliverOrder
 
             if (restaurant.ManagerId != authenticator.UserId) return Error.Unauthorised();
 
-            if (order.AlreadyDelivered) return Result.Ok();
+            if (order.Delivered) return Result.Ok();
 
-            var result = order.Deliver(clock.UtcNow);
+            var result = order.Deliver(dateTimeProvider.UtcNow);
 
             if (!result) return result.Error;
 
-            var evnt = new OrderDeliveredEvent(order.Id, clock.UtcNow);
+            var evnt = new OrderDeliveredEvent(order.Id, dateTimeProvider.UtcNow);
 
             await unitOfWork.Events.Add(evnt);
 

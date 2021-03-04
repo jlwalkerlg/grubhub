@@ -6,7 +6,7 @@ using Shouldly;
 using Web;
 using Web.Features.Billing;
 using Web.Features.Orders.ConfirmOrder;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
@@ -28,8 +28,8 @@ namespace WebTests.Features.Orders.ConfirmOrder
             {
                 builder.ConfigureServices(services =>
                 {
-                    services.AddSingleton<IClock>(
-                    new ClockStub()
+                    services.AddSingleton<IDateTimeProvider>(
+                    new DateTimeProviderStub()
                     {
                         UtcNow = now,
                     });
@@ -72,7 +72,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
             var ocEv = ev.ToEvent() as OrderConfirmedEvent;
 
             ocEv.OrderId.Value.ShouldBe(order.Id);
-            ocEv.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            ocEv.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }

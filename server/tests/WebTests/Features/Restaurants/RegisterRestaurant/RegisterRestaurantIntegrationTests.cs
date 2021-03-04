@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Features.Restaurants.RegisterRestaurant;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 using Web.Services.Hashing;
 using WebTests.Doubles;
 using Xunit;
@@ -29,8 +29,8 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
             {
                 builder.ConfigureServices(services =>
                 {
-                    services.AddSingleton<IClock>(
-                        new ClockStub()
+                    services.AddSingleton<IDateTimeProvider>(
+                        new DateTimeProviderStub()
                         {
                             UtcNow = now,
                         }

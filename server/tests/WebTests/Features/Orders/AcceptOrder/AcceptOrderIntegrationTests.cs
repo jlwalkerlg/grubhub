@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Web.Features.Orders.AcceptOrder;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
@@ -52,7 +52,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             {
                 builder.ConfigureServices(services =>
                 {
-                    services.AddSingleton<IClock>(new ClockStub() {UtcNow = now});
+                    services.AddSingleton<IDateTimeProvider>(new DateTimeProviderStub() {UtcNow = now});
                 });
             });
 
@@ -68,7 +68,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             var ev = UseTestDbContext(db => db.Events.Single().ToEvent()) as OrderAcceptedEvent;
 
             ev.OrderId.Value.ShouldBe(order.Id);
-            ev.CreatedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            ev.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }

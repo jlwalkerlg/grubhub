@@ -6,7 +6,7 @@ using Shouldly;
 using Web;
 using Web.Features.Billing;
 using Web.Features.Orders.PlaceOrder;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
@@ -34,8 +34,8 @@ namespace WebTests.Features.Orders.PlaceOrder
             {
                 builder.ConfigureServices(services =>
                 {
-                    services.AddSingleton<IClock>(
-                        new ClockStub()
+                    services.AddSingleton<IDateTimeProvider>(
+                        new DateTimeProviderStub()
                         {
                             UtcNow = now,
                         });

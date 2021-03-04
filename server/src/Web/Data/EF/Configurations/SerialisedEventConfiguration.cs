@@ -14,8 +14,8 @@ namespace Web.Data.EF.Configurations
             builder.Property(x => x.Id)
                 .HasColumnName("id");
 
-            builder.Property(x => x.CreatedAt)
-                .HasColumnName("created_at")
+            builder.Property(x => x.OccuredAt)
+                .HasColumnName("occured_at")
                 .IsRequired();
 
             builder.Property(x => x.Handled)

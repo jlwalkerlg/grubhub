@@ -20,7 +20,7 @@ namespace Web.Data.EF.Repositories
 
             var serialized = new SerialisedEvent()
             {
-                CreatedAt = ev.CreatedAt,
+                OccuredAt = ev.OccuredAt,
                 Type = type,
                 Json = json,
             };

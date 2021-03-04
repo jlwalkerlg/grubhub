@@ -37,7 +37,7 @@ namespace Web.Workers
 
                     var events = await db.Events
                         .Where(x => !x.Handled)
-                        .OrderBy(x => x.CreatedAt)
+                        .OrderBy(x => x.OccuredAt)
                         .Take(5)
                         .ToListAsync(stoppingToken);
 

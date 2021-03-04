@@ -12,8 +12,8 @@ namespace WebTests.TestData
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        [Column("occured_at")]
+        public DateTime OccuredAt { get; set; }
 
         [Column("handled")]
         public bool Handled { get; set; }

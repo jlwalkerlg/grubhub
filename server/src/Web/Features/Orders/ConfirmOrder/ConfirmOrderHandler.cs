@@ -1,23 +1,23 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Features.Billing;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
     public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderCommand>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IClock clock;
+        private readonly IDateTimeProvider dateTimeProvider;
         private readonly IBillingService billingService;
 
         public ConfirmOrderHandler(
             IUnitOfWork unitOfWork,
-            IClock clock,
+            IDateTimeProvider dateTimeProvider,
             IBillingService billingService)
         {
             this.unitOfWork = unitOfWork;
-            this.clock = clock;
+            this.dateTimeProvider = dateTimeProvider;
             this.billingService = billingService;
         }
 
@@ -32,12 +32,12 @@ namespace Web.Features.Orders.ConfirmOrder
                 return Error.NotFound("Order not found.");
             }
 
-            if (order.AlreadyConfirmed)
+            if (order.Confirmed)
             {
                 return Result.Ok();
             }
 
-            var now = clock.UtcNow;
+            var now = dateTimeProvider.UtcNow;
 
             var accepted = await billingService.CheckPaymentWasAccepted(order);
 
@@ -46,7 +46,7 @@ namespace Web.Features.Orders.ConfirmOrder
                 return Error.BadRequest("Payment not accepted.");
             }
 
-            order.Confirm(clock.UtcNow);
+            order.Confirm(dateTimeProvider.UtcNow);
 
             var basket = await unitOfWork.Baskets.Get(order.UserId, order.RestaurantId);
 

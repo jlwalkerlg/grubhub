@@ -55,10 +55,10 @@ namespace Web.Domain.Orders
 
         public IReadOnlyList<OrderItem> Items => items;
 
-        public bool AlreadyConfirmed => ConfirmedAt.HasValue;
+        public bool Confirmed => ConfirmedAt.HasValue;
 
-        public bool AlreadyAccepted => AcceptedAt.HasValue;
-        public bool AlreadyDelivered => DeliveredAt.HasValue;
+        public bool Accepted => AcceptedAt.HasValue;
+        public bool Delivered => DeliveredAt.HasValue;
 
         public Money CalculateTotal()
         {
@@ -67,7 +67,7 @@ namespace Web.Domain.Orders
 
         public void Confirm(DateTime now)
         {
-            if (!AlreadyConfirmed)
+            if (!Confirmed)
             {
                 ConfirmedAt = now;
                 Status = OrderStatus.PaymentConfirmed;
@@ -76,7 +76,7 @@ namespace Web.Domain.Orders
 
         public void Accept(DateTime now)
         {
-            if (!AlreadyAccepted)
+            if (!Accepted)
             {
                 AcceptedAt = now;
                 Status = OrderStatus.Accepted;
@@ -85,12 +85,12 @@ namespace Web.Domain.Orders
 
         public Result Deliver(DateTime now)
         {
-            if (!AlreadyAccepted)
+            if (!Accepted)
             {
                 return Error.BadRequest("Order must be accepted before it can be delivered.");
             }
 
-            if (!AlreadyDelivered)
+            if (!Delivered)
             {
                 DeliveredAt = now;
                 Status = OrderStatus.Delivered;

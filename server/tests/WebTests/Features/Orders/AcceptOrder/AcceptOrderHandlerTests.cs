@@ -21,15 +21,15 @@ namespace WebTests.Features.Orders.AcceptOrder
         private readonly AcceptOrderHandler handler;
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly AuthenticatorSpy authenticator;
-        private readonly ClockStub clock;
+        private readonly DateTimeProviderStub dateTimeProvider;
 
         public AcceptOrderHandlerTests()
         {
             unitOfWork = new UnitOfWorkSpy();
             authenticator = new AuthenticatorSpy();
-            clock = new ClockStub() {UtcNow = DateTime.UtcNow};
+            dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
 
-            handler = new AcceptOrderHandler(unitOfWork, authenticator, clock);
+            handler = new AcceptOrderHandler(unitOfWork, authenticator, dateTimeProvider);
         }
 
         [Fact]
@@ -102,12 +102,12 @@ namespace WebTests.Features.Orders.AcceptOrder
 
             result.ShouldBeSuccessful();
 
-            order.AlreadyAccepted.ShouldBeTrue();
-            order.AcceptedAt.ShouldBe(clock.UtcNow);
+            order.Accepted.ShouldBeTrue();
+            order.AcceptedAt.ShouldBe(dateTimeProvider.UtcNow);
 
             var ev = unitOfWork.EventRepositorySpy.Events.OfType<OrderAcceptedEvent>().Single();
             ev.OrderId.ShouldBe(order.Id);
-            ev.CreatedAt.ShouldBe(clock.UtcNow);
+            ev.OccuredAt.ShouldBe(dateTimeProvider.UtcNow);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace WebTests.Features.Orders.AcceptOrder
 
             result.ShouldBeSuccessful();
 
-            order.AlreadyAccepted.ShouldBeTrue();
+            order.Accepted.ShouldBeTrue();
             order.AcceptedAt.ShouldBe(acceptedAt);
 
             unitOfWork.EventRepositorySpy.Events.ShouldBeEmpty();

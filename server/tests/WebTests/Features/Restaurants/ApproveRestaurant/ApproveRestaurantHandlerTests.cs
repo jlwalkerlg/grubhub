@@ -21,7 +21,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            handler = new ApproveRestaurantHandler(unitOfWorkSpy, new ClockStub());
+            handler = new ApproveRestaurantHandler(unitOfWorkSpy, new DateTimeProviderStub());
         }
 
         [Fact]

@@ -1,19 +1,19 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Restaurants.ApproveRestaurant
 {
     public class ApproveRestaurantHandler : IRequestHandler<ApproveRestaurantCommand>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IClock clock;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public ApproveRestaurantHandler(IUnitOfWork unitOfWork, IClock clock)
+        public ApproveRestaurantHandler(IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
-            this.clock = clock;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(
@@ -30,7 +30,7 @@ namespace Web.Features.Restaurants.ApproveRestaurant
 
             restaurant.Approve();
 
-            var @event = new RestaurantApprovedEvent(restaurant.Id, clock.UtcNow);
+            var @event = new RestaurantApprovedEvent(restaurant.Id, dateTimeProvider.UtcNow);
             await unitOfWork.Events.Add(@event);
 
             await unitOfWork.Commit();

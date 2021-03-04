@@ -6,7 +6,7 @@ namespace Web.Features.Orders.AcceptOrder
 {
     public record OrderAcceptedEvent : Event
     {
-        public OrderAcceptedEvent(OrderId orderId, DateTime createdAt) : base(createdAt)
+        public OrderAcceptedEvent(OrderId orderId, DateTime occuredAt) : base(occuredAt)
         {
             OrderId = orderId ?? throw new ArgumentNullException(nameof(orderId));
         }

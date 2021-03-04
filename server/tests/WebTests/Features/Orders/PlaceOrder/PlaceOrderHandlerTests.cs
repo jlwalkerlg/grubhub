@@ -20,7 +20,7 @@ namespace WebTests.Features.Orders.PlaceOrder
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly AuthenticatorSpy authenticatorSpy;
-        private readonly ClockStub clockStub;
+        private readonly DateTimeProviderStub dateTimeProviderStub;
         private readonly BillingServiceSpy billingServiceSpy;
         private readonly GeocoderSpy geocoderSpy;
         private readonly PlaceOrderHandler handler;
@@ -31,7 +31,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             authenticatorSpy = new AuthenticatorSpy();
 
-            clockStub = new ClockStub();
+            dateTimeProviderStub = new DateTimeProviderStub();
 
             billingServiceSpy = new BillingServiceSpy();
 
@@ -40,7 +40,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             handler = new PlaceOrderHandler(
                 unitOfWorkSpy,
                 authenticatorSpy,
-                clockStub,
+                dateTimeProviderStub,
                 billingServiceSpy,
                 geocoderSpy
             );
@@ -90,7 +90,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
-            clockStub.UtcNow = now;
+            dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
             {
@@ -178,7 +178,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
-            clockStub.UtcNow = now;
+            dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
             {
@@ -242,7 +242,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
-            clockStub.UtcNow = now;
+            dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
             {
@@ -314,7 +314,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
-            clockStub.UtcNow = now;
+            dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
             {
@@ -387,7 +387,7 @@ namespace WebTests.Features.Orders.PlaceOrder
             await authenticatorSpy.SignIn(basket.UserId);
 
             var now = DateTime.UtcNow;
-            clockStub.UtcNow = now;
+            dateTimeProviderStub.UtcNow = now;
 
             billingServiceSpy.PaymentIntentResult = Error.Internal("Billing service failed.");
 

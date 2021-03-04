@@ -7,20 +7,20 @@ using Web.Data;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Features.Cuisines;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Restaurants.SearchRestaurants
 {
     public class DPRestaurantSearcher : IRestaurantSearcher
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
-        private readonly IClock clock;
+        private readonly IDateTimeProvider dateTimeProvider;
 
         public DPRestaurantSearcher(
-            IDbConnectionFactory dbConnectionFactory, IClock clock)
+            IDbConnectionFactory dbConnectionFactory, IDateTimeProvider dateTimeProvider)
         {
             this.dbConnectionFactory = dbConnectionFactory;
-            this.clock = clock;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<List<RestaurantSearchResult>> Search(
@@ -58,7 +58,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     r.status = @Status
                     AND ba.billing_enabled = TRUE";
 
-            var now = clock.UtcNow;
+            var now = dateTimeProvider.UtcNow;
             var day = now.DayOfWeek.ToString().ToLower();
 
             sql += $" AND {day}_open <= @Now AND ({day}_close IS NULL OR {day}_close > @Now)";

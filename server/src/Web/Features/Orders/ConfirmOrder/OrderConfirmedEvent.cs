@@ -6,7 +6,7 @@ namespace Web.Features.Orders.ConfirmOrder
 {
     public record OrderConfirmedEvent : Event
     {
-        public OrderConfirmedEvent(OrderId orderId, DateTime CreatedAt) : base(CreatedAt)
+        public OrderConfirmedEvent(OrderId orderId, DateTime occuredAt) : base(occuredAt)
         {
             OrderId = orderId ?? throw new ArgumentNullException(nameof(orderId));
         }

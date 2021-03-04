@@ -5,7 +5,7 @@ using Web.Domain;
 using Web.Domain.Orders;
 using Web.Domain.Restaurants;
 using Web.Features.Billing;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 using Web.Services.Authentication;
 using Web.Services.Geocoding;
 
@@ -15,20 +15,20 @@ namespace Web.Features.Orders.PlaceOrder
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
-        private readonly IClock clock;
+        private readonly IDateTimeProvider dateTimeProvider;
         private readonly IBillingService billingService;
         private readonly IGeocoder geocoder;
 
         public PlaceOrderHandler(
             IUnitOfWork unitOfWork,
             IAuthenticator authenticator,
-            IClock clock,
+            IDateTimeProvider dateTimeProvider,
             IBillingService billingService,
             IGeocoder geocoder)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
-            this.clock = clock;
+            this.dateTimeProvider = dateTimeProvider;
             this.billingService = billingService;
             this.geocoder = geocoder;
         }
@@ -85,7 +85,7 @@ namespace Web.Features.Orders.PlaceOrder
                 new MobileNumber(command.Mobile),
                 deliveryLocation,
                 billingAccount,
-                clock.UtcNow);
+                dateTimeProvider.UtcNow);
 
             if (placeOrderError)
             {

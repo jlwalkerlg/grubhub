@@ -20,7 +20,7 @@ namespace WebTests.Features.Orders.DeliverOrder
     {
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly AuthenticatorSpy authenticator;
-        private readonly ClockStub clock;
+        private readonly DateTimeProviderStub dateTimeProvider;
         private readonly DeliverOrderHandler handler;
 
         public DeliverOrderHandlerTests()
@@ -29,9 +29,9 @@ namespace WebTests.Features.Orders.DeliverOrder
 
             authenticator = new AuthenticatorSpy();
 
-            clock = new ClockStub() {UtcNow = DateTime.UtcNow};
+            dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
 
-            handler = new DeliverOrderHandler(unitOfWork, authenticator, clock);
+            handler = new DeliverOrderHandler(unitOfWork, authenticator, dateTimeProvider);
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace WebTests.Features.Orders.DeliverOrder
                 .Single();
 
             evnt.OrderId.ShouldBe(order.Id);
-            evnt.CreatedAt.ShouldBe(clock.UtcNow);
+            evnt.OccuredAt.ShouldBe(dateTimeProvider.UtcNow);
         }
 
         [Fact]

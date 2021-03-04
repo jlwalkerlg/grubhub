@@ -19,7 +19,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
     public class ConfirmOrderHandlerTests
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
-        private readonly ClockStub clockStub;
+        private readonly DateTimeProviderStub dateTimeProviderStub;
         private readonly BillingServiceSpy billingServiceSpy;
         private readonly ConfirmOrderHandler handler;
 
@@ -27,13 +27,13 @@ namespace WebTests.Features.Orders.ConfirmOrder
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            clockStub = new ClockStub();
+            dateTimeProviderStub = new DateTimeProviderStub();
 
             billingServiceSpy = new BillingServiceSpy();
 
             handler = new ConfirmOrderHandler(
                 unitOfWorkSpy,
-                clockStub,
+                dateTimeProviderStub,
                 billingServiceSpy);
         }
 
@@ -89,7 +89,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
             await unitOfWorkSpy.Baskets.Add(basket);
             await unitOfWorkSpy.Orders.Add(order);
 
-            clockStub.UtcNow = now;
+            dateTimeProviderStub.UtcNow = now;
 
             billingServiceSpy.PaymentAccepted = true;
 
@@ -113,7 +113,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 .Single();
 
             ocEvent.OrderId.ShouldBe(order.Id);
-            ocEvent.CreatedAt.ShouldBe(now);
+            ocEvent.OccuredAt.ShouldBe(now);
 
             billingServiceSpy.ConfirmedOrder.ShouldBe(order);
         }
@@ -252,7 +252,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             await unitOfWorkSpy.Orders.Add(order);
 
-            clockStub.UtcNow = now;
+            dateTimeProviderStub.UtcNow = now;
 
             billingServiceSpy.PaymentAccepted = false;
 

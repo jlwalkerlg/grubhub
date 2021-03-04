@@ -4,5 +4,13 @@ using Web.Services.Events;
 
 namespace Web.Features.Restaurants
 {
-    public record RestaurantApprovedEvent(RestaurantId RestaurantId, DateTime CreatedAt) : Event(CreatedAt);
+    public record RestaurantApprovedEvent : Event
+    {
+        public RestaurantApprovedEvent(RestaurantId restaurantId, DateTime occuredAt) : base(occuredAt)
+        {
+            RestaurantId = restaurantId ?? throw new ArgumentNullException(nameof(restaurantId));
+        }
+
+        public RestaurantId RestaurantId { get; }
+    }
 }

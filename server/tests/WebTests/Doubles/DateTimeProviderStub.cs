@@ -1,9 +1,9 @@
 using System;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 
 namespace WebTests.Doubles
 {
-    public class ClockStub : IClock
+    public class DateTimeProviderStub : IDateTimeProvider
     {
         public DateTime UtcNow { get; set; }
     }

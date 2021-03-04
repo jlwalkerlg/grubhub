@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Http;
 using Web.Services.Jobs;
 using Web.Data.EF;
 using Web.Services.Billing;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 
 namespace Web
 {
@@ -96,7 +96,7 @@ namespace Web
 
             services.AddDapper();
 
-            services.AddClock();
+            services.AddDateTimeProvider();
 
             services.AddStripe(config);
 

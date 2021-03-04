@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Orders;
 using Web.Services.Authentication;
-using Web.Services.Clocks;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Orders.AcceptOrder
 {
@@ -10,20 +10,20 @@ namespace Web.Features.Orders.AcceptOrder
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
-        private readonly IClock clock;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public AcceptOrderHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator, IClock clock)
+        public AcceptOrderHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator, IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
-            this.clock = clock;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(AcceptOrderCommand command, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(new OrderId(command.OrderId));
 
-            if (order.AlreadyAccepted)
+            if (order.Accepted)
             {
                 return Result.Ok();
             }
@@ -40,9 +40,9 @@ namespace Web.Features.Orders.AcceptOrder
                 return Error.Unauthorised();
             }
 
-            order.Accept(clock.UtcNow);
+            order.Accept(dateTimeProvider.UtcNow);
 
-            var ev = new OrderAcceptedEvent(order.Id, clock.UtcNow);
+            var ev = new OrderAcceptedEvent(order.Id, dateTimeProvider.UtcNow);
 
             await unitOfWork.Events.Add(ev);
             await unitOfWork.Commit();

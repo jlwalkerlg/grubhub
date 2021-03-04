@@ -14,16 +14,16 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 {
     public class DPRestaurantSearcherTests : IntegrationTestBase
     {
-        private readonly ClockStub clock;
+        private readonly DateTimeProviderStub dateTimeProvider;
         private readonly DPRestaurantSearcher repository;
 
         public DPRestaurantSearcherTests(IntegrationTestFixture fixture) : base(fixture)
         {
-            clock = new ClockStub();
+            dateTimeProvider = new DateTimeProviderStub();
 
             repository = new DPRestaurantSearcher(
                 factory.Services.GetRequiredService<IDbConnectionFactory>(),
-                clock
+                dateTimeProvider
             );
         }
 
@@ -33,7 +33,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Only_Returns_Suitable_Restaurants()
         {
-            clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             // not approved
             var r1 = new Restaurant()
@@ -120,7 +120,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Distance()
         {
-            clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -170,7 +170,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Min_Order()
         {
-            clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -223,7 +223,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Delivery_Fee()
         {
-            clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -276,7 +276,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Time()
         {
-            clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -329,7 +329,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Filters_Restaurants_By_Cuisine()
         {
-            clock.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var thai = new Cuisine() { Name = "Thai" };
             var italian = new Cuisine() { Name = "Italian" };
