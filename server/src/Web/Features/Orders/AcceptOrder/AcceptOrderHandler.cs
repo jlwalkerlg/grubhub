@@ -40,7 +40,9 @@ namespace Web.Features.Orders.AcceptOrder
                 return Error.Unauthorised();
             }
 
-            order.Accept(dateTimeProvider.UtcNow);
+            var result = order.Accept(dateTimeProvider.UtcNow);
+
+            if (!result) return result.Error;
 
             var ev = new OrderAcceptedEvent(order.Id, dateTimeProvider.UtcNow);
 

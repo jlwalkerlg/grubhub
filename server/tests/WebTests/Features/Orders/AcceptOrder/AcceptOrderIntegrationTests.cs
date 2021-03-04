@@ -3,11 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Web.Domain.Orders;
 using Web.Features.Orders.AcceptOrder;
 using Web.Services.DateTimeServices;
 using WebTests.Doubles;
 using WebTests.TestData;
 using Xunit;
+using Order = WebTests.TestData.Order;
+using OrderItem = WebTests.TestData.OrderItem;
 
 namespace WebTests.Features.Orders.AcceptOrder
 {
@@ -32,6 +35,8 @@ namespace WebTests.Features.Orders.AcceptOrder
 
             var order = new Order()
             {
+                Status = OrderStatus.PaymentConfirmed,
+                ConfirmedAt = DateTime.Now,
                 Restaurant = restaurant,
                 Items = new()
                 {

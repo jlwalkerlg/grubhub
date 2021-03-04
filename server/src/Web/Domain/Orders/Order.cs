@@ -29,8 +29,7 @@ namespace Web.Domain.Orders
             RestaurantId = basket.RestaurantId;
             Subtotal = subtotal;
             DeliveryFee = deliveryFee with { }; // removes EF warning
-            MobileNumber = mobileNumber
-                ?? throw new ArgumentNullException(nameof(mobileNumber));
+            MobileNumber = mobileNumber ?? throw new ArgumentNullException(nameof(mobileNumber));
             Address = address;
             PlacedAt = placedAt;
         }
@@ -74,13 +73,20 @@ namespace Web.Domain.Orders
             }
         }
 
-        public void Accept(DateTime now)
+        public Result Accept(DateTime now)
         {
+            if (!Confirmed)
+            {
+                return Error.BadRequest("Only orders for which payment has been confirmed can be accepted.");
+            }
+
             if (!Accepted)
             {
                 AcceptedAt = now;
                 Status = OrderStatus.Accepted;
             }
+
+            return Result.Ok();
         }
 
         public Result Deliver(DateTime now)

@@ -35,58 +35,7 @@ namespace WebTests.Features.Orders.AcceptOrder
         [Fact]
         public async Task It_Accepts_The_Order()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, MN12 1NM"),
-                new Coordinates(54, -2));
-
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MaxDeliveryDistance = Distance.FromKm(10);
-
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
-            billingAccount.Enable();
-
-            var menu = new Menu(restaurant.Id);
-            var (category, _) = menu.AddCategory(Guid.NewGuid(),"Pizza");
-            var (item, _) = category.AddItem(
-                Guid.NewGuid(),
-                "Margherita",
-                "Cheese & tomato",
-                Money.FromPounds(9.99m));
-
-            var customer = new Customer(
-                new UserId(Guid.NewGuid()),
-                "Bruno",
-                new Email("bruno@gmail.com"),
-                "password123");
-
-            var basket = new Basket(customer.Id, restaurant.Id);
-            basket.AddItem(item.Id, 5);
-
-            var (order, _) = restaurant.PlaceOrder(
-                new OrderId(Guid.NewGuid().ToString()),
-                basket,
-                menu,
-                new MobileNumber("07123456789"),
-                new DeliveryLocation(
-                    new Address("12 Maine Road, Manchester, MN12 1NM"),
-                    new Coordinates(54, -2)),
-                billingAccount,
-                DateTime.UtcNow);
-
-            order.Confirm(DateTime.UtcNow);
+            var (manager, restaurant, order) = SetupOrder();
 
             await unitOfWork.Orders.Add(order);
             await unitOfWork.Restaurants.Add(restaurant);
@@ -113,58 +62,7 @@ namespace WebTests.Features.Orders.AcceptOrder
         [Fact]
         public async Task It_Is_Idempotent()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, MN12 1NM"),
-                new Coordinates(54, -2));
-
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MaxDeliveryDistance = Distance.FromKm(10);
-
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
-            billingAccount.Enable();
-
-            var menu = new Menu(restaurant.Id);
-            var (category, _) = menu.AddCategory(Guid.NewGuid(),"Pizza");
-            var (item, _) = category.AddItem(
-                Guid.NewGuid(),
-                "Margherita",
-                "Cheese & tomato",
-                Money.FromPounds(9.99m));
-
-            var customer = new Customer(
-                new UserId(Guid.NewGuid()),
-                "Bruno",
-                new Email("bruno@gmail.com"),
-                "password123");
-
-            var basket = new Basket(customer.Id, restaurant.Id);
-            basket.AddItem(item.Id, 5);
-
-            var (order, _) = restaurant.PlaceOrder(
-                new OrderId(Guid.NewGuid().ToString()),
-                basket,
-                menu,
-                new MobileNumber("07123456789"),
-                new DeliveryLocation(
-                    new Address("12 Maine Road, Manchester, MN12 1NM"),
-                    new Coordinates(54, -2)),
-                billingAccount,
-                DateTime.UtcNow);
-
-            order.Confirm(DateTime.UtcNow);
+            var (manager, restaurant, order) = SetupOrder();
 
             var acceptedAt = DateTime.UtcNow;
             order.Accept(acceptedAt);
@@ -190,62 +88,14 @@ namespace WebTests.Features.Orders.AcceptOrder
         }
 
         [Fact]
-        public async Task It_Returns_Unauthorised_If_The_Restaurant_Is_Not_Found()
+        public async Task It_Fails_If_The_Restaurant_Is_Not_Found()
         {
-            var manager = new RestaurantManager(
-                new UserId(Guid.NewGuid()),
-                "Jordan Walker",
-                new Email("walker.jlg@gmail.com"),
-                "password123");
-
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                manager.Id,
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, MN12 1NM"),
-                new Coordinates(54, -2));
-
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MaxDeliveryDistance = Distance.FromKm(10);
-
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
-            billingAccount.Enable();
-
-            var menu = new Menu(restaurant.Id);
-            var (category, _) = menu.AddCategory(Guid.NewGuid(),"Pizza");
-            var (item, _) = category.AddItem(
-                Guid.NewGuid(),
-                "Margherita",
-                "Cheese & tomato",
-                Money.FromPounds(9.99m));
-
-            var customer = new Customer(
-                new UserId(Guid.NewGuid()),
-                "Bruno",
-                new Email("bruno@gmail.com"),
-                "password123");
-
-            var basket = new Basket(customer.Id, restaurant.Id);
-            basket.AddItem(item.Id, 5);
-
-            var (order, _) = restaurant.PlaceOrder(
-                new OrderId(Guid.NewGuid().ToString()),
-                basket,
-                menu,
-                new MobileNumber("07123456789"),
-                new DeliveryLocation(
-                    new Address("12 Maine Road, Manchester, MN12 1NM"),
-                    new Coordinates(54, -2)),
-                billingAccount,
-                DateTime.UtcNow);
-
-            order.Confirm(DateTime.UtcNow);
+            var (manager, _, order) = SetupOrder();
 
             await unitOfWork.Orders.Add(order);
+            await unitOfWork.Users.Add(manager);
+
+            await authenticator.SignIn(manager);
 
             var command = new AcceptOrderCommand()
             {
@@ -260,6 +110,47 @@ namespace WebTests.Features.Orders.AcceptOrder
         [Fact]
         public async Task It_Returns_Unauthorised_If_The_Authenticated_User_Is_Not_The_Manager()
         {
+            var (manager, restaurant, order) = SetupOrder();
+
+            await unitOfWork.Orders.Add(order);
+            await unitOfWork.Restaurants.Add(restaurant);
+            await unitOfWork.Users.Add(manager);
+
+            await authenticator.SignIn(Guid.NewGuid());
+
+            var command = new AcceptOrderCommand()
+            {
+                OrderId = order.Id.Value,
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError(ErrorType.Unauthorised);
+        }
+
+        [Fact]
+        public async Task It_Fails_If_The_Order_Is_Not_Yet_Confirmed()
+        {
+            var (manager, restaurant, order) = SetupOrder(confirm: false);
+
+            await unitOfWork.Orders.Add(order);
+            await unitOfWork.Restaurants.Add(restaurant);
+            await unitOfWork.Users.Add(manager);
+
+            await authenticator.SignIn(manager);
+
+            var command = new AcceptOrderCommand()
+            {
+                OrderId = order.Id.Value,
+            };
+
+            var result = await handler.Handle(command, default);
+
+            result.ShouldBeAnError(ErrorType.BadRequest);
+        }
+
+        private static (RestaurantManager manager, Restaurant restaurant, Order order) SetupOrder(bool confirm = true)
+        {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
@@ -284,7 +175,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             billingAccount.Enable();
 
             var menu = new Menu(restaurant.Id);
-            var (category, _) = menu.AddCategory(Guid.NewGuid(),"Pizza");
+            var (category, _) = menu.AddCategory(Guid.NewGuid(), "Pizza");
             var (item, _) = category.AddItem(
                 Guid.NewGuid(),
                 "Margherita",
@@ -311,21 +202,9 @@ namespace WebTests.Features.Orders.AcceptOrder
                 billingAccount,
                 DateTime.UtcNow);
 
-            order.Confirm(DateTime.UtcNow);
+            if (confirm) order.Confirm(DateTime.UtcNow);
 
-            await unitOfWork.Orders.Add(order);
-            await unitOfWork.Restaurants.Add(restaurant);
-
-            await authenticator.SignIn(customer);
-
-            var command = new AcceptOrderCommand()
-            {
-                OrderId = order.Id.Value,
-            };
-
-            var result = await handler.Handle(command, default);
-
-            result.ShouldBeAnError(ErrorType.Unauthorised);
+            return (manager, restaurant, order);
         }
     }
 }
