@@ -19,9 +19,9 @@ namespace Web.Features.Orders.RejectOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(HandleEventCommand<OrderRejectedEvent> command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(OrderRejectedEvent evnt, CancellationToken cancellationToken)
         {
-            var order = await unitOfWork.Orders.GetById(new OrderId(command.Event.OrderId));
+            var order = await unitOfWork.Orders.GetById(new OrderId(evnt.OrderId));
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
 
             await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()

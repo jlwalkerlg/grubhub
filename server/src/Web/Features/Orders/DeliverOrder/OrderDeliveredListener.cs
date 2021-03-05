@@ -18,9 +18,9 @@ namespace Web.Features.Orders.DeliverOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(HandleEventCommand<OrderDeliveredEvent> evnt, CancellationToken cancellationToken)
+        public async Task<Result> Handle(OrderDeliveredEvent evnt, CancellationToken cancellationToken)
         {
-            var order = await unitOfWork.Orders.GetById(evnt.Event.OrderId);
+            var order = await unitOfWork.Orders.GetById(evnt.OrderId);
 
             if (order is null) return Error.NotFound("Order not found.");
 

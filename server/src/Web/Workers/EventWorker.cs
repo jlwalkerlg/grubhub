@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,7 +33,7 @@ namespace Web.Workers
                 try
                 {
                     using var scope = services.CreateScope();
-                    var dispatcher = scope.ServiceProvider.GetRequiredService<EventDispatcher>();
+                    var sender = scope.ServiceProvider.GetRequiredService<ISender>();
                     await using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
                     var events = await db.Events
@@ -43,7 +44,7 @@ namespace Web.Workers
 
                     foreach (var ev in events)
                     {
-                        await ProcessEvent(ev, dispatcher, db, stoppingToken);
+                        await ProcessEvent(ev, sender, db, stoppingToken);
                     }
                 }
                 catch (System.Exception ex)
@@ -57,7 +58,7 @@ namespace Web.Workers
 
         private async Task ProcessEvent(
             SerialisedEvent serialised,
-            EventDispatcher dispatcher,
+            ISender sender,
             AppDbContext db,
             CancellationToken stoppingToken)
         {
@@ -65,11 +66,11 @@ namespace Web.Workers
 
             var ev = (Event)JsonSerializer.Deserialize(
                 serialised.Json,
-                Type.GetType(serialised.Type));
+                Type.GetType(serialised.Type)!);
 
             try
             {
-                var result = await dispatcher.Dispatch(ev, stoppingToken);
+                var result = await sender.Send(ev!, stoppingToken);
 
                 if (result)
                 {
@@ -81,7 +82,7 @@ namespace Web.Workers
                     logger.LogError(result.Error.Message);
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex.ToString());
             }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,10 +18,9 @@ namespace Web.Features.Orders.AcceptOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(
-            HandleEventCommand<OrderAcceptedEvent> command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(OrderAcceptedEvent evnt, CancellationToken cancellationToken)
         {
-            var order = await unitOfWork.Orders.GetById(command.Event.OrderId);
+            var order = await unitOfWork.Orders.GetById(evnt.OrderId);
 
             if (order is null) return Error.NotFound("Order not found.");
 

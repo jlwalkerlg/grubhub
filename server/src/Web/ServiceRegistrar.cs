@@ -26,7 +26,6 @@ namespace Web
 
         public static void AddEventWorker(this IServiceCollection services)
         {
-            services.AddScoped<EventDispatcher>();
             services.AddHostedService<EventWorker>();
         }
     }

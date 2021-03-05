@@ -29,9 +29,7 @@ namespace WebTests.Features.Orders
                 new OrderId(Guid.NewGuid().ToString()),
                 DateTime.UtcNow);
 
-            await listener.Handle(
-                new HandleEventCommand<OrderConfirmedEvent>(ev),
-                default);
+            await listener.Handle(ev, default);
 
             queue.Jobs
                 .OfType<NotifyRestaurantOrderConfirmedJob>()

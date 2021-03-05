@@ -16,15 +16,13 @@ namespace Web.Features.Orders.ConfirmOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(HandleEventCommand<OrderConfirmedEvent> command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(OrderConfirmedEvent evnt, CancellationToken cancellationToken)
         {
-            var ev = command.Event;
-
             await queue.Enqueue(
                 new Dictionary<Job, EnqueueOptions>()
                 {
-                    { new NotifyUserOrderConfirmedJob(ev.OrderId), null },
-                    { new NotifyRestaurantOrderConfirmedJob(ev.OrderId), null },
+                    { new NotifyUserOrderConfirmedJob(evnt.OrderId), null },
+                    { new NotifyRestaurantOrderConfirmedJob(evnt.OrderId), null },
                 },
                 cancellationToken);
 
