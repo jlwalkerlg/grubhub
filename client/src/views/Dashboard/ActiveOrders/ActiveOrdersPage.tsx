@@ -329,7 +329,7 @@ const ActiveOrdersPage: FC = () => {
   );
 };
 
-const OrderPageLayout: FC = () => {
+const ActiveOrdersPageLayout: FC = () => {
   return (
     <DashboardLayout>
       <ActiveOrdersPage />
@@ -337,4 +337,4 @@ const OrderPageLayout: FC = () => {
   );
 };
 
-export default OrderPageLayout;
+export default ActiveOrdersPageLayout;

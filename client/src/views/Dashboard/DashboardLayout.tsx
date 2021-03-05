@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
+import BookIcon from "~/components/Icons/BookIcon";
 import BuildingIcon from "~/components/Icons/BuildingIcon";
 import CashIcon from "~/components/Icons/CashIcon";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
@@ -26,6 +27,11 @@ const routes: DashboardRoute[] = [
     title: "Active Orders",
     pathname: "/dashboard/active-orders",
     icon: OrdersIcon,
+  },
+  {
+    title: "Order History",
+    pathname: "/dashboard/order-history",
+    icon: BookIcon,
   },
   {
     title: "Restaurant Details",
