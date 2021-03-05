@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Web.Features.Restaurants.UpdateOpeningHours;
 
 namespace Web.Features.Restaurants.UpdateOpeningTimes
@@ -15,6 +16,7 @@ namespace Web.Features.Restaurants.UpdateOpeningTimes
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpPut("/restaurants/{restaurantId:guid}/opening-times")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,

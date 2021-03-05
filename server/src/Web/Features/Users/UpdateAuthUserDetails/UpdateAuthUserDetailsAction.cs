@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Features.Users.UpdateAuthUserDetails
 {
@@ -13,6 +14,7 @@ namespace Web.Features.Users.UpdateAuthUserDetails
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpPut("/auth/user")]
         public async Task<IActionResult> Execute([FromBody] UpdateAuthUserDetailsCommand command)
         {

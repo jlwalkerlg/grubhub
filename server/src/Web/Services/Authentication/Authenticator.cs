@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Domain.Users;
@@ -23,13 +22,7 @@ namespace Web.Services.Authentication
         public bool IsAuthenticated => HttpContext.User.Identity?.IsAuthenticated ?? false;
 
         public UserId UserId => IsAuthenticated
-            ? new UserId(Guid.Parse(HttpContext.User.Identity.Name))
-            : null;
-
-        public UserRole? UserRole => IsAuthenticated
-            ? Enum.Parse<UserRole>(
-                HttpContext.User.Claims.Single(
-                    x => x.Type == ClaimTypes.Role).Value)
+            ? new UserId(Guid.Parse(HttpContext.User.Identity!.Name!))
             : null;
 
         public async Task SignIn(User user)

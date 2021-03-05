@@ -21,11 +21,6 @@ namespace Web
             return Problem(Error.NotFound(message));
         }
 
-        protected IActionResult Unauthenticated()
-        {
-            return Problem(Error.Unauthenticated());
-        }
-
         protected IActionResult Unauthorised(string message = null)
         {
             return Problem(Error.Unauthorised(message));

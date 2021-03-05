@@ -1,9 +1,7 @@
 using System;
-using Web.Services.Authentication;
 
 namespace Web.Features.Restaurants.UpdateRestaurantDetails
 {
-    [Authenticate]
     public record UpdateRestaurantDetailsCommand : IRequest
     {
         public Guid RestaurantId { get; init; }

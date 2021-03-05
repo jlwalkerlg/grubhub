@@ -1,9 +1,7 @@
 using System;
-using Web.Services.Authentication;
 
 namespace Web.Features.Menus.AddMenuItem
 {
-    [Authenticate]
     public record AddMenuItemCommand : IRequest
     {
         public Guid RestaurantId { get; init; }

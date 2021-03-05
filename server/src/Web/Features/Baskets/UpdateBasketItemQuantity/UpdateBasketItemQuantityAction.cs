@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Features.Baskets.UpdateBasketItemQuantity
@@ -14,6 +15,7 @@ namespace Web.Features.Baskets.UpdateBasketItemQuantity
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpPut("/restaurants/{restaurantId:guid}/basket/items/{menuItemId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Features.Baskets.RemoveFromBasket
@@ -14,6 +15,7 @@ namespace Web.Features.Baskets.RemoveFromBasket
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpDelete("/restaurants/{restaurantId:guid}/basket/items/{menuItemId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,

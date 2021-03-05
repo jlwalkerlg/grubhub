@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Features.Billing.SetupBilling
@@ -14,6 +15,7 @@ namespace Web.Features.Billing.SetupBilling
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpPost("/restaurants/{restaurantId:guid}/billing/setup")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {

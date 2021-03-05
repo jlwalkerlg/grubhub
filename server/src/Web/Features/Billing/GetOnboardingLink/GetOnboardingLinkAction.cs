@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Features.Billing.GetOnboardingLink
@@ -14,6 +15,7 @@ namespace Web.Features.Billing.GetOnboardingLink
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpGet("/restaurants/{restaurantId:guid}/billing/onboarding/link")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {

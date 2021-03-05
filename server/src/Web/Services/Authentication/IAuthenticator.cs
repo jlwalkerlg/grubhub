@@ -9,6 +9,5 @@ namespace Web.Services.Authentication
         Task SignOut();
         bool IsAuthenticated { get; }
         UserId UserId { get; }
-        UserRole? UserRole { get; }
     }
 }

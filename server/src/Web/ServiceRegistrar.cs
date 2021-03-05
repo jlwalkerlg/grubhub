@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Web.Features.Restaurants.SearchRestaurants;
-using Web.Services.Authentication;
 using Web.Services.Validation;
 using Web.Workers;
 
@@ -12,10 +11,6 @@ namespace Web
         public static void AddMediatR(this IServiceCollection services)
         {
             services.AddMediatR(typeof(Startup).Assembly);
-
-            services.AddTransient(
-                typeof(IPipelineBehavior<,>),
-                typeof(AuthenticationMiddleware<,>));
 
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),

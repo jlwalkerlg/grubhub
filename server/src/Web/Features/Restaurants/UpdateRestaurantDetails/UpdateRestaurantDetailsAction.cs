@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Features.Restaurants.UpdateRestaurantDetails
 {
@@ -14,6 +15,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpPut("/restaurants/{id:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid id,

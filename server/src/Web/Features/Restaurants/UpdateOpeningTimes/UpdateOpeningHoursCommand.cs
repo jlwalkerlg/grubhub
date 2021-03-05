@@ -1,9 +1,7 @@
 using System;
-using Web.Services.Authentication;
 
 namespace Web.Features.Restaurants.UpdateOpeningHours
 {
-    [Authenticate]
     public record UpdateOpeningHoursCommand : IRequest
     {
         public Guid RestaurantId { get; init; }

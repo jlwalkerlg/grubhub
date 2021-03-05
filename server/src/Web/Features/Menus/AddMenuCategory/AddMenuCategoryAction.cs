@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Features.Menus.AddMenuCategory
 {
@@ -14,6 +15,7 @@ namespace Web.Features.Menus.AddMenuCategory
             this.sender = sender;
         }
 
+        [Authorize]
         [HttpPost("/restaurants/{restaurantId:guid}/menu/categories")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,
