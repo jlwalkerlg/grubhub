@@ -75,7 +75,7 @@ const UpdateForm: FC<{
     <form onSubmit={onSubmit} className="px-2 pb-3">
       {isError && (
         <div className="my-3">
-          <ErrorAlert message={error.message} />
+          <ErrorAlert message={error.detail} />
         </div>
       )}
 
@@ -199,7 +199,7 @@ const MenuItem: React.FC<{
       },
       {
         onError: (error) => {
-          addToast(error.message);
+          addToast(error.detail);
         },
       }
     );

@@ -56,7 +56,7 @@ const OrderTableRow: FC<{
         },
 
         onError: (error) => {
-          addToast("Failed to accept order: " + error.message);
+          addToast(error.detail);
         },
       }
     );
@@ -75,7 +75,7 @@ const OrderTableRow: FC<{
         },
 
         onError: (error) => {
-          addToast("Failed to reject order: " + error.message);
+          addToast(error.detail);
         },
       }
     );
@@ -94,7 +94,7 @@ const OrderTableRow: FC<{
         },
 
         onError: (error) => {
-          addToast("Failed to deliver order: " + error.message);
+          addToast(error.detail);
         },
       }
     );

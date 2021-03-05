@@ -94,7 +94,7 @@ const MenuLinks: React.FC<Props> = ({ route }) => {
 
 export const Dashboard: React.FC<Props> = ({ children, route }) => {
   const { user } = useAuth();
-  const { data: restaurant, isLoading, isError, error } = useRestaurant(
+  const { data: restaurant, isLoading, isError } = useRestaurant(
     user.restaurantId
   );
 
@@ -115,7 +115,7 @@ export const Dashboard: React.FC<Props> = ({ children, route }) => {
             <div className="flex items-center">
               <InfoIcon className="h-6 w-6 inline-block text-red-600" />
               <p className="ml-2 text-gray-300">
-                Failed to load restaurant: {error.message}
+                Restaurant could not be loaded at this time.
               </p>
             </div>
           )}

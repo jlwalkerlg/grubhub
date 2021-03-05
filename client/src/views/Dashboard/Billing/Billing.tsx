@@ -12,7 +12,7 @@ const Billing: FC = () => {
 
   const { user } = useAuth();
   const { data: restaurant } = useRestaurant(user.restaurantId);
-  const { data: billingDetails, isLoading, isError, error } = useBillingDetails(
+  const { data: billingDetails, isLoading, isError } = useBillingDetails(
     restaurant.id
   );
 
@@ -23,7 +23,7 @@ const Billing: FC = () => {
   }
 
   if (isError) {
-    return <div>{error.message}</div>;
+    return <div>Billing details could not be loaded at this time.</div>;
   }
 
   const onSetupBilling = async () => {
@@ -33,8 +33,9 @@ const Billing: FC = () => {
       onSuccess: (link) => {
         window.location.href = link;
       },
+
       onError: (error) => {
-        addToast(error.message);
+        addToast(error.detail);
       },
     });
   };
@@ -73,7 +74,7 @@ const Billing: FC = () => {
 const BillingLayout: FC = () => {
   const { isLoading: isLoadingUser, isLoggedIn, user } = useAuth();
 
-  const { isLoading: isLoadingRestaurant, isError, error } = useRestaurant(
+  const { isLoading: isLoadingRestaurant, isError } = useRestaurant(
     user?.restaurantId,
     {
       enabled: isLoggedIn,
@@ -92,7 +93,9 @@ const BillingLayout: FC = () => {
         <div className="mt-2">
           {isLoading && <SpinnerIcon className="w-6 h-6 animate-spin" />}
 
-          {!isLoading && isError && <p>{error.message}</p>}
+          {!isLoading && isError && (
+            <p>Restaurant could not be loaded at this time.</p>
+          )}
 
           {!isLoading && !isError && <Billing />}
         </div>

@@ -41,6 +41,7 @@ const Home: NextPage = () => {
   });
 
   const onClickLocation = async () => {
+    getCurrentLocation();
     try {
       const { postcode } = await getCurrentLocation();
       form.setValue("postcode", postcode);

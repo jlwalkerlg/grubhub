@@ -41,7 +41,7 @@ const UpdateCuisinesForm: FC = () => {
     <form onSubmit={onSubmit}>
       {isError && (
         <div className="my-6">
-          <ErrorAlert message={error.message} />
+          <ErrorAlert message={error.detail} />
         </div>
       )}
 

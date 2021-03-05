@@ -97,7 +97,7 @@ const MenuCategory: React.FC<{
       },
       {
         onError: (error) => {
-          addToast(error.message);
+          addToast(error.detail);
         },
       }
     );
@@ -144,7 +144,7 @@ const MenuCategory: React.FC<{
         <form onSubmit={onRename} className="px-2 pb-3">
           {renameStatus.isError && (
             <div className="my-3">
-              <ErrorAlert message={renameStatus.error.message} />
+              <ErrorAlert message={renameStatus.error.detail} />
             </div>
           )}
 

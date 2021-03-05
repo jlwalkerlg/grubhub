@@ -67,7 +67,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       </h2>
 
       {isError && (
-        <p className="text-primary text-center mt-2">{error.message}</p>
+        <p className="text-primary text-center mt-2">{error.detail}</p>
       )}
 
       <form onSubmit={handleSubmit} className="mt-4">

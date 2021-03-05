@@ -6,9 +6,10 @@ import Axios, {
 } from "axios";
 
 interface ProblemDetails {
-  type?: string;
-  title?: string;
-  status?: string;
+  type: string;
+  title: string;
+  status: number;
+  traceId: string;
   detail?: string;
   instance?: string;
   errors?: { [key: string]: string[] };
@@ -16,30 +17,39 @@ interface ProblemDetails {
 
 export class ApiResult<T = void> {
   readonly data?: T;
-  readonly statusCode: number;
+  readonly status: number;
 
   public constructor(response: AxiosResponse<T>) {
     this.data = response.data || undefined;
-    this.statusCode = response.status;
+    this.status = response.status;
   }
 }
 
 export class ApiError {
-  readonly message: string;
-  readonly statusCode: number;
+  readonly type: string;
+  readonly title: string;
+  readonly status: number;
+  readonly traceId: string;
+  readonly detail?: string;
+  readonly instance?: string;
   readonly errors?: { [key: string]: string[] };
 
   public constructor(response: AxiosResponse<ProblemDetails>) {
-    this.statusCode = response?.status || 500;
-    this.errors = response?.data?.errors;
-
-    this.message =
-      response?.data?.detail ??
-      (this.statusCode === 404 ? "Resource not found." : "Server error.");
+    this.type = response.data.type;
+    this.title = response.data.title;
+    this.status = response.data.status;
+    this.traceId = response.data.traceId;
+    this.detail = response.data.detail;
+    this.instance = response.data.instance;
+    this.errors = response.data.errors;
   }
 
   get isValidationError() {
-    return this.statusCode === 422;
+    return this.status === 422;
+  }
+
+  get message() {
+    return this.detail;
   }
 }
 

@@ -13,7 +13,7 @@ export async function getAuthUser() {
   } catch (e) {
     localStorage.removeItem("isLoggedIn");
 
-    if (e instanceof ApiError && e.statusCode === 401) {
+    if (e instanceof ApiError && e.status === 401) {
       return null;
     }
 

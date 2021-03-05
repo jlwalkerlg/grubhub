@@ -64,7 +64,7 @@ const Main: FC<{
   }
 
   if (isError) {
-    return <p>Error loading restaurant: {error.message}</p>;
+    return <p>Restaurant could not be loaded at this time.</p>;
   }
 
   return (

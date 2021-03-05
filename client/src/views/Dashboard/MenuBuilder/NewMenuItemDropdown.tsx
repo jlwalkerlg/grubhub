@@ -77,7 +77,7 @@ const NewMenuItemDropdown: React.FC<{
         <form onSubmit={onSubmit} className="px-4 pb-3">
           {isError && (
             <div className="my-3">
-              <ErrorAlert message={error.message} />
+              <ErrorAlert message={error.detail} />
             </div>
           )}
 

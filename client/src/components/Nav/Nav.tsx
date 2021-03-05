@@ -28,7 +28,7 @@ const Nav: React.FC = () => {
   const onLogout = async () => {
     await logout(null, {
       onError: (error) => {
-        addToast(`Logout failed: ${error.message}`);
+        addToast(error.detail);
       },
     });
   };

@@ -11,7 +11,7 @@ import MenuCategory from "./MenuCategory";
 const MenuBuilder: React.FC = () => {
   const { user } = useAuth();
 
-  const { data: restaurant, isLoading, isError, error } = useRestaurant(
+  const { data: restaurant, isLoading, isError } = useRestaurant(
     user.restaurantId
   );
 
@@ -20,7 +20,7 @@ const MenuBuilder: React.FC = () => {
   }
 
   if (isError) {
-    return <div className="my-2">{error.message}</div>;
+    return <div className="my-2">Menu could not be loaded at this time.</div>;
   }
 
   return (

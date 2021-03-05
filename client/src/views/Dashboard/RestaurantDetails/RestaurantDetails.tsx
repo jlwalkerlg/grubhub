@@ -59,7 +59,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
     <form onSubmit={onSubmit}>
       {isError && (
         <div className="my-6">
-          <ErrorAlert message={error.message} />
+          <ErrorAlert message={error.detail} />
         </div>
       )}
 
@@ -244,9 +244,7 @@ const RestaurantDetails: React.FC = () => {
 
   if (isError) {
     return (
-      <ErrorAlert
-        message={`Failed to load restaurant: ${loadingError.message}`}
-      />
+      <ErrorAlert message="Restaurant could not be loaded at this time." />
     );
   }
 
