@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   const { addToast } = useToasts();
 
   const {
-    postcode,
+    location,
     isLoading: isLoadingLocation,
     getCurrentLocation,
   } = useCurrentLocation();
@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const form = useForm({
     defaultValues: {
       postcode:
-        postcode ?? typeof window === "undefined"
+        location?.postcode ?? typeof window === "undefined"
           ? ""
           : window.localStorage.getItem("postcode") ?? "",
     },
@@ -41,13 +41,15 @@ const Home: NextPage = () => {
   });
 
   const onClickLocation = async () => {
-    getCurrentLocation();
-    try {
-      const { postcode } = await getCurrentLocation();
-      form.setValue("postcode", postcode);
-    } catch (error) {
-      addToast(error.message);
-    }
+    getCurrentLocation({
+      onSuccess: ({ postcode }) => {
+        form.setValue("postcode", postcode);
+      },
+
+      onError: (error) => {
+        addToast(error.message);
+      },
+    });
   };
 
   return (
