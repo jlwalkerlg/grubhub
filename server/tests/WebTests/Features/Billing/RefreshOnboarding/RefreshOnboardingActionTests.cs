@@ -23,17 +23,8 @@ namespace WebTests.Features.Billing.RefreshOnboarding
             var response = await GetClient().Get(uri);
 
             response.StatusCode.ShouldBe(302);
-            response.Headers.Location.OriginalString.ShouldBe(
+            response.Headers.Location?.OriginalString.ShouldBe(
                 $"{config.ClientUrl}/login?redirect_to={config.ServerUrl}{uri}");
-        }
-
-        [Fact]
-        public async Task It_Returns_Handler_Errors()
-        {
-            var response = await GetAuthenticatedClient().Get(
-                $"/stripe/onboarding/refresh?restaurant_id={Guid.NewGuid()}");
-
-            response.StatusCode.ShouldBe(400);
         }
     }
 }

@@ -29,8 +29,8 @@ namespace WebTests
             return Send(client, new HttpRequestMessage(HttpMethod.Delete, uri));
         }
 
-        private static Task<HttpResponseMessage> Send(
-            HttpClient client, HttpRequestMessage message, object data = null)
+        public static Task<HttpResponseMessage> Send(
+            this HttpClient client, HttpRequestMessage message, object data = null)
         {
             if (data != null)
             {
