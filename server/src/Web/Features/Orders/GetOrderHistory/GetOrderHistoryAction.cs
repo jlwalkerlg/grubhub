@@ -31,7 +31,7 @@ namespace Web.Features.Orders.GetOrderHistory
                     @"
                         SELECT
                             o.id,
-                            o.delivered_at,
+                            o.placed_at,
                             SUM(oi.quantity) as total_items,
                             SUM(oi.price * oi.quantity) as subtotal,
                             o.service_fee,
@@ -43,13 +43,11 @@ namespace Web.Features.Orders.GetOrderHistory
                             INNER JOIN restaurants r on o.restaurant_id = r.id
                         WHERE
                             o.user_id = @UserId
-                            AND o.status = @DeliveredStatus
                         GROUP BY o.id, r.name
                         ORDER BY o.delivered_at",
                     new
                     {
                         UserId = authenticator.UserId.Value,
-                        DeliveredStatus = OrderStatus.Delivered.ToString(),
                     });
 
             return Ok(orders);
@@ -58,7 +56,7 @@ namespace Web.Features.Orders.GetOrderHistory
         public record OrderModel
         {
             public string Id { get; set; }
-            public DateTime DeliveredAt { get; set; }
+            public DateTime PlacedAt { get; set; }
             public int TotalItems { get; set; }
             public decimal Subtotal { get; set; }
             public decimal ServiceFee { get; set; }

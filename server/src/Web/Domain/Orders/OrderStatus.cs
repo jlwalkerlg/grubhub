@@ -7,5 +7,6 @@ namespace Web.Domain.Orders
         Accepted,
         Delivered,
         Rejected,
+        Cancelled,
     }
 }

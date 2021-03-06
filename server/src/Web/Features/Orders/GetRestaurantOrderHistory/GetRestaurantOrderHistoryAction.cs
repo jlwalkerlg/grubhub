@@ -35,7 +35,6 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                             o.number,
                             o.status,
                             o.placed_at,
-                            o.delivered_at,
                             SUM(oi.price * oi.quantity) as subtotal
                         FROM
                             orders o
@@ -49,7 +48,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                     new
                     {
                         UserId = authenticator.UserId.Value,
-                        InactiveStatuses = (new[] {OrderStatus.Delivered, OrderStatus.Rejected})
+                        InactiveStatuses = (new[] {OrderStatus.Delivered, OrderStatus.Rejected, OrderStatus.Cancelled})
                             .Select(x => x.ToString())
                             .ToArray(),
                     });
@@ -63,7 +62,6 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
             public int Number { get; set; }
             public string Status { get; set; }
             public DateTime PlacedAt { get; set; }
-            public DateTime? DeliveredAt { get; set; }
             public decimal Subtotal { get; set; }
         }
     }

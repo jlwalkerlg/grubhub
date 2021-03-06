@@ -3,7 +3,7 @@ import Api, { ApiError } from "~/api/Api";
 
 export interface OrderModel {
   id: string;
-  deliveredAt: string;
+  placedAt: string;
   totalItems: number;
   subtotal: number;
   serviceFee: number;
@@ -11,9 +11,13 @@ export interface OrderModel {
   restaurantName: string;
 }
 
+export function getOrderHistoryQueryKey() {
+  return "order-history";
+}
+
 export function useOrderHistory(config?: QueryConfig<OrderModel[], ApiError>) {
   return useQuery<OrderModel[], ApiError>(
-    "order-history",
+    getOrderHistoryQueryKey(),
     async () => {
       const response = await Api.get<OrderModel[]>("/order-history");
       return response.data;

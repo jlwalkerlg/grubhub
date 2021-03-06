@@ -91,6 +91,12 @@ namespace Web.Data.EF.Configurations
             builder.Property(x => x.DeliveredAt)
                 .HasColumnName("delivered_at");
 
+            builder.Property(x => x.RejectedAt)
+                .HasColumnName("rejected_at");
+
+            builder.Property(x => x.CancelledAt)
+                .HasColumnName("cancelled_at");
+
             builder.Property(x => x.PaymentIntentId)
                 .HasColumnName("payment_intent_id")
                 .IsRequired();

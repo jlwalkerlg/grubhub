@@ -1,5 +1,6 @@
-import { useMutation } from "react-query";
+import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
+import { getOrderHistoryQueryKey } from "./useOrderHistory";
 
 export interface PlaceOrderCommand {
   mobile: string;
@@ -11,6 +12,8 @@ export interface PlaceOrderCommand {
 }
 
 export function usePlaceOrder() {
+  const cache = useQueryCache();
+
   return useMutation<string, ApiError, PlaceOrderCommand, null>(
     async (command) => {
       const { restaurantId, ...data } = command;
@@ -19,6 +22,11 @@ export function usePlaceOrder() {
         data
       );
       return response.data;
+    },
+    {
+      onSuccess: () => {
+        cache.invalidateQueries(getOrderHistoryQueryKey());
+      },
     }
   );
 }

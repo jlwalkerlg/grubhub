@@ -4,15 +4,15 @@ using Web.Domain.Orders;
 using Web.Services.Authentication;
 using Web.Services.DateTimeServices;
 
-namespace Web.Features.Orders.RejectOrder
+namespace Web.Features.Orders.CancelOrder
 {
-    public class RejectOrderHandler : IRequestHandler<RejectOrderCommand>
+    public class CancelOrderHandler : IRequestHandler<CancelOrderCommand>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
         private readonly IDateTimeProvider dateTimeProvider;
 
-        public RejectOrderHandler(
+        public CancelOrderHandler(
             IUnitOfWork unitOfWork, IAuthenticator authenticator, IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
@@ -20,7 +20,7 @@ namespace Web.Features.Orders.RejectOrder
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<Result> Handle(RejectOrderCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CancelOrderCommand command, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(new OrderId(command.OrderId));
 
@@ -31,17 +31,16 @@ namespace Web.Features.Orders.RejectOrder
             if (restaurant is null) return Error.NotFound("Restaurant not found.");
 
             if (restaurant.ManagerId != authenticator.UserId)
-            {
-                return Error.Unauthorised("Only the restaurant manager can reject orders.");
-            }
+                return Error.Unauthorised("Only the restaurant manager can cancel orders.");
 
-            if (order.Rejected) return Result.Ok();
+            if (order.Cancelled) return Result.Ok();
 
-            var result = order.Reject(dateTimeProvider.UtcNow);
+            var result = order.Cancel(dateTimeProvider.UtcNow);
 
             if (!result) return result.Error;
 
-            var evnt = new OrderRejectedEvent(order.Id.Value, dateTimeProvider.UtcNow);
+            var evnt = new OrderCancelledEvent(order.Id.Value, dateTimeProvider.UtcNow);
+
             await unitOfWork.Events.Add(evnt);
 
             await unitOfWork.Commit();

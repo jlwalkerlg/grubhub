@@ -54,6 +54,12 @@ const statuses: Map<
       title: "Delivered",
     },
   ],
+  [
+    "Cancelled",
+    {
+      title: "Cancelled",
+    },
+  ],
 ]);
 
 const OrderStatusTitle: FC<{ order: OrderDto }> = ({ order }) => {
@@ -96,6 +102,10 @@ const OrderStatusDescription: FC<{ order: OrderDto }> = ({ order }) => {
 
   if (order.status === "Delivered") {
     return <>Your order was delivered at {deliveredAt}. Enjoy!</>;
+  }
+
+  if (order.status === "Cancelled") {
+    return <>Your order has been cancelled by the restaurant.</>;
   }
 
   return (
@@ -406,6 +416,10 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
       });
 
       connection.on(`order_${order.id}.delivered`, () => {
+        cache.invalidateQueries(getOrderQueryKey(order.id));
+      });
+
+      connection.on(`order_${order.id}.cancelled`, () => {
         cache.invalidateQueries(getOrderQueryKey(order.id));
       });
     },

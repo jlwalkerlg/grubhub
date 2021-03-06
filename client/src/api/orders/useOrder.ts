@@ -15,6 +15,8 @@ export interface OrderDto {
   confirmedAt?: string;
   acceptedAt?: string;
   deliveredAt?: string;
+  rejectedAt?: string;
+  cancelledAt?: string;
   estimatedDeliveryTime: string;
   restaurantName: string;
   restaurantAddress: string;
@@ -31,6 +33,7 @@ export type OrderStatus =
   | "PaymentConfirmed"
   | "Accepted"
   | "Rejected"
+  | "Cancelled"
   | "Delivered";
 
 export interface OrderItemDto {

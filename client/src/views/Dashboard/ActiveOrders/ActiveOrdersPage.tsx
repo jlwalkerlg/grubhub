@@ -3,6 +3,7 @@ import { useAcceptOrder } from "~/api/orders/useAcceptOrder";
 import useActiveRestaurantOrders, {
   ActiveOrderDto,
 } from "~/api/orders/useActiveRestaurantOrders";
+import { useCancelOrder } from "~/api/orders/useCancelOrder";
 import { useDeliverOrder } from "~/api/orders/useDeliverOrder";
 import { useOrdersHub } from "~/api/orders/useOrdersHub";
 import { useRejectOrder } from "~/api/orders/useRejectOrder";
@@ -100,6 +101,25 @@ const OrderTableRow: FC<{
     );
   };
 
+  const [cancel, { isLoading: isCancelling }] = useCancelOrder();
+
+  const onCancel = async () => {
+    if (isAccepting) return;
+
+    await cancel(
+      { orderId: order.id },
+      {
+        onSuccess: async () => {
+          await onOrderStatusChanged(order.id);
+        },
+
+        onError: (error) => {
+          addToast(error.detail);
+        },
+      }
+    );
+  };
+
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const openDetailsModal = () => setIsDetailsModalOpen(true);
@@ -158,16 +178,29 @@ const OrderTableRow: FC<{
             </>
           )}
           {order.status === "Accepted" && (
-            <button
-              className="mr-1 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
-              title="Deliver order"
-              onClick={onDeliver}
-              disabled={isDelivering}
-            >
-              <LoadingIconWrapper isLoading={isDelivering} className="h-5">
-                <CheckIcon className="h-5" />
-              </LoadingIconWrapper>
-            </button>
+            <>
+              <button
+                className="mr-1 text-green-500 hover:text-green-800 transition-colors transform hover:scale-110"
+                title="Deliver order"
+                onClick={onDeliver}
+                disabled={isDelivering}
+              >
+                <LoadingIconWrapper isLoading={isDelivering} className="h-5">
+                  <CheckIcon className="h-5" />
+                </LoadingIconWrapper>
+              </button>
+
+              <button
+                className="mr-1 text-red-500 hover:text-red-800 transition-colors transform hover:scale-110"
+                title="Cancel order"
+                onClick={onCancel}
+                disabled={isCancelling}
+              >
+                <LoadingIconWrapper isLoading={isCancelling} className="h-5">
+                  <CheckIcon className="h-5" />
+                </LoadingIconWrapper>
+              </button>
+            </>
           )}
         </div>
       </td>
@@ -269,6 +302,10 @@ const ActiveOrdersPage: FC = () => {
       });
 
       connection.on("order-delivered", (orderId) => {
+        refetch();
+      });
+
+      connection.on("order-cancelled", (orderId) => {
         refetch();
       });
     },

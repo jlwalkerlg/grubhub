@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Web.Features.Orders.RejectOrder
+namespace Web.Features.Orders
 {
     public class RefundOrderProcessor : JobProcessor<RefundOrderJob>
     {

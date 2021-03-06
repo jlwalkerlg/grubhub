@@ -16,6 +16,14 @@ const StatusBadge: FC<{ order: OrderModel }> = ({ order }) => {
     );
   }
 
+  if (order.status === "Cancelled") {
+    return (
+      <span className="bg-red-200 text-red-900 py-1 px-3 rounded-full text-xs font-semibold">
+        Cancelled
+      </span>
+    );
+  }
+
   return (
     <span className="bg-green-200 text-green-900 py-1 px-3 rounded-full text-xs font-semibold">
       Delivered

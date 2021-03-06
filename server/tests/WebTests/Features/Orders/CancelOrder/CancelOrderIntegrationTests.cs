@@ -4,28 +4,27 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Web.Domain.Orders;
-using Web.Features.Orders.RejectOrder;
+using Web.Features.Orders.CancelOrder;
 using Web.Services.DateTimeServices;
 using WebTests.Doubles;
 using Xunit;
 using Order = WebTests.TestData.Order;
 
-namespace WebTests.Features.Orders.RejectOrder
+namespace WebTests.Features.Orders.CancelOrder
 {
-    public class RejectOrderIntegrationTests : IntegrationTestBase
-
+    public class CancelOrderIntegrationTests : IntegrationTestBase
     {
-        public RejectOrderIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
+        public CancelOrderIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
         [Fact]
-        public async Task It_Rejects_The_Order()
+        public async Task It_Cancels_The_Order()
         {
             var order = new Order()
             {
-                Status = OrderStatus.PaymentConfirmed,
-                ConfirmedAt = DateTime.Now.AddMinutes(-1),
+                Status = OrderStatus.Accepted,
+                AcceptedAt = DateTime.Now.AddMinutes(-1),
             };
 
             Insert(order);
@@ -42,16 +41,16 @@ namespace WebTests.Features.Orders.RejectOrder
             });
 
             var response = await factory.GetAuthenticatedClient(order.Restaurant.ManagerId).Put(
-                $"/orders/{order.Id}/reject");
+                $"/orders/{order.Id}/cancel");
 
             response.StatusCode.ShouldBe(200);
 
             Reload(order);
 
-            order.Status.ShouldBe(OrderStatus.Rejected);
-            order.RejectedAt?.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            order.Status.ShouldBe(OrderStatus.Cancelled);
+            order.CancelledAt?.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
 
-            var evnt = UseTestDbContext(db => db.Events.Single().ToEvent()) as OrderRejectedEvent;
+            var evnt = UseTestDbContext(db => db.Events.Single().ToEvent()) as OrderCancelledEvent;
 
             evnt.OrderId.ShouldBe(order.Id);
             evnt.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Web.Features.Orders.RejectOrder
+namespace Web.Features.Orders
 {
     public class RefundOrderJob : Job
     {

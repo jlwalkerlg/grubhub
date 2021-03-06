@@ -10,15 +10,15 @@ const OrderListItem: FC<{ order: OrderModel; index: number }> = ({
   order,
   index,
 }) => {
-  const deliveredAt = useMemo(() => {
-    const date = new Date(order.deliveredAt);
+  const placedAt = useMemo(() => {
+    const date = new Date(order.placedAt);
     return formatDate(date, "dd/mm/yyyy");
   }, []);
 
   const total = order.subtotal + order.deliveryFee + order.serviceFee;
 
   return (
-    <li className={`py-4 border-gray-300 ${index === 0 ? "border-b" : ""}`}>
+    <li className={`py-4 border-gray-300 ${index === 0 ? "" : "border-t"}`}>
       <Link href={`/orders/${order.id}`}>
         <a className="flex">
           <div>
@@ -32,7 +32,7 @@ const OrderListItem: FC<{ order: OrderModel; index: number }> = ({
 
           <div className="flex-1 ml-4">
             <p className="font-semibold">{order.restaurantName}</p>
-            <p className="text-sm">{deliveredAt}</p>
+            <p className="text-sm">{placedAt}</p>
             <p className="text-sm">
               <span>£{total.toFixed(2)}</span>{" "}
               {order.totalItems === 1 ? (

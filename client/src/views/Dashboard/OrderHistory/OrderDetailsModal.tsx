@@ -16,6 +16,14 @@ const StatusBadge: FC<{ order: OrderDto }> = ({ order }) => {
     );
   }
 
+  if (order.status === "Cancelled") {
+    return (
+      <span className="bg-red-200 text-red-900 py-1 px-3 rounded-full text-xs font-semibold">
+        Cancelled
+      </span>
+    );
+  }
+
   return (
     <span className="bg-green-200 text-green-900 py-1 px-3 rounded-full text-xs font-semibold">
       Delivered
@@ -39,6 +47,20 @@ const OrderDetails: FC<{
     const date = new Date(order.deliveredAt);
     return formatDate(date, "dd/mm/yyyy hh:mm");
   }, [order.status, order.deliveredAt]);
+
+  const rejectedAt = useMemo(() => {
+    if (order.status !== "Rejected") return null;
+
+    const date = new Date(order.rejectedAt);
+    return formatDate(date, "dd/mm/yyyy hh:mm");
+  }, [order.status, order.rejectedAt]);
+
+  const cancelledAt = useMemo(() => {
+    if (order.status !== "Cancelled") return null;
+
+    const date = new Date(order.cancelledAt);
+    return formatDate(date, "dd/mm/yyyy hh:mm");
+  }, [order.status, order.cancelledAt]);
 
   return (
     <div>
@@ -79,6 +101,18 @@ const OrderDetails: FC<{
               <p className="mt-2">
                 <span className="font-semibold">Delivered At</span>
                 <span className="ml-2">{deliveredAt}</span>
+              </p>
+            )}
+            {rejectedAt && (
+              <p className="mt-2">
+                <span className="font-semibold">Rejected At</span>
+                <span className="ml-2">{rejectedAt}</span>
+              </p>
+            )}
+            {cancelledAt && (
+              <p className="mt-2">
+                <span className="font-semibold">Cancelled At</span>
+                <span className="ml-2">{cancelledAt}</span>
               </p>
             )}
           </div>

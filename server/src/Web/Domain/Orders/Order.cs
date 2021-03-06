@@ -49,6 +49,8 @@ namespace Web.Domain.Orders
         public DateTime? ConfirmedAt { get; private set; }
         public DateTime? AcceptedAt { get; private set; }
         public DateTime? DeliveredAt { get; private set; }
+        public DateTime? RejectedAt { get; private set; }
+        public DateTime? CancelledAt { get; private set; }
         public string PaymentIntentId { get; set; }
         public string PaymentIntentClientSecret { get; set; }
 
@@ -59,7 +61,8 @@ namespace Web.Domain.Orders
 
         public bool Accepted => AcceptedAt.HasValue;
         public bool Delivered => DeliveredAt.HasValue;
-        public bool Rejected => Status == OrderStatus.Rejected;
+        public bool Rejected => RejectedAt.HasValue;
+        public bool Cancelled => CancelledAt.HasValue;
 
         public Money CalculateTotal()
         {
@@ -107,13 +110,33 @@ namespace Web.Domain.Orders
             return Result.Ok();
         }
 
-        public Result Reject()
+        public Result Reject(DateTime time)
         {
             if (!Confirmed) return Error.BadRequest("Order must be confirmed before it can be rejected.");
 
             if (Accepted) return Error.BadRequest("Order was already accepted.");
 
-            Status = OrderStatus.Rejected;
+            if (!Rejected)
+            {
+                Status = OrderStatus.Rejected;
+                RejectedAt = time;
+            }
+
+            return Result.Ok();
+        }
+
+
+        public Result Cancel(DateTime time)
+        {
+            if (!Accepted) return Error.BadRequest("Only accepted orders can be cancelled.");
+
+            if (Delivered) return Error.BadRequest("Order was already delivered.");
+
+            if (!Cancelled)
+            {
+                Status = OrderStatus.Cancelled;
+                CancelledAt = time;
+            }
 
             return Result.Ok();
         }

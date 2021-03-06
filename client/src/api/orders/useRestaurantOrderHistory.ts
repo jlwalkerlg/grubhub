@@ -6,11 +6,10 @@ export interface OrderModel {
   number: number;
   status: string;
   placedAt: string;
-  deliveredAt: string;
   subtotal: number;
 }
 
-function getRestaurantOrderHistoryQueryKey() {
+export function getRestaurantOrderHistoryQueryKey() {
   return "restaurant-order-history";
 }
 

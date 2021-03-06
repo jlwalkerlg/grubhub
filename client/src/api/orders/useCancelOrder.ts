@@ -2,16 +2,16 @@ import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
 import { getRestaurantOrderHistoryQueryKey } from "./useRestaurantOrderHistory";
 
-interface DeliverOrderCommand {
+interface CancelOrderCommand {
   orderId: string;
 }
 
-export function useDeliverOrder() {
+export function useCancelOrder() {
   const cache = useQueryCache();
 
-  return useMutation<string, ApiError, DeliverOrderCommand, null>(
+  return useMutation<string, ApiError, CancelOrderCommand, null>(
     async ({ orderId }) => {
-      const response = await Api.put(`/orders/${orderId}/deliver`);
+      const response = await Api.put(`/orders/${orderId}/cancel`);
       return response.data;
     },
     {
