@@ -1,0 +1,11 @@
+.dropdown::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 10%;
+  border-width: 10px;
+  @apply border-gray-700;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}

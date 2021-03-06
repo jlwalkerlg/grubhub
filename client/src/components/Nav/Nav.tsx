@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import useAuth from "~/api/users/useAuth";
 import useLogout from "~/api/users/useLogout";
 import CloseIcon from "~/components/Icons/CloseIcon";
@@ -10,7 +10,9 @@ import RestaurantMenuIcon from "~/components/Icons/RestaurantMenuIcon";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
 import DashboardIcon from "../Icons/DashboardIcon";
 import OrdersIcon from "../Icons/OrdersIcon";
+import UserCircleIcon from "../Icons/UserCircleIcon";
 import { useToasts } from "../Toaster/Toaster";
+import styles from "./Nav.module.css";
 
 const Nav: React.FC = () => {
   const { addToast } = useToasts();
@@ -32,6 +34,11 @@ const Nav: React.FC = () => {
       },
     });
   };
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const openDropdown = () => setIsDropdownOpen(true);
+  const closeDropdown = () => setIsDropdownOpen(false);
 
   return (
     <nav className="fixed w-full z-30 top-0 bg-white" id="nav">
@@ -58,37 +65,58 @@ const Nav: React.FC = () => {
 
           {!isLoading && isLoggedIn && (
             <div className="hidden md:block ml-auto">
-              {user.role === "RestaurantManager" && (
-                <Link href="/dashboard">
-                  <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                    Dashboard
-                  </a>
-                </Link>
-              )}
-              <Link href="/order-history">
-                <a className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                  Orders
-                </a>
-              </Link>
-              <button
-                type="button"
-                onClick={onLogout}
-                className="px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary"
+              <div
+                className="relative cursor-pointer"
+                onMouseEnter={openDropdown}
+                onMouseLeave={closeDropdown}
               >
-                Logout
-              </button>
+                <div className="flex items-center uppercase font-medium px-2 py-2">
+                  <UserCircleIcon className="h-5" />
+                  <span className="ml-2">{user.name}</span>
+                </div>
+
+                <div
+                  className={`absolute top-100 pt-3 right-0 ${
+                    isDropdownOpen ? "" : "hidden"
+                  }`}
+                >
+                  <div
+                    className={`relative bg-white text-gray-700 px-2 rounded shadow whitespace-nowrap ${styles["dropdown"]}`}
+                  >
+                    <Link href="/order-history">
+                      <a className="block px-4 py-3 hover:text-primary border-b border-gray-200">
+                        Your Orders
+                      </a>
+                    </Link>
+                    {user.role === "RestaurantManager" && (
+                      <Link href="/dashboard">
+                        <a className="block px-4 py-3 hover:text-primary border-b border-gray-200">
+                          Restaurant Dashboard
+                        </a>
+                      </Link>
+                    )}
+                    <button
+                      type="button"
+                      onClick={onLogout}
+                      className="block px-4 py-3 hover:text-primary w-full text-left"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
           {!isLoading && !isLoggedIn && (
             <>
               <Link href="/login">
-                <a className="hidden md:block ml-auto px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                <a className="hidden md:block ml-auto px-2 py-2 uppercase font-medium hover:text-primary">
                   Login
                 </a>
               </Link>
               <Link href="/register">
-                <a className="hidden md:block px-2 py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                <a className="hidden md:block px-2 py-2 uppercase font-medium hover:text-primary">
                   Register
                 </a>
               </Link>
@@ -110,24 +138,24 @@ const Nav: React.FC = () => {
         <ul className="container mt-5">
           {!isLoading && isLoggedIn && (
             <li>
+              <Link href="/order-history">
+                <a className="block py-2 uppercase font-medium hover:text-primary">
+                  <OrdersIcon className="w-6 h-6 inline" />
+                  <span className="ml-2 align-middle">Orders</span>
+                </a>
+              </Link>
               {user.role === "RestaurantManager" && (
                 <Link href="/dashboard">
-                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  <a className="block py-2 uppercase font-medium hover:text-primary">
                     <DashboardIcon className="w-6 h-6 inline" />
                     <span className="ml-2 align-middle">Dashboard</span>
                   </a>
                 </Link>
               )}
-              <Link href="/order-history">
-                <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
-                  <OrdersIcon className="w-6 h-6 inline" />
-                  <span className="ml-2 align-middle">Orders</span>
-                </a>
-              </Link>
               <button
                 type="button"
                 onClick={onLogout}
-                className="block py-2 uppercase font-medium text-gray-900 hover:text-primary"
+                className="block py-2 uppercase font-medium hover:text-primary w-full text-left"
               >
                 <LogoutIcon className="w-6 h-6 inline" />
                 <span className="ml-2 align-middle">Logout</span>
@@ -139,7 +167,7 @@ const Nav: React.FC = () => {
             <>
               <li>
                 <Link href="/login">
-                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  <a className="block py-2 uppercase font-medium hover:text-primary">
                     <LogoutIcon className="w-6 h-6 inline" />
                     <span className="ml-2 align-middle">Login</span>
                   </a>
@@ -147,7 +175,7 @@ const Nav: React.FC = () => {
               </li>
               <li>
                 <Link href="/register">
-                  <a className="block py-2 uppercase font-medium text-gray-900 hover:text-primary">
+                  <a className="block py-2 uppercase font-medium hover:text-primary">
                     <RegisterIcon className="w-6 h-6 inline" />
                     <span className="ml-2 align-middle">Register</span>
                   </a>
