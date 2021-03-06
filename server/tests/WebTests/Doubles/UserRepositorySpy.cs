@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Domain.Restaurants;
 using Web.Domain.Users;
 using Web.Features.Users;
 
@@ -39,13 +38,6 @@ namespace WebTests.Doubles
         {
             Users.Add(manager);
             return Task.CompletedTask;
-        }
-
-        public Task<RestaurantManager> GetManagerById(UserId id)
-        {
-            return Task.FromResult(
-                Users.OfType<RestaurantManager>()
-                .FirstOrDefault(x => x.Id == id));
         }
     }
 }

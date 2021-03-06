@@ -24,7 +24,7 @@ namespace Web.Domain.Orders
             Id = id;
             UserId = basket.UserId;
             RestaurantId = basket.RestaurantId;
-            DeliveryFee = deliveryFee with { }; // removes EF warning
+            DeliveryFee = deliveryFee;
             MobileNumber = mobileNumber ?? throw new ArgumentNullException(nameof(mobileNumber));
             Address = address;
             PlacedAt = placedAt;

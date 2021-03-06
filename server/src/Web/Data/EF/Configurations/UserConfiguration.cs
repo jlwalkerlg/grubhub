@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Web.Domain;
 using Web.Domain.Users;
 
 namespace Web.Data.EF.Configurations.UserConfiguration
@@ -21,15 +22,22 @@ namespace Web.Data.EF.Configurations.UserConfiguration
                 .HasColumnName("id")
                 .ValueGeneratedNever();
 
-            builder.Property(x => x.Name).IsRequired().HasColumnName("name");
+            builder.Property(x => x.Name)
+                .HasColumnName("name")
+                .IsRequired();
 
-            builder.OwnsOne(x => x.Email, y =>
-            {
-                y.Property(x => x.Address).IsRequired().HasColumnName("email");
-                y.HasIndex(x => x.Address).IsUnique();
-            });
+            builder.Property(x => x.Email)
+                .HasConversion(
+                    email => email.Address,
+                    address => new Email(address))
+                .HasColumnName("email")
+                .IsRequired();
 
-            builder.Property(x => x.Password).IsRequired().HasColumnName("password");
+            builder.HasIndex(x => x.Email).IsUnique();
+
+            builder.Property(x => x.Password)
+                .HasColumnName("password")
+                .IsRequired();
         }
     }
 }

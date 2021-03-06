@@ -30,16 +30,20 @@ namespace Web.Data.EF.Configurations
             builder.HasIndex(x => x.ManagerId)
                 .IsUnique();
 
-            builder.Property(x => x.Name).IsRequired().HasColumnName("name");
+            builder.Property(x => x.Name)
+                .HasColumnName("name")
+                .IsRequired();
 
             builder.Property(x => x.Description)
                 .HasColumnName("description")
                 .HasMaxLength(400);
 
-            builder.OwnsOne(x => x.PhoneNumber, x =>
-            {
-                x.Property(y => y.Number).IsRequired().HasColumnName("phone_number");
-            });
+            builder.Property(x => x.PhoneNumber)
+                .HasConversion(
+                    number => number.Number,
+                    number => new PhoneNumber(number))
+                .HasColumnName("phone_number")
+                .IsRequired();
 
             builder.OwnsOne(x => x.Address, x =>
             {
@@ -109,30 +113,26 @@ namespace Web.Data.EF.Configurations
                 });
             });
 
-            builder.OwnsOne(x => x.DeliveryFee, x =>
-            {
-                x.Ignore(y => y.Pence);
+            builder.Property(x => x.DeliveryFee)
+                .HasConversion(
+                    fee => fee.Pounds,
+                    pounds => Money.FromPounds(pounds))
+                .HasColumnName("delivery_fee")
+                .IsRequired();
 
-                x.Property(y => y.Pounds)
-                    .IsRequired()
-                    .HasColumnName("delivery_fee");
-            });
+            builder.Property(x => x.MinimumDeliverySpend)
+                .HasConversion(
+                    spenc => spenc.Pounds,
+                    pounds => Money.FromPounds(pounds))
+                .HasColumnName("minimum_delivery_spend")
+                .IsRequired();
 
-            builder.OwnsOne(x => x.MinimumDeliverySpend, x =>
-            {
-                x.Ignore(y => y.Pence);
-
-                x.Property(y => y.Pounds)
-                    .IsRequired()
-                    .HasColumnName("minimum_delivery_spend");
-            });
-
-            builder.OwnsOne(x => x.MaxDeliveryDistance, x =>
-            {
-                x.Property(y => y.Km)
-                    .IsRequired()
-                    .HasColumnName("max_delivery_distance_in_km");
-            });
+            builder.Property(x => x.MaxDeliveryDistance)
+                .HasConversion(
+                    distance => distance.Km,
+                    km => Distance.FromKm(km))
+                .HasColumnName("max_delivery_distance_in_km")
+                .IsRequired();
 
             builder.Property(x => x.EstimatedDeliveryTimeInMinutes)
                 .IsRequired()

@@ -4,6 +4,8 @@ namespace Web.Domain
 {
     public record Money
     {
+        public static readonly Money Zero = new(0);
+
         private Money(decimal pounds)
         {
             Pounds = pounds;
@@ -12,8 +14,6 @@ namespace Web.Domain
         public decimal Pounds { get; }
 
         public int Pence => (int)(Pounds * 100);
-
-        public static Money Zero => new Money(0);
 
         public static Money FromPence(int pence) => FromPounds((decimal)(pence) / 100);
 

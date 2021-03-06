@@ -4,6 +4,8 @@ namespace Web.Domain
 {
     public record Distance
     {
+        public static readonly Distance Zero = new(0);
+
         private Distance() { } // EF
 
         private Distance(float km)
@@ -17,8 +19,6 @@ namespace Web.Domain
         }
 
         public float Km { get; }
-
-        public static Distance Zero => new Distance(0);
 
         public static Distance FromMetres(float metres) => new Distance(metres / 1000);
 

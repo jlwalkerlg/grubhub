@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Web.Domain;
 using Web.Domain.Menus;
 using Web.Domain.Orders;
 
@@ -34,14 +35,12 @@ namespace Web.Data.EF.Configurations
                 .IsRequired()
                 .HasColumnName("name");
 
-            builder.OwnsOne(x => x.Price, x =>
-            {
-                x.Ignore(y => y.Pence);
-
-                x.Property(y => y.Pounds)
-                    .HasColumnName("price")
-                    .IsRequired();
-            });
+            builder.Property(x => x.Price)
+                .HasConversion(
+                    price => price.Pounds,
+                    pounds => Money.FromPounds(pounds))
+                .HasColumnName("price")
+                .IsRequired();
 
             builder.Property(x => x.Quantity)
                 .IsRequired()

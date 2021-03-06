@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Domain;
 using Web.Domain.Users;
 using Web.Features.Users;
 
@@ -18,7 +19,7 @@ namespace Web.Data.EF.Repositories
         public async Task<User> GetByEmail(string email)
         {
             return await context.Users
-                .SingleOrDefaultAsync(x => x.Email.Address == email);
+                .SingleOrDefaultAsync(x => x.Email == new Email(email));
         }
 
         public async Task<User> GetById(UserId id)
@@ -29,7 +30,7 @@ namespace Web.Data.EF.Repositories
         public async Task<bool> EmailExists(string email)
         {
             var count = await context.Users
-                .Where(x => x.Email.Address == email)
+                .Where(x => x.Email == new Email(email))
                 .CountAsync();
 
             return count > 0;
@@ -38,11 +39,6 @@ namespace Web.Data.EF.Repositories
         public async Task Add(User user)
         {
             await context.Users.AddAsync(user);
-        }
-
-        public async Task<RestaurantManager> GetManagerById(UserId id)
-        {
-            return await context.RestaurantManagers.FindAsync(id);
         }
     }
 }

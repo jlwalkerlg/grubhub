@@ -63,8 +63,6 @@ namespace Web.Data.EF
                 {
                     entry.State = EntityState.Modified;
                     entry.CurrentValues["isDeleted"] = true;
-
-                    entry.Reference(x => x.Price).TargetEntry.State = EntityState.Unchanged;
                 }
             }
         }

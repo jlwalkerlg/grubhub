@@ -42,35 +42,31 @@ namespace Web.Data.EF.Configurations
             builder.Property(x => x.RestaurantId)
                 .HasColumnName("restaurant_id");
 
-            builder.OwnsOne(x => x.DeliveryFee, x =>
-            {
-                x.Ignore(y => y.Pence);
+            builder.Property(x => x.DeliveryFee)
+                .HasConversion(
+                    fee => fee.Pounds,
+                    pounds => Money.FromPounds(pounds))
+                .HasColumnName("delivery_fee")
+                .IsRequired();
 
-                x.Property(y => y.Pounds)
-                    .HasColumnName("delivery_fee")
-                    .IsRequired();
-            });
-
-            builder.OwnsOne(x => x.ServiceFee, x =>
-            {
-                x.Ignore(y => y.Pence);
-
-                x.Property(y => y.Pounds)
-                    .HasColumnName("service_fee")
-                    .IsRequired();
-            });
+            builder.Property(x => x.ServiceFee)
+                .HasConversion(
+                    fee => fee.Pounds,
+                    pounds => Money.FromPounds(pounds))
+                .HasColumnName("service_fee")
+                .IsRequired();
 
             builder.Property(x => x.Status)
                 .HasColumnName("status")
                 .IsRequired()
                 .HasConversion(new EnumToStringConverter<OrderStatus>());
 
-            builder.OwnsOne(x => x.MobileNumber, x =>
-            {
-                x.Property(y => y.Value)
-                    .HasColumnName("mobile_number")
-                    .IsRequired();
-            });
+            builder.Property(x => x.MobileNumber)
+                .HasConversion(
+                    number => number.Value,
+                    number => new MobileNumber(number))
+                .HasColumnName("mobile_number")
+                .IsRequired();
 
             builder.OwnsOne(x => x.Address, x =>
             {

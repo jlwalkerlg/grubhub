@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Web.Domain;
 using Web.Domain.Menus;
 
 namespace Web.Data.EF.Configurations
@@ -24,14 +25,12 @@ namespace Web.Data.EF.Configurations
                 .HasColumnName("description")
                 .HasMaxLength(280);
 
-            builder.OwnsOne(x => x.Price, y =>
-            {
-                y.Ignore(z => z.Pence);
-
-                y.Property(z => z.Pounds)
-                    .HasColumnName("price")
-                    .IsRequired();
-            });
+            builder.Property(x => x.Price)
+                .HasConversion(
+                    price => price.Pounds,
+                    pounds => Money.FromPounds(pounds))
+                .HasColumnName("price")
+                .IsRequired();
 
             builder.Property<Guid>("menu_category_id")
                 .IsRequired();
