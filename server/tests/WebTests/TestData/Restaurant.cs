@@ -57,8 +57,17 @@ namespace WebTests.TestData
         [Column("phone_number")]
         public string PhoneNumber { get; set; } = "01234567890";
 
-        [Column("address")]
-        public string Address { get; set; } = "12 Maine Road, Manchester, UK";
+        [Column("address_line1")]
+        public string AddressLine1 { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("address_line2")]
+        public string AddressLine2 { get; set; }
+
+        [Column("city")]
+        public string City { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("postcode")]
+        public string Postcode { get; set; } = "MN12 1NM";
 
         [Column("latitude")]
         public float Latitude { get; set; } = 54.0f;

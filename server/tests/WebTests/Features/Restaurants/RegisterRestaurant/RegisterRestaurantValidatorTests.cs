@@ -98,20 +98,25 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task Disallows_Invalid_Restaurant_Addresses(string address)
+        [InlineData(null, null, null)]
+        [InlineData("", "", "")]
+        [InlineData(" ", " ", " ")]
+        public async Task Disallows_Invalid_Restaurant_Addresses(string line1, string city, string postcode)
         {
             var command = new RegisterRestaurantCommand()
             {
-                Address = address,
+                AddressLine1 = line1,
+                AddressLine2 = null,
+                City = city,
+                Postcode = postcode,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.Address));
+            result.Errors.ShouldContainKey(nameof(command.AddressLine1));
+            result.Errors.ShouldContainKey(nameof(command.City));
+            result.Errors.ShouldContainKey(nameof(command.Postcode));
         }
     }
 }

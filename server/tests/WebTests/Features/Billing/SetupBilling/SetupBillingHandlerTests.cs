@@ -42,7 +42,11 @@ namespace WebTests.Features.Billing.SetupBilling
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var billingAccount = new BillingAccount(
@@ -73,7 +77,11 @@ namespace WebTests.Features.Billing.SetupBilling
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);

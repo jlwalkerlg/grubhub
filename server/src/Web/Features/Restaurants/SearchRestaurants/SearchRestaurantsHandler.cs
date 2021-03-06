@@ -1,19 +1,13 @@
-using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Web.Domain;
 using Web.Services.Geocoding;
 
 namespace Web.Features.Restaurants.SearchRestaurants
 {
     public class SearchRestaurantsHandler : IRequestHandler<SearchRestaurantsQuery, List<RestaurantSearchResult>>
     {
-        private static readonly Regex regex = new Regex(
-            @"[A-Z]{2}\d{1,2} ?\d[A-Z]{2}",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase,
-            TimeSpan.FromMilliseconds(250));
-
         private readonly IGeocoder geocoder;
         private readonly IRestaurantSearcher searcher;
 
@@ -25,20 +19,20 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
         public async Task<Result<List<RestaurantSearchResult>>> Handle(SearchRestaurantsQuery query, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(query.Postcode) || !regex.IsMatch(query.Postcode))
+            if (!Postcode.IsValid(query.Postcode))
             {
                 return Error.BadRequest("Invalid postcode.");
             }
 
-            var (geocodingResult, geocodingError) = await geocoder.Geocode(query.Postcode);
+            var (coordinates, error) = await geocoder.LookupCoordinates(query.Postcode);
 
-            if (geocodingError)
+            if (error)
             {
                 return Error.BadRequest("Sorry, we don't recognise that postcode.");
             }
 
             var restaurants = await searcher.Search(
-                geocodingResult.Coordinates,
+                coordinates,
                 query.Options);
 
             return Result.Ok(restaurants);

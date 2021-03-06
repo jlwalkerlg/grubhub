@@ -5,7 +5,7 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import useEscapeKeyListener from "~/services/useEscapeKeyListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
-import { formatDate } from "~/services/utils";
+import { formatAddress, formatDate } from "~/services/utils";
 
 const OrderDetails: FC<{
   order: OrderDto;
@@ -45,7 +45,14 @@ const OrderDetails: FC<{
           <div className="mt-1">
             <p className="mt-2">
               <span className="font-semibold">Address</span>
-              <span className="ml-2">{order.address}</span>
+              <span className="ml-2">
+                {formatAddress(
+                  order.addressLine1,
+                  order.addressLine2,
+                  order.city,
+                  order.postcode
+                )}
+              </span>
             </p>
             <p className="mt-2">
               <span className="font-semibold">Placed At</span>

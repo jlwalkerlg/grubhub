@@ -7,7 +7,10 @@ export interface ActiveOrderDto {
   number: number;
   subtotal: number;
   status: OrderStatus;
-  address: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  postcode: string;
   placedAt: string;
   estimatedDeliveryTime: string;
 }

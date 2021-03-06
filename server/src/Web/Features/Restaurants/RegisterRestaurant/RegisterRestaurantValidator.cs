@@ -24,8 +24,15 @@ namespace Web.Features.Restaurants.RegisterRestaurant
                 .Required()
                 .PhoneNumber();
 
-            CascadeRuleFor(x => x.Address)
+            CascadeRuleFor(x => x.AddressLine1)
                 .Required();
+
+            CascadeRuleFor(x => x.City)
+                .Required();
+
+            CascadeRuleFor(x => x.Postcode)
+                .Required()
+                .Postcode();
         }
     }
 }

@@ -69,7 +69,11 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
@@ -110,7 +114,11 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);
@@ -152,7 +160,11 @@ namespace WebTests.Features.Menus.UpdateMenuItem
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(1, 1));
 
             var menu = new Menu(restaurant.Id);

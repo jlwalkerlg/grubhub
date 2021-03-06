@@ -15,7 +15,7 @@ import ClipboardIcon from "~/components/Icons/ClipboardIcon";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
-import { formatDate } from "~/services/utils";
+import { formatAddress, formatDate } from "~/services/utils";
 import { useOrdersHub } from "../../../api/orders/useOrdersHub";
 
 const statuses: Map<
@@ -153,10 +153,7 @@ const OrderHeader: FC<{ order: OrderDto }> = ({ order }) => {
   );
 };
 
-const MobileOrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
-  order,
-  user,
-}) => {
+const MobileOrderSummary: FC<{ order: OrderDto }> = ({ order }) => {
   const total = order.subtotal + order.deliveryFee + order.serviceFee;
 
   return (
@@ -178,7 +175,14 @@ const MobileOrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
 
         <p className="font-semibold text-2xl mt-2">{order.restaurantName}</p>
 
-        <p className="text-sm text-gray-700">{order.restaurantAddress}</p>
+        <p className="text-sm text-gray-700">
+          {formatAddress(
+            order.restaurantAddressLine1,
+            order.restaurantAddressLine2,
+            order.restaurantCity,
+            order.restaurantPostcode
+          )}
+        </p>
 
         <p>
           <Link href={`/restaurants/${order.restaurantId}`}>
@@ -203,7 +207,14 @@ const MobileOrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
           <h2 className="font-semibold">Delivering to</h2>
 
           <p className="font-semibold mt-3">{order.customerName}</p>
-          <p>{order.address}</p>
+          <p>
+            {formatAddress(
+              order.addressLine1,
+              order.addressLine2,
+              order.city,
+              order.postcode
+            )}
+          </p>
         </div>
       </div>
 
@@ -302,7 +313,14 @@ const OrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
             <div className="ml-4">
               <p className="font-semibold text-xl">{order.restaurantName}</p>
 
-              <p className="text-gray-700">{order.restaurantAddress}</p>
+              <p className="text-gray-700">
+                {formatAddress(
+                  order.restaurantAddressLine1,
+                  order.restaurantAddressLine2,
+                  order.restaurantCity,
+                  order.restaurantPostcode
+                )}
+              </p>
 
               <p className="text-gray-700">{order.restaurantPhoneNumber}</p>
 
@@ -384,7 +402,14 @@ const OrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
               <h2 className="font-semibold">Delivering to</h2>
 
               <p className="font-semibold mt-3">{user.name}</p>
-              <p>{order.address}</p>
+              <p>
+                {formatAddress(
+                  order.addressLine1,
+                  order.addressLine2,
+                  order.city,
+                  order.postcode
+                )}
+              </p>
             </div>
           </div>
         </div>
@@ -436,7 +461,7 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
       <OrderHeader order={order} />
 
       <div className="md:hidden">
-        <MobileOrderSummary order={order} user={user} />
+        <MobileOrderSummary order={order} />
       </div>
 
       <div className="hidden md:block">

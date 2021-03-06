@@ -2,6 +2,7 @@ import React, { FC, useEffect } from "react";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import { useGoogleMap } from "~/services/geolocation/useGoogleMap";
 import useDate from "~/services/useDate";
+import { formatAddress } from "~/services/utils";
 
 const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const { map } = useGoogleMap(
@@ -45,20 +46,27 @@ const InformationTab: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       <div className="relative mt-3 rounded overflow-hidden h-80 bg-gray-200">
         <div id="restaurant-location-map" className="w-full h-full"></div>
         <div className="rounded bg-white border border-gray-300 p-2 text-gray-600 absolute bottom-8 left-4 text-sm">
-          {restaurant.address
-            .replaceAll(",", ",,")
-            .split(", ")
-            .map((x) => (
-              <span key={x}>
-                {x}
-                <br />
-              </span>
-            ))}
+          <span>{restaurant.addressLine1}</span>
+          <br />
+          {restaurant.addressLine2 && (
+            <>
+              <span>{restaurant.addressLine2}</span>
+              <br />
+            </>
+          )}
+          <span>{restaurant.city}</span>
+          <br />
+          <span>{restaurant.postcode}</span>
         </div>
       </div>
 
       <p className="font-semibold text-gray-700 mt-3 block md:hidden">
-        {restaurant.address}
+        {formatAddress(
+          restaurant.addressLine1,
+          restaurant.addressLine2,
+          restaurant.city,
+          restaurant.postcode
+        )}
       </p>
 
       <hr className="my-4 border-gray-300 md:hidden" />

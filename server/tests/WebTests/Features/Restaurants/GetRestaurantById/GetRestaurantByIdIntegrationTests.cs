@@ -57,7 +57,10 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
             restaurantDto.Description.ShouldBe(restaurant.Description);
             restaurantDto.PhoneNumber.ShouldBe(restaurant.PhoneNumber);
             restaurantDto.Status.ShouldBe(restaurant.Status);
-            restaurantDto.Address.ShouldBe(restaurant.Address);
+            restaurantDto.AddressLine1.ShouldBe(restaurant.AddressLine1);
+            restaurantDto.AddressLine2.ShouldBe(restaurant.AddressLine2);
+            restaurantDto.City.ShouldBe(restaurant.City);
+            restaurantDto.Postcode.ShouldBe(restaurant.Postcode);
             restaurantDto.Latitude.ShouldBe(restaurant.Latitude);
             restaurantDto.Longitude.ShouldBe(restaurant.Longitude);
             restaurantDto.OpeningTimes.Monday.ShouldBe(restaurant.MondayOpen, restaurant.MondayClose);

@@ -10,7 +10,10 @@ export interface OrderDto {
   deliveryFee: number;
   serviceFee: number;
   status: OrderStatus;
-  address: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  postcode: string;
   placedAt: string;
   confirmedAt?: string;
   acceptedAt?: string;
@@ -19,7 +22,10 @@ export interface OrderDto {
   cancelledAt?: string;
   estimatedDeliveryTime: string;
   restaurantName: string;
-  restaurantAddress: string;
+  restaurantAddressLine1: string;
+  restaurantAddressLine2: string;
+  restaurantCity: string;
+  restaurantPostcode: string;
   restaurantPhoneNumber: string;
   paymentIntentClientSecret: string;
   customerName: string;

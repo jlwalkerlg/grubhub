@@ -170,7 +170,11 @@ namespace WebTests.Features.Orders.DeliverOrder
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2))
             {
                 OpeningTimes = OpeningTimes.Always,
@@ -206,7 +210,11 @@ namespace WebTests.Features.Orders.DeliverOrder
                 menu,
                 new MobileNumber("07123456789"),
                 new DeliveryLocation(
-                    new Address("12 Maine Road, Manchester, MN12 1NM"),
+                    new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                     new Coordinates(54, -2)),
                 billingAccount,
                 DateTime.UtcNow);

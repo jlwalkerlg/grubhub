@@ -36,11 +36,11 @@ namespace Web.Features.Restaurants.RegisterRestaurant
                 });
             }
 
-            var (geocodingResult, geocodingError) = await geocoder.Geocode(command.Address);
+            var (coordinates, geocodingError) = await geocoder.LookupCoordinates(command.Postcode);
 
             if (geocodingError)
             {
-                return Error.BadRequest("Address is not a valid postal address.");
+                return Error.BadRequest("Address was not recognised.");
             }
 
             var manager = new RestaurantManager(
@@ -54,8 +54,12 @@ namespace Web.Features.Restaurants.RegisterRestaurant
                 manager.Id,
                 command.RestaurantName,
                 new PhoneNumber(command.RestaurantPhoneNumber),
-                new Address(geocodingResult.FormattedAddress),
-                geocodingResult.Coordinates);
+                new Address(
+                    command.AddressLine1,
+                    command.AddressLine2,
+                    command.City,
+                    new Postcode(command.Postcode)),
+                coordinates);
 
             await unitOfWork.Users.Add(manager);
             await unitOfWork.Restaurants.Add(restaurant);

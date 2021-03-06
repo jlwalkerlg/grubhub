@@ -107,3 +107,12 @@ export function formatDate(date: Date, format: DateFormat = "dd/mm/yyyy") {
     padStart(date.getSeconds().toString(), 2, "0")
   );
 }
+
+export function formatAddress(
+  line1: string,
+  line2: string,
+  city: string,
+  postcode: string
+) {
+  return [line1, line2, city, postcode].filter((x) => x ?? false).join(", ");
+}

@@ -16,7 +16,6 @@ namespace WebTests.Features.Billing.GetOnboardingLink
     {
         private readonly AuthenticatorSpy authenticatorSpy;
         private readonly UnitOfWorkSpy unitOfWorkSpy;
-        private readonly BillingServiceSpy billingServiceSpy;
         private readonly GetOnboardingLinkHandler handler;
 
         public GetOnboardingLinkHandlerTests()
@@ -25,12 +24,10 @@ namespace WebTests.Features.Billing.GetOnboardingLink
 
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            billingServiceSpy = new BillingServiceSpy();
-
             handler = new GetOnboardingLinkHandler(
                 authenticatorSpy,
                 unitOfWorkSpy,
-                billingServiceSpy);
+                new BillingServiceSpy());
         }
 
         [Fact]
@@ -41,7 +38,11 @@ namespace WebTests.Features.Billing.GetOnboardingLink
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var billingAccount = new BillingAccount(

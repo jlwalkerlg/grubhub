@@ -22,7 +22,11 @@ namespace WebTests.Domain.Restaurants
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -49,7 +53,11 @@ namespace WebTests.Domain.Restaurants
             var mobileNumber = new MobileNumber("07123456789");
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var now = DateTime.Now;
@@ -94,7 +102,11 @@ namespace WebTests.Domain.Restaurants
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -121,7 +133,11 @@ namespace WebTests.Domain.Restaurants
             var mobileNumber = new MobileNumber("07123456789");
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(53, -3));
 
             var now = DateTime.Now;
@@ -149,7 +165,11 @@ namespace WebTests.Domain.Restaurants
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -176,7 +196,11 @@ namespace WebTests.Domain.Restaurants
             var mobileNumber = new MobileNumber("07123456789");
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var now = DateTime.Now;
@@ -204,7 +228,11 @@ namespace WebTests.Domain.Restaurants
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -229,7 +257,11 @@ namespace WebTests.Domain.Restaurants
             var mobileNumber = new MobileNumber("07123456789");
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var now = DateTime.Now;
@@ -257,7 +289,11 @@ namespace WebTests.Domain.Restaurants
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = null;
@@ -284,7 +320,11 @@ namespace WebTests.Domain.Restaurants
             var mobileNumber = new MobileNumber("07123456789");
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var now = DateTime.Now;
@@ -312,7 +352,11 @@ namespace WebTests.Domain.Restaurants
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -339,7 +383,11 @@ namespace WebTests.Domain.Restaurants
             var mobileNumber = new MobileNumber("07123456789");
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var now = DateTime.Now;

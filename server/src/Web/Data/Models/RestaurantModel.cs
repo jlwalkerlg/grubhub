@@ -11,7 +11,10 @@ namespace Web.Data.Models
         public string name { get; init; }
         public string description { get; init; }
         public string phone_number { get; init; }
-        public string address { get; init; }
+        public string address_line1 { get; init; }
+        public string address_line2 { get; init; }
+        public string city { get; init; }
+        public string postcode { get; init; }
         public float latitude { get; init; }
         public float longitude { get; init; }
         public string status { get; init; }
@@ -44,7 +47,10 @@ namespace Web.Data.Models
                 Name = name,
                 Description = description,
                 PhoneNumber = phone_number,
-                Address = address,
+                AddressLine1 = address_line1,
+                AddressLine2 = address_line2,
+                City = city,
+                Postcode = postcode,
                 Latitude = latitude,
                 Longitude = longitude,
                 Status = status,

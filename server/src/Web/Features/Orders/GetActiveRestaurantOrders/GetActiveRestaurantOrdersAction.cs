@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
-using Web.Data.Models;
 using Web.Domain.Orders;
 using Web.Domain.Users;
 using Web.Services.Authentication;
@@ -38,7 +36,10 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
                             o.id,
                             o.number,
                             o.status,
-                            o.address,
+                            o.address_line1,
+                            o.address_line2,
+                            o.city,
+                            o.postcode,
                             o.placed_at,
                             r.estimated_delivery_time_in_minutes,
                             SUM(oi.price * oi.quantity) as subtotal
@@ -70,7 +71,10 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
             public int Number { get; set; }
             public decimal Subtotal { get; set; }
             public string Status { get; set; }
-            public string Address { get; set; }
+            public string AddressLine1 { get; set; }
+            public string AddressLine2 { get; set; }
+            public string City { get; set; }
+            public string Postcode { get; set; }
             public DateTime PlacedAt { get; set; }
             [JsonIgnore]
             public int EstimatedDeliveryTimeInMinutes { get; set; }

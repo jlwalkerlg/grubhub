@@ -4,7 +4,6 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
-using Web.Domain.Orders;
 using Web.Services.Authentication;
 
 namespace Web.Features.Orders.GetOrderHistory

@@ -92,7 +92,10 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
             order.Status.ShouldBe(Web.Domain.Orders.OrderStatus.Placed);
             order.MobileNumber.ShouldBe(request.Mobile);
-            order.Address.ShouldBe("12 Maine Road, Oldham, Manchester, MN12 1NM");
+            order.AddressLine1.ShouldBe(request.AddressLine1);
+            order.AddressLine2.ShouldBe(request.AddressLine2);
+            order.City.ShouldBe(request.City);
+            order.Postcode.ShouldBe(request.Postcode);
             order.PlacedAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
             order.PaymentIntentId.ShouldBe(paymentIntent.Id);
             order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);

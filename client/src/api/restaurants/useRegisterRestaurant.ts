@@ -7,7 +7,10 @@ export interface RegisterRestaurantCommand {
   managerPassword: string;
   restaurantName: string;
   restaurantPhoneNumber: string;
-  address: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  postcode: string;
 }
 
 async function registerRestaurant(command: RegisterRestaurantCommand) {

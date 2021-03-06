@@ -11,6 +11,7 @@ namespace WebTests.Features.Billing.GetOnboardingLink
 {
     public class GetOnboardingLinkIntegrationTests : IntegrationTestBase
     {
+
         public GetOnboardingLinkIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }

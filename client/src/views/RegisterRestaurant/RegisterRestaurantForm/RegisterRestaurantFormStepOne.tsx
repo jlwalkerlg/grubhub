@@ -16,7 +16,7 @@ interface StepOneValues {
 
 interface Props {
   defaults: StepOneValues;
-  errors: { [K in keyof StepOneValues]?: string };
+  errors: { [K in keyof StepOneValues]?: string[] };
   advanceStep(data: StepOneValues): any;
 }
 

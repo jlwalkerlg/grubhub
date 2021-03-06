@@ -12,7 +12,10 @@ namespace Web.Features.Restaurants
         public string Name { get; init; }
         public string Description { get; init; }
         public string PhoneNumber { get; init; }
-        public string Address { get; init; }
+        public string AddressLine1 { get; init; }
+        public string AddressLine2 { get; init; }
+        public string City { get; init; }
+        public string Postcode { get; init; }
         public float Latitude { get; init; }
         public float Longitude { get; init; }
         public string Status { get; init; }

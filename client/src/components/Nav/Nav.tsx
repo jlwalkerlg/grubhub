@@ -141,14 +141,16 @@ const Nav: React.FC = () => {
               <Link href="/order-history">
                 <a className="block py-2 uppercase font-medium hover:text-primary">
                   <OrdersIcon className="w-6 h-6 inline" />
-                  <span className="ml-2 align-middle">Orders</span>
+                  <span className="ml-2 align-middle">Your Orders</span>
                 </a>
               </Link>
               {user.role === "RestaurantManager" && (
                 <Link href="/dashboard">
                   <a className="block py-2 uppercase font-medium hover:text-primary">
                     <DashboardIcon className="w-6 h-6 inline" />
-                    <span className="ml-2 align-middle">Dashboard</span>
+                    <span className="ml-2 align-middle">
+                      Restaurant Dashboard
+                    </span>
                   </a>
                 </Link>
               )}

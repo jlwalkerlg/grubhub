@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Web.Domain;
 using Web.Domain.Orders;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
@@ -73,8 +74,19 @@ namespace Web.Data.EF.Configurations
 
             builder.OwnsOne(x => x.Address, x =>
             {
-                x.Property(y => y.Value)
-                    .HasColumnName("address")
+                x.Property(y => y.Line1)
+                    .HasColumnName("address_line1")
+                    .IsRequired();
+                x.Property(y => y.Line2)
+                    .HasColumnName("address_line2");
+                x.Property(y => y.City)
+                    .HasColumnName("city")
+                    .IsRequired();
+                x.Property(y => y.Postcode)
+                    .HasConversion(
+                        postcode => postcode.Value,
+                        postcode => new Postcode(postcode))
+                    .HasColumnName("postcode")
                     .IsRequired();
             });
 

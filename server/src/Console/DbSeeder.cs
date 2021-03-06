@@ -76,7 +76,11 @@ namespace Console
                         user.Id,
                         restaurantEl.GetProperty("name").GetString(),
                         new PhoneNumber(restaurantEl.GetProperty("phone_number").GetString()),
-                        new Address(restaurantEl.GetProperty("address").GetString()),
+                        new Address(
+                            restaurantEl.GetProperty("addressLine1").GetString(),
+                            restaurantEl.GetProperty("addressLine2").GetString(),
+                            restaurantEl.GetProperty("addressCity").GetString(),
+                            new Postcode(restaurantEl.GetProperty("addressPostcode").GetString())),
                         new Coordinates(
                             (float)restaurantEl.GetProperty("latitude").GetDouble(),
                             (float)restaurantEl.GetProperty("longitude").GetDouble()

@@ -1,19 +1,11 @@
 using System;
-using System.Linq;
+using System.Text;
 
 namespace Web.Domain
 {
     public record Address
     {
-        public Address(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            Value = value;
-        }
+        private Address() { } // EF Core
 
         public Address(string line1, string line2, string city, Postcode postcode)
         {
@@ -32,13 +24,27 @@ namespace Web.Domain
                 throw new ArgumentNullException(nameof(postcode));
             }
 
-            Value = string.Join(", ",
-                (new[] { line1, line2, city, postcode.Value })
-                    .Where(x => !string.IsNullOrWhiteSpace(x)));
+            Line1 = line1;
+            Line2 = line2;
+            City = city;
+            Postcode = postcode;
         }
 
-        private Address() { } // EF Core
+        public string Line1 { get; }
+        public string Line2 { get; }
+        public string City { get; }
+        public Postcode Postcode { get; }
 
-        public string Value { get; }
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+
+            builder.Append(Line1);
+            if (!string.IsNullOrWhiteSpace(Line2)) builder.Append($", {Line2}");
+            builder.Append($", {City}");
+            builder.Append($", {Postcode.Value}");
+
+            return builder.ToString();
+        }
     }
 }

@@ -8,7 +8,10 @@ export interface RestaurantDto {
   name: string;
   description?: string;
   phoneNumber: string;
-  address: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  postcode: string;
   latitude: number;
   longitude: number;
   status: RestaurantStatus;

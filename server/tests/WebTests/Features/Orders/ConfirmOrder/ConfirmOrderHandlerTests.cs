@@ -45,7 +45,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.MaxDeliveryDistance = Distance.FromKm(10);
@@ -64,7 +68,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("13 Maine Road"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var billingAccount = new BillingAccount(
@@ -126,7 +134,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.MaxDeliveryDistance = Distance.FromKm(10);
@@ -145,7 +157,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("13 Maine Road"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var billingAccount = new BillingAccount(
@@ -209,7 +225,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.MaxDeliveryDistance = Distance.FromKm(10);
@@ -228,7 +248,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("13 Maine Road"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             var billingAccount = new BillingAccount(

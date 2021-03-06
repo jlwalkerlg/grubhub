@@ -45,7 +45,10 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
                 RestaurantPhoneNumber = "01234567890",
-                Address = "1 Maine Road, Manchester, UK",
+                AddressLine1 = "1 Maine Road, Manchester, UK",
+                AddressLine2 = null,
+                City = "Manchester",
+                Postcode = "MN12 1NM",
             };
 
             var response = await factory.GetClient().Post("/restaurants/register", request);
@@ -56,7 +59,10 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             restaurant.Name.ShouldBe(request.RestaurantName);
             restaurant.PhoneNumber.ShouldBe(request.RestaurantPhoneNumber);
-            restaurant.Address.ShouldBe(GeocoderStub.Address);
+            restaurant.AddressLine1.ShouldBe(request.AddressLine1);
+            restaurant.AddressLine2.ShouldBe(request.AddressLine2);
+            restaurant.City.ShouldBe(request.City);
+            restaurant.Postcode.ShouldBe(request.Postcode);
             restaurant.Latitude.ShouldBe(GeocoderStub.Latitude);
             restaurant.Longitude.ShouldBe(GeocoderStub.Longitude);
             restaurant.Status.ShouldBe(Web.Domain.Restaurants.RestaurantStatus.PendingApproval);

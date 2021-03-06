@@ -12,7 +12,7 @@ import InfoIcon from "~/components/Icons/InfoIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import LoadingIconWrapper from "~/components/LoadingIconWrapper";
 import { useToasts } from "~/components/Toaster/Toaster";
-import { formatDate } from "~/services/utils";
+import { formatAddress, formatDate } from "~/services/utils";
 import { DashboardLayout } from "../DashboardLayout";
 import styles from "./ActiveOrdersPage.module.css";
 import OrderDetailsModal from "./OrderDetailsModal";
@@ -143,7 +143,14 @@ const OrderTableRow: FC<{
       <td className="py-3 px-3 text-left whitespace-nowrap">
         {estimatedDeliveryTime}
       </td>
-      <td className="py-3 px-3 text-left whitespace-nowrap">{order.address}</td>
+      <td className="py-3 px-3 text-left whitespace-nowrap">
+        {formatAddress(
+          order.addressLine1,
+          order.addressLine2,
+          order.city,
+          order.postcode
+        )}
+      </td>
       <td className="py-3 px-3 text-left whitespace-nowrap">
         £{order.subtotal.toFixed(2)}
       </td>

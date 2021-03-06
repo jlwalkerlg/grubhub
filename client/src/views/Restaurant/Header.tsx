@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
 import useDate from "~/services/useDate";
-import { isRestaurantOpen, nextOpenDay } from "~/services/utils";
+import { formatAddress, isRestaurantOpen, nextOpenDay } from "~/services/utils";
 
 const Header: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const { dayOfWeek } = useDate();
@@ -45,7 +45,12 @@ const Header: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       </p>
 
       <p className="mt-3 text-center text-gray-700 text-sm">
-        {restaurant.address}
+        {formatAddress(
+          restaurant.addressLine1,
+          restaurant.addressLine2,
+          restaurant.city,
+          restaurant.postcode
+        )}
       </p>
 
       <hr className="w-full mt-6 mb-2 border-gray-300 md:hidden" />

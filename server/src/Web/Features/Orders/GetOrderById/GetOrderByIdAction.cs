@@ -40,7 +40,10 @@ namespace Web.Features.Orders.GetOrderById
                             o.delivery_fee,
                             o.service_fee,
                             o.status,
-                            o.address,
+                            o.address_line1,
+                            o.address_line2,
+                            o.city,
+                            o.postcode,
                             o.placed_at,
                             o.confirmed_at,
                             o.accepted_at,
@@ -49,7 +52,10 @@ namespace Web.Features.Orders.GetOrderById
                             o.cancelled_at,
                             o.payment_intent_client_secret,
                             r.name AS restaurant_name,
-                            r.address AS restaurant_address,
+                            r.address_line1 AS restaurant_address_line1,
+                            r.address_line2 AS restaurant_address_line2,
+                            r.city AS restaurant_city,
+                            r.postcode AS restaurant_postcode,
                             r.phone_number as restaurant_phone_number,
                             r.estimated_delivery_time_in_minutes,
                             u.name as customer_name,
@@ -107,7 +113,10 @@ namespace Web.Features.Orders.GetOrderById
             public decimal DeliveryFee { get; set; }
             public decimal ServiceFee { get; set; }
             public string Status { get; set; }
-            public string Address { get; set; }
+            public string AddressLine1 { get; set; }
+            public string AddressLine2 { get; set; }
+            public string City { get; set; }
+            public string Postcode { get; set; }
             public DateTime PlacedAt { get; set; }
             public DateTime? ConfirmedAt { get; set; }
             public DateTime? AcceptedAt { get; set; }
@@ -116,7 +125,10 @@ namespace Web.Features.Orders.GetOrderById
             public DateTime? CancelledAt { get; set; }
             public string PaymentIntentClientSecret { get; set; }
             public string RestaurantName { get; set; }
-            public string RestaurantAddress { get; set; }
+            public string RestaurantAddressLine1 { get; set; }
+            public string RestaurantAddressLine2 { get; set; }
+            public string RestaurantCity { get; set; }
+            public string RestaurantPostcode { get; set; }
             public string RestaurantPhoneNumber { get; set; }
             [JsonIgnore]
             public int EstimatedDeliveryTimeInMinutes { get; set; }

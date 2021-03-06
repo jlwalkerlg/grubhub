@@ -54,7 +54,11 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
                 manager.Id,
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Madchester, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(1, 2));
 
             await unitOfWorkSpy.UserRepositorySpy.Add(manager);

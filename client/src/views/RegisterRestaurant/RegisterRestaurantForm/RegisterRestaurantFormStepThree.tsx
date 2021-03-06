@@ -1,19 +1,24 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
+import {
+  combineRules,
+  PostcodeRule,
+  RequiredRule,
+} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
-import useAddressLookup from "~/services/geolocation/useAddressLookup";
-import useAddressPredictions from "~/services/geolocation/useAddressPredictions";
-import useAutocomplete from "~/services/useAutocomplete";
 
 interface StepThreeValues {
-  address: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  postcode: string;
 }
 
 interface Props {
   isSubmitting: boolean;
   defaults: StepThreeValues;
-  errors: { [K in keyof StepThreeValues]?: string };
+  errors: { [K in keyof StepThreeValues]?: string[] };
   backStep(data: StepThreeValues): any;
   onSubmit(data: StepThreeValues): any;
 }
@@ -33,31 +38,6 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
     setFormErrors(errors, form);
   }, [errors]);
 
-  const address = form.watch("address");
-
-  const { predictions, pause } = useAddressPredictions(address);
-
-  const autocompleteWrapperRef = useRef<HTMLDivElement>();
-  const autocompleteInputRef = useRef<HTMLInputElement>();
-  const autocompleteEndRef = useRef<HTMLButtonElement>();
-
-  const { isOpen: isAutocompleteOpen, close } = useAutocomplete(
-    predictions,
-    autocompleteInputRef,
-    autocompleteEndRef,
-    autocompleteWrapperRef
-  );
-
-  const { getAddressById } = useAddressLookup();
-
-  const onSelectAddress = async (id: string) => {
-    const address = await getAddressById(id);
-    pause();
-    close();
-    form.setValue("address", address);
-    autocompleteInputRef.current.focus();
-  };
-
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <p className="text-gray-600 font-medium tracking-wide text-xl mt-8">
@@ -65,52 +45,77 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
       </p>
 
       <div className="mt-4">
-        <label className="label" htmlFor="address">
-          Address <span className="text-primary">*</span>
+        <label className="label" htmlFor="addressLine1">
+          Address Line 1 <span className="text-primary">*</span>
         </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule()]),
+          })}
+          autoFocus
+          className="input"
+          type="text"
+          name="addressLine1"
+          id="addressLine1"
+          data-invalid={!!form.errors.addressLine1}
+        />
+        {form.errors.addressLine1 && (
+          <p className="form-error mt-1">{form.errors.addressLine1.message}</p>
+        )}
+      </div>
 
-        <div ref={autocompleteWrapperRef} className="relative">
-          <input
-            ref={(e) => {
-              autocompleteInputRef.current = e;
-              form.register(e);
-            }}
-            autoFocus
-            className="input"
-            type="text"
-            name="address"
-            id="address"
-            placeholder="e.g. 123 High Street"
-            autoComplete="new-password"
-            data-invalid={!!form.errors.address}
-          />
+      <div className="mt-4">
+        <label className="label" htmlFor="addressLine2">
+          Address Line 2
+        </label>
+        <input
+          ref={form.register}
+          className="input"
+          type="text"
+          name="addressLine2"
+          id="addressLine2"
+          data-invalid={!!form.errors.addressLine2}
+        />
+        {form.errors.addressLine2 && (
+          <p className="form-error mt-1">{form.errors.addressLine2.message}</p>
+        )}
+      </div>
 
-          {isAutocompleteOpen && (
-            <ul className="absolute top-100 w-full rounded-lg shadow">
-              {predictions.map((x, index) => {
-                return (
-                  <li key={x.description} className="w-full">
-                    <button
-                      ref={
-                        index === predictions.length - 1
-                          ? autocompleteEndRef
-                          : undefined
-                      }
-                      onClick={() => onSelectAddress(x.id)}
-                      type="button"
-                      className="py-2 px-4 w-full text-left bg-white hover:bg-gray-100 focus:bg-gray-100 border-t border-gray-300 cursor-pointer"
-                    >
-                      {x.description}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
+      <div className="mt-4">
+        <label className="label" htmlFor="city">
+          City <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule()]),
+          })}
+          className="input"
+          type="text"
+          name="city"
+          id="city"
+          data-invalid={!!form.errors.city}
+        />
+        {form.errors.city && (
+          <p className="form-error mt-1">{form.errors.city.message}</p>
+        )}
+      </div>
 
-        {form.errors.address && (
-          <p className="form-error mt-1">{form.errors.address.message}</p>
+      <div className="mt-4">
+        <label className="label" htmlFor="postcode">
+          Postcode <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule(), new PostcodeRule()]),
+          })}
+          className="input"
+          type="text"
+          name="postcode"
+          id="postcode"
+          data-invalid={!!form.errors.postcode}
+        />
+        {form.errors.postcode && (
+          <p className="form-error mt-1">{form.errors.postcode.message}</p>
         )}
       </div>
 

@@ -10,7 +10,7 @@ interface StepTwoValues {
 
 interface Props {
   defaults: StepTwoValues;
-  errors: { [K in keyof StepTwoValues]?: string };
+  errors: { [K in keyof StepTwoValues]?: string[] };
   advanceStep(data: StepTwoValues): any;
   backStep(data: StepTwoValues): any;
 }

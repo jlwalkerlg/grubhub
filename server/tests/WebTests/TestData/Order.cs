@@ -18,13 +18,13 @@ namespace WebTests.TestData
             Restaurant = new Restaurant();
         }
 
-        [Column("number")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Number { get; private set; }
-
         [Key]
         [Column("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("number")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Number { get; private set; }
 
         [Column("user_id")]
         public Guid UserId { get; private set; }
@@ -66,8 +66,17 @@ namespace WebTests.TestData
         [Column("mobile_number")]
         public string MobileNumber { get; set; } = "07123456789";
 
-        [Column("address")]
-        public string Address { get; set; } = Guid.NewGuid().ToString();
+        [Column("address_line1")]
+        public string AddressLine1 { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("address_line2")]
+        public string AddressLine2 { get; set; }
+
+        [Column("city")]
+        public string City { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("postcode")]
+        public string Postcode { get; set; } = "MN12 1NM";
 
         [Column("placed_at")]
         public DateTime PlacedAt { get; set; } = DateTime.UtcNow;

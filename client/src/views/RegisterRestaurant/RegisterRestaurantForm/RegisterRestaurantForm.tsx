@@ -31,11 +31,14 @@ const RegisterRestaurantForm: FC = () => {
     managerPassword: "",
     restaurantName: "",
     restaurantPhoneNumber: "",
-    address: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    postcode: "",
   });
 
   const [errors, setErrors] = useState<
-    { [K in keyof RegisterRestaurantCommand]?: string }
+    { [K in keyof RegisterRestaurantCommand]?: string[] }
   >({});
 
   const [step, setStep] = useState(1);

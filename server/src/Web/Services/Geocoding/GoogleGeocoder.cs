@@ -16,40 +16,6 @@ namespace Web.Services.Geocoding
             key = config.GoogleGeocodingApiKey;
         }
 
-        public async Task<Result<GeocodingResult>> Geocode(string address)
-        {
-            var url = string.Format(
-                "https://maps.googleapis.com/maps/api/geocode/json?address={0}&components=country:GB&key={1}",
-                WebUtility.UrlEncode(address),
-                key);
-
-            var json = await GetResponseAsJson(url);
-            var doc = JsonDocument.Parse(json);
-
-            var status = doc.RootElement.GetProperty("status").GetString();
-
-            if (status != "OK")
-            {
-                return Error.BadRequest("Address not recognised.");
-            }
-
-            var result = doc.RootElement
-                .GetProperty("results")
-                .EnumerateArray()
-                .First();
-
-            var location = result.GetProperty("geometry").GetProperty("location");
-
-            return Result.Ok(
-                new GeocodingResult()
-                {
-                    FormattedAddress = result.GetProperty("formatted_address").GetString(),
-                    Coordinates = new Coordinates(
-                        (float)location.GetProperty("lat").GetDouble(),
-                        (float)location.GetProperty("lng").GetDouble()),
-                });
-        }
-
         public async Task<Result<Coordinates>> LookupCoordinates(string postcode)
         {
             var url = string.Format(

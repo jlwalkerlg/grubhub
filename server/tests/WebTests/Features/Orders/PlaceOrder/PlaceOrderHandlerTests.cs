@@ -54,7 +54,11 @@ namespace WebTests.Features.Orders.PlaceOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -79,7 +83,11 @@ namespace WebTests.Features.Orders.PlaceOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -126,7 +134,10 @@ namespace WebTests.Features.Orders.PlaceOrder
             order.RestaurantId.ShouldBe(restaurant.Id);
             order.PlacedAt.ShouldBe(now);
             order.MobileNumber.Value.ShouldBe(command.Mobile);
-            order.Address.Value.ShouldBe("12 Maine Road, Oldham, Manchester, MN12 1NM");
+            order.Address.Line1.ShouldBe(command.AddressLine1);
+            order.Address.Line2.ShouldBe(command.AddressLine2);
+            order.Address.City.ShouldBe(command.City);
+            order.Address.Postcode.Value.ShouldBe(command.Postcode);
             order.PaymentIntentId.ShouldBe(paymentIntent.Id);
             order.PaymentIntentClientSecret.ShouldBe(paymentIntent.ClientSecret);
 
@@ -142,7 +153,11 @@ namespace WebTests.Features.Orders.PlaceOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -167,7 +182,11 @@ namespace WebTests.Features.Orders.PlaceOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -213,7 +232,11 @@ namespace WebTests.Features.Orders.PlaceOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -232,7 +255,11 @@ namespace WebTests.Features.Orders.PlaceOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -279,7 +306,11 @@ namespace WebTests.Features.Orders.PlaceOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -304,7 +335,11 @@ namespace WebTests.Features.Orders.PlaceOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -351,7 +386,11 @@ namespace WebTests.Features.Orders.PlaceOrder
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             restaurant.OpeningTimes = OpeningTimes.Always;
@@ -376,7 +415,11 @@ namespace WebTests.Features.Orders.PlaceOrder
             basket.AddItem(menuItem.Id, 1);
 
             var deliveryLocation = new DeliveryLocation(
-                new Address("12 Maine Road, Manchester, UK, MN12 1NM"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);

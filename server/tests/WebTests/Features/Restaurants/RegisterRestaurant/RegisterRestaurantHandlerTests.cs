@@ -32,17 +32,13 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Returns_A_Validation_Error_If_The_Email_Is_Already_Taken()
         {
-            await unitOfWorkSpy.UserRepositorySpy.Add(new RestaurantManager(
+            await unitOfWorkSpy.Users.Add(new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Jordan Walker",
                 new Email("taken@gmail.com"),
                 "password123"));
 
-            geocoderSpy.GeocodeResult = Result.Ok(new GeocodingResult()
-            {
-                FormattedAddress = "1 Maine Road, Manchester, UK",
-                Coordinates = new Coordinates(54.0f, -2.0f),
-            });
+            geocoderSpy.LookupCoordinatesResult = Result.Ok(new Coordinates(54.0f, -2.0f));
 
             var command = new RegisterRestaurantCommand()
             {
@@ -51,7 +47,10 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
                 RestaurantPhoneNumber = "01234567890",
-                Address = "1 Maine Road, Manchester, UK",
+                AddressLine1 = "1 Maine Road, Manchester, UK",
+                AddressLine2 = null,
+                City = "Manchester",
+                Postcode = "MN12 1NM",
             };
 
             var result = await handler.Handle(command, default);
@@ -64,7 +63,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Fails_If_Geocoding_Fails()
         {
-            geocoderSpy.GeocodeResult = Error.Internal("Geocoding failed.");
+            geocoderSpy.LookupCoordinatesResult = Error.Internal("Geocoding failed.");
 
             var command = new RegisterRestaurantCommand()
             {
@@ -73,7 +72,10 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
                 RestaurantPhoneNumber = "01234567890",
-                Address = "1 Maine Road, Manchester, UK",
+                AddressLine1 = "1 Maine Road, Manchester, UK",
+                AddressLine2 = null,
+                City = "Manchester",
+                Postcode = "MN12 1NM",
             };
 
             var result = await handler.Handle(command, default);

@@ -32,7 +32,11 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(0, 0));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
@@ -57,7 +61,11 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
                 new UserId(Guid.NewGuid()),
                 "Chow Main",
                 new PhoneNumber("01234567890"),
-                new Address("1 Maine Road, Manchester, UK"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
                 new Coordinates(0, 0));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);

@@ -24,25 +24,6 @@ namespace WebTests.Services.Geocoding
         }
 
         [Fact]
-        public async Task Geocode_Finds_Address_Coordinates()
-        {
-            var result = await geocoder.Geocode("1 Maine Road, Manchester, UK");
-
-            result.ShouldBeSuccessful();
-            result.Value.FormattedAddress.ShouldNotBeNull();
-            result.Value.Coordinates.Latitude.ShouldNotBe(default);
-            result.Value.Coordinates.Longitude.ShouldNotBe(default);
-        }
-
-        [Fact]
-        public async Task Geocode_Fails_If_Address_Geocoding_Fails()
-        {
-            var result = await geocoder.Geocode("not_a_real_address");
-
-            result.ShouldBeAnError();
-        }
-
-        [Fact]
         public async Task LookupCoordinates_Finds_Coordinates()
         {
             var result = await geocoder.LookupCoordinates("BD18 1LT");

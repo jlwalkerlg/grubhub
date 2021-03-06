@@ -24,7 +24,7 @@ namespace Web.Domain
 
         public static bool IsValid(string value)
         {
-            return regex.IsMatch(value);
+            return value is not null && regex.IsMatch(value);
         }
     }
 }

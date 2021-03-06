@@ -5,7 +5,6 @@ using Web.Domain.Orders;
 using Web.Features.Orders.GetActiveRestaurantOrders;
 using WebTests.TestData;
 using Xunit;
-using Xunit.Abstractions;
 using Order = WebTests.TestData.Order;
 using OrderItem = WebTests.TestData.OrderItem;
 using Restaurant = WebTests.TestData.Restaurant;
@@ -14,11 +13,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
 {
     public class GetActiveRestaurantOrdersIntegrationTests : IntegrationTestBase
     {
-        private readonly ITestOutputHelper output;
-
-        public GetActiveRestaurantOrdersIntegrationTests(IntegrationTestFixture fixture, ITestOutputHelper output) : base(fixture)
+        public GetActiveRestaurantOrdersIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
-            this.output = output;
         }
 
         [Fact]
@@ -119,11 +115,6 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
 
             var response = await factory.GetAuthenticatedClient(restaurant.Manager).Get(
                 $"/restaurant/active-orders?confirmedAfter={confirmedAfter}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                output.WriteLine(response.Content.ReadAsStringAsync().Result);
-            }
 
             response.StatusCode.ShouldBe(200);
 

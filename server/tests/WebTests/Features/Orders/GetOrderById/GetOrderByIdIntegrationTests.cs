@@ -7,6 +7,7 @@ namespace WebTests.Features.Orders.GetOrderById
 {
     public class GetOrderByIdIntegrationTests : IntegrationTestBase
     {
+
         public GetOrderByIdIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }

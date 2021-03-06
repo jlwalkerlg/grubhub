@@ -43,7 +43,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Fails_If_Geocoding_Fails()
         {
-            geocoder.GeocodeResult = Error.Internal("Geocoding failed.");
+            geocoder.LookupCoordinatesResult = Error.Internal("Geocoding failed.");
 
             var query = new SearchRestaurantsQuery()
             {
