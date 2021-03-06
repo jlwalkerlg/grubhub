@@ -47,6 +47,14 @@ namespace Web
             return new Error(ErrorType.NotFound, message);
         }
 
+        public static Error ValidationError(string field, string error)
+        {
+            return new Error(new Dictionary<string, string>()
+            {
+                { field, error },
+            });
+        }
+
         public static Error ValidationError(Dictionary<string, string> errors)
         {
             return new Error(errors);

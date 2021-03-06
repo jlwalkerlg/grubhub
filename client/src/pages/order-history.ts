@@ -1,1 +1,1 @@
-export { default } from "~/views/Orders/OrderHistory/OrderHistoryPage.tsx";
+export { default } from "~/views/Orders/OrderHistory/OrderHistoryPage";
