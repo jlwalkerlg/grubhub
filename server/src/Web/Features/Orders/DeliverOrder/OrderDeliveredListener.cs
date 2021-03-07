@@ -38,6 +38,10 @@ namespace Web.Features.Orders.DeliverOrder
                         order.RestaurantId.Value.ToString()),
                     null
                 },
+                {
+                    new CapturePaymentJob(order.PaymentIntentId),
+                    null
+                },
             }, cancellationToken);
 
             return Result.Ok();

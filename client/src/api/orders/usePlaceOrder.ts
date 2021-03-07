@@ -1,5 +1,6 @@
 import { useMutation, useQueryCache } from "react-query";
 import Api, { ApiError } from "../Api";
+import { getBasketQueryKey } from "../baskets/useBasket";
 import { getOrderHistoryQueryKey } from "./useOrderHistory";
 
 export interface PlaceOrderCommand {
@@ -24,7 +25,8 @@ export function usePlaceOrder() {
       return response.data;
     },
     {
-      onSuccess: () => {
+      onSuccess: (_, { restaurantId }) => {
+        cache.invalidateQueries(getBasketQueryKey(restaurantId));
         cache.invalidateQueries(getOrderHistoryQueryKey());
       },
     }

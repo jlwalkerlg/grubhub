@@ -4,11 +4,11 @@ namespace Web.Features.Orders
 {
     public class RefundOrderJob : Job
     {
-        public RefundOrderJob(string orderId)
+        public RefundOrderJob(string paymentIntentId)
         {
-            OrderId = orderId ?? throw new ArgumentNullException(nameof(orderId));
+            PaymentIntentId = paymentIntentId ?? throw new ArgumentNullException(nameof(paymentIntentId));
         }
 
-        public string OrderId { get; }
+        public string PaymentIntentId { get; }
     }
 }

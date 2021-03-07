@@ -35,7 +35,7 @@ namespace Web.Features.Orders.RejectOrder
                     null
                 },
                 {
-                    new RefundOrderJob(order.Id.Value),
+                    new RefundOrderJob(order.PaymentIntentId),
                     null
                 },
             }, cancellationToken);

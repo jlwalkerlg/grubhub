@@ -4,15 +4,15 @@ using Stripe;
 
 namespace Web.Features.Orders
 {
-    public class RefundOrderProcessor : JobProcessor<RefundOrderJob>
+    public class CapturePaymentProcessor : JobProcessor<CapturePaymentJob>
     {
         private readonly PaymentIntentService service = new();
 
-        public async Task<Result> Handle(RefundOrderJob job, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CapturePaymentJob job, CancellationToken cancellationToken)
         {
-            await service.CancelAsync(
+            await service.CaptureAsync(
                 job.PaymentIntentId,
-                new PaymentIntentCancelOptions(),
+                new PaymentIntentCaptureOptions(),
                 cancellationToken: cancellationToken);
 
             return Result.Ok();
