@@ -4,12 +4,13 @@ namespace Web.Domain.Users
 {
     public abstract class User : Entity<User>
     {
-        private string name;
+        private string firstName;
+        private string lastName;
         private Email email;
 
         protected User() { } // EF Core
 
-        protected User(UserId id, string name, Email email, string password)
+        protected User(UserId id, string firstName, string lastName, Email email, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
             {
@@ -17,26 +18,43 @@ namespace Web.Domain.Users
             }
 
             Id = id ?? throw new ArgumentNullException(nameof(id));
-            Name = name;
+            FirstName = firstName;
+            LastName = lastName;
             Email = email;
             Password = password;
         }
 
         public UserId Id { get; }
 
-        public string Name
+        public string FirstName
         {
-            get => name;
-            set
+            get => firstName;
+            private set
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException("Name must not be empty.");
+                    throw new ArgumentException("First name must not be empty.");
                 }
 
-                name = value;
+                firstName = value;
             }
         }
+
+        public string LastName
+        {
+            get => lastName;
+            private set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Last name must not be empty.");
+                }
+
+                lastName = value;
+            }
+        }
+
+        public string Name => $"{FirstName} {LastName}";
 
         public Email Email
         {
@@ -49,6 +67,12 @@ namespace Web.Domain.Users
         public Address DeliveryAddress { get; set; }
 
         public abstract UserRole Role { get; }
+
+        public void Rename(string first, string last)
+        {
+            FirstName = first;
+            LastName = last;
+        }
 
         protected override bool IdentityEquals(User other)
         {

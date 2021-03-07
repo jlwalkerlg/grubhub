@@ -12,11 +12,14 @@ namespace WebTests.TestData
         [Column("id")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Column("name")]
-        public string Name { get; set; } = Guid.NewGuid().ToString();
+        [Column("first_name")]
+        public string FirstName { get; set; } = Guid.NewGuid().ToString();
+
+        [Column("last_name")]
+        public string LastName { get; set; } = Guid.NewGuid().ToString();
 
         [Column("email")]
-        public string Email { get; set; } = Guid.NewGuid().ToString() + "@gmail.com";
+        public string Email { get; set; } = Guid.NewGuid() + "@gmail.com";
 
         [Column("password")]
         public string Password { get; set; } = Guid.NewGuid().ToString();

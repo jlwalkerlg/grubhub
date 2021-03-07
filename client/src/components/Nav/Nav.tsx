@@ -76,7 +76,7 @@ const Nav: React.FC = () => {
               >
                 <div className="flex items-center uppercase font-medium px-2 py-2">
                   <UserCircleIcon className="h-5" />
-                  <span className="ml-2">{user.name}</span>
+                  <span className="ml-2">{user.firstName}</span>
                 </div>
 
                 <div

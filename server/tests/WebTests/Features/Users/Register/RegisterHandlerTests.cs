@@ -31,7 +31,8 @@ namespace WebTests.Features.Users.Register
         {
             var command = new RegisterCustomerCommand()
             {
-                Name = "Jordan Walker",
+                FirstName = "Jordan",
+                LastName = "Walker",
                 Email = "walker.jlg@gmail.com",
                 Password = "password123",
             };
@@ -42,7 +43,8 @@ namespace WebTests.Features.Users.Register
 
             var customer = unitOfWork.UserRepositorySpy.Users.Single() as Customer;
 
-            customer.Name.ShouldBe(command.Name);
+            customer.FirstName.ShouldBe(command.FirstName);
+            customer.LastName.ShouldBe(command.LastName);
             customer.Email.Address.ShouldBe(command.Email);
             customer.Password.ShouldBe(hasher.Hash(command.Password));
 
@@ -55,14 +57,16 @@ namespace WebTests.Features.Users.Register
         {
             var command = new RegisterCustomerCommand()
             {
-                Name = "Jordan Walker",
+                FirstName = "Jordan",
+                LastName = "Walker",
                 Email = "walker.jlg@gmail.com",
                 Password = "password123",
             };
 
             var existingCustomer = new Customer(
                 new UserId(Guid.NewGuid()),
-                command.Name,
+                command.FirstName,
+                command.LastName,
                 new Email(command.Email),
                 hasher.Hash(command.Password));
 

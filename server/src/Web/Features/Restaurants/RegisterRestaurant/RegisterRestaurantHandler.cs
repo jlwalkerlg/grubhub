@@ -45,7 +45,8 @@ namespace Web.Features.Restaurants.RegisterRestaurant
 
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                command.ManagerName,
+                command.ManagerFirstName,
+                command.ManagerLastName,
                 new Email(command.ManagerEmail),
                 hasher.Hash(command.ManagerPassword));
 

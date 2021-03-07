@@ -58,9 +58,11 @@ namespace Web.Features.Orders.GetOrderById
                             r.postcode AS restaurant_postcode,
                             r.phone_number as restaurant_phone_number,
                             r.estimated_delivery_time_in_minutes,
-                            u.name as customer_name,
+                            u.first_name as customer_first_name,
+                            u.last_name as customer_last_name,
                             u.email as customer_email,
-                            o.mobile_number as customer_mobile
+                            o.mobile_number as customer_mobile,
+                            r.manager_id as restaurant_manager_id
                         FROM
                             orders o
                             INNER JOIN restaurants r ON r.id = o.restaurant_id
@@ -78,7 +80,7 @@ namespace Web.Features.Orders.GetOrderById
                 return NotFound();
             }
 
-            if (order.UserId != authenticator.UserId)
+            if (order.UserId != authenticator.UserId && authenticator.UserId != order.RestaurantManagerId)
             {
                 return Unauthorised();
             }
@@ -133,9 +135,12 @@ namespace Web.Features.Orders.GetOrderById
             [JsonIgnore]
             public int EstimatedDeliveryTimeInMinutes { get; set; }
             public DateTime EstimatedDeliveryTime => PlacedAt.AddMinutes(EstimatedDeliveryTimeInMinutes);
-            public string CustomerName { get; set; }
+            public string CustomerFirstName { get; set; }
+            public string CustomerLastName { get; set; }
             public string CustomerEmail { get; set; }
             public string CustomerMobile { get; set; }
+            [JsonIgnore]
+            public Guid RestaurantManagerId { get; set; }
 
             public List<OrderItemModel> Items { get; set; }
             public decimal Subtotal => Items.Aggregate(

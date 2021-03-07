@@ -6,7 +6,10 @@ namespace Web.Features.Users.UpdateAuthUserDetails
     {
         public UpdateAuthUserDetailsValidator()
         {
-            CascadeRuleFor(x => x.Name)
+            CascadeRuleFor(x => x.FirstName)
+                .Required();
+
+            CascadeRuleFor(x => x.LastName)
                 .Required();
 
             CascadeRuleFor(x => x.Email)

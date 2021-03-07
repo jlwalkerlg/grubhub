@@ -48,7 +48,8 @@ namespace WebTests.Features.Menus.AddMenuCategory
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
@@ -89,7 +90,8 @@ namespace WebTests.Features.Menus.AddMenuCategory
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 

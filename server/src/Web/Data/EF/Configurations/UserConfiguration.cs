@@ -23,8 +23,12 @@ namespace Web.Data.EF.Configurations
                 .HasColumnName("id")
                 .ValueGeneratedNever();
 
-            builder.Property(x => x.Name)
-                .HasColumnName("name")
+            builder.Property(x => x.FirstName)
+                .HasColumnName("first_name")
+                .IsRequired();
+
+            builder.Property(x => x.LastName)
+                .HasColumnName("last_name")
                 .IsRequired();
 
             builder.Property(x => x.Email)

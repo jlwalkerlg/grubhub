@@ -3,7 +3,8 @@ import Api, { ApiError } from "../Api";
 import { getAuthUser, getAuthUserQueryKey } from "./useAuth";
 
 export interface RegisterCommand {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }

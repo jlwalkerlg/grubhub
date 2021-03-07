@@ -3,7 +3,8 @@ import Api, { ApiError } from "../Api";
 import { getAuthUserQueryKey } from "./useAuth";
 
 interface UpdateAccountDetailsCommand {
-  name: string;
+  firstName: string;
+  lastName: string;
   mobileNumber: string;
 }
 

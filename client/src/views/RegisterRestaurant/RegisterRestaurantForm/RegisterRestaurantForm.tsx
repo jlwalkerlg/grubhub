@@ -26,7 +26,8 @@ const RegisterRestaurantForm: FC = () => {
   ] = useRegisterRestaurant();
 
   const [values, setValues] = useState<RegisterRestaurantCommand>({
-    managerName: "",
+    managerFirstName: "",
+    managerLastName: "",
     managerEmail: "",
     managerPassword: "",
     restaurantName: "",
@@ -81,7 +82,8 @@ const RegisterRestaurantForm: FC = () => {
           setErrors(error.errors);
 
           for (const field of [
-            "managerName",
+            "managerFirstName",
+            "managerLastName",
             "managerEmail",
             "managerPassword",
           ]) {

@@ -17,13 +17,15 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
         {
             var command = new UpdateAuthUserDetailsCommand()
             {
-                Name = name,
+                FirstName = name,
+                LastName = name,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.Name));
+            result.Errors.ShouldContainKey(nameof(command.FirstName));
+            result.Errors.ShouldContainKey(nameof(command.LastName));
         }
 
         [Theory]

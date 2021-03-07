@@ -30,7 +30,8 @@ namespace Web.Features.Users.RegisterCustomer
 
             var customer = new Customer(
                 new UserId(Guid.NewGuid()),
-                command.Name,
+                command.FirstName,
+                command.LastName,
                 new Email(command.Email),
                 hasher.Hash(command.Password));
 

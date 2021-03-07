@@ -22,7 +22,7 @@ namespace Web.Features.Users.UpdateAccountDetails
 
             if (user is null) return Error.NotFound("User not found.");
 
-            user.Name = command.Name;
+            user.Rename(command.FirstName, command.LastName);
             user.MobileNumber = new MobileNumber(command.MobileNumber);
 
             await unitOfWork.Commit();

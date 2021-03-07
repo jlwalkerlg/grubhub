@@ -13,7 +13,8 @@ const UpdateManagerDetailsForm = () => {
 
   const form = useForm({
     defaultValues: {
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
     },
   });

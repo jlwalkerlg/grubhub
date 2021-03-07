@@ -40,7 +40,8 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var request = new RegisterRestaurantCommand()
             {
-                ManagerName = "Jordan Walker",
+                ManagerFirstName = "Jordan",
+                ManagerLastName = "Walker",
                 ManagerEmail = "walker.jlg@gmail.com",
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
@@ -89,7 +90,8 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             manager.Id.ShouldBe(restaurant.ManagerId);
             manager.Email.ShouldBe(request.ManagerEmail);
-            manager.Name.ShouldBe(request.ManagerName);
+            manager.FirstName.ShouldBe(request.ManagerFirstName);
+            manager.LastName.ShouldBe(request.ManagerLastName);
             manager.Role.ShouldBe(Web.Domain.Users.UserRole.RestaurantManager);
 
             hasher.CheckMatch(request.ManagerPassword, manager.Password).ShouldBe(true);

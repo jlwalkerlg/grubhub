@@ -31,7 +31,8 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
@@ -60,7 +61,8 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
@@ -105,7 +107,8 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
@@ -151,7 +154,8 @@ namespace WebTests.Features.Menus.UpdateMenuItem
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 

@@ -206,7 +206,9 @@ const MobileOrderSummary: FC<{ order: OrderDto }> = ({ order }) => {
         <div>
           <h2 className="font-semibold">Delivering to</h2>
 
-          <p className="font-semibold mt-3">{order.customerName}</p>
+          <p className="font-semibold mt-3">
+            {order.customerFirstName} {order.customerLastName}
+          </p>
           <p>
             {formatAddress(
               order.addressLine1,
@@ -401,7 +403,9 @@ const OrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
             <div>
               <h2 className="font-semibold">Delivering to</h2>
 
-              <p className="font-semibold mt-3">{user.name}</p>
+              <p className="font-semibold mt-3">
+                {user.firstName} {user.lastName}
+              </p>
               <p>
                 {formatAddress(
                   order.addressLine1,

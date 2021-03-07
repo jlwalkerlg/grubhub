@@ -71,7 +71,9 @@ const OrderDetails: FC<{
           <div className="mt-1">
             <p className="mt-2">
               <span className="font-semibold">Name</span>
-              <span className="ml-2">{order.customerName}</span>
+              <span className="ml-2">
+                {order.customerFirstName} {order.customerLastName}
+              </span>
             </p>
             <p className="mt-2">
               <span className="font-semibold">Phone Number</span>

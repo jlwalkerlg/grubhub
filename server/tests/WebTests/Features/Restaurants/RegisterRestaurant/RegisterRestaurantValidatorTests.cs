@@ -17,13 +17,15 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         {
             var command = new RegisterRestaurantCommand()
             {
-                ManagerName = name,
+                ManagerFirstName = name,
+                ManagerLastName = name,
             };
 
             var result = await validator.Validate(command);
 
             result.ShouldBeAnError();
-            result.Errors.ShouldContainKey(nameof(command.ManagerName));
+            result.Errors.ShouldContainKey(nameof(command.ManagerFirstName));
+            result.Errors.ShouldContainKey(nameof(command.ManagerLastName));
         }
 
         [Theory]

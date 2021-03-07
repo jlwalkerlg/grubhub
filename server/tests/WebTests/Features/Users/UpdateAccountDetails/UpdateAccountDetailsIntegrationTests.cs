@@ -26,7 +26,8 @@ namespace WebTests.Features.Users.UpdateAccountDetails
 
             var command = new UpdateAccountDetailsCommand()
             {
-                Name = Guid.NewGuid().ToString(),
+                FirstName = Guid.NewGuid().ToString(),
+                LastName = Guid.NewGuid().ToString(),
                 MobileNumber = "07098765432",
             };
 
@@ -40,7 +41,8 @@ namespace WebTests.Features.Users.UpdateAccountDetails
 
             Reload(user);
 
-            user.Name.ShouldBe(command.Name);
+            user.FirstName.ShouldBe(command.FirstName);
+            user.LastName.ShouldBe(command.LastName);
             user.MobileNumber.ShouldBe(command.MobileNumber);
         }
     }

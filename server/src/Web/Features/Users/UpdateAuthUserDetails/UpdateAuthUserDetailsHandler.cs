@@ -32,7 +32,7 @@ namespace Web.Features.Users.UpdateAuthUserDetails
                 }
             }
 
-            user.Name = command.Name;
+            user.Rename(command.FirstName, command.LastName);
             user.Email = new Email(command.Email);
 
             await unitOfWork.Commit();

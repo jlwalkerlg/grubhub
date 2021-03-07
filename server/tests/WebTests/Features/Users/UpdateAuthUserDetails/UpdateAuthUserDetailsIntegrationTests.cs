@@ -18,7 +18,8 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
         {
             var user = new User()
             {
-                Name = "Jordan",
+                FirstName = "Jordan",
+                LastName = "Walker",
                 Email = "walker.jlg@gmail.com",
             };
 
@@ -26,7 +27,8 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             var request = new UpdateAuthUserDetailsCommand()
             {
-                Name = "Bruno",
+                FirstName = "Bruno",
+                LastName = "Walker",
                 Email = "bruno@gmail.com",
             };
 
@@ -36,7 +38,8 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             var found = UseTestDbContext(db => db.Users.Single());
 
-            found.Name.ShouldBe(request.Name);
+            found.FirstName.ShouldBe(request.FirstName);
+            found.LastName.ShouldBe(request.LastName);
             found.Email.ShouldBe(request.Email);
         }
     }

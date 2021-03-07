@@ -30,13 +30,15 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
         {
             var authUser = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
             var existingUser = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
                 "Bruno",
+                "Walker",
                 new Email("taken@gmail.com"),
                 "password123");
 
@@ -47,7 +49,8 @@ namespace WebTests.Features.Users.UpdateAuthUserDetails
 
             var command = new UpdateAuthUserDetailsCommand()
             {
-                Name = "Jordan Walker",
+                FirstName = "Jordan",
+                LastName = "Walker",
                 Email = "taken@gmail.com",
             };
 

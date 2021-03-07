@@ -58,12 +58,10 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
     );
   });
 
-  const firstName = user.name.split(" ")[0];
-
   return (
     <div>
       <h2 className="font-bold text-xl text-gray-800 text-center pb-2">
-        {firstName}, confirm your details.
+        {user.firstName}, confirm your details.
       </h2>
 
       {isError && (

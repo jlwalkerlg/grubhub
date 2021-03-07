@@ -6,7 +6,10 @@ namespace Web.Features.Restaurants.RegisterRestaurant
     {
         public RegisterRestaurantValidator()
         {
-            CascadeRuleFor(x => x.ManagerName)
+            CascadeRuleFor(x => x.ManagerFirstName)
+                .Required();
+
+            CascadeRuleFor(x => x.ManagerLastName)
                 .Required();
 
             CascadeRuleFor(x => x.ManagerEmail)

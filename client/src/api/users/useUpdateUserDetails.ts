@@ -4,7 +4,8 @@ import useAuth, { getAuthUserQueryKey } from "./useAuth";
 import { UserDto } from "./UserDto";
 
 export interface UpdateUserDetailsCommand {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
 }
 
@@ -23,7 +24,8 @@ export default function useUpdateUserDetails() {
       onSuccess: (_, command) => {
         const newUser: UserDto = {
           ...user,
-          name: command.name,
+          firstName: command.firstName,
+          lastName: command.lastName,
           email: command.email,
         };
 

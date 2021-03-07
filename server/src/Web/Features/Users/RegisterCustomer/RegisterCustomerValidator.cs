@@ -6,7 +6,10 @@ namespace Web.Features.Users.RegisterCustomer
     {
         public RegisterCustomerValidator()
         {
-            CascadeRuleFor(x => x.Name)
+            CascadeRuleFor(x => x.FirstName)
+                .Required();
+
+            CascadeRuleFor(x => x.LastName)
                 .Required();
 
             CascadeRuleFor(x => x.Email)

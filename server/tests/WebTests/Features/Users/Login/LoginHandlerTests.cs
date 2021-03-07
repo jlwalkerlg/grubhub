@@ -49,7 +49,8 @@ namespace WebTests.Features.Users.Login
         {
             User user = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 hasherFake.Hash("password123"));
 

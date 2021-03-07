@@ -18,7 +18,7 @@ export default function usePay() {
           payment_method: {
             card: elements.getElement(CardElement),
             billing_details: {
-              name: user.name,
+              name: `${user.firstName} ${user.lastName}`,
             },
           },
         }

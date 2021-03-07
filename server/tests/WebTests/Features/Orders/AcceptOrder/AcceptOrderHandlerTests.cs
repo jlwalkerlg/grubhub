@@ -153,7 +153,8 @@ namespace WebTests.Features.Orders.AcceptOrder
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 
@@ -189,6 +190,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             var customer = new Customer(
                 new UserId(Guid.NewGuid()),
                 "Bruno",
+                "Walker",
                 new Email("bruno@gmail.com"),
                 "password123");
 

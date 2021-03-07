@@ -34,7 +34,8 @@ namespace WebTests.Features.Users.GetAuthUser
             var userDto = await response.GetData<UserDto>();
 
             userDto.Id.ShouldBe(user.Id);
-            userDto.Name.ShouldBe(user.Name);
+            userDto.FirstName.ShouldBe(user.FirstName);
+            userDto.LastName.ShouldBe(user.LastName);
             userDto.Email.ShouldBe(user.Email);
             userDto.RestaurantId.ShouldBe(restaurant.Id);
             userDto.RestaurantName.ShouldBe(restaurant.Name);

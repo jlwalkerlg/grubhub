@@ -34,7 +34,8 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         {
             await unitOfWorkSpy.Users.Add(new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("taken@gmail.com"),
                 "password123"));
 
@@ -42,7 +43,8 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var command = new RegisterRestaurantCommand()
             {
-                ManagerName = "Jordan Walker",
+                ManagerFirstName = "Jordan",
+                ManagerLastName = "Walker",
                 ManagerEmail = "taken@gmail.com",
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",
@@ -67,7 +69,8 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
 
             var command = new RegisterRestaurantCommand()
             {
-                ManagerName = "Jordan Walker",
+                ManagerFirstName = "Jordan",
+                ManagerLastName = "Walker",
                 ManagerEmail = "test@email.com",
                 ManagerPassword = "password123",
                 RestaurantName = "Chow Main",

@@ -62,7 +62,8 @@ namespace Console
                 {
                     var customer = new Customer(
                         new UserId(new Guid(userEl.GetProperty("id").GetString())),
-                        userEl.GetProperty("name").GetString(),
+                        userEl.GetProperty("firstName").GetString(),
+                        userEl.GetProperty("lastName").GetString(),
                         new Email(userEl.GetProperty("email").GetString()),
                         hasher.Hash(userEl.GetProperty("password").GetString())
                     );
@@ -74,7 +75,8 @@ namespace Console
                 {
                     var manager = new RestaurantManager(
                         new UserId(new Guid(userEl.GetProperty("id").GetString())),
-                        userEl.GetProperty("name").GetString(),
+                        userEl.GetProperty("firstName").GetString(),
+                        userEl.GetProperty("lastName").GetString(),
                         new Email(userEl.GetProperty("email").GetString()),
                         hasher.Hash(userEl.GetProperty("password").GetString())
                     );

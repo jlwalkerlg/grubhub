@@ -25,7 +25,8 @@ namespace Web.Features.Users.GetAuthUser
             var sql = @"
                 SELECT
                     u.id,
-                    u.name,
+                    u.first_name,
+                    u.last_name,
                     u.email,
                     u.role,
                     u.mobile_number,

@@ -45,7 +45,8 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
         {
             var manager = new RestaurantManager(
                 new UserId(Guid.NewGuid()),
-                "Jordan Walker",
+                "Jordan",
+                "Walker",
                 new Email("walker.jlg@gmail.com"),
                 "password123");
 

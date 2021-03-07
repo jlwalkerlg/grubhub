@@ -9,7 +9,8 @@ import {
 import { setFormErrors } from "~/services/forms/setFormErrors";
 
 interface StepOneValues {
-  managerName: string;
+  managerFirstName: string;
+  managerLastName: string;
   managerEmail: string;
   managerPassword: string;
 }
@@ -40,8 +41,8 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
       </p>
 
       <div className="mt-6">
-        <label className="label" htmlFor="managerName">
-          Manager Name <span className="text-primary">*</span>
+        <label className="label" htmlFor="managerFirstName">
+          First Name <span className="text-primary">*</span>
         </label>
         <input
           ref={form.register({
@@ -50,18 +51,41 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
           autoFocus
           className="input"
           type="text"
-          name="managerName"
-          id="managerName"
-          data-invalid={!!form.errors.managerName}
+          name="managerFirstName"
+          id="managerFirstName"
+          data-invalid={!!form.errors.managerFirstName}
         />
-        {form.errors.managerName && (
-          <p className="form-error mt-1">{form.errors.managerName.message}</p>
+        {form.errors.managerFirstName && (
+          <p className="form-error mt-1">
+            {form.errors.managerFirstName.message}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="managerLastName">
+          Last Name <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: combineRules([new RequiredRule()]),
+          })}
+          className="input"
+          type="text"
+          name="managerLastName"
+          id="managerLastName"
+          data-invalid={!!form.errors.managerLastName}
+        />
+        {form.errors.managerLastName && (
+          <p className="form-error mt-1">
+            {form.errors.managerLastName.message}
+          </p>
         )}
       </div>
 
       <div className="mt-4">
         <label className="label" htmlFor="managerEmail">
-          Manager Email <span className="text-primary">*</span>
+          Email <span className="text-primary">*</span>
         </label>
         <input
           ref={form.register({
@@ -81,7 +105,7 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
 
       <div className="mt-4">
         <label className="label" htmlFor="managerPassword">
-          Manager Password <span className="text-primary">*</span>
+          Password <span className="text-primary">*</span>
         </label>
         <input
           ref={form.register({

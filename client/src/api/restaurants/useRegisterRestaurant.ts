@@ -2,7 +2,8 @@ import { useMutation } from "react-query";
 import Api, { ApiError } from "../Api";
 
 export interface RegisterRestaurantCommand {
-  managerName: string;
+  managerFirstName: string;
+  managerLastName: string;
   managerEmail: string;
   managerPassword: string;
   restaurantName: string;

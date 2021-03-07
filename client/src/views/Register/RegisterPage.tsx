@@ -16,7 +16,8 @@ const Register: FC = () => {
 
   const form = useForm({
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
     },
@@ -50,20 +51,38 @@ const Register: FC = () => {
 
       <form className="mt-4" onSubmit={onSubmit}>
         <div className="mt-4">
-          <label className="label" htmlFor="name">
-            Name <span className="text-primary">*</span>
+          <label className="label" htmlFor="firstName">
+            First Name <span className="text-primary">*</span>
           </label>
           <input
             ref={form.register({
               validate: combineRules([new RequiredRule()]),
             })}
             className="input"
-            name="name"
-            id="name"
-            data-invalid={!!form.errors.name}
+            name="firstName"
+            id="firstName"
+            data-invalid={!!form.errors.firstName}
           />
-          {form.errors.name && (
-            <p className="form-error mt-1">{form.errors.name.message}</p>
+          {form.errors.firstName && (
+            <p className="form-error mt-1">{form.errors.firstName.message}</p>
+          )}
+        </div>
+
+        <div className="mt-4">
+          <label className="label" htmlFor="lastName">
+            Last Name <span className="text-primary">*</span>
+          </label>
+          <input
+            ref={form.register({
+              validate: combineRules([new RequiredRule()]),
+            })}
+            className="input"
+            name="lastName"
+            id="lastName"
+            data-invalid={!!form.errors.lastName}
+          />
+          {form.errors.lastName && (
+            <p className="form-error mt-1">{form.errors.lastName.message}</p>
           )}
         </div>
 

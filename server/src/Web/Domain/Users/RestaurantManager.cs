@@ -2,8 +2,8 @@ namespace Web.Domain.Users
 {
     public class RestaurantManager : User
     {
-        public RestaurantManager(UserId id, string name, Email email, string password)
-            : base(id, name, email, password)
+        public RestaurantManager(UserId id, string firstName, string lastName, Email email, string password)
+            : base(id, firstName, lastName, email, password)
         {
         }
 

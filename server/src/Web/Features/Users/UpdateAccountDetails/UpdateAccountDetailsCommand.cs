@@ -2,7 +2,8 @@
 {
     public record UpdateAccountDetailsCommand : IRequest
     {
-        public string Name { get; init; }
+        public string FirstName { get; init; }
+        public string LastName { get; init; }
         public string MobileNumber { get; init; }
     }
 }
