@@ -29,6 +29,10 @@ const Nav: React.FC = () => {
 
   const onLogout = async () => {
     await logout(null, {
+      onSuccess: () => {
+        window.location.reload();
+      },
+
       onError: (error) => {
         addToast(error.detail);
       },

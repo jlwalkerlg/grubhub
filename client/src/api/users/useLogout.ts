@@ -7,7 +7,7 @@ async function logout() {
 }
 
 export default function useLogout() {
-  const queryCache = useQueryCache();
+  const cache = useQueryCache();
 
   return useMutation<void, ApiError, null, null>(
     async () => {
@@ -17,7 +17,7 @@ export default function useLogout() {
     },
     {
       onSuccess: () => {
-        queryCache.setQueryData(getAuthUserQueryKey(), null);
+        cache.setQueryData(getAuthUserQueryKey(), null);
       },
     }
   );
