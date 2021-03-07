@@ -4,7 +4,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { loadStripe, StripeCardElementOptions } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, FormEvent } from "react";
@@ -12,6 +12,7 @@ import useOrder, { OrderDto } from "~/api/orders/useOrder";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import TruckIcon from "~/components/Icons/TruckIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
+import { STRIPE_PUBLISHABLE_KEY } from "~/config";
 import { formatAddress } from "~/services/utils";
 import "./PayPage.module.css";
 import usePay from "./usePay";
@@ -19,9 +20,7 @@ import usePay from "./usePay";
 const stripePromise =
   typeof window === "undefined"
     ? undefined
-    : loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-
-const CARD_ELEMENT_OPTIONS: StripeCardElementOptions = {};
+    : loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
   const stripe = useStripe();
@@ -58,7 +57,7 @@ const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
               Card details <span className="text-primary">*</span>
             </label>
             <div className="input px-2">
-              <CardElement id="card" options={CARD_ELEMENT_OPTIONS} />
+              <CardElement id="card" />
             </div>
           </div>
 

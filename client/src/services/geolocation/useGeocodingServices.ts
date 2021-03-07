@@ -1,9 +1,8 @@
 import { useQuery } from "react-query";
+import { GOOGLE_API_KEY } from "~/config";
 import useScript from "../useScript";
 
-const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-
-const src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`;
+const src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&libraries=places`;
 
 export default function useGeocodingServices() {
   const { load: loadScript } = useScript(src);

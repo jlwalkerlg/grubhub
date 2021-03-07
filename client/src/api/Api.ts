@@ -4,6 +4,7 @@ import Axios, {
   AxiosResponse,
   Method,
 } from "axios";
+import { API_BASE_URL } from "~/config";
 
 interface ProblemDetails {
   type: string;
@@ -56,7 +57,7 @@ export class ApiError {
 class Api {
   private client: AxiosInstance = Axios.create({
     withCredentials: true,
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseURL: API_BASE_URL,
     xsrfCookieName: "XSRF-TOKEN",
     xsrfHeaderName: "X-XSRF-TOKEN",
   });

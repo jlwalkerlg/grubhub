@@ -1,5 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "~/config";
 import { useIsMounted } from "../../services/useIsMounted";
 
 interface Options {
@@ -21,7 +22,7 @@ export function useOrdersHub(options?: Options) {
     if (!enabled) return;
 
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hubs/orders`)
+      .withUrl(`${API_BASE_URL}/hubs/orders`)
       .build();
 
     if (options?.configure) {
