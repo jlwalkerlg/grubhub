@@ -12,6 +12,7 @@ import useOrder, { OrderDto } from "~/api/orders/useOrder";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import TruckIcon from "~/components/Icons/TruckIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
+import { formatAddress } from "~/services/utils";
 import "./PayPage.module.css";
 import usePay from "./usePay";
 
@@ -45,28 +46,56 @@ const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
   };
 
   return (
-    <div className="flex-1 rounded bg-white border border-gray-300 p-2 ">
-      <h2 className="font-bold text-xl text-gray-700">Payment details</h2>
+    <div className="flex-1">
+      <div className="rounded bg-white border border-gray-300 p-2">
+        <h2 className="font-bold text-xl text-gray-700">Payment details</h2>
 
-      {isError && <p className="text-primary mt-1 mb-4">{error.message}</p>}
+        {isError && <p className="text-primary mt-1 mb-4">{error.message}</p>}
 
-      <form onSubmit={handleSubmit} className="mt-2">
-        <div>
-          <label htmlFor="card" className="label">
-            Card details <span className="text-primary">*</span>
-          </label>
-          <div className="input px-2">
-            <CardElement id="card" options={CARD_ELEMENT_OPTIONS} />
+        <form onSubmit={handleSubmit} className="mt-2">
+          <div>
+            <label htmlFor="card" className="label">
+              Card details <span className="text-primary">*</span>
+            </label>
+            <div className="input px-2">
+              <CardElement id="card" options={CARD_ELEMENT_OPTIONS} />
+            </div>
+          </div>
+
+          <button
+            className="btn btn-primary w-full mt-4"
+            disabled={!stripe || !elements || isLoading}
+          >
+            Place my order
+          </button>
+        </form>
+      </div>
+
+      <div className="rounded bg-white border border-gray-300 p-2 mt-4 text-sm text-gray-700">
+        <h2 className="font-bold text-lg text-gray-700">Demo card details</h2>
+
+        <div className="mt-2">
+          <div className="mt-1">
+            <span className="font-semibold text-gray-800">Number: </span>
+            <span>4242 4242 4242 4242</span>
+          </div>
+
+          <div className="mt-1">
+            <span className="font-semibold text-gray-800">Expiry date: </span>
+            <span>Any valid expiry date (04/24)</span>
+          </div>
+
+          <div className="mt-1">
+            <span className="font-semibold text-gray-800">CVC: </span>
+            <span>Any valid CVC (242)</span>
+          </div>
+
+          <div className="mt-1">
+            <span className="font-semibold text-gray-800">ZIP: </span>
+            <span>Any valid ZIP (42424)</span>
           </div>
         </div>
-
-        <button
-          className="btn btn-primary w-full mt-4"
-          disabled={!stripe || !elements || isLoading}
-        >
-          Place my order
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
@@ -172,7 +201,12 @@ const Pay: FC = () => {
         <hr className="mt-4 -mx-2 border-gray-300" />
 
         <p className="mt-3 text-sm text-center text-gray-700">
-          {order.restaurantAddress}
+          {formatAddress(
+            order.restaurantAddressLine1,
+            order.restaurantAddressLine2,
+            order.restaurantCity,
+            order.restaurantPostcode
+          )}
         </p>
 
         <hr className="mt-3 -mx-2 border-gray-300" />

@@ -30,11 +30,11 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
   const form = useForm({
     defaultValues: {
-      mobile: "",
-      addressLine1: "",
-      addressLine2: "",
-      city: "",
-      postcode: "",
+      mobile: user.mobileNumber,
+      addressLine1: user.addressLine1,
+      addressLine2: user.addressLine2,
+      city: user.city,
+      postcode: user.postcode,
     },
   });
 
