@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
+using System.IO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -18,10 +19,32 @@ namespace Web.Services.Authentication
                         ? CookieSecurePolicy.Always
                         : CookieSecurePolicy.None;
 
-                    options.Events.OnRedirectToLogin = context =>
+                    options.Events.OnRedirectToLogin = async context =>
                     {
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        return Task.CompletedTask;
+                        var problem = new ProblemDetails()
+                        {
+                            Detail = Error.Unauthorised().Message,
+                            Status = 401,
+                        };
+
+                        context.Response.StatusCode = 401;
+
+                        await context.Response.WriteAsJsonAsync(problem);
+                        await context.Response.Body.FlushAsync();
+                    };
+
+                    options.Events.OnRedirectToAccessDenied = async context =>
+                    {
+                        var problem = new ProblemDetails()
+                        {
+                            Detail = Error.Unauthorised().Message,
+                            Status = 403,
+                        };
+
+                        context.Response.StatusCode = 403;
+
+                        await context.Response.WriteAsJsonAsync(problem);
+                        await context.Response.Body.FlushAsync();
                     };
                 });
 
