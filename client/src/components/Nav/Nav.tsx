@@ -83,6 +83,11 @@ const Nav: React.FC = () => {
                   <div
                     className={`relative bg-white text-gray-700 px-2 rounded shadow whitespace-nowrap ${styles["dropdown"]}`}
                   >
+                    <Link href="/account">
+                      <a className="block px-4 py-3 hover:text-primary border-b border-gray-200">
+                        Your Account
+                      </a>
+                    </Link>
                     <Link href="/order-history">
                       <a className="block px-4 py-3 hover:text-primary border-b border-gray-200">
                         Your Orders
@@ -138,6 +143,12 @@ const Nav: React.FC = () => {
         <ul className="container mt-5">
           {!isLoading && isLoggedIn && (
             <li>
+              <Link href="/account">
+                <a className="block py-2 uppercase font-medium hover:text-primary">
+                  <OrdersIcon className="w-6 h-6 inline" />
+                  <span className="ml-2 align-middle">Your Account</span>
+                </a>
+              </Link>
               <Link href="/order-history">
                 <a className="block py-2 uppercase font-medium hover:text-primary">
                   <OrdersIcon className="w-6 h-6 inline" />

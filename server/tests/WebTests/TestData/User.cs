@@ -23,5 +23,20 @@ namespace WebTests.TestData
 
         [Column("role")]
         public UserRole Role { get; set; } = UserRole.RestaurantManager;
+
+        [Column("mobile_number")]
+        public string MobileNumber { get; set; }
+
+        [Column("address_line1")]
+        public string AddressLine1 { get; set; }
+
+        [Column("address_line2")]
+        public string AddressLine2 { get; set; }
+
+        [Column("city")]
+        public string City { get; set; }
+
+        [Column("postcode")]
+        public string Postcode { get; set; }
     }
 }

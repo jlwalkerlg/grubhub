@@ -28,6 +28,11 @@ namespace Web.Features.Users.GetAuthUser
                     u.name,
                     u.email,
                     u.role,
+                    u.mobile_number,
+                    u.address_line1,
+                    u.address_line2,
+                    u.city,
+                    u.postcode,
                     r.id as restaurant_id,
                     r.name as restaurant_name
                 FROM

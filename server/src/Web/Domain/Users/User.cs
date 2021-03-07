@@ -54,7 +54,7 @@ namespace Web.Domain.Users
             }
         }
 
-        public string Password { get; }
+        public string Password { get; set; }
 
         public abstract UserRole Role { get; }
 

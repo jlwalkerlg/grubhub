@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain;
 using Web.Domain.Users;
 
-namespace Web.Data.EF.Configurations.UserConfiguration
+namespace Web.Data.EF.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {

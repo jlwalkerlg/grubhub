@@ -15,7 +15,7 @@ namespace Web.Features.Users.Register
 
             CascadeRuleFor(x => x.Password)
                 .Required()
-                .MinLength(8);
+                .Password();
         }
     }
 }

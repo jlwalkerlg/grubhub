@@ -3,8 +3,13 @@ export interface UserDto {
   name: string;
   email: string;
   role: UserRole;
-  restaurantId: string;
-  restaurantName: string;
+  mobileNumber?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  postcode?: string;
+  restaurantId?: string;
+  restaurantName?: string;
 }
 
 export type UserRole = "RestaurantManager" | "Customer" | "Admin";

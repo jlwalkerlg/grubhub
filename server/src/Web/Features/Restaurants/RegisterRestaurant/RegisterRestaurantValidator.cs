@@ -15,7 +15,7 @@ namespace Web.Features.Restaurants.RegisterRestaurant
 
             CascadeRuleFor(x => x.ManagerPassword)
                 .Required()
-                .MinLength(8);
+                .Password();
 
             CascadeRuleFor(x => x.RestaurantName)
                 .Required();

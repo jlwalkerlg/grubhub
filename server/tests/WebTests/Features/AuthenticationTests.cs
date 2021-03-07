@@ -37,6 +37,9 @@ namespace WebTests.Features
         [InlineData("PUT", "/auth/user")]
         [InlineData("GET", "/restaurant/order-history")]
         [InlineData("PUT", "/orders/015caf13-8252-476b-9e7f-c43767998c01/cancel")]
+        [InlineData("PUT", "/account/delivery-address")]
+        [InlineData("PUT", "/account/password")]
+        [InlineData("PUT", "/account/details")]
         public async Task It_Requires_Authentication(string method, string uri)
         {
             var response = await GetClient().Send(

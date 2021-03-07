@@ -73,5 +73,10 @@ namespace Web.Services.Validation
                 .Must(Web.Domain.Postcode.IsValid)
                 .WithMessage("Must be a valid postcode.");
         }
+
+        public static IRuleBuilderOptions<T, string> Password<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder.MinLength(8);
+        }
     }
 }

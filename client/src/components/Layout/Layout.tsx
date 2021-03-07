@@ -2,15 +2,16 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 import useAuth from "~/api/users/useAuth";
+import { UserRole } from "~/api/users/UserDto";
 import Nav from "~/components/Nav/Nav";
 import Toaster from "../Toaster/Toaster";
 
-interface Props {
+interface LayoutProps {
   title: string;
   children: React.ReactNode;
 }
 
-const Layout: React.FC<Props> = ({ title, children }) => {
+const Layout: React.FC<LayoutProps> = ({ title, children }) => {
   return (
     <div className="py-16">
       <Head>
@@ -24,12 +25,26 @@ const Layout: React.FC<Props> = ({ title, children }) => {
   );
 };
 
-export const AuthLayout: FC<Props> = ({ children, ...rest }) => {
-  const { isLoggedIn, isLoading } = useAuth();
+interface AuthLayoutProps extends LayoutProps {
+  role?: UserRole;
+}
+
+export const AuthLayout: FC<AuthLayoutProps> = ({
+  role,
+  children,
+  ...rest
+}) => {
+  const { isLoggedIn, isLoading, user } = useAuth();
   const router = useRouter();
 
-  if (!isLoggedIn && !isLoading) {
+  if (!isLoading && !isLoggedIn) {
     router.push(`/login?redirect_to=${window.location.href}`);
+  } else if (!isLoading && role && user.role !== role) {
+    if (user.role === "RestaurantManager") {
+      router.push("/dashboard");
+    } else {
+      router.push("/");
+    }
   }
 
   return <Layout {...rest}>{isLoggedIn && children}</Layout>;
