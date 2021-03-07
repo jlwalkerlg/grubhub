@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Npgsql;
-using Web;
 using Web.Data;
 using Web.Data.EF;
 using Web.Domain;
@@ -13,7 +12,6 @@ using Web.Domain.Cuisines;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
-using Web.Features.Restaurants.RegisterRestaurant;
 using Web.Services.Hashing;
 
 namespace Console
@@ -58,22 +56,34 @@ namespace Console
 
             foreach (var userEl in jdoc.RootElement.GetProperty("users").EnumerateArray())
             {
-                var role = userEl.GetProperty("role").GetString();
+                var role = Enum.Parse<UserRole>(userEl.GetProperty("role").GetString());
 
-                if (role == "RestaurantManager")
+                if (role == UserRole.Customer)
                 {
-                    var user = new RestaurantManager(
+                    var customer = new Customer(
                         new UserId(new Guid(userEl.GetProperty("id").GetString())),
                         userEl.GetProperty("name").GetString(),
                         new Email(userEl.GetProperty("email").GetString()),
-                        hasher.Hash("password123")
+                        hasher.Hash(userEl.GetProperty("password").GetString())
+                    );
+
+                    await context.AddAsync(customer);
+                }
+
+                if (role == UserRole.RestaurantManager)
+                {
+                    var manager = new RestaurantManager(
+                        new UserId(new Guid(userEl.GetProperty("id").GetString())),
+                        userEl.GetProperty("name").GetString(),
+                        new Email(userEl.GetProperty("email").GetString()),
+                        hasher.Hash(userEl.GetProperty("password").GetString())
                     );
 
                     var restaurantEl = userEl.GetProperty("restaurant");
 
                     var restaurant = new Restaurant(
                         new RestaurantId(new Guid(restaurantEl.GetProperty("id").GetString())),
-                        user.Id,
+                        manager.Id,
                         restaurantEl.GetProperty("name").GetString(),
                         new PhoneNumber(restaurantEl.GetProperty("phone_number").GetString()),
                         new Address(
@@ -178,7 +188,7 @@ namespace Console
                     }
 
                     await context.AddRangeAsync(
-                        user,
+                        manager,
                         restaurant,
                         menu);
                 }

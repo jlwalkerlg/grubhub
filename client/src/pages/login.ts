@@ -1,3 +1,1 @@
-import Login from "~/views/Login/Login";
-
-export default Login;
+export { default } from "~/views/Login/LoginPage";

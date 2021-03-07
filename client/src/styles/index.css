@@ -11,8 +11,7 @@ button:disabled {
 }
 
 .btn {
-  @apply rounded-sm inline-block py-2 px-4 uppercase font-medium;
-  transition: background-color 0.2s ease-in-out;
+  @apply rounded-sm inline-block py-2 px-4 uppercase font-medium transition-colors duration-200 ease-in-out;
 }
 
 .btn:disabled,
@@ -24,8 +23,7 @@ button:disabled {
 }
 
 .btn-link {
-  @apply text-primary rounded-none inline p-0 normal-case font-normal;
-  transition: none;
+  @apply text-primary rounded-none inline p-0 normal-case font-normal transition-none;
 }
 
 .btn-primary {

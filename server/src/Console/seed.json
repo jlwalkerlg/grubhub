@@ -3,8 +3,9 @@
   "users": [
     {
       "id": "979a79d6-7b7c-4c21-88c9-8f918be90d01",
-      "name": "Jordan Walker",
-      "email": "walker.jlg@gmail.com",
+      "name": "Mr Manager",
+      "email": "mr.manager@gmail.com",
+      "password": "password123",
       "role": "RestaurantManager",
       "restaurant": {
         "id": "015caf13-8252-476b-9e7f-c43767998c01",
@@ -502,6 +503,7 @@
       "id": "979a79d6-7b7c-4c21-88c9-8f918be90d02",
       "name": "Bruno",
       "email": "bruno@gmail.com",
+      "password": "password123",
       "role": "RestaurantManager",
       "restaurant": {
         "id": "015caf13-8252-476b-9e7f-c43767998c02",
@@ -1004,6 +1006,13 @@
         },
         "cuisines": ["Tapas", "Spanish"]
       }
+    },
+    {
+      "id": "979a79d6-7b7c-4c21-88c9-8f918be90d03",
+      "name": "Joe Bloggs",
+      "email": "joe.bloggs@gmail.com",
+      "password": "password123",
+      "role": "Customer"
     }
   ]
 }
