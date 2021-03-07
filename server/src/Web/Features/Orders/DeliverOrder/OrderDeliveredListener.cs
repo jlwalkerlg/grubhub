@@ -42,6 +42,10 @@ namespace Web.Features.Orders.DeliverOrder
                     new CapturePaymentJob(order.PaymentIntentId),
                     null
                 },
+                {
+                    new EmailUserOrderDeliveredJob(order.Id.Value),
+                    null
+                },
             }, cancellationToken);
 
             return Result.Ok();

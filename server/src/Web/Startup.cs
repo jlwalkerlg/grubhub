@@ -20,12 +20,13 @@ using Web.Services.Jobs;
 using Web.Data.EF;
 using Web.Services.Billing;
 using Web.Services.DateTimeServices;
+using Web.Services.Mail;
 
 namespace Web
 {
     public class Startup
     {
-        public readonly Config config = new();
+        private readonly Config config = new();
         private readonly IHostEnvironment env;
 
         public Startup(IConfiguration configuration, IHostEnvironment env)
@@ -107,6 +108,8 @@ namespace Web
             services.AddGeocoding();
 
             services.AddHashing();
+
+            services.AddMail();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
