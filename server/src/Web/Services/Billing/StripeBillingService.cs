@@ -64,7 +64,7 @@ namespace Web.Services.Billing
                     PaymentMethodTypes = new List<string>() { "card" },
                     Amount = order.CalculateTotal().Pence,
                     Currency = "gbp",
-                    ApplicationFeeAmount = 50,
+                    ApplicationFeeAmount = order.ServiceFee.Pence,
                     TransferData = new PaymentIntentTransferDataOptions()
                     {
                         Destination = account.Id.Value,

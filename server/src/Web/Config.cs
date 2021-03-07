@@ -14,6 +14,5 @@ namespace Web
         public string StripeConnectWebhookSigningSecret { get; set; }
         public string StripeOnboardingRefreshUrl => $"{ServerUrl}/stripe/onboarding/refresh";
         public string StripeOnboardingReturnUrl => $"{ClientUrl}/dashboard/billing";
-        public decimal ServiceCharge => 0.50m;
     }
 }
