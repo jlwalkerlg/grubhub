@@ -15,14 +15,14 @@ namespace WebTests.Features.Users.UpdateAccountDetails
         }
 
         [Fact]
-        public async Task It_Updates_The_Customers_Account_Details()
+        public async Task It_Updates_The_Users_Account_Details()
         {
-            var customer = new User()
+            var user = new User()
             {
                 Role = UserRole.Customer,
             };
 
-            Insert(customer);
+            Insert(user);
 
             var command = new UpdateAccountDetailsCommand()
             {
@@ -31,15 +31,17 @@ namespace WebTests.Features.Users.UpdateAccountDetails
             };
 
             var response = await factory
-                .GetAuthenticatedClient(customer)
+                .GetAuthenticatedClient(user)
                 .Put("/account/details", command);
+
+            if (!response.IsSuccessStatusCode) throw new Exception(response.Content.ReadAsStringAsync().Result);
 
             response.StatusCode.ShouldBe(200);
 
-            Reload(customer);
+            Reload(user);
 
-            customer.Name.ShouldBe(command.Name);
-            customer.MobileNumber.ShouldBe(command.MobileNumber);
+            user.Name.ShouldBe(command.Name);
+            user.MobileNumber.ShouldBe(command.MobileNumber);
         }
     }
 }

@@ -4,19 +4,19 @@ namespace Web.Domain.Users
 {
     public abstract class User : Entity<User>
     {
-        public User(UserId id, string name, Email email, string password)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+        private string name;
+        private Email email;
 
+        protected User() { } // EF Core
+
+        protected User(UserId id, string name, Email email, string password)
+        {
             if (string.IsNullOrWhiteSpace(password))
             {
                 throw new ArgumentException("Password must not be empty.");
             }
 
-            Id = id;
+            Id = id ?? throw new ArgumentNullException(nameof(id));
             Name = name;
             Email = email;
             Password = password;
@@ -24,7 +24,6 @@ namespace Web.Domain.Users
 
         public UserId Id { get; }
 
-        private string name;
         public string Name
         {
             get => name;
@@ -39,22 +38,15 @@ namespace Web.Domain.Users
             }
         }
 
-        private Email email;
         public Email Email
         {
             get => email;
-            set
-            {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(nameof(Email));
-                }
-
-                email = value;
-            }
+            set => email = value ?? throw new ArgumentNullException(nameof(Email));
         }
 
         public string Password { get; set; }
+        public MobileNumber MobileNumber { get; set; }
+        public Address DeliveryAddress { get; set; }
 
         public abstract UserRole Role { get; }
 
@@ -67,8 +59,5 @@ namespace Web.Domain.Users
         {
             return Id.GetHashCode();
         }
-
-        // EF Core
-        protected User() { }
     }
 }

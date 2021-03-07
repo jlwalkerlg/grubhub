@@ -21,7 +21,6 @@ namespace Web.Data.EF
         public DbSet<Restaurant> Restaurants { get; protected set; }
         public DbSet<Menu> Menus { get; protected set; }
         public DbSet<User> Users { get; protected set; }
-        public DbSet<Customer> Customers { get; protected set; }
         public DbSet<Cuisine> Cuisines { get; protected set; }
         public DbSet<Basket> Baskets { get; protected set; }
         public DbSet<Order> Orders { get; protected set; }

@@ -1,10 +1,10 @@
 ﻿using Web.Services.Validation;
 
-namespace Web.Features.Users.Register
+namespace Web.Features.Users.RegisterCustomer
 {
-    public class RegisterValidator : FluentValidator<RegisterCommand>
+    public class RegisterCustomerValidator : FluentValidator<RegisterCustomerCommand>
     {
-        public RegisterValidator()
+        public RegisterCustomerValidator()
         {
             CascadeRuleFor(x => x.Name)
                 .Required();

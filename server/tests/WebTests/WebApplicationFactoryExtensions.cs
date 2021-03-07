@@ -30,7 +30,7 @@ namespace WebTests
 
         public static HttpClient GetAuthenticatedClient<TEntryPoint>(
             this WebApplicationFactory<TEntryPoint> factory,
-            UserRole role = UserRole.Customer) where TEntryPoint : class
+            UserRole role = UserRole.RestaurantManager) where TEntryPoint : class
         {
             return factory.GetAuthenticatedClient(Guid.NewGuid(), role);
         }
@@ -38,7 +38,7 @@ namespace WebTests
         public static HttpClient GetAuthenticatedClient<TEntryPoint>(
             this WebApplicationFactory<TEntryPoint> factory,
             Guid userId,
-            UserRole role = UserRole.Customer) where TEntryPoint : class
+            UserRole role = UserRole.RestaurantManager) where TEntryPoint : class
         {
             var client = factory.GetClient();
 

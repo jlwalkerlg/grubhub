@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
 using Web.Data.Models;
+using Web.Domain.Users;
 using Web.Services.Authentication;
 
 namespace Web.Features.Billing.GetBillingDetails
@@ -20,7 +21,7 @@ namespace Web.Features.Billing.GetBillingDetails
             this.dbConnectionFactory = dbConnectionFactory;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpGet("/restaurants/{restaurantId:guid}/billing")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {

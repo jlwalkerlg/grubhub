@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Domain.Users;
 
 namespace Web.Features.Billing.GetOnboardingLink
 {
@@ -15,7 +16,7 @@ namespace Web.Features.Billing.GetOnboardingLink
             this.sender = sender;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpGet("/restaurants/{restaurantId:guid}/billing/onboarding/link")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {

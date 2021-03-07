@@ -15,7 +15,7 @@ namespace WebTests.Features.Users.UpdateDeliveryAddress
         }
 
         [Fact]
-        public async Task It_Updates_The_Customers_Delivery_Address()
+        public async Task It_Updates_The_Users_Delivery_Address()
         {
             var user = new User()
             {

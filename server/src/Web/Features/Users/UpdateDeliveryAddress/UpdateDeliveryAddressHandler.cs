@@ -18,11 +18,11 @@ namespace Web.Features.Users.UpdateDeliveryAddress
 
         public async Task<Result> Handle(UpdateDeliveryAddressCommand command, CancellationToken cancellationToken)
         {
-            var customer = await unitOfWork.Users.GetCustomerById(authenticator.UserId);
+            var user = await unitOfWork.Users.GetById(authenticator.UserId);
 
-            if (customer is null) return Error.NotFound("Customer not found.");
+            if (user is null) return Error.NotFound("User not found.");
 
-            customer.DeliveryAddress = new Address(
+            user.DeliveryAddress = new Address(
                 command.AddressLine1,
                 command.AddressLine2,
                 command.City,

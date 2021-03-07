@@ -18,12 +18,12 @@ namespace Web.Features.Users.UpdateAccountDetails
 
         public async Task<Result> Handle(UpdateAccountDetailsCommand command, CancellationToken cancellationToken)
         {
-            var customer = await unitOfWork.Users.GetCustomerById(authenticator.UserId);
+            var user = await unitOfWork.Users.GetById(authenticator.UserId);
 
-            if (customer is null) return Error.NotFound("Customer not found.");
+            if (user is null) return Error.NotFound("User not found.");
 
-            customer.Name = command.Name;
-            customer.MobileNumber = new MobileNumber(command.MobileNumber);
+            user.Name = command.Name;
+            user.MobileNumber = new MobileNumber(command.MobileNumber);
 
             await unitOfWork.Commit();
 

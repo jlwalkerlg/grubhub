@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Web.Domain.Users;
 
 namespace Web.Features.Restaurants.UpdateCuisines
 {
@@ -15,7 +16,7 @@ namespace Web.Features.Restaurants.UpdateCuisines
             this.sender = sender;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpPut("/restaurants/{restaurantId:guid}/cuisines")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,

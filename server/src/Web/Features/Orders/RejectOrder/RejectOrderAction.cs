@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Domain.Users;
 
 namespace Web.Features.Orders.RejectOrder
 {
@@ -14,7 +15,7 @@ namespace Web.Features.Orders.RejectOrder
             this.sender = sender;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpPut("/orders/{orderId}/reject")]
         public async Task<IActionResult> RejectOrder([FromRoute] string orderId)
         {

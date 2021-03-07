@@ -5,19 +5,19 @@ using Web.Hubs;
 
 namespace Web.Features.Orders.RejectOrder
 {
-    public class NotifyCustomerOrderRejectedProcessor : JobProcessor<NotifyCustomerOrderRejectedJob>
+    public class NotifyUserOrderRejectedProcessor : JobProcessor<NotifyUserOrderRejectedJob>
     {
         private readonly IHubContext<OrderHub> hubContext;
 
-        public NotifyCustomerOrderRejectedProcessor(IHubContext<OrderHub> hubContext)
+        public NotifyUserOrderRejectedProcessor(IHubContext<OrderHub> hubContext)
         {
             this.hubContext = hubContext;
         }
 
-        public async Task<Result> Handle(NotifyCustomerOrderRejectedJob job, CancellationToken cancellationToken)
+        public async Task<Result> Handle(NotifyUserOrderRejectedJob job, CancellationToken cancellationToken)
         {
             await hubContext.Clients
-                .Users(job.CustomerId)
+                .Users(job.UserId)
                 .SendAsync($"order_{job.OrderId}.rejected", cancellationToken);
 
             return Result.Ok();

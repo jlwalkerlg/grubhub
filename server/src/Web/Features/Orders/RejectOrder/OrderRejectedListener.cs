@@ -27,7 +27,7 @@ namespace Web.Features.Orders.RejectOrder
             await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
             {
                 {
-                    new NotifyCustomerOrderRejectedJob(order.Id.Value, order.UserId.Value.ToString()),
+                    new NotifyUserOrderRejectedJob(order.Id.Value, order.UserId.Value.ToString()),
                     null
                 },
                 {

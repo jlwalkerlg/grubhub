@@ -22,13 +22,6 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<Customer> GetCustomerById(UserId id)
-        {
-            return Task.FromResult(Users
-                .OfType<Customer>()
-                .FirstOrDefault(x => x.Id == id));
-        }
-
         public Task<User> GetById(UserId id)
         {
             return Task.FromResult(

@@ -31,7 +31,7 @@ namespace Web.Features.Orders.AcceptOrder
             await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
             {
                 {
-                    new NotifyCustomerOrderAcceptedJob(order.Id.Value, order.UserId.Value.ToString()),
+                    new NotifyUserOrderAcceptedJob(order.Id.Value, order.UserId.Value.ToString()),
                     null
                 },
                 {

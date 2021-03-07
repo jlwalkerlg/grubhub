@@ -40,10 +40,5 @@ namespace Web.Data.EF.Repositories
         {
             await context.Users.AddAsync(user);
         }
-
-        public async Task<Customer> GetCustomerById(UserId id)
-        {
-            return await context.Customers.FindAsync(id);
-        }
     }
 }

@@ -6,22 +6,22 @@ using Web.Domain.Users;
 using Web.Services.Authentication;
 using Web.Services.Hashing;
 
-namespace Web.Features.Users.Register
+namespace Web.Features.Users.RegisterCustomer
 {
-    public class RegisterHandler : IRequestHandler<RegisterCommand>
+    public class RegisterCustomerHandler : IRequestHandler<RegisterCustomerCommand>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IHasher hasher;
         private readonly IAuthenticator authenticator;
 
-        public RegisterHandler(IUnitOfWork unitOfWork, IHasher hasher, IAuthenticator authenticator)
+        public RegisterCustomerHandler(IUnitOfWork unitOfWork, IHasher hasher, IAuthenticator authenticator)
         {
             this.unitOfWork = unitOfWork;
             this.hasher = hasher;
             this.authenticator = authenticator;
         }
 
-        public async Task<Result> Handle(RegisterCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(RegisterCustomerCommand command, CancellationToken cancellationToken)
         {
             if (await unitOfWork.Users.EmailExists(command.Email))
             {

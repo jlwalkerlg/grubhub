@@ -1,20 +1,17 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using Web.Domain.Users;
 using Xunit;
 
 namespace WebTests.Features
 {
-    public class AuthenticationTests : ActionTestBase
+    public class AuthorisationTests : ActionTestBase
     {
-        public AuthenticationTests(ActionTestWebApplicationFactory factory) : base(factory)
+        public AuthorisationTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
         }
 
         [Theory]
-        [InlineData("GET", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/basket")]
-        [InlineData("POST", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/basket")]
-        [InlineData("DELETE", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/basket/items/015caf13-8252-476b-9e7f-c43767998c01")]
-        [InlineData("PUT", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/basket/items/015caf13-8252-476b-9e7f-c43767998c01")]
         [InlineData("GET", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/billing")]
         [InlineData("GET", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/billing/onboarding/link")]
         [InlineData("POST", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/billing/setup")]
@@ -26,28 +23,19 @@ namespace WebTests.Features
         [InlineData("PUT", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/menu/categories/015caf13-8252-476b-9e7f-c43767998c01/items/015caf13-8252-476b-9e7f-c43767998c01")]
         [InlineData("PUT", "/orders/015caf13-8252-476b-9e7f-c43767998c01/accept")]
         [InlineData("PUT", "/orders/015caf13-8252-476b-9e7f-c43767998c01/deliver")]
-        [InlineData("GET", "/restaurant/active-orders")]
-        [InlineData("GET", "/orders/015caf13-8252-476b-9e7f-c43767998c01")]
-        [InlineData("POST", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/orders")]
         [InlineData("PUT", "/orders/015caf13-8252-476b-9e7f-c43767998c01/reject")]
+        [InlineData("GET", "/restaurant/active-orders")]
         [InlineData("PUT", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/cuisines")]
         [InlineData("PUT", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01/opening-times")]
         [InlineData("PUT", "/restaurants/015caf13-8252-476b-9e7f-c43767998c01")]
-        [InlineData("GET", "/auth/user")]
-        [InlineData("PUT", "/auth/user")]
-        [InlineData("GET", "/restaurant/order-history")]
         [InlineData("PUT", "/orders/015caf13-8252-476b-9e7f-c43767998c01/cancel")]
-        [InlineData("PUT", "/account/delivery-address")]
-        [InlineData("PUT", "/account/password")]
-        [InlineData("PUT", "/account/details")]
-        [InlineData("GET", "/order-history")]
-        public async Task It_Requires_Authentication(string method, string uri)
+        public async Task It_Requires_Authentication(string method, string uri, UserRole role = UserRole.Customer)
         {
-            var response = await GetClient().Send(
+            var response = await factory.GetAuthenticatedClient(role).Send(
                 new HttpRequestMessage(new HttpMethod(method), uri),
                 new object());
 
-            response.StatusCode.ShouldBe(401);
+            response.StatusCode.ShouldBe(403);
         }
     }
 }

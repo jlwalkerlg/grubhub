@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Shouldly;
-using Web.Features.Users.Register;
+using Web.Features.Users.RegisterCustomer;
 using Xunit;
 
 namespace WebTests.Features.Users.Register
 {
     public class RegisterValidatorTests
     {
-        private readonly RegisterValidator validator = new();
+        private readonly RegisterCustomerValidator validator = new();
 
         [Theory]
         [InlineData(null)]
@@ -15,7 +15,7 @@ namespace WebTests.Features.Users.Register
         [InlineData(" ")]
         public async Task Disallows_Invalid_Names(string name)
         {
-            var command = new RegisterCommand()
+            var command = new RegisterCustomerCommand()
             {
                 Name = name,
             };
@@ -33,7 +33,7 @@ namespace WebTests.Features.Users.Register
         [InlineData("blahblahblah")]
         public async Task Disallows_Invalid_Emails(string email)
         {
-            var command = new RegisterCommand()
+            var command = new RegisterCustomerCommand()
             {
                 Email = email,
             };
@@ -51,7 +51,7 @@ namespace WebTests.Features.Users.Register
         [InlineData("1234567")]
         public async Task Disallows_Invalid_Passwords(string password)
         {
-            var command = new RegisterCommand()
+            var command = new RegisterCustomerCommand()
             {
                 Password = password,
             };

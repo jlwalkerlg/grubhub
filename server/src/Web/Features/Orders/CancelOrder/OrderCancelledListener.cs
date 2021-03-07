@@ -28,7 +28,7 @@ namespace Web.Features.Orders.CancelOrder
             await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
             {
                 {
-                    new NotifyCustomerOrderCancelledJob(order.Id.Value, order.UserId.Value.ToString()),
+                    new NotifyUserOrderCancelledJob(order.Id.Value, order.UserId.Value.ToString()),
                     null
                 },
                 {

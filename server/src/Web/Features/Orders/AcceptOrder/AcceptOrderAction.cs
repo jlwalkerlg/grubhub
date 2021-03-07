@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Domain.Users;
 
 namespace Web.Features.Orders.AcceptOrder
 {
@@ -14,7 +15,7 @@ namespace Web.Features.Orders.AcceptOrder
             this.sender = sender;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpPut("/orders/{orderId:guid}/accept")]
         public async Task<IActionResult> AcceptOrder([FromRoute] string orderId)
         {

@@ -5,19 +5,19 @@ using Web.Hubs;
 
 namespace Web.Features.Orders.CancelOrder
 {
-    public class NotifyCustomerOrderCancelledProcessor : JobProcessor<NotifyCustomerOrderCancelledJob>
+    public class NotifyUserOrderCancelledProcessor : JobProcessor<NotifyUserOrderCancelledJob>
     {
         private readonly IHubContext<OrderHub> hubContext;
 
-        public NotifyCustomerOrderCancelledProcessor(IHubContext<OrderHub> hubContext)
+        public NotifyUserOrderCancelledProcessor(IHubContext<OrderHub> hubContext)
         {
             this.hubContext = hubContext;
         }
 
-        public async Task<Result> Handle(NotifyCustomerOrderCancelledJob job, CancellationToken cancellationToken)
+        public async Task<Result> Handle(NotifyUserOrderCancelledJob job, CancellationToken cancellationToken)
         {
             await hubContext.Clients
-                .Users(job.CustomerId)
+                .Users(job.UserId)
                 .SendAsync($"order_{job.OrderId}.cancelled", cancellationToken);
 
             return Result.Ok();

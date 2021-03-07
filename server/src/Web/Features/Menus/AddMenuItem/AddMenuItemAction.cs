@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Web.Domain.Users;
 
 namespace Web.Features.Menus.AddMenuItem
 {
@@ -15,7 +16,7 @@ namespace Web.Features.Menus.AddMenuItem
             this.sender = sender;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpPost("/restaurants/{restaurantId:guid}/menu/categories/{categoryId:guid}/items")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,

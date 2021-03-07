@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Domain.Users;
-using Web.Features.Users.Register;
+using Web.Features.Users.RegisterCustomer;
 using WebTests.Doubles;
 using Xunit;
 using Shouldly;
@@ -16,20 +16,20 @@ namespace WebTests.Features.Users.Register
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly HasherFake hasher;
         private readonly AuthenticatorSpy authenticator;
-        private readonly RegisterHandler handler;
+        private readonly RegisterCustomerHandler handler;
 
         public RegisterHandlerTests()
         {
             unitOfWork = new UnitOfWorkSpy();
             hasher = new HasherFake();
             authenticator = new AuthenticatorSpy();
-            handler = new RegisterHandler(unitOfWork, hasher, authenticator);
+            handler = new RegisterCustomerHandler(unitOfWork, hasher, authenticator);
         }
 
         [Fact]
         public async Task It_Registers_The_Customer()
         {
-            var command = new RegisterCommand()
+            var command = new RegisterCustomerCommand()
             {
                 Name = "Jordan Walker",
                 Email = "walker.jlg@gmail.com",
@@ -53,7 +53,7 @@ namespace WebTests.Features.Users.Register
         [Fact]
         public async Task It_Fails_If_The_Email_Is_Already_Taken()
         {
-            var command = new RegisterCommand()
+            var command = new RegisterCustomerCommand()
             {
                 Name = "Jordan Walker",
                 Email = "walker.jlg@gmail.com",

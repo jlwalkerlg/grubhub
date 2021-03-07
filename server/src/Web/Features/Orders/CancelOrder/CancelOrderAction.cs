@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Domain.Users;
 
 namespace Web.Features.Orders.CancelOrder
 {
@@ -14,7 +15,7 @@ namespace Web.Features.Orders.CancelOrder
             this.sender = sender;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpPut("/orders/{orderId}/cancel")]
         public async Task<IActionResult> CancelOrder([FromRoute] string orderId)
         {

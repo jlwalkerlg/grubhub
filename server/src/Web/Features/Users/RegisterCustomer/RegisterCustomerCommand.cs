@@ -1,6 +1,6 @@
-﻿namespace Web.Features.Users.Register
+﻿namespace Web.Features.Users.RegisterCustomer
 {
-    public record RegisterCommand : IRequest
+    public record RegisterCustomerCommand : IRequest
     {
         public string Name { get; init; }
         public string Email { get; init; }

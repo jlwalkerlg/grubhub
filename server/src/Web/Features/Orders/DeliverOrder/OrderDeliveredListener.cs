@@ -27,7 +27,7 @@ namespace Web.Features.Orders.DeliverOrder
             await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
             {
                 {
-                    new NotifyCustomerOrderDeliveredJob(
+                    new NotifyUserOrderDeliveredJob(
                         order.Id.Value,
                         order.UserId.Value.ToString()),
                     null

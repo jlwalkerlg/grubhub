@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Web.Domain.Users;
 
 namespace Web.Features.Menus.RemoveMenuCategory
 {
@@ -15,7 +16,7 @@ namespace Web.Features.Menus.RemoveMenuCategory
             this.sender = sender;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpDelete("/restaurants/{restaurantId:guid}/menu/categories/{categoryId:guid}")]
         public async Task<IActionResult> Execute(
             [FromRoute] Guid restaurantId,

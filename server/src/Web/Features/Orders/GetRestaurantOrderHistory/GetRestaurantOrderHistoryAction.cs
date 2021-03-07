@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
 using Web.Domain.Orders;
+using Web.Domain.Users;
 using Web.Services.Authentication;
 
 namespace Web.Features.Orders.GetRestaurantOrderHistory
@@ -21,7 +22,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
             this.authenticator = authenticator;
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpGet("/restaurant/order-history")]
         public async Task<IActionResult> GetRestaurantOrderHistory()
         {

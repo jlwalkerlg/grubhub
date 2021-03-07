@@ -8,8 +8,5 @@ namespace Web.Domain.Users
         }
 
         public override UserRole Role => UserRole.Customer;
-
-        public MobileNumber MobileNumber { get; set; }
-        public Address DeliveryAddress { get; set; }
     }
 }

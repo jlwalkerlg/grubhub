@@ -3,20 +3,20 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services.Antiforgery;
 
-namespace Web.Features.Users.Register
+namespace Web.Features.Users.RegisterCustomer
 {
-    public class RegisterAction : Action
+    public class RegisterCustomerAction : Action
     {
         private readonly ISender sender;
 
-        public RegisterAction(ISender sender)
+        public RegisterCustomerAction(ISender sender)
         {
             this.sender = sender;
         }
 
         [IgnoreAntiforgeryValidation]
         [HttpPost("/register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
+        public async Task<IActionResult> Register([FromBody] RegisterCustomerCommand command)
         {
             var result = await sender.Send(command);
 
