@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
 import React, { FC, useEffect, useState } from "react";
-import { ApiError } from "~/api/Api";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
-import useRestaurant from "~/api/restaurants/useRestaurant";
+import { ApiError } from "~/api/api";
+import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
 import CuisineList from "./CuisineList";

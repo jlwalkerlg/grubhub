@@ -255,9 +255,10 @@ const ChangePasswordForm: FC = () => {
 
   const rules = useRules(() => ({
     password: (builder) => builder.required().password(),
-    confirm: builder
-      .required()
-      .match(() => form.getValues("password"), "Must match the password."),
+    confirm: (builder) =>
+      builder
+        .required()
+        .match(() => form.getValues("password"), "Must match the password."),
   }));
 
   const [update, { error, isSuccess }] = useChangePassword();

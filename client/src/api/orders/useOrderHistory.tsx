@@ -1,5 +1,5 @@
 import { QueryConfig, useQuery } from "react-query";
-import Api, { ApiError } from "~/api/Api";
+import Api, { ApiError } from "~/api/api";
 
 export interface OrderModel {
   id: string;

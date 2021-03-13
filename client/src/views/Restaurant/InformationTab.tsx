@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import { useGoogleMap } from "~/services/geolocation/useGoogleMap";
 import useDate from "~/services/useDate";
 import { formatAddress } from "~/services/utils";

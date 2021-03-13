@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import Api, { ApiError } from "../Api";
+import Api, { ApiError } from "../api";
 
 interface ChangePasswordCommand {
   password: string;

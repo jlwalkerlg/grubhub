@@ -1,8 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
-import useAuth from "~/api/users/useAuth";
-import { UserRole } from "~/api/users/UserDto";
+import useAuth, { UserRole } from "~/api/users/useAuth";
 import Nav from "~/components/Nav/Nav";
 import Toaster from "../Toaster/Toaster";
 

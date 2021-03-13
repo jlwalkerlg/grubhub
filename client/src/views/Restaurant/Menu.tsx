@@ -2,8 +2,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useAddToBasket } from "~/api/baskets/useAddToBasket";
-import { MenuDto, MenuItemDto } from "~/api/menu/MenuDto";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import {
+  MenuDto,
+  MenuItemDto,
+  RestaurantDto,
+} from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import ChevronIcon from "~/components/Icons/ChevronIcon";

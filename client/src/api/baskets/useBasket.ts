@@ -1,7 +1,20 @@
 import { QueryConfig, useQuery } from "react-query";
-import Api, { ApiError } from "../Api";
+import Api, { ApiError } from "../api";
 import useAuth from "../users/useAuth";
-import { BasketDto } from "./BasketDto";
+
+export interface BasketDto {
+  userId: string;
+  restaurantId: string;
+  items: BasketItemDto[];
+}
+
+export interface BasketItemDto {
+  menuItemId: string;
+  menuItemName: string;
+  menuItemDescription: string;
+  menuItemPrice: number;
+  quantity: number;
+}
 
 export function getBasketQueryKey(restaurantId: string) {
   return `/restaurants/${restaurantId}/basket`;

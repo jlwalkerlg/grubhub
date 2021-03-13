@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
-import Api, { ApiError } from "../Api";
-import { CuisineDto } from "../cuisines/CuisineDto";
-import { OpeningTimes } from "./OpeningTimes";
+import Api, { ApiError } from "../api";
+import { CuisineDto } from "../cuisines/useCuisines";
+import { OpeningTimes } from "./useRestaurant";
 
 export interface RestaurantSearchResult {
   id: string;

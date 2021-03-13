@@ -2,10 +2,11 @@ import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { MenuCategoryDto } from "~/api/menu/MenuDto";
 import useRemoveMenuCategory from "~/api/menu/useRemoveMenuCategory";
 import useRenameMenuCategory from "~/api/menu/useRenameMenuCategory";
-import useRestaurant from "~/api/restaurants/useRestaurant";
+import useRestaurant, {
+  MenuCategoryDto,
+} from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import CloseIcon from "~/components/Icons/CloseIcon";

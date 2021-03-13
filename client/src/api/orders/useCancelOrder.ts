@@ -1,5 +1,5 @@
 import { useMutation, useQueryCache } from "react-query";
-import Api, { ApiError } from "../Api";
+import Api, { ApiError } from "../api";
 import { getRestaurantOrderHistoryQueryKey } from "./useRestaurantOrderHistory";
 
 interface CancelOrderCommand {

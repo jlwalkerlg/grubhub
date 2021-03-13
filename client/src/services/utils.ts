@@ -1,6 +1,6 @@
 import { padStart } from "lodash";
 import { FieldName, UseFormMethods } from "react-hook-form";
-import { OpeningHours, OpeningTimes } from "~/api/restaurants/OpeningTimes";
+import { OpeningHours, OpeningTimes } from "~/api/restaurants/useRestaurant";
 import Coordinates from "./geolocation/Coordinates";
 import { daysOfWeek } from "./useDate";
 

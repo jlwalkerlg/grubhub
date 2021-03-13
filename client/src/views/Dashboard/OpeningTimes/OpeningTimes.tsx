@@ -2,8 +2,7 @@ import { flatten, padStart, range } from "lodash";
 import { NextPage } from "next";
 import React from "react";
 import { useForm, UseFormMethods } from "react-hook-form";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
-import useRestaurant from "~/api/restaurants/useRestaurant";
+import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useUpdateOpeningTimes, {
   UpdateOpeningTimesCommand,
 } from "~/api/restaurants/useUpdateOpeningTimes";

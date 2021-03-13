@@ -1,6 +1,63 @@
 import { QueryConfig, useQuery } from "react-query";
-import api, { ApiError } from "../Api";
-import { RestaurantDto } from "./RestaurantDto";
+import api, { ApiError } from "../api";
+import { CuisineDto } from "../cuisines/useCuisines";
+
+export interface RestaurantDto {
+  id: string;
+  managerId: string;
+  name: string;
+  description?: string;
+  phoneNumber: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  postcode: string;
+  latitude: number;
+  longitude: number;
+  status: RestaurantStatus;
+  openingTimes: OpeningTimes;
+  deliveryFee: number;
+  minimumDeliverySpend: number;
+  maxDeliveryDistanceInKm: number;
+  estimatedDeliveryTimeInMinutes: number;
+  menu: MenuDto;
+  cuisines: CuisineDto[];
+}
+
+export type RestaurantStatus = "PendingApproval" | "Approved";
+
+export interface OpeningTimes {
+  monday: OpeningHours;
+  tuesday: OpeningHours;
+  wednesday: OpeningHours;
+  thursday: OpeningHours;
+  friday: OpeningHours;
+  saturday: OpeningHours;
+  sunday: OpeningHours;
+}
+
+export interface OpeningHours {
+  open: string;
+  close: string;
+}
+
+export interface MenuDto {
+  restaurantId: string;
+  categories: MenuCategoryDto[];
+}
+
+export interface MenuCategoryDto {
+  id: string;
+  name: string;
+  items: MenuItemDto[];
+}
+
+export interface MenuItemDto {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+}
 
 export function getRestaurantQueryKey(id: string) {
   return ["restaurants", id];

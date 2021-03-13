@@ -1,6 +1,9 @@
 import { useQuery } from "react-query";
-import api, { ApiError } from "../Api";
-import { CuisineDto } from "./CuisineDto";
+import api, { ApiError } from "../api";
+
+export interface CuisineDto {
+  name: string;
+}
 
 export function getCuisinesQueryKey() {
   return "cuisines";

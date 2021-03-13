@@ -8,8 +8,7 @@ import useOrder, {
   OrderDto,
   OrderStatus,
 } from "~/api/orders/useOrder";
-import useAuth from "~/api/users/useAuth";
-import { UserDto } from "~/api/users/UserDto";
+import useAuth, { UserDto } from "~/api/users/useAuth";
 import ChevronIcon from "~/components/Icons/ChevronIcon";
 import ClipboardIcon from "~/components/Icons/ClipboardIcon";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";

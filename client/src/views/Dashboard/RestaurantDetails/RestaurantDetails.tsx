@@ -1,8 +1,7 @@
 import { NextPage } from "next";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
-import useRestaurant from "~/api/restaurants/useRestaurant";
+import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useUpdateRestaurantDetails from "~/api/restaurants/useUpdateRestaurantDetails";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";

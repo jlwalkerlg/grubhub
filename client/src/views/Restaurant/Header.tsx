@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useDate from "~/services/useDate";
 import { formatAddress, isRestaurantOpen, nextOpenDay } from "~/services/utils";
 

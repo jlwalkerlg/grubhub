@@ -1,5 +1,5 @@
 import { FC, useCallback } from "react";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { RestaurantDto } from "~/api/restaurants/useRestaurant";
 
 const CuisineList: FC<{
   restaurant: RestaurantDto;

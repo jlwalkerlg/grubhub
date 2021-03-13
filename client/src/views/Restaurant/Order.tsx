@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { ApiError } from "~/api/Api";
-import { BasketDto, BasketItemDto } from "~/api/baskets/BasketDto";
-import useBasket from "~/api/baskets/useBasket";
+import { ApiError } from "~/api/api";
+import useBasket, { BasketDto, BasketItemDto } from "~/api/baskets/useBasket";
 import useRemoveFromBasket from "~/api/baskets/useRemoveFromBasket";
 import { useUpdateBasketItemQuantity } from "~/api/baskets/useUpdateBasketItemQuantity";
-import { RestaurantDto } from "~/api/restaurants/RestaurantDto";
+import { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import CartIcon from "~/components/Icons/CartIcon";

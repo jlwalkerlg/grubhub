@@ -1,7 +1,6 @@
 import { useMutation, useQueryCache } from "react-query";
-import Api, { ApiError } from "../Api";
-import useAuth, { getAuthUserQueryKey } from "./useAuth";
-import { UserDto } from "./UserDto";
+import Api, { ApiError } from "../api";
+import useAuth, { getAuthUserQueryKey, UserDto } from "./useAuth";
 
 export interface UpdateUserDetailsCommand {
   firstName: string;
