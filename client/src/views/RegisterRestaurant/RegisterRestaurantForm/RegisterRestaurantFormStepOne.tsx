@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 
 interface StepOneValues {
   managerFirstName: string;

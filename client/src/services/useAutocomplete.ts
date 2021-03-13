@@ -1,5 +1,5 @@
 import { MutableRefObject, useCallback, useEffect, useState } from "react";
-import useClickAwayListener from "./click-away-listener/useClickAwayListener";
+import useClickAwayListener from "./useClickAwayListener";
 import useEscapeKeyListener from "./useEscapeKeyListener";
 import useFocusListener from "./useFocusListener";
 import useFocusTrap from "./useFocusTrap";

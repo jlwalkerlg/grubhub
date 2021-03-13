@@ -12,7 +12,7 @@ import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
 import ThumbsUpIcon from "~/components/Icons/ThumbsUpIcon";
 import Layout from "~/components/Layout/Layout";
-import useClickAwayListener from "~/services/click-away-listener/useClickAwayListener";
+import useClickAwayListener from "~/services/useClickAwayListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import useIsRouterReady from "~/services/useIsRouterReady";
 import { url } from "~/services/utils";

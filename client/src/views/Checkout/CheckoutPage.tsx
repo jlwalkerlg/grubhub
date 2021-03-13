@@ -11,8 +11,8 @@ import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 
 const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const router = useRouter();

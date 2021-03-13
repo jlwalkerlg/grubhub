@@ -6,8 +6,8 @@ import useAuth from "~/api/users/useAuth";
 import useLogin from "~/api/users/useLogin";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import Layout from "~/components/Layout/Layout";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 
 const Login: React.FC = () => {
   const form = useForm({

@@ -7,8 +7,8 @@ import useUpdateAccountDetails from "~/api/users/useUpdateAccountDetails";
 import useUpdateDeliveryAddress from "~/api/users/useUpdateDeliveryAddress";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import { AuthLayout } from "~/components/Layout/Layout";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 
 const CustomerDetailsForm: FC = () => {
   const { user } = useAuth();

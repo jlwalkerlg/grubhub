@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 
 interface StepThreeValues {
   addressLine1: string;

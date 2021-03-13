@@ -7,8 +7,8 @@ import useUpdateRestaurantDetails from "~/api/restaurants/useUpdateRestaurantDet
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 import { DashboardLayout } from "../DashboardLayout";
 
 const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({

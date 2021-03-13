@@ -10,7 +10,7 @@ import useUpdateOpeningTimes, {
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import { setFormErrors } from "~/services/forms/setFormErrors";
+import { setFormErrors } from "~/services/utils";
 import { DashboardLayout } from "../DashboardLayout";
 
 const openingTimes = flatten(

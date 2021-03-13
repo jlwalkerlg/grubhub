@@ -12,8 +12,8 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { useToasts } from "~/components/Toaster/Toaster";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 
 const MySwal = withReactContent(Swal);
 

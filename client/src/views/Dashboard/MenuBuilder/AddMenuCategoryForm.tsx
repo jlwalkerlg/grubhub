@@ -4,8 +4,8 @@ import useAddMenuCategory from "~/api/menu/useAddMenuCategory";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
-import { setFormErrors } from "~/services/forms/setFormErrors";
-import { useRules } from "~/services/forms/useRules";
+import { useRules } from "~/services/useRules";
+import { setFormErrors } from "~/services/utils";
 
 const AddMenuCategoryForm: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);

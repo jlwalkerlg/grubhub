@@ -1,4 +1,5 @@
 import { padStart } from "lodash";
+import { FieldName, UseFormMethods } from "react-hook-form";
 import { OpeningHours, OpeningTimes } from "~/api/restaurants/OpeningTimes";
 import Coordinates from "./geolocation/Coordinates";
 import { daysOfWeek } from "./useDate";
@@ -116,3 +117,15 @@ export function formatAddress(
 ) {
   return [line1, line2, city, postcode].filter((x) => x ?? false).join(", ");
 }
+
+export const setFormErrors = <T>(
+  errors: { [key: string]: string[] },
+  form: UseFormMethods<T>
+) => {
+  for (const field in errors) {
+    if (form.getValues().hasOwnProperty(field)) {
+      const message = errors[field][0] || undefined;
+      form.setError(field as FieldName<T>, { message });
+    }
+  }
+};

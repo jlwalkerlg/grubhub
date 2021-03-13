@@ -6,8 +6,8 @@ import GeolocationIcon from "~/components/Icons/GeolocationIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
 import { useToasts } from "~/components/Toaster/Toaster";
-import { useRules } from "~/services/forms/useRules";
 import useCurrentLocation from "~/services/geolocation/useCurrentLocation";
+import { useRules } from "~/services/useRules";
 
 const Home: NextPage = () => {
   const { addToast } = useToasts();
