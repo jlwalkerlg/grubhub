@@ -25,12 +25,12 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
     defaultValues: defaults,
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     managerFirstName: (builder) => builder.required(),
     managerLastName: (builder) => builder.required(),
     managerEmail: (builder) => builder.required().email(),
     managerPassword: (builder) => builder.required().password(),
-  }));
+  });
 
   useEffect(() => {
     setFormErrors(errors, form);

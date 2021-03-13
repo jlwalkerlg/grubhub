@@ -19,11 +19,11 @@ const UpdateManagerDetailsForm = () => {
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     firstName: (builder) => builder.required(),
     lastName: (builder) => builder.required(),
     email: (builder) => builder.required().email(),
-  }));
+  });
 
   const [
     updateUserDetails,

@@ -25,7 +25,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     name: (builder) => builder.required(),
     description: (builder) => builder.required().maxLength(280),
     phoneNumber: (builder) => builder.required().phone(),
@@ -33,7 +33,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
     minimumDeliverySpend: (builder) => builder.required().min(0),
     maxDeliveryDistanceInKm: (builder) => builder.required().min(0),
     estimatedDeliveryTimeInMinutes: (builder) => builder.required().min(1),
-  }));
+  });
 
   const [
     updateRestaurantDetails,

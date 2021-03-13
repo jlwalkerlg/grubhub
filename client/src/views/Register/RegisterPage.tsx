@@ -23,12 +23,12 @@ const Register: FC = () => {
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     firstName: (builder) => builder.required(),
     lastName: (builder) => builder.required(),
     email: (builder) => builder.required().email(),
     password: (builder) => builder.required().password(),
-  }));
+  });
 
   const onSubmit = form.handleSubmit(async (data) => {
     await register(data, {

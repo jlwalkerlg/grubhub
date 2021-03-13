@@ -28,9 +28,9 @@ const Home: NextPage = () => {
     reValidateMode: "onSubmit",
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     postcode: (builder) => builder.required().postcode(),
-  }));
+  });
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;

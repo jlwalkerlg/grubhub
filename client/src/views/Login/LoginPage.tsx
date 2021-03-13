@@ -14,10 +14,10 @@ const Login: React.FC = () => {
     defaultValues: { email: "", password: "" },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     email: (builder) => builder.required().email(),
     password: (builder) => builder.required(),
-  }));
+  });
 
   const [login, { isError, error }] = useLogin();
 

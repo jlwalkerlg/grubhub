@@ -30,11 +30,11 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
     defaultValues: defaults,
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     addressLine1: (builder) => builder.required(),
     city: (builder) => builder.required(),
     postcode: (builder) => builder.required().postcode(),
-  }));
+  });
 
   useEffect(() => {
     setFormErrors(errors, form);

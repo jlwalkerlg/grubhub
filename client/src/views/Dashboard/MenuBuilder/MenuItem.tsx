@@ -36,11 +36,11 @@ const UpdateForm: FC<{
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     name: (builder) => builder.required(),
     description: (builder) => builder.required().maxLength(280),
     price: (builder) => builder.required().min(0),
-  }));
+  });
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;

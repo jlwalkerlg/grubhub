@@ -25,10 +25,10 @@ const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
     defaultValues: defaults,
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     restaurantName: (builder) => builder.required(),
     restaurantPhoneNumber: (builder) => builder.required().phone(),
-  }));
+  });
 
   useEffect(() => {
     setFormErrors(errors, form);

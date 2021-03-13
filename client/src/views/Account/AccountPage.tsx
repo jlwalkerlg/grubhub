@@ -21,11 +21,11 @@ const CustomerDetailsForm: FC = () => {
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     firstName: (builder) => builder.required(),
     lastName: (builder) => builder.required(),
     mobileNumber: (builder) => builder.required().mobile(),
-  }));
+  });
 
   const [update, { error, isSuccess }] = useUpdateAccountDetails();
 
@@ -132,11 +132,11 @@ const DeliveryAddressForm: FC = () => {
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     addressLine1: (builder) => builder.required(),
     city: (builder) => builder.required(),
     postcode: (builder) => builder.required().postcode(),
-  }));
+  });
 
   const [update, { error, isSuccess }] = useUpdateDeliveryAddress();
 
@@ -253,13 +253,13 @@ const ChangePasswordForm: FC = () => {
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     password: (builder) => builder.required().password(),
     confirm: (builder) =>
       builder
         .required()
-        .match(() => form.getValues("password"), "Must match the password."),
-  }));
+        .match(() => form.getValues("password"), "Passwords must match."),
+  });
 
   const [update, { error, isSuccess }] = useChangePassword();
 

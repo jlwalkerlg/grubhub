@@ -107,21 +107,14 @@ class RuleBuilder {
   }
 }
 
-export function useRules<
-  T extends Record<string, (builder: RuleBuilder) => RuleBuilder>
->(config: () => T) {
+type Rules = Record<string, (builder: RuleBuilder) => RuleBuilder>;
+
+export function useRules<T extends Rules>(schema: T) {
   return useMemo(() => {
-    const schema = config();
-
-    const rules: { [K in keyof T]?: ValidateFunction } = {};
-
-    for (const key in schema) {
-      if (Object.prototype.hasOwnProperty.call(schema, key)) {
-        const builder = new RuleBuilder();
-        rules[key] = schema[key](builder).build();
-      }
-    }
-
-    return rules as { [K in keyof T]: ValidateFunction };
+    return Object.fromEntries(
+      Object.entries(schema).map(([key, builder]) => {
+        return [key, builder(new RuleBuilder()).build()];
+      })
+    ) as Record<keyof T, ValidateFunction>;
   }, []);
 }

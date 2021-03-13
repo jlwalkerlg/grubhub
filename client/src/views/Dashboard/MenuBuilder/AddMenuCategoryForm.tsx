@@ -20,9 +20,9 @@ const AddMenuCategoryForm: React.FC = () => {
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     name: (builder) => builder.required(),
-  }));
+  });
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;

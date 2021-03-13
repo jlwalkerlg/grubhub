@@ -32,12 +32,12 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
     },
   });
 
-  const rules = useRules(() => ({
+  const rules = useRules({
     mobile: (builder) => builder.required().mobile(),
     addressLine1: (builder) => builder.required(),
     city: (builder) => builder.required(),
     postcode: (builder) => builder.required().postcode(),
-  }));
+  });
 
   const handleSubmit = form.handleSubmit(async (data) => {
     await placeOrder(
