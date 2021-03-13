@@ -21,7 +21,7 @@ namespace Web.Services.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             var job = (Job)context.JobDetail.JobDataMap.Get("job");
-            var options = (EnqueueOptions)context.JobDetail.JobDataMap.Get("options");
+            var options = job.Options ?? new EnqueueOptions();
 
             Result result = null;
             Exception exception = null;

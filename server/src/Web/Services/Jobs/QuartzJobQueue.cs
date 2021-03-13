@@ -15,41 +15,15 @@ namespace Web.Services.Jobs
             this.scheduler = scheduler;
         }
 
-        public async Task Enqueue(
-            Job job,
-            EnqueueOptions options = null,
-            CancellationToken cancellationToken = default)
-        {
-            IDictionary data = new Dictionary<string, object>()
-            {
-                { "job", job },
-                { "options", options ?? new EnqueueOptions() },
-            };
-
-            var jobDetail = JobBuilder.Create<QuartzJobProcessor>()
-                .UsingJobData(new JobDataMap(data))
-                .WithIdentity(job.Id.ToString())
-                .StoreDurably()
-                .Build();
-
-            var trigger = TriggerBuilder.Create()
-                .StartNow()
-                .WithSimpleSchedule(x => x.WithRepeatCount(0))
-                .Build();
-
-            await scheduler.ScheduleJob(jobDetail, trigger, cancellationToken);
-        }
-
-        public async Task Enqueue(IDictionary<Job, EnqueueOptions> jobs, CancellationToken cancellationToken = default)
+        public async Task Enqueue(IEnumerable<Job> jobs, CancellationToken cancellationToken = default)
         {
             var dict = new Dictionary<IJobDetail, IReadOnlyCollection<ITrigger>>();
 
-            foreach (var (job, options) in jobs)
+            foreach (var job in jobs)
             {
                 IDictionary data = new Dictionary<string, object>()
                 {
                     { "job", job },
-                    { "options", options ?? new EnqueueOptions() },
                 };
 
                 var jobDetail = JobBuilder.Create<QuartzJobProcessor>()

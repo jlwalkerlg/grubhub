@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Web.Services;
 using Web.Services.Events;
 using Web.Services.Jobs;
 
@@ -24,28 +22,16 @@ namespace Web.Features.Orders.DeliverOrder
 
             if (order is null) return Error.NotFound("Order not found.");
 
-            await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
+            await queue.Enqueue(new Job[]
             {
-                {
-                    new NotifyUserOrderDeliveredJob(
-                        order.Id.Value,
-                        order.UserId.Value.ToString()),
-                    null
-                },
-                {
-                    new NotifyRestaurantOrderDeliveredJob(
-                        order.Id.Value,
-                        order.RestaurantId.Value.ToString()),
-                    null
-                },
-                {
-                    new CapturePaymentJob(order.PaymentIntentId),
-                    null
-                },
-                {
-                    new EmailUserOrderDeliveredJob(order.Id.Value),
-                    null
-                },
+                new NotifyUserOrderDeliveredJob(
+                    order.Id.Value,
+                    order.UserId.Value.ToString()),
+                new NotifyRestaurantOrderDeliveredJob(
+                    order.Id.Value,
+                    order.RestaurantId.Value.ToString()),
+                new CapturePaymentJob(order.PaymentIntentId),
+                new EmailUserOrderDeliveredJob(order.Id.Value),
             }, cancellationToken);
 
             return Result.Ok();

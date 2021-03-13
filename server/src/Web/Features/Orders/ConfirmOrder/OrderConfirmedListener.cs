@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services;
 using Web.Services.Events;
 using Web.Services.Jobs;
 
@@ -18,13 +16,12 @@ namespace Web.Features.Orders.ConfirmOrder
 
         public async Task<Result> Handle(OrderConfirmedEvent evnt, CancellationToken cancellationToken)
         {
-            await queue.Enqueue(
-                new Dictionary<Job, EnqueueOptions>()
-                {
-                    { new NotifyUserOrderConfirmedJob(evnt.OrderId), null },
-                    { new NotifyRestaurantOrderConfirmedJob(evnt.OrderId), null },
-                },
-                cancellationToken);
+            await queue.Enqueue(new Job[]
+            {
+                new NotifyUserOrderConfirmedJob(evnt.OrderId),
+                new NotifyRestaurantOrderConfirmedJob(evnt.OrderId),
+            },
+            cancellationToken);
 
             return Result.Ok();
         }

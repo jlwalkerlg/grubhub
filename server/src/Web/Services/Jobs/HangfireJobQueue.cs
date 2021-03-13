@@ -14,23 +14,19 @@ namespace Web.Services.Jobs
             this.client = client;
         }
 
-        public Task Enqueue(Job job, EnqueueOptions options = null, CancellationToken cancellationToken = default)
+        private Task Enqueue(Job job, CancellationToken cancellationToken = default)
         {
-            options = options ?? new EnqueueOptions();
-
             client.Enqueue<HangfireJobProcessor>(processor =>
-                processor.Process(job, options, default, default));
+                processor.Process(job, default, default));
 
             return Task.CompletedTask;
         }
 
-        public async Task Enqueue(
-            IDictionary<Job, EnqueueOptions> jobs,
-            CancellationToken cancellationToken = default)
+        public async Task Enqueue(IEnumerable<Job> jobs, CancellationToken cancellationToken = default)
         {
-            foreach (var (job, options) in jobs)
+            foreach (var job in jobs)
             {
-                await Enqueue(job, options, cancellationToken);
+                await Enqueue(job, cancellationToken);
             }
         }
     }

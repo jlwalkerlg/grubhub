@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
+using Hangfire.States;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -22,8 +23,10 @@ namespace Web.Services.Jobs
             this.logger = logger;
         }
 
-        public async Task Process(Job job, EnqueueOptions options, CancellationToken cancellationToken, PerformContext context)
+        public async Task Process(Job job, CancellationToken cancellationToken, PerformContext context)
         {
+            var options = job.Options ?? new EnqueueOptions();
+
             var attempt = context.GetJobParameter<int>("Attempt") + 1;
             context.SetJobParameter("Attempt", attempt);
 
@@ -39,7 +42,7 @@ namespace Web.Services.Jobs
                     exception = new HangfireJobResultException(result.Error);
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 exception = ex;
             }
@@ -48,7 +51,7 @@ namespace Web.Services.Jobs
 
             client.ChangeState(
                 context.BackgroundJob.Id,
-                new Hangfire.States.FailedState(exception));
+                new FailedState(exception));
 
             TimeSpan? delay = null;
 
@@ -59,7 +62,7 @@ namespace Web.Services.Jobs
 
                 client.ChangeState(
                     context.BackgroundJob.Id,
-                    new Hangfire.States.ScheduledState(delay.Value));
+                    new ScheduledState(delay.Value));
             }
 
             LogFailure(attempt, options, delay, result, exception, context);

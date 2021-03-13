@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Services;
 using Web.Services.Events;
 using Web.Services.Jobs;
 
@@ -28,16 +26,10 @@ namespace Web.Features.Orders.AcceptOrder
 
             if (restaurant is null) return Error.NotFound("Restaurant not found.");
 
-            await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
+            await queue.Enqueue(new Job[]
             {
-                {
-                    new NotifyUserOrderAcceptedJob(order.Id.Value, order.UserId.Value.ToString()),
-                    null
-                },
-                {
-                    new NotifyRestaurantOrderAcceptedJob(order.Id.Value, restaurant.ManagerId.Value.ToString()),
-                    null
-                },
+                new NotifyUserOrderAcceptedJob(order.Id.Value, order.UserId.Value.ToString()),
+                new NotifyRestaurantOrderAcceptedJob(order.Id.Value, restaurant.ManagerId.Value.ToString()),
             }, cancellationToken);
 
             return Result.Ok();

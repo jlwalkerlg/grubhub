@@ -6,7 +6,6 @@ namespace Web.Services.Jobs
 {
     public interface IJobQueue
     {
-        Task Enqueue(Job job, EnqueueOptions options = null, CancellationToken cancellationToken = default);
-        Task Enqueue(IDictionary<Job, EnqueueOptions> jobs, CancellationToken cancellationToken = default);
+        Task Enqueue(IEnumerable<Job> jobs, CancellationToken cancellationToken = default);
     }
 }

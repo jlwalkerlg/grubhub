@@ -10,31 +10,15 @@ namespace WebTests.Doubles
     public class JobQueueSpy : IJobQueue
     {
         public List<Job> Jobs { get; } = new();
-        public Dictionary<Job, int?> MaxAttempts { get; } = new();
-        public Dictionary<Job, int> Attempts { get; } = new();
 
-        public Task Enqueue(
-            Job job,
-            EnqueueOptions options = null,
-            CancellationToken cancellationToken = default)
+        public Task Enqueue(IEnumerable<Job> jobs, CancellationToken cancellationToken = default)
         {
-            options ??= new EnqueueOptions();
-
-            Jobs.Add(job);
-            MaxAttempts.Add(job, options.MaxAttempts);
-            Attempts.Add(job, 0);
+            foreach (var job in jobs)
+            {
+                Jobs.Add(job);
+            }
 
             return Task.CompletedTask;
-        }
-
-        public async Task Enqueue(
-            IDictionary<Job, EnqueueOptions> jobs,
-            CancellationToken cancellationToken = default)
-        {
-            foreach (var (job, options) in jobs)
-            {
-                await Enqueue(job, options, cancellationToken);
-            }
         }
     }
 }

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Orders;
-using Web.Services;
 using Web.Services.Events;
 using Web.Services.Jobs;
 
@@ -24,20 +22,11 @@ namespace Web.Features.Orders.RejectOrder
             var order = await unitOfWork.Orders.GetById(new OrderId(evnt.OrderId));
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
 
-            await queue.Enqueue(new Dictionary<Job, EnqueueOptions>()
+            await queue.Enqueue(new Job[]
             {
-                {
-                    new NotifyUserOrderRejectedJob(order.Id.Value, order.UserId.Value.ToString()),
-                    null
-                },
-                {
-                    new NotifyRestaurantOrderRejectedJob(order.Id.Value, restaurant.ManagerId.Value.ToString()),
-                    null
-                },
-                {
-                    new RefundOrderJob(order.PaymentIntentId),
-                    null
-                },
+                new NotifyUserOrderRejectedJob(order.Id.Value, order.UserId.Value.ToString()),
+                new NotifyRestaurantOrderRejectedJob(order.Id.Value, restaurant.ManagerId.Value.ToString()),
+                new RefundOrderJob(order.PaymentIntentId),
             }, cancellationToken);
 
             return Result.Ok();
