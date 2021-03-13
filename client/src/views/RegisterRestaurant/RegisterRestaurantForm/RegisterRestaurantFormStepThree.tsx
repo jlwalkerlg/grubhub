@@ -1,12 +1,8 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import {
-  combineRules,
-  PostcodeRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 interface StepThreeValues {
   addressLine1: string;
@@ -34,6 +30,12 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
     defaultValues: defaults,
   });
 
+  const rules = useRules(() => ({
+    addressLine1: (builder) => builder.required(),
+    city: (builder) => builder.required(),
+    postcode: (builder) => builder.required().postcode(),
+  }));
+
   useEffect(() => {
     setFormErrors(errors, form);
   }, [errors]);
@@ -50,7 +52,7 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.addressLine1,
           })}
           autoFocus
           className="input"
@@ -87,7 +89,7 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.city,
           })}
           className="input"
           type="text"
@@ -106,7 +108,7 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new PostcodeRule()]),
+            validate: rules.postcode,
           })}
           className="input"
           type="text"

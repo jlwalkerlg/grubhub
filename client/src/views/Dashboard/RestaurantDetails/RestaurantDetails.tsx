@@ -7,14 +7,8 @@ import useUpdateRestaurantDetails from "~/api/restaurants/useUpdateRestaurantDet
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import {
-  combineRules,
-  MaxLengthRule,
-  MinRule,
-  PhoneRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 import { DashboardLayout } from "../DashboardLayout";
 
 const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
@@ -31,6 +25,16 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
       estimatedDeliveryTimeInMinutes: restaurant.estimatedDeliveryTimeInMinutes,
     },
   });
+
+  const rules = useRules(() => ({
+    name: (builder) => builder.required(),
+    description: (builder) => builder.required().maxLength(280),
+    phoneNumber: (builder) => builder.required().phone(),
+    deliveryFee: (builder) => builder.required().min(0),
+    minimumDeliverySpend: (builder) => builder.required().min(0),
+    maxDeliveryDistanceInKm: (builder) => builder.required().min(0),
+    estimatedDeliveryTimeInMinutes: (builder) => builder.required().min(1),
+  }));
 
   const [
     updateRestaurantDetails,
@@ -75,7 +79,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.name,
           })}
           className="input"
           type="text"
@@ -94,7 +98,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         </label>
         <textarea
           ref={form.register({
-            validate: combineRules([new MaxLengthRule(400)]),
+            validate: rules.description,
           })}
           className="input"
           name="description"
@@ -112,7 +116,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new PhoneRule()]),
+            validate: rules.phoneNumber,
           })}
           className="input"
           type="text"
@@ -131,7 +135,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+            validate: rules.deliveryFee,
           })}
           className="input"
           type="number"
@@ -152,7 +156,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+            validate: rules.minimumDeliverySpend,
           })}
           className="input"
           type="number"
@@ -175,7 +179,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+            validate: rules.maxDeliveryDistanceInKm,
           })}
           className="input"
           type="number"
@@ -198,7 +202,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new MinRule(1)]),
+            validate: rules.estimatedDeliveryTimeInMinutes,
           })}
           className="input"
           type="number"

@@ -7,13 +7,8 @@ import useUpdateAccountDetails from "~/api/users/useUpdateAccountDetails";
 import useUpdateDeliveryAddress from "~/api/users/useUpdateDeliveryAddress";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import { AuthLayout } from "~/components/Layout/Layout";
-import {
-  combineRules,
-  MobileRule,
-  PostcodeRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 const CustomerDetailsForm: FC = () => {
   const { user } = useAuth();
@@ -25,6 +20,12 @@ const CustomerDetailsForm: FC = () => {
       mobileNumber: user.mobileNumber,
     },
   });
+
+  const rules = useRules(() => ({
+    firstName: (builder) => builder.required(),
+    lastName: (builder) => builder.required(),
+    mobileNumber: (builder) => builder.required().mobile(),
+  }));
 
   const [update, { error, isSuccess }] = useUpdateAccountDetails();
 
@@ -58,7 +59,7 @@ const CustomerDetailsForm: FC = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.firstName,
           })}
           className="input bg-white"
           type="text"
@@ -77,7 +78,7 @@ const CustomerDetailsForm: FC = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.lastName,
           })}
           className="input bg-white"
           type="text"
@@ -96,7 +97,7 @@ const CustomerDetailsForm: FC = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new MobileRule()]),
+            validate: rules.mobileNumber,
           })}
           className="input bg-white"
           type="text"
@@ -131,6 +132,12 @@ const DeliveryAddressForm: FC = () => {
     },
   });
 
+  const rules = useRules(() => ({
+    addressLine1: (builder) => builder.required(),
+    city: (builder) => builder.required(),
+    postcode: (builder) => builder.required().postcode(),
+  }));
+
   const [update, { error, isSuccess }] = useUpdateDeliveryAddress();
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -163,7 +170,7 @@ const DeliveryAddressForm: FC = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.addressLine1,
           })}
           className="input bg-white"
           type="text"
@@ -196,7 +203,7 @@ const DeliveryAddressForm: FC = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.city,
           })}
           className="input bg-white"
           type="text"
@@ -215,7 +222,7 @@ const DeliveryAddressForm: FC = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new PostcodeRule()]),
+            validate: rules.postcode,
           })}
           className="input bg-white"
           type="text"
@@ -242,19 +249,30 @@ const ChangePasswordForm: FC = () => {
   const form = useForm({
     defaultValues: {
       password: "",
+      confirm: "",
     },
   });
 
+  const rules = useRules(() => ({
+    password: (builder) => builder.required().password(),
+    confirm: builder
+      .required()
+      .match(() => form.getValues("password"), "Must match the password."),
+  }));
+
   const [update, { error, isSuccess }] = useChangePassword();
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    await update(data, {
-      onError: (error) => {
-        if (error.isValidationError) {
-          setFormErrors(error.errors, form);
-        }
-      },
-    });
+  const onSubmit = form.handleSubmit(async ({ password }) => {
+    await update(
+      { password },
+      {
+        onError: (error) => {
+          if (error.isValidationError) {
+            setFormErrors(error.errors, form);
+          }
+        },
+      }
+    );
   });
 
   return (
@@ -277,7 +295,7 @@ const ChangePasswordForm: FC = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.password,
           })}
           className="input bg-white"
           type="password"
@@ -287,6 +305,25 @@ const ChangePasswordForm: FC = () => {
         />
         {form.errors.password && (
           <p className="form-error mt-1">{form.errors.password.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="confirm">
+          Confirm Password <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: rules.confirm,
+          })}
+          className="input bg-white"
+          type="password"
+          name="confirm"
+          id="confirm"
+          data-invalid={!!form.errors.confirm}
+        />
+        {form.errors.confirm && (
+          <p className="form-error mt-1">{form.errors.confirm.message}</p>
         )}
       </div>
 

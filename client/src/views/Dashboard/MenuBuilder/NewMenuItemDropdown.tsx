@@ -6,13 +6,8 @@ import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
-import {
-  combineRules,
-  MaxLengthRule,
-  MinRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 const NewMenuItemDropdown: React.FC<{
   category: MenuCategoryDto;
@@ -31,6 +26,12 @@ const NewMenuItemDropdown: React.FC<{
       price: null,
     },
   });
+
+  const rules = useRules(() => ({
+    name: (builder) => builder.required(),
+    description: (builder) => builder.required().maxLength(280),
+    price: (builder) => builder.required().min(0),
+  }));
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
@@ -87,7 +88,7 @@ const NewMenuItemDropdown: React.FC<{
             </label>
             <input
               ref={form.register({
-                validate: combineRules([new RequiredRule()]),
+                validate: rules.name,
               })}
               className="input"
               type="text"
@@ -106,7 +107,7 @@ const NewMenuItemDropdown: React.FC<{
             </label>
             <textarea
               ref={form.register({
-                validate: combineRules([new MaxLengthRule(280)]),
+                validate: rules.description,
               })}
               className="input"
               name="description"
@@ -126,7 +127,7 @@ const NewMenuItemDropdown: React.FC<{
             </label>
             <input
               ref={form.register({
-                validate: combineRules([new RequiredRule(), new MinRule(0)]),
+                validate: rules.price,
               })}
               className="input"
               type="number"

@@ -12,13 +12,8 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { useToasts } from "~/components/Toaster/Toaster";
-import {
-  combineRules,
-  MaxLengthRule,
-  MinRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 const MySwal = withReactContent(Swal);
 
@@ -37,6 +32,12 @@ const UpdateForm: FC<{
       price: item.price,
     },
   });
+
+  const rules = useRules(() => ({
+    name: (builder) => builder.required(),
+    description: (builder) => builder.required().maxLength(280),
+    price: (builder) => builder.required().min(0),
+  }));
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
@@ -85,7 +86,7 @@ const UpdateForm: FC<{
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.name,
           })}
           className="input"
           type="text"
@@ -104,7 +105,7 @@ const UpdateForm: FC<{
         </label>
         <textarea
           ref={form.register({
-            validate: combineRules([new MaxLengthRule(280)]),
+            validate: rules.description,
           })}
           className="input"
           name="description"
@@ -122,7 +123,7 @@ const UpdateForm: FC<{
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new MinRule(0)]),
+            validate: rules.price,
           })}
           className="input"
           type="number"

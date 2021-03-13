@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import {
-  combineRules,
-  EmailRule,
-  PasswordRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 interface StepOneValues {
   managerFirstName: string;
@@ -30,6 +25,13 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
     defaultValues: defaults,
   });
 
+  const rules = useRules(() => ({
+    managerFirstName: (builder) => builder.required(),
+    managerLastName: (builder) => builder.required(),
+    managerEmail: (builder) => builder.required().email(),
+    managerPassword: (builder) => builder.required().password(),
+  }));
+
   useEffect(() => {
     setFormErrors(errors, form);
   }, [errors]);
@@ -46,7 +48,7 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.managerFirstName,
           })}
           autoFocus
           className="input"
@@ -68,7 +70,7 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.managerLastName,
           })}
           className="input"
           type="text"
@@ -89,7 +91,7 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new EmailRule()]),
+            validate: rules.managerEmail,
           })}
           className="input"
           type="email"
@@ -109,7 +111,7 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new PasswordRule()]),
+            validate: rules.managerPassword,
           })}
           className="input"
           type="password"

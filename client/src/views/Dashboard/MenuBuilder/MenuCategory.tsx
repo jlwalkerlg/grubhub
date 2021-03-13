@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -12,14 +12,14 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { useToasts } from "~/components/Toaster/Toaster";
-import { combineRules, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 import MenuItem from "./MenuItem";
 import NewMenuItemDropdown from "./NewMenuItemDropdown";
 
 const MySwal = withReactContent(Swal);
 
-const MenuCategory: React.FC<{
+const MenuCategory: FC<{
   category: MenuCategoryDto;
 }> = ({ category }) => {
   const { addToast } = useToasts();
@@ -27,22 +27,26 @@ const MenuCategory: React.FC<{
   const { user } = useAuth();
   const { data: restaurant } = useRestaurant(user.restaurantId);
 
-  const [isRenameFormOpen, setIsRenameFormOpen] = React.useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const [rename, renameStatus] = useRenameMenuCategory();
 
-  const renameForm = useForm({
+  const form = useForm({
     defaultValues: {
       newName: category.name,
     },
   });
 
-  const onRename = renameForm.handleSubmit(async (data) => {
-    if (renameForm.formState.isSubmitting) return;
+  const rules = useRules(() => ({
+    newName: (builder) => builder.required(),
+  }));
+
+  const onRename = form.handleSubmit(async (data) => {
+    if (form.formState.isSubmitting) return;
 
     if (data.newName === category.name) {
-      setIsRenameFormOpen(false);
-      renameForm.reset(data);
+      setIsFormOpen(false);
+      form.reset(data);
       return;
     }
 
@@ -55,7 +59,7 @@ const MenuCategory: React.FC<{
       {
         onError: (error) => {
           if (error.isValidationError) {
-            setFormErrors(error.errors, renameForm);
+            setFormErrors(error.errors, form);
           }
         },
       }
@@ -63,12 +67,12 @@ const MenuCategory: React.FC<{
   });
 
   const onEdit = () => {
-    setIsRenameFormOpen(true);
+    setIsFormOpen(true);
   };
 
   const onCancelEdit = () => {
-    setIsRenameFormOpen(false);
-    renameForm.reset();
+    setIsFormOpen(false);
+    form.reset();
     renameStatus.reset();
   };
 
@@ -123,7 +127,7 @@ const MenuCategory: React.FC<{
                 type="button"
                 className="text-blue-700"
                 onClick={onEdit}
-                disabled={renameForm.formState.isSubmitting}
+                disabled={form.formState.isSubmitting}
               >
                 <PencilIcon className="w-5 h-5" />
               </button>
@@ -140,7 +144,7 @@ const MenuCategory: React.FC<{
         </div>
       </div>
 
-      {isRenameFormOpen && (
+      {isFormOpen && (
         <form onSubmit={onRename} className="px-2 pb-3">
           {renameStatus.isError && (
             <div className="my-3">
@@ -153,26 +157,24 @@ const MenuCategory: React.FC<{
               Name <span className="text-primary">*</span>
             </label>
             <input
-              ref={renameForm.register({
-                validate: combineRules([new RequiredRule()]),
+              ref={form.register({
+                validate: rules.newName,
               })}
               className="input"
               type="text"
               name="newName"
               id="newName"
-              data-invalid={!!renameForm.errors.newName}
+              data-invalid={!!form.errors.newName}
             />
-            {renameForm.errors.newName && (
-              <p className="form-error mt-1">
-                {renameForm.errors.newName.message}
-              </p>
+            {form.errors.newName && (
+              <p className="form-error mt-1">{form.errors.newName.message}</p>
             )}
           </div>
 
           <div className="mt-4">
             <button
               type="submit"
-              disabled={renameForm.formState.isSubmitting}
+              disabled={form.formState.isSubmitting}
               className="w-full lg:w-auto btn btn-sm btn-primary mt-3 lg:mt-0"
             >
               Rename
@@ -180,7 +182,7 @@ const MenuCategory: React.FC<{
             <button
               type="button"
               onClick={onCancelEdit}
-              disabled={renameForm.formState.isSubmitting}
+              disabled={form.formState.isSubmitting}
               className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel

@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import useAuth from "~/api/users/useAuth";
 import useUpdateUserDetails from "~/api/users/useUpdateUserDetails";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
-import { combineRules, EmailRule, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 import { DashboardLayout } from "../DashboardLayout";
 
 const UpdateManagerDetailsForm = () => {
@@ -18,6 +18,12 @@ const UpdateManagerDetailsForm = () => {
       email: user.email,
     },
   });
+
+  const rules = useRules(() => ({
+    firstName: (builder) => builder.required(),
+    lastName: (builder) => builder.required(),
+    email: (builder) => builder.required().email(),
+  }));
 
   const [
     updateUserDetails,
@@ -51,21 +57,40 @@ const UpdateManagerDetailsForm = () => {
       )}
 
       <div className="mt-4">
-        <label className="label" htmlFor="name">
-          Name <span className="text-primary">*</span>
+        <label className="label" htmlFor="firstName">
+          First Name <span className="text-primary">*</span>
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.firstName,
           })}
           className="input"
           type="text"
-          name="name"
-          id="name"
-          data-invalid={!!form.errors.name}
+          name="firstName"
+          id="firstName"
+          data-invalid={!!form.errors.firstName}
         />
-        {form.errors.name && (
-          <p className="form-error mt-1">{form.errors.name.message}</p>
+        {form.errors.firstName && (
+          <p className="form-error mt-1">{form.errors.firstName.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="lastName">
+          Last Name <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: rules.lastName,
+          })}
+          className="input"
+          type="text"
+          name="lastName"
+          id="lastName"
+          data-invalid={!!form.errors.lastName}
+        />
+        {form.errors.lastName && (
+          <p className="form-error mt-1">{form.errors.lastName.message}</p>
         )}
       </div>
 
@@ -75,7 +100,7 @@ const UpdateManagerDetailsForm = () => {
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new EmailRule()]),
+            validate: rules.email,
           })}
           className="input"
           type="text"

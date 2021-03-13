@@ -4,8 +4,8 @@ import useAddMenuCategory from "~/api/menu/useAddMenuCategory";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
-import { combineRules, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 const AddMenuCategoryForm: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -19,6 +19,10 @@ const AddMenuCategoryForm: React.FC = () => {
       name: "",
     },
   });
+
+  const rules = useRules(() => ({
+    name: (builder) => builder.required(),
+  }));
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
@@ -73,7 +77,7 @@ const AddMenuCategoryForm: React.FC = () => {
             </label>
             <input
               ref={form.register({
-                validate: combineRules([new RequiredRule()]),
+                validate: rules.name,
               })}
               className="input"
               type="text"

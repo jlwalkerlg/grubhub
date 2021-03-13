@@ -6,18 +6,18 @@ import useAuth from "~/api/users/useAuth";
 import useLogin from "~/api/users/useLogin";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import Layout from "~/components/Layout/Layout";
-import {
-  combineRules,
-  EmailRule,
-  PasswordRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 const Login: React.FC = () => {
   const form = useForm({
     defaultValues: { email: "", password: "" },
   });
+
+  const rules = useRules(() => ({
+    email: (builder) => builder.required().email(),
+    password: (builder) => builder.required(),
+  }));
 
   const [login, { isError, error }] = useLogin();
 
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule(), new EmailRule()]),
+              validate: rules.email,
             })}
             className="input"
             type="email"
@@ -83,7 +83,7 @@ const Login: React.FC = () => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule(), new PasswordRule()]),
+              validate: rules.password,
             })}
             className="input"
             type="password"

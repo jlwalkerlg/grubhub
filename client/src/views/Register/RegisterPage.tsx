@@ -6,8 +6,8 @@ import useAuth from "~/api/users/useAuth";
 import useRegister from "~/api/users/useRegister";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import Layout from "~/components/Layout/Layout";
-import { combineRules, EmailRule, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 const Register: FC = () => {
   const router = useRouter();
@@ -22,6 +22,13 @@ const Register: FC = () => {
       password: "",
     },
   });
+
+  const rules = useRules(() => ({
+    firstName: (builder) => builder.required(),
+    lastName: (builder) => builder.required(),
+    email: (builder) => builder.required().email(),
+    password: (builder) => builder.required().password(),
+  }));
 
   const onSubmit = form.handleSubmit(async (data) => {
     await register(data, {
@@ -56,7 +63,7 @@ const Register: FC = () => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule()]),
+              validate: rules.firstName,
             })}
             className="input"
             name="firstName"
@@ -74,7 +81,7 @@ const Register: FC = () => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule()]),
+              validate: rules.lastName,
             })}
             className="input"
             name="lastName"
@@ -92,7 +99,7 @@ const Register: FC = () => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule(), new EmailRule()]),
+              validate: rules.email,
             })}
             className="input"
             type="email"
@@ -111,7 +118,7 @@ const Register: FC = () => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule()]),
+              validate: rules.password,
             })}
             className="input"
             name="password"

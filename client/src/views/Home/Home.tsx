@@ -6,11 +6,7 @@ import GeolocationIcon from "~/components/Icons/GeolocationIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
 import { useToasts } from "~/components/Toaster/Toaster";
-import {
-  combineRules,
-  PostcodeRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
+import { useRules } from "~/services/forms/useRules";
 import useCurrentLocation from "~/services/geolocation/useCurrentLocation";
 
 const Home: NextPage = () => {
@@ -31,6 +27,10 @@ const Home: NextPage = () => {
     },
     reValidateMode: "onSubmit",
   });
+
+  const rules = useRules(() => ({
+    postcode: (builder) => builder.required().postcode(),
+  }));
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (form.formState.isSubmitting) return;
@@ -86,10 +86,7 @@ const Home: NextPage = () => {
               </button>
               <input
                 ref={form.register({
-                  validate: combineRules([
-                    new RequiredRule(),
-                    new PostcodeRule(),
-                  ]),
+                  validate: rules.postcode,
                 })}
                 className="shadow bg-transparent appearance-none w-full py-2 pr-12 pl-3 text-gray-700 focus:outline-none focus:shadow-outline"
                 id="postcode"

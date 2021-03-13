@@ -11,13 +11,8 @@ import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
-import {
-  combineRules,
-  MobileRule,
-  PostcodeRule,
-  RequiredRule,
-} from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const router = useRouter();
@@ -37,6 +32,13 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       postcode: user.postcode,
     },
   });
+
+  const rules = useRules(() => ({
+    mobile: (builder) => builder.required().mobile(),
+    addressLine1: (builder) => builder.required(),
+    city: (builder) => builder.required(),
+    postcode: (builder) => builder.required().postcode(),
+  }));
 
   const handleSubmit = form.handleSubmit(async (data) => {
     await placeOrder(
@@ -75,7 +77,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule(), new MobileRule()]),
+              validate: rules.mobile,
             })}
             className="input"
             type="text"
@@ -94,7 +96,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule()]),
+              validate: rules.addressLine1,
             })}
             className="input"
             type="text"
@@ -134,7 +136,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule()]),
+              validate: rules.city,
             })}
             className="input"
             type="text"
@@ -153,7 +155,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           </label>
           <input
             ref={form.register({
-              validate: combineRules([new RequiredRule(), new PostcodeRule()]),
+              validate: rules.postcode,
             })}
             className="input"
             type="text"

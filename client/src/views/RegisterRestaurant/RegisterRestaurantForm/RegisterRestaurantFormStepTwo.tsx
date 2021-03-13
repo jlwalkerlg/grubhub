@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { combineRules, PhoneRule, RequiredRule } from "~/services/forms/Rule";
 import { setFormErrors } from "~/services/forms/setFormErrors";
+import { useRules } from "~/services/forms/useRules";
 
 interface StepTwoValues {
   restaurantName: string;
@@ -25,6 +25,11 @@ const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
     defaultValues: defaults,
   });
 
+  const rules = useRules(() => ({
+    restaurantName: (builder) => builder.required(),
+    restaurantPhoneNumber: (builder) => builder.required().phone(),
+  }));
+
   useEffect(() => {
     setFormErrors(errors, form);
   }, [errors]);
@@ -41,7 +46,7 @@ const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule()]),
+            validate: rules.restaurantName,
           })}
           autoFocus
           className="input"
@@ -63,7 +68,7 @@ const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
         </label>
         <input
           ref={form.register({
-            validate: combineRules([new RequiredRule(), new PhoneRule()]),
+            validate: rules.restaurantPhoneNumber,
           })}
           className="input"
           type="tel"
