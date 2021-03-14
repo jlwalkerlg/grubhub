@@ -68,6 +68,14 @@ namespace Console
                         hasher.Hash(userEl.GetProperty("password").GetString())
                     );
 
+                    customer.DeliveryAddress = new Address(
+                        "12 Maine Road",
+                        null,
+                        "Shipley",
+                        new Postcode("BD18 1LT"));
+
+                    customer.MobileNumber = new MobileNumber("07234567890");
+
                     await context.AddAsync(customer);
                 }
 

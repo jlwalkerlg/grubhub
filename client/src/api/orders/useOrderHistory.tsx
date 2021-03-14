@@ -1,5 +1,10 @@
-import { QueryConfig, useQuery } from "react-query";
+import { InfiniteQueryConfig, useInfiniteQuery } from "react-query";
 import Api, { ApiError } from "~/api/api";
+
+export interface GetOrderHistoryResponse {
+  orders: OrderModel[];
+  count: number;
+}
 
 export interface OrderModel {
   id: string;
@@ -11,17 +16,48 @@ export interface OrderModel {
   restaurantName: string;
 }
 
+interface QueryParams {
+  perPage?: number;
+}
+
 export function getOrderHistoryQueryKey() {
   return "order-history";
 }
 
-export function useOrderHistory(config?: QueryConfig<OrderModel[], ApiError>) {
-  return useQuery<OrderModel[], ApiError>(
+export function useOrderHistory(
+  params?: QueryParams,
+  config?: InfiniteQueryConfig<GetOrderHistoryResponse, ApiError>
+) {
+  return useInfiniteQuery<GetOrderHistoryResponse, ApiError, [string, number]>(
     getOrderHistoryQueryKey(),
-    async () => {
-      const response = await Api.get<OrderModel[]>("/order-history");
+    async (_, page) => {
+      const response = await Api.get<GetOrderHistoryResponse>(
+        "/order-history",
+        {
+          params: {
+            page,
+            perPage: params?.perPage,
+          },
+        }
+      );
       return response.data;
     },
-    config
+    {
+      ...config,
+      getFetchMore: (lastPage, allPages) => {
+        if (!params?.perPage) return undefined;
+
+        const totalOrdersAvailable = lastPage.count;
+
+        const numberOfOrdersLoaded = allPages.reduce(
+          (count, page) => count + page.orders.length,
+          0
+        );
+
+        if (numberOfOrdersLoaded === totalOrdersAvailable) return undefined;
+
+        return allPages.length + 1;
+      },
+    }
   );
 }

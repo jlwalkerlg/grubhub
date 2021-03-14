@@ -34,7 +34,7 @@ export function useOrdersHub(options?: Options) {
       .then(options?.onConnect)
       .catch((error) => {
         if (isMounted) setConnectionError(error);
-        options?.onError(error);
+        if (options?.onError) options.onError(error);
       })
       .finally(() => isMounted && setIsLoading(false));
 
