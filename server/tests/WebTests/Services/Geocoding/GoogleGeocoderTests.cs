@@ -13,14 +13,13 @@ namespace WebTests.Services.Geocoding
 
         public GoogleGeocoderTests()
         {
-            var config = new Config();
-
-            new ConfigurationBuilder()
-                .AddJsonFile("config.json")
+            var settings = new ConfigurationBuilder()
+                .AddJsonFile("settings.json")
                 .Build()
-                .Bind(config);
+                .GetSection("Geocoding")
+                .Get<GeocodingSettings>();
 
-            geocoder = new GoogleGeocoder(config);
+            geocoder = new GoogleGeocoder(settings);
         }
 
         [Fact]

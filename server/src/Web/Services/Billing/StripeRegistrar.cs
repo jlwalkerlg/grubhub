@@ -6,9 +6,9 @@ namespace Web.Services.Billing
 {
     public static class StripeRegistrar
     {
-        public static void AddStripe(this IServiceCollection services, Config config)
+        public static void AddStripe(this IServiceCollection services, StripeSettings settings)
         {
-            StripeConfiguration.ApiKey = config.StripeSecretKey;
+            StripeConfiguration.ApiKey = settings.SecretKey;
 
             services.AddSingleton<IBillingService, StripeBillingService>();
         }

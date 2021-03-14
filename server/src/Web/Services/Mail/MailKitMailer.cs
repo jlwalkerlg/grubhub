@@ -8,11 +8,11 @@ namespace Web.Services.Mail
 {
     public class MailKitMailer : IMailer
     {
-        private readonly Config config;
+        private readonly MailSettings settings;
 
-        public MailKitMailer(Config config)
+        public MailKitMailer(MailSettings settings)
         {
-            this.config = config;
+            this.settings = settings;
         }
 
         public async Task Send(Mail mail, CancellationToken cancellationToken = default)
@@ -33,14 +33,14 @@ namespace Web.Services.Mail
             using var smtp = new SmtpClient();
 
             await smtp.ConnectAsync(
-                config.MailHost,
-                config.MailPort,
+                settings.Host,
+                settings.Port,
                 SecureSocketOptions.StartTls,
                 cancellationToken);
 
             await smtp.AuthenticateAsync(
-                config.MailUsername,
-                config.MailPassword,
+                settings.Username,
+                settings.Password,
                 cancellationToken);
 
             await smtp.SendAsync(message, cancellationToken);

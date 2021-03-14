@@ -18,7 +18,7 @@ namespace Web
                 .ConfigureAppConfiguration(builder =>
                 {
                     var config = new ConfigurationBuilder()
-                            .AddJsonFile("config.json")
+                            .AddJsonFile("settings.json")
                             .Build();
 
                     builder.AddConfiguration(config);

@@ -9,13 +9,13 @@ namespace Web.Features.Orders.DeliverOrder
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMailer mailer;
-        private readonly Config config;
+        private readonly MailSettings settings;
 
-        public EmailUserOrderDeliveredProcessor(IUnitOfWork unitOfWork, IMailer mailer, Config config)
+        public EmailUserOrderDeliveredProcessor(IUnitOfWork unitOfWork, IMailer mailer, MailSettings settings)
         {
             this.unitOfWork = unitOfWork;
             this.mailer = mailer;
-            this.config = config;
+            this.settings = settings;
         }
 
         public async Task<Result> Handle(EmailUserOrderDeliveredJob job, CancellationToken cancellationToken)
@@ -24,10 +24,10 @@ namespace Web.Features.Orders.DeliverOrder
             var user = await unitOfWork.Users.GetById(order.UserId);
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
 
-            await mailer.Send(new Mail(config.MailFromAddress, user.Email.Address)
+            await mailer.Send(new Mail(settings.FromAddress, user.Email.Address)
             {
                 ToName = user.Name,
-                FromName = config.MailFromName,
+                FromName = settings.FromName,
                 Subject = "Order delivered!",
                 Body = $"{restaurant.Name} delivered your order at {order.DeliveredAt?.ToString("h:mm:ss tt")}. The total cost was £{order.CalculateTotal().Pounds}.",
             }, cancellationToken);

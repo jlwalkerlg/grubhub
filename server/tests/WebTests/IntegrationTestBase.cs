@@ -13,20 +13,20 @@ namespace WebTests
     {
         private readonly IntegrationTestFixture fixture;
         protected readonly IntegrationTestWebApplicationFactory factory;
-        private readonly Config config;
+        private readonly DatabaseSettings settings;
 
         protected IntegrationTestBase(IntegrationTestFixture fixture)
         {
             this.fixture = fixture;
             factory = fixture.Factory;
-            config = factory.Services.GetRequiredService<Config>();
+            settings = factory.Services.GetRequiredService<DatabaseSettings>();
 
             ResetDatabase();
         }
 
         private void ResetDatabase()
         {
-            using var conn = new NpgsqlConnection(config.DbConnectionString);
+            using var conn = new NpgsqlConnection(settings.ConnectionString);
             conn.Open();
             fixture.Checkpoint.Reset(conn).Wait();
         }

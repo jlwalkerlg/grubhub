@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebTests", "tests\WebTests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4D382AC-439B-4CD1-81EC-26235198652F}"
 	ProjectSection(SolutionItems) = preProject
-		config.json = config.json
+		settings.json = settings.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "src\Console\Console.csproj", "{99AEEFDF-9E55-4F4E-A81A-38B665D403C2}"

@@ -26,20 +26,32 @@ namespace Web
 {
     public class Startup
     {
-        private readonly Config config = new();
         private readonly IHostEnvironment env;
+        private readonly AppSettings appSettings;
+        private readonly GeocodingSettings geocodingSettings;
+        private readonly DatabaseSettings databaseSettings;
+        private readonly StripeSettings stripeSettings;
+        private readonly MailSettings mailSettings;
 
         public Startup(IConfiguration configuration, IHostEnvironment env)
         {
-            configuration.Bind(config);
+            appSettings = configuration.GetSection("App").Get<AppSettings>();
+            geocodingSettings = configuration.GetSection("Geocoding").Get<GeocodingSettings>();
+            databaseSettings = configuration.GetSection("Database").Get<DatabaseSettings>();
+            stripeSettings = configuration.GetSection("Stripe").Get<StripeSettings>();
+            mailSettings = configuration.GetSection("Mail").Get<MailSettings>();
 
-            env.EnvironmentName = config.Environment;
+            env.EnvironmentName = appSettings.Environment;
             this.env = env;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(config);
+            services.AddSingleton(appSettings);
+            services.AddSingleton(geocodingSettings);
+            services.AddSingleton(databaseSettings);
+            services.AddSingleton(stripeSettings);
+            services.AddSingleton(mailSettings);
 
             services.AddLogging(builder =>
             {
@@ -69,7 +81,7 @@ namespace Web
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins(config.CorsOrigins)
+                        .WithOrigins(appSettings.CorsOrigins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -93,15 +105,15 @@ namespace Web
 
             services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
-            services.AddEntityFramework(config);
+            services.AddEntityFramework(databaseSettings);
 
             services.AddDapper();
 
             services.AddDateTimeProvider();
 
-            services.AddStripe(config);
+            services.AddStripe(stripeSettings);
 
-            services.AddQuartz(config);
+            services.AddQuartz(databaseSettings);
 
             services.AddEventWorker();
 

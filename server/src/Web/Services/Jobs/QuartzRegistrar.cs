@@ -6,7 +6,7 @@ namespace Web.Services.Jobs
 {
     public static class QuartzRegistrar
     {
-        public static void AddQuartz(this IServiceCollection services, Config config)
+        public static void AddQuartz(this IServiceCollection services, DatabaseSettings settings)
         {
             services.AddQuartz(q =>
             {
@@ -17,7 +17,7 @@ namespace Web.Services.Jobs
 
                 q.UsePersistentStore(store =>
                 {
-                    store.UsePostgres(config.DbConnectionString);
+                    store.UsePostgres(settings.ConnectionString);
 
                     store.UseJsonSerializer();
                 });

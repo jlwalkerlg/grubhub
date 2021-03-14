@@ -10,11 +10,11 @@ namespace Web.Services.Billing
 {
     public class StripeBillingService : IBillingService
     {
-        private readonly Config config;
+        private readonly AppSettings settings;
 
-        public StripeBillingService(Config config)
+        public StripeBillingService(AppSettings settings)
         {
-            this.config = config;
+            this.settings = settings;
         }
 
         public async Task<string> CreateAccount(Restaurant restaurant)
@@ -44,8 +44,8 @@ namespace Web.Services.Billing
                 new AccountLinkCreateOptions()
                 {
                     Account = id,
-                    RefreshUrl = $"{config.StripeOnboardingRefreshUrl}?restaurant_id={restaurantId.Value}",
-                    ReturnUrl = config.StripeOnboardingReturnUrl,
+                    RefreshUrl = $"{settings.StripeOnboardingRefreshUrl}?restaurant_id={restaurantId.Value}",
+                    ReturnUrl = settings.StripeOnboardingReturnUrl,
                     Type = "account_onboarding",
                 });
 

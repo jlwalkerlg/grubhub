@@ -10,14 +10,14 @@ namespace Web.Features.Billing.RefreshOnboarding
     public class RefreshOnboardingAction : Action
     {
         private readonly IAuthenticator authenticator;
-        private readonly Config config;
+        private readonly AppSettings settings;
         private readonly ISender sender;
 
         public RefreshOnboardingAction(
-            IAuthenticator authenticator, Config config, ISender sender)
+            IAuthenticator authenticator, AppSettings settings, ISender sender)
         {
             this.authenticator = authenticator;
-            this.config = config;
+            this.settings = settings;
             this.sender = sender;
         }
 
@@ -27,7 +27,7 @@ namespace Web.Features.Billing.RefreshOnboarding
         {
             if (!authenticator.IsAuthenticated)
             {
-                return Redirect($"{config.ClientUrl}/login?redirect_to={config.StripeOnboardingRefreshUrl}?restaurant_id={restaurantId}");
+                return Redirect($"{settings.ClientUrl}/login?redirect_to={settings.StripeOnboardingRefreshUrl}?restaurant_id={restaurantId}");
             }
 
             var command = new SetupBillingCommand()

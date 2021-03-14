@@ -11,9 +11,9 @@ namespace Web.Services.Geocoding
     {
         private readonly string key;
 
-        public GoogleGeocoder(Config config)
+        public GoogleGeocoder(GeocodingSettings settings)
         {
-            key = config.GoogleGeocodingApiKey;
+            key = settings.GoogleApiKey;
         }
 
         public async Task<Result<Coordinates>> LookupCoordinates(string postcode)

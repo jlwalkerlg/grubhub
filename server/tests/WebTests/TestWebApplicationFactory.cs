@@ -32,18 +32,18 @@ namespace WebTests
             // Can be used to override other services registered in Startup.
             builder.ConfigureServices((ctx, services) =>
             {
-                var config = new Config();
-                ctx.Configuration.Bind(config);
-
-                config = config with
+                var appSettings = ctx.Configuration.GetSection("App").Get<AppSettings>() with
                 {
                     Environment = "Testing",
-                    DbConnectionString = ctx.Configuration
-                        .GetSection("TestDbConnectionString")
-                        .Value,
                 };
 
-                services.AddSingleton(config);
+                var databaseSettings = ctx.Configuration.GetSection("Database").Get<DatabaseSettings>() with
+                {
+                    ConnectionString = ctx.Configuration.GetSection("Database").GetValue<string>("TestConnectionString"),
+                };
+
+                services.AddSingleton(appSettings);
+                services.AddSingleton(databaseSettings);
 
                 services.Remove(
                     services.Single(x => x.ImplementationType == typeof(EventWorker))
@@ -74,7 +74,7 @@ namespace WebTests
 
                 services.AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseNpgsql(config.DbConnectionString, b =>
+                    options.UseNpgsql(databaseSettings.ConnectionString, b =>
                     {
                         b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                     });
@@ -82,7 +82,7 @@ namespace WebTests
 
                 services.AddDbContext<TestDbContext>(options =>
                 {
-                    options.UseNpgsql(config.DbConnectionString, b =>
+                    options.UseNpgsql(databaseSettings.ConnectionString, b =>
                     {
                         b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                     });

@@ -9,11 +9,11 @@ namespace WebTests.Features.Billing.RefreshOnboarding
 {
     public class RefreshOnboardingActionTests : ActionTestBase
     {
-        private readonly Config config;
+        private readonly AppSettings settings;
 
         public RefreshOnboardingActionTests(ActionTestWebApplicationFactory factory) : base(factory)
         {
-            config = factory.Server.Services.GetRequiredService<Config>();
+            settings = factory.Server.Services.GetRequiredService<AppSettings>();
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace WebTests.Features.Billing.RefreshOnboarding
 
             response.StatusCode.ShouldBe(302);
             response.Headers.Location?.OriginalString.ShouldBe(
-                $"{config.ClientUrl}/login?redirect_to={config.ServerUrl}{uri}");
+                $"{settings.ClientUrl}/login?redirect_to={settings.ServerUrl}{uri}");
         }
     }
 }
