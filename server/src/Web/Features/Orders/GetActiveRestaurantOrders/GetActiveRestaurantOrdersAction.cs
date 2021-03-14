@@ -42,7 +42,7 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
                             o.postcode,
                             o.placed_at,
                             r.estimated_delivery_time_in_minutes,
-                            SUM(oi.price * oi.quantity) as subtotal
+                            SUM(oi.price * oi.quantity) / 100.00 as subtotal
                         FROM
                             orders o
                             INNER JOIN order_items oi ON o.id = oi.order_id

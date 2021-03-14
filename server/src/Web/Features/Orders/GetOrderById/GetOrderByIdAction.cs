@@ -37,8 +37,8 @@ namespace Web.Features.Orders.GetOrderById
                             o.number,
                             o.user_id,
                             o.restaurant_id,
-                            o.delivery_fee,
-                            o.service_fee,
+                            o.delivery_fee / 100.00 as delivery_fee,
+                            o.service_fee / 100.00 as service_fee,
                             o.status,
                             o.address_line1,
                             o.address_line2,
@@ -90,7 +90,7 @@ namespace Web.Features.Orders.GetOrderById
                     @"SELECT
                             oi.id,
                             oi.name,
-                            oi.price,
+                            oi.price / 100.00 as price,
                             oi.quantity
                         FROM
                             order_items oi

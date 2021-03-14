@@ -36,7 +36,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                             o.number,
                             o.status,
                             o.placed_at,
-                            SUM(oi.price * oi.quantity) as subtotal
+                            SUM(oi.price * oi.quantity) / 100.00 as subtotal
                         FROM
                             orders o
                             INNER JOIN order_items oi ON o.id = oi.order_id

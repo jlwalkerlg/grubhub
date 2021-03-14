@@ -60,7 +60,7 @@ namespace Web.Features.Baskets.GetBasketByRestaurantId
                             bi.menu_item_id,
                             mi.name as menu_item_name,
                             mi.description as menu_item_description,
-                            mi.price as menu_item_price,
+                            mi.price / 100.00 as menu_item_price,
                             bi.quantity
                         FROM
                             basket_items bi

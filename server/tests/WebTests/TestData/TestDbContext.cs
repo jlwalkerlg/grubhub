@@ -53,9 +53,45 @@ namespace WebTests.TestData
                 .Property(x => x.Status)
                 .HasConversion(new EnumToStringConverter<RestaurantStatus>());
 
+            modelBuilder.Entity<Restaurant>()
+                .Property(x => x.DeliveryFee)
+                .HasConversion(
+                    pounds => (int) (pounds * 100),
+                    pence => ((decimal) pence) / 100);
+
+            modelBuilder.Entity<Restaurant>()
+                .Property(x => x.MinimumDeliverySpend)
+                .HasConversion(
+                    pounds => (int) (pounds * 100),
+                    pence => ((decimal) pence) / 100);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(x => x.Price)
+                .HasConversion(
+                    pounds => (int) (pounds * 100),
+                    pence => ((decimal) pence) / 100);
+
+            modelBuilder.Entity<MenuItem>()
+                .Property(x => x.Price)
+                .HasConversion(
+                    pounds => (int) (pounds * 100),
+                    pence => ((decimal) pence) / 100);
+
             modelBuilder.Entity<Order>()
                 .Property(x => x.Status)
                 .HasConversion(new EnumToStringConverter<OrderStatus>());
+
+            modelBuilder.Entity<Order>()
+                .Property(x => x.DeliveryFee)
+                .HasConversion(
+                    pounds => (int) (pounds * 100),
+                    pence => ((decimal) pence) / 100);
+            
+            modelBuilder.Entity<Order>()
+                .Property(x => x.ServiceFee)
+                .HasConversion(
+                    pounds => (int) (pounds * 100),
+                    pence => ((decimal) pence) / 100);
         }
     }
 }

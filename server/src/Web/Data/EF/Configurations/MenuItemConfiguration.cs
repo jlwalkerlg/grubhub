@@ -27,8 +27,8 @@ namespace Web.Data.EF.Configurations
 
             builder.Property(x => x.Price)
                 .HasConversion(
-                    price => price.Pounds,
-                    pounds => Money.FromPounds(pounds))
+                    price => price.Pence,
+                    pence => Money.FromPence(pence))
                 .HasColumnName("price")
                 .IsRequired();
 

@@ -32,9 +32,9 @@ namespace Web.Features.Orders.GetOrderHistory
                             o.id,
                             o.placed_at,
                             SUM(oi.quantity) as total_items,
-                            SUM(oi.price * oi.quantity) as subtotal,
-                            o.service_fee,
-                            o.delivery_fee,
+                            SUM(oi.price * oi.quantity) / 100.00 as subtotal,
+                            o.service_fee / 100.00 as service_fee,
+                            o.delivery_fee / 100.00 as delivery_fee,
                             r.name as restaurant_name
                         FROM
                             orders o

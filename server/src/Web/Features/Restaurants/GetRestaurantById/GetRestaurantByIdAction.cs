@@ -51,8 +51,8 @@ namespace Web.Features.Restaurants.GetRestaurantById
                         r.saturday_close,
                         r.sunday_open,
                         r.sunday_close,
-                        r.delivery_fee,
-                        r.minimum_delivery_spend,
+                        r.delivery_fee / 100.00 as delivery_fee,
+                        r.minimum_delivery_spend / 100.00 as minimum_delivery_spend,
                         r.max_delivery_distance_in_km,
                         r.estimated_delivery_time_in_minutes
                     FROM
@@ -105,7 +105,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             i.menu_category_id,
                             i.name,
                             i.description,
-                            i.price
+                            i.price / 100.00 as price
                         FROM
                             menu_items i
                         WHERE

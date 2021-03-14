@@ -115,15 +115,15 @@ namespace Web.Data.EF.Configurations
 
             builder.Property(x => x.DeliveryFee)
                 .HasConversion(
-                    fee => fee.Pounds,
-                    pounds => Money.FromPounds(pounds))
+                    fee => fee.Pence,
+                    pence => Money.FromPence(pence))
                 .HasColumnName("delivery_fee")
                 .IsRequired();
 
             builder.Property(x => x.MinimumDeliverySpend)
                 .HasConversion(
-                    spenc => spenc.Pounds,
-                    pounds => Money.FromPounds(pounds))
+                    spend => spend.Pence,
+                    pence => Money.FromPence(pence))
                 .HasColumnName("minimum_delivery_spend")
                 .IsRequired();
 

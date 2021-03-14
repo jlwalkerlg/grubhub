@@ -44,15 +44,15 @@ namespace Web.Data.EF.Configurations
 
             builder.Property(x => x.DeliveryFee)
                 .HasConversion(
-                    fee => fee.Pounds,
-                    pounds => Money.FromPounds(pounds))
+                    fee => fee.Pence,
+                    pence => Money.FromPence(pence))
                 .HasColumnName("delivery_fee")
                 .IsRequired();
 
             builder.Property(x => x.ServiceFee)
                 .HasConversion(
-                    fee => fee.Pounds,
-                    pounds => Money.FromPounds(pounds))
+                    fee => fee.Pence,
+                    pence => Money.FromPence(pence))
                 .HasColumnName("service_fee")
                 .IsRequired();
 
