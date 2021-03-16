@@ -21,19 +21,11 @@ namespace Web.Domain
         {
             if (value is null) return false;
 
-            var numbers = string.Join("", value.Where(x => x >= '0' && x <= '9'));
+            value = value.Replace("+44", "0").Replace(" ", "");
 
-            if (numbers.StartsWith("07") && numbers.Length == 11)
-            {
-                return true;
-            }
+            if (!long.TryParse(value, out var number)) return false;
 
-            if (numbers.StartsWith("447") && numbers.Length == 12)
-            {
-                return true;
-            }
-
-            return false;
+            return number >= 07000000000 && number < 08000000000;
         }
     }
 }

@@ -36,20 +36,13 @@ class RuleBuilder {
     return this.must((value) => {
       if (!value) return false;
 
-      const numbers = value
-        .split("")
-        .filter((x) => (+x).toString() === x && +x >= 0 && +x <= 9)
-        .join("");
+      value = value.replaceAll("+44", "0").replaceAll(" ", "");
 
-      if (numbers.startsWith("07") && numbers.length === 11) {
-        return true;
-      }
+      const number = +value;
 
-      if (numbers.startsWith("447") && numbers.length === 12) {
-        return true;
-      }
+      if (!Number.isInteger(number)) return false;
 
-      return false;
+      return number >= 7000000000 && number < 8000000000;
     }, message);
   }
 
