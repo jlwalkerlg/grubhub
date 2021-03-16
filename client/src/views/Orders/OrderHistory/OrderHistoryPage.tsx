@@ -72,8 +72,6 @@ const OrderHistory: FC = () => {
     isLoading,
   } = useOrderHistory({ perPage: 15 });
 
-  const loadMoreOrders = () => fetchNextPage();
-
   const orders = data?.pages.map((x) => x.orders).flat() ?? [];
 
   return (
@@ -93,7 +91,7 @@ const OrderHistory: FC = () => {
           {hasNextPage && (
             <button
               className="btn btn-primary mt-2 normal-case w-full"
-              onClick={loadMoreOrders}
+              onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage !== false}
             >
               View more

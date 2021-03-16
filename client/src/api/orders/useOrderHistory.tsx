@@ -17,7 +17,7 @@ export interface OrderModel {
 }
 
 interface QueryParams {
-  perPage?: number;
+  perPage: number;
 }
 
 export function getOrderHistoryQueryKey() {
@@ -25,7 +25,7 @@ export function getOrderHistoryQueryKey() {
 }
 
 export function useOrderHistory(
-  params?: QueryParams,
+  { perPage }: QueryParams,
   config?: UseInfiniteQueryOptions<GetOrderHistoryResponse, ApiError>
 ) {
   return useInfiniteQuery<GetOrderHistoryResponse, ApiError>(
@@ -36,17 +36,14 @@ export function useOrderHistory(
         {
           params: {
             page,
-            perPage: params?.perPage,
+            perPage: perPage,
           },
         }
       );
       return response.data;
     },
     {
-      ...config,
       getNextPageParam: (lastPage, allPages) => {
-        if (!params?.perPage) return undefined;
-
         const totalOrdersAvailable = lastPage.count;
 
         const numberOfOrdersLoaded = allPages.reduce(
@@ -58,6 +55,7 @@ export function useOrderHistory(
 
         return allPages.length + 1;
       },
+      ...config,
     }
   );
 }

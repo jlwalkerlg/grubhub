@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -24,28 +25,56 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
 
         [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpGet("/restaurant/order-history")]
-        public async Task<IActionResult> GetRestaurantOrderHistory()
+        public async Task<IActionResult> GetRestaurantOrderHistory([FromQuery] int? page, [FromQuery] int? perPage)
         {
             using var connection = await dbConnectionFactory.OpenConnection();
 
-            var orders = await connection
-                .QueryAsync<OrderModel>(
-                    @"
-                        SELECT
-                            o.id,
-                            o.number,
-                            o.status,
-                            o.placed_at,
-                            SUM(oi.price * oi.quantity) / 100.00 as subtotal
-                        FROM
-                            orders o
-                            INNER JOIN order_items oi ON o.id = oi.order_id
-                            INNER JOIN restaurants r ON r.id = o.restaurant_id
-                        WHERE
-                            r.manager_id = @UserId
-                            AND o.status = ANY(@InactiveStatuses)
-                        GROUP BY o.id, r.estimated_delivery_time_in_minutes
-                        ORDER BY o.placed_at",
+            var sql = @"SELECT
+                    o.id,
+                    o.number,
+                    o.status,
+                    o.placed_at,
+                    SUM(oi.price * oi.quantity) / 100.00 as subtotal
+                FROM
+                    orders o
+                    INNER JOIN order_items oi ON o.id = oi.order_id
+                    INNER JOIN restaurants r ON r.id = o.restaurant_id
+                WHERE
+                    r.manager_id = @UserId
+                    AND o.status = ANY(@InactiveStatuses)
+                GROUP BY o.id, r.estimated_delivery_time_in_minutes
+                ORDER BY o.placed_at";
+
+            int? offset = null;
+
+            if (perPage > 0)
+            {
+                perPage = Math.Max(perPage.Value, 0);
+
+                var currentPage = Math.Max(page ?? 1, 1);
+                offset = (currentPage - 1) * perPage;
+
+                sql += " LIMIT @Limit OFFSET @Offset";
+            }
+
+            var orders = await connection.QueryAsync<OrderModel>(
+                    sql,
+                    new
+                    {
+                        UserId = authenticator.UserId.Value,
+                        InactiveStatuses = (new[] {OrderStatus.Delivered, OrderStatus.Rejected, OrderStatus.Cancelled})
+                            .Select(x => x.ToString())
+                            .ToArray(),
+                        Offset = offset,
+                        Limit = perPage,
+                    });
+
+            var count = await connection.ExecuteScalarAsync<int>(
+                    @"SELECT COUNT(*)
+                        FROM orders o
+                        INNER JOIN restaurants r ON r.id = o.restaurant_id
+                        WHERE r.manager_id = @UserId
+                        AND o.status = ANY(@InactiveStatuses)",
                     new
                     {
                         UserId = authenticator.UserId.Value,
@@ -54,7 +83,11 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                             .ToArray(),
                     });
 
-            return Ok(orders);
+            return Ok(new GetRestaurantOrderHistoryResponse()
+            {
+                Orders = orders,
+                Count = count,
+            });
         }
 
         public record OrderModel
@@ -64,6 +97,12 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
             public string Status { get; set; }
             public DateTime PlacedAt { get; set; }
             public decimal Subtotal { get; set; }
+        }
+
+        public record GetRestaurantOrderHistoryResponse
+        {
+            public IEnumerable<OrderModel> Orders { get; init; }
+            public int Count { get; init; }
         }
     }
 }
