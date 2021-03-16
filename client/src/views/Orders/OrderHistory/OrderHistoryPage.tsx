@@ -107,7 +107,7 @@ const OrderHistory: FC = () => {
 
 const OrderHistoryPage: FC = () => {
   return (
-    <AuthLayout title="Your Orders | FoodSnap">
+    <AuthLayout title="Your Orders | GrubHub">
       <Head>
         <style
           dangerouslySetInnerHTML={{

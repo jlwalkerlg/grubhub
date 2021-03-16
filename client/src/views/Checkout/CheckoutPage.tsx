@@ -235,7 +235,7 @@ const Checkout: FC = () => {
 
 const CheckoutPage: FC = () => {
   return (
-    <AuthLayout title="Food Snap | Checkout">
+    <AuthLayout title="Grub Hub | Checkout">
       <div className="container max-w-xl mt-4">
         <div className="rounded-sm bg-white border border-gray-200 py-6 px-8">
           <Checkout />

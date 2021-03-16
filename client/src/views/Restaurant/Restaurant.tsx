@@ -110,10 +110,10 @@ const Restaurant: FC = () => {
   const loading = router.query.id === undefined || isLoading;
 
   const title = loading
-    ? "FoodSnap"
+    ? "GrubHub"
     : isError
-    ? "Whoops! | FoodSnap"
-    : `${restaurant.name} | Order now on FoodSnap!`;
+    ? "Whoops! | GrubHub"
+    : `${restaurant.name} | Order now on GrubHub!`;
 
   return (
     <Layout title={title}>
