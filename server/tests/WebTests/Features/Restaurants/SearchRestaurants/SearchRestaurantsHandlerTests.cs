@@ -10,16 +10,13 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
     public class SearchRestaurantsHandlerTests
     {
         private readonly GeocoderSpy geocoder;
-        private readonly RestaurantSearcherFake restaurantSearcherFake;
         private readonly SearchRestaurantsHandler handler;
 
         public SearchRestaurantsHandlerTests()
         {
             geocoder = new GeocoderSpy();
 
-            restaurantSearcherFake = new RestaurantSearcherFake();
-
-            handler = new SearchRestaurantsHandler(geocoder, restaurantSearcherFake);
+            handler = new SearchRestaurantsHandler(geocoder, new RestaurantSearcherDummy());
         }
 
         [Theory]

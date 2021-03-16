@@ -1,12 +1,10 @@
 using Dapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Data;
 using Web.Domain;
 using Web.Domain.Restaurants;
-using Web.Features.Cuisines;
 using Web.Services.DateTimeServices;
 
 namespace Web.Features.Restaurants.SearchRestaurants
@@ -23,10 +21,13 @@ namespace Web.Features.Restaurants.SearchRestaurants
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<List<RestaurantSearchResult>> Search(
+        public async Task<SearchRestaurantsResponse> Search(
             Coordinates coordinates,
             RestaurantSearchOptions options = null)
         {
+            var now = dateTimeProvider.UtcNow;
+            var day = now.DayOfWeek.ToString().ToLower();
+
             var sql = @"
                 SELECT
                     r.id,
@@ -53,17 +54,114 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     r.estimated_delivery_time_in_minutes
                 FROM
                     restaurants r
-                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id
-                WHERE
-                    r.status = @Status
-                    AND ba.billing_enabled = TRUE";
+                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id ";
 
-            var now = dateTimeProvider.UtcNow;
-            var day = now.DayOfWeek.ToString().ToLower();
+            sql += GetWhereClause(options, day);
+
+            if (options?.SortBy == "distance")
+            {
+                sql += " ORDER BY (FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000) ASC";
+            }
+            else if (options?.SortBy == "min_order")
+            {
+                sql += " ORDER BY r.minimum_delivery_spend ASC";
+            }
+            else if (options?.SortBy == "delivery_fee")
+            {
+                sql += " ORDER BY r.delivery_fee ASC";
+            }
+            else if (options?.SortBy == "time")
+            {
+                sql += " ORDER BY r.estimated_delivery_time_in_minutes ASC";
+            }
+
+            int? offset = null;
+            var perPage = options?.PerPage;
+
+            if (perPage > 0)
+            {
+                perPage = Math.Max(perPage.Value, 0);
+
+                var currentPage = Math.Max(options?.Page ?? 1, 1);
+                offset = (currentPage - 1) * perPage;
+
+                sql += " LIMIT @Limit OFFSET @Offset";
+            }
+
+            using var connection = await dbConnectionFactory.OpenConnection();
+
+            var count = await connection.ExecuteScalarAsync<int>(
+                @"SELECT COUNT(*) FROM restaurants r
+                INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id "
+                + GetWhereClause(options, day),
+                new
+                {
+                    Status = RestaurantStatus.Approved.ToString(),
+                    Now = now.TimeOfDay,
+                    OriginLatitude = coordinates.Latitude,
+                    OriginLongitude = coordinates.Longitude,
+                    Cuisines = options?.Cuisines,
+                });
+
+            var entries = await connection.QueryAsync<RestaurantEntry>(
+                    sql,
+                    new
+                    {
+                        Status = RestaurantStatus.Approved.ToString(),
+                        Now = now.TimeOfDay,
+                        OriginLatitude = coordinates.Latitude,
+                        OriginLongitude = coordinates.Longitude,
+                        Cuisines = options?.Cuisines,
+                        Offset = offset,
+                        Limit = perPage,
+                    });
+
+            var restaurants = entries.Select(EntryToDto).ToList();
+
+            var cuisines = (await connection
+                .QueryAsync<RestaurantCuisine>(
+                    @"SELECT
+                            rc.restaurant_id,
+                            rc.cuisine_name
+                        FROM
+                            restaurant_cuisines rc
+                        WHERE
+                            rc.restaurant_id = ANY(@RestaurantIds)",
+                    new
+                    {
+                        RestaurantIds = restaurants
+                            .Select(x => x.Id)
+                            .ToArray(),
+                    })).ToList();
+
+            if (cuisines.Any())
+            {
+                var map = restaurants.ToDictionary(x => x.Id);
+                foreach (var cuisine in cuisines)
+                {
+                    map[cuisine.restaurant_id].Cuisines.Add(
+                        new SearchRestaurantsResponse.CuisineDto()
+                        {
+                            Name = cuisine.cuisine_name,
+                        });
+                }
+            }
+
+            return new SearchRestaurantsResponse()
+            {
+                Restaurants = restaurants,
+                Count = count,
+            };
+        }
+
+        private static string GetWhereClause(RestaurantSearchOptions options, string day)
+        {
+            var sql = "WHERE r.status = @Status AND ba.billing_enabled = TRUE";
 
             sql += $" AND {day}_open <= @Now AND ({day}_close IS NULL OR {day}_close > @Now)";
 
-            sql += " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
+            sql +=
+                " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
 
             sql += @" AND r.id = ANY(
                     SELECT
@@ -85,75 +183,12 @@ namespace Web.Features.Restaurants.SearchRestaurants
                         c.name = ANY(@Cuisines))";
             }
 
-            if (options?.SortBy == "distance")
-            {
-                sql += " ORDER BY (FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000) ASC";
-            }
-            else if (options?.SortBy == "min_order")
-            {
-                sql += " ORDER BY r.minimum_delivery_spend ASC";
-            }
-            else if (options?.SortBy == "delivery_fee")
-            {
-                sql += " ORDER BY r.delivery_fee ASC";
-            }
-            else if (options?.SortBy == "time")
-            {
-                sql += " ORDER BY r.estimated_delivery_time_in_minutes ASC";
-            }
-
-            using (var connection = await dbConnectionFactory.OpenConnection())
-            {
-                var entries = await connection
-                    .QueryAsync<RestaurantEntry>(
-                        sql,
-                        new
-                        {
-                            Status = RestaurantStatus.Approved.ToString(),
-                            Now = now.TimeOfDay,
-                            OriginLatitude = coordinates.Latitude,
-                            OriginLongitude = coordinates.Longitude,
-                            Cuisines = options?.Cuisines,
-                        });
-
-                var restaurants = entries.Select(EntryToDto).ToList();
-
-                var cuisines = await connection
-                    .QueryAsync<RestaurantCuisine>(
-                        @"SELECT
-                            rc.restaurant_id,
-                            rc.cuisine_name
-                        FROM
-                            restaurant_cuisines rc
-                        WHERE
-                            rc.restaurant_id = ANY(@RestaurantIds)",
-                        new
-                        {
-                            RestaurantIds = restaurants
-                                .Select(x => x.Id)
-                                .ToArray(),
-                        });
-
-                if (cuisines.Count() > 0)
-                {
-                    var map = restaurants.ToDictionary(x => x.Id);
-                    foreach (var cuisine in cuisines)
-                    {
-                        map[cuisine.restaurant_id].Cuisines.Add(
-                            new CuisineDto()
-                            {
-                                Name = cuisine.cuisine_name,
-                            });
-                    }
-                }
-
-                return restaurants;
-            }
+            return sql;
         }
 
-        private RestaurantSearchResult EntryToDto(RestaurantEntry entry)
+        private SearchRestaurantsResponse.RestaurantModel EntryToDto(RestaurantEntry entry)
         {
-            return new RestaurantSearchResult()
+            return new SearchRestaurantsResponse.RestaurantModel()
             {
                 Id = entry.id,
                 Name = entry.name,

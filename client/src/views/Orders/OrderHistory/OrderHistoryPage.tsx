@@ -65,7 +65,7 @@ const OrderHistoryList: FC<{ orders: OrderModel[] }> = ({ orders }) => {
 const OrderHistory: FC = () => {
   const {
     data,
-    isFetchingNextPage,
+    isFetching,
     fetchNextPage,
     hasNextPage,
     isError,
@@ -92,7 +92,7 @@ const OrderHistory: FC = () => {
             <button
               className="btn btn-primary mt-2 normal-case w-full"
               onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage !== false}
+              disabled={isFetching !== false}
             >
               View more
             </button>

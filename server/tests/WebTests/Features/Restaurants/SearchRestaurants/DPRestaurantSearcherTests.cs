@@ -15,13 +15,13 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
     public class DPRestaurantSearcherTests : IntegrationTestBase
     {
         private readonly DateTimeProviderStub dateTimeProvider;
-        private readonly DPRestaurantSearcher repository;
+        private readonly DPRestaurantSearcher searcher;
 
         public DPRestaurantSearcherTests(IntegrationTestFixture fixture) : base(fixture)
         {
             dateTimeProvider = new DateTimeProviderStub();
 
-            repository = new DPRestaurantSearcher(
+            searcher = new DPRestaurantSearcher(
                 factory.Services.GetRequiredService<IDbConnectionFactory>(),
                 dateTimeProvider
             );
@@ -111,10 +111,11 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             Insert(r1, r2, r3, r4, r5, expected);
 
-            var restaurants = await repository.Search(new Coordinates(54.0f, -2.0f));
+            var response = await searcher.Search(new Coordinates(54.0f, -2.0f));
 
-            restaurants.ShouldHaveSingleItem();
-            restaurants.Single().Id.ShouldBe(expected.Id);
+            response.Restaurants.ShouldHaveSingleItem();
+            response.Restaurants.Single().Id.ShouldBe(expected.Id);
+            response.Count.ShouldBe(1);
         }
 
         [Fact]
@@ -154,17 +155,17 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             Insert(r1, r2, r3);
 
-            var restaurants = await repository.Search(
+            var response = await searcher.Search(
                 new Coordinates(54.0f, -2.0f),
                 new RestaurantSearchOptions()
                 {
                     SortBy = "distance",
                 });
 
-            restaurants.Count.ShouldBe(3);
-            restaurants[0].Id.ShouldBe(r2.Id);
-            restaurants[1].Id.ShouldBe(r3.Id);
-            restaurants[2].Id.ShouldBe(r1.Id);
+            response.Restaurants.Count.ShouldBe(3);
+            response.Restaurants[0].Id.ShouldBe(r2.Id);
+            response.Restaurants[1].Id.ShouldBe(r3.Id);
+            response.Restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -207,17 +208,17 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             Insert(r1, r2, r3);
 
-            var restaurants = await repository.Search(
+            var response = await searcher.Search(
                 new Coordinates(54.0f, -2.0f),
                 new RestaurantSearchOptions()
                 {
                     SortBy = "min_order",
                 });
 
-            restaurants.Count.ShouldBe(3);
-            restaurants[0].Id.ShouldBe(r2.Id);
-            restaurants[1].Id.ShouldBe(r3.Id);
-            restaurants[2].Id.ShouldBe(r1.Id);
+            response.Restaurants.Count.ShouldBe(3);
+            response.Restaurants[0].Id.ShouldBe(r2.Id);
+            response.Restaurants[1].Id.ShouldBe(r3.Id);
+            response.Restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -260,17 +261,17 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             Insert(r1, r2, r3);
 
-            var restaurants = await repository.Search(
+            var response = await searcher.Search(
                 new Coordinates(54.0f, -2.0f),
                 new RestaurantSearchOptions()
                 {
                     SortBy = "delivery_fee",
                 });
 
-            restaurants.Count.ShouldBe(3);
-            restaurants[0].Id.ShouldBe(r2.Id);
-            restaurants[1].Id.ShouldBe(r3.Id);
-            restaurants[2].Id.ShouldBe(r1.Id);
+            response.Restaurants.Count.ShouldBe(3);
+            response.Restaurants[0].Id.ShouldBe(r2.Id);
+            response.Restaurants[1].Id.ShouldBe(r3.Id);
+            response.Restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -313,17 +314,17 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             Insert(r1, r2, r3);
 
-            var restaurants = await repository.Search(
+            var response = await searcher.Search(
                 new Coordinates(54.0f, -2.0f),
                 new RestaurantSearchOptions()
                 {
                     SortBy = "time",
                 });
 
-            restaurants.Count.ShouldBe(3);
-            restaurants[0].Id.ShouldBe(r2.Id);
-            restaurants[1].Id.ShouldBe(r3.Id);
-            restaurants[2].Id.ShouldBe(r1.Id);
+            response.Restaurants.Count.ShouldBe(3);
+            response.Restaurants[0].Id.ShouldBe(r2.Id);
+            response.Restaurants[1].Id.ShouldBe(r3.Id);
+            response.Restaurants[2].Id.ShouldBe(r1.Id);
         }
 
         [Fact]
@@ -370,16 +371,16 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
 
             Insert(r1, r2, r3);
 
-            var restaurants = await repository.Search(
+            var response = await searcher.Search(
                 new Coordinates(54.0f, -2.0f),
                 new RestaurantSearchOptions()
                 {
                     Cuisines = new() { "Thai", "Italian" }
                 });
 
-            restaurants.Count.ShouldBe(2);
-            restaurants.ShouldContain(x => x.Id == r1.Id);
-            restaurants.ShouldContain(x => x.Id == r2.Id);
+            response.Restaurants.Count.ShouldBe(2);
+            response.Restaurants.ShouldContain(x => x.Id == r1.Id);
+            response.Restaurants.ShouldContain(x => x.Id == r2.Id);
         }
     }
 }

@@ -16,28 +16,34 @@ const RestaurantSearchResults: FC = () => {
   const postcode = router.query.postcode.toString();
 
   const {
-    data: restaurants,
+    data,
+    isLoading: isLoadingRestaurants,
     isFetching: isFetchingRestaurants,
     isError: isSearchError,
-    error: searchError,
-  } = useSearchRestaurants({ ...router.query, postcode });
+    fetchNextPage,
+    hasNextPage,
+  } = useSearchRestaurants({ ...router.query, perPage: 1, postcode });
 
   const {
     data: coords,
     isLoading: isLoadingCoords,
     isError: isPostcodeLookupError,
-    error: postcodeLookupError,
   } = usePostcodeLookup(postcode);
+
+  const isLoading = isLoadingRestaurants || isLoadingCoords;
+  const isError = isSearchError || isPostcodeLookupError;
 
   const { dayOfWeek } = useDate();
 
-  if (isFetchingRestaurants || isLoadingCoords) {
+  if (isLoading) {
     return <p>Loading restaurants...</p>;
   }
 
-  if (isSearchError || isPostcodeLookupError) {
-    return <p>{(searchError || postcodeLookupError).message}</p>;
+  if (isError) {
+    return <p>Restaurants are not loading at this time.</p>;
   }
+
+  const restaurants = data?.pages.map((x) => x.restaurants).flat() ?? [];
 
   return (
     <div>
@@ -120,6 +126,16 @@ const RestaurantSearchResults: FC = () => {
             </Link>
           );
         })}
+
+        {hasNextPage && (
+          <button
+            className="btn btn-primary mt-2 normal-case w-full"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingRestaurants !== false}
+          >
+            View more
+          </button>
+        )}
       </div>
     </div>
   );

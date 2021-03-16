@@ -21,7 +21,9 @@ namespace Web.Features.Restaurants.SearchRestaurants
         public async Task<IActionResult> Execute(
             [FromQuery] string postcode,
             [FromQuery(Name = "sort_by")] string sortBy,
-            [FromQuery] string cuisines)
+            [FromQuery] string cuisines,
+            [FromQuery] int? page,
+            [FromQuery] int? perPage)
         {
             var query = new SearchRestaurantsQuery()
             {
@@ -30,12 +32,14 @@ namespace Web.Features.Restaurants.SearchRestaurants
                 {
                     SortBy = sortBy,
                     Cuisines = cuisines?.Split(',').ToList() ?? new(),
+                    Page = page,
+                    PerPage = perPage,
                 },
             };
 
-            var (restaurants, error) = await sender.Send(query);
+            var (data, error) = await sender.Send(query);
 
-            return error ? Problem(error) : Ok(restaurants);
+            return error ? Problem(error) : Ok(data);
         }
     }
 }

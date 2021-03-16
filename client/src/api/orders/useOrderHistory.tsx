@@ -43,17 +43,17 @@ export function useOrderHistory(
       return response.data;
     },
     {
-      getNextPageParam: (lastPage, allPages) => {
-        const totalOrdersAvailable = lastPage.count;
+      getNextPageParam: (_, pages) => {
+        const totalOrdersAvailable = pages[0].count;
 
-        const numberOfOrdersLoaded = allPages.reduce(
+        const numberOfOrdersLoaded = pages.reduce(
           (count, page) => count + page.orders.length,
           0
         );
 
         if (numberOfOrdersLoaded === totalOrdersAvailable) return undefined;
 
-        return allPages.length + 1;
+        return pages.length + 1;
       },
       ...config,
     }

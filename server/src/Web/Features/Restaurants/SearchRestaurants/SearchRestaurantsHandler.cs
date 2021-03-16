@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain;
@@ -6,7 +5,7 @@ using Web.Services.Geocoding;
 
 namespace Web.Features.Restaurants.SearchRestaurants
 {
-    public class SearchRestaurantsHandler : IRequestHandler<SearchRestaurantsQuery, List<RestaurantSearchResult>>
+    public class SearchRestaurantsHandler : IRequestHandler<SearchRestaurantsQuery, SearchRestaurantsResponse>
     {
         private readonly IGeocoder geocoder;
         private readonly IRestaurantSearcher searcher;
@@ -17,7 +16,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
             this.searcher = searcher;
         }
 
-        public async Task<Result<List<RestaurantSearchResult>>> Handle(SearchRestaurantsQuery query, CancellationToken cancellationToken)
+        public async Task<Result<SearchRestaurantsResponse>> Handle(SearchRestaurantsQuery query, CancellationToken cancellationToken)
         {
             if (!Postcode.IsValid(query.Postcode))
             {
@@ -26,16 +25,13 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             var (coordinates, error) = await geocoder.LookupCoordinates(query.Postcode);
 
-            if (error)
-            {
-                return Error.BadRequest("Sorry, we don't recognise that postcode.");
-            }
+            if (error) Error.BadRequest("Sorry, we don't recognise that postcode.");
 
-            var restaurants = await searcher.Search(
+            var response = await searcher.Search(
                 coordinates,
                 query.Options);
 
-            return Result.Ok(restaurants);
+            return Result.Ok(response);
         }
     }
 }

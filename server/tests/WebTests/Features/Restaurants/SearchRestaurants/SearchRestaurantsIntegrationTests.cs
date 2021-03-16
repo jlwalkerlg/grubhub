@@ -73,11 +73,12 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
             var response = await factory.GetClient().Get(
                 "/restaurants?postcode=BD181LT&sort_by=distance&cuisines=Thai,Greek");
 
-            var restaurants = await response.GetData<List<RestaurantSearchResult>>();
+            var data = await response.GetData<SearchRestaurantsResponse>();
 
-            restaurants.Count.ShouldBe(2);
-            restaurants[0].Id.ShouldBe(r2.Id);
-            restaurants[1].Id.ShouldBe(r1.Id);
+            data.Restaurants.Count.ShouldBe(2);
+            data.Restaurants[0].Id.ShouldBe(r2.Id);
+            data.Restaurants[1].Id.ShouldBe(r1.Id);
+            data.Count.ShouldBe(2);
         }
     }
 }
