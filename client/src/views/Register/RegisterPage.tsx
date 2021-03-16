@@ -12,7 +12,7 @@ import { setFormErrors } from "~/services/utils";
 const Register: FC = () => {
   const router = useRouter();
 
-  const [register, { error }] = useRegister();
+  const { mutate: register, isLoading, error } = useRegister();
 
   const form = useForm({
     defaultValues: {
@@ -31,7 +31,7 @@ const Register: FC = () => {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    await register(data, {
+    register(data, {
       onSuccess: async () => {
         await router.push("/");
       },
@@ -134,7 +134,7 @@ const Register: FC = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={isLoading}
             className="btn btn-primary font-semibold w-full normal-case"
           >
             Create account

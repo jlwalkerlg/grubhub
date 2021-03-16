@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "../restaurants/useRestaurant";
 
@@ -16,13 +16,13 @@ async function removeMenuCategory(command: RemoveMenuCategoryCommand) {
 }
 
 export default function useRemoveMenuCategory() {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, RemoveMenuCategoryCommand, null>(
     removeMenuCategory,
     {
       onSuccess: (_, command) => {
-        queryCache.invalidateQueries(
+        queryClient.invalidateQueries(
           getRestaurantQueryKey(command.restaurantId)
         );
       },

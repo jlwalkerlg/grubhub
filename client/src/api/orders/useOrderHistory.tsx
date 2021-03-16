@@ -1,4 +1,4 @@
-import { InfiniteQueryConfig, useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, UseInfiniteQueryOptions } from "react-query";
 import Api, { ApiError } from "~/api/api";
 
 export interface GetOrderHistoryResponse {
@@ -26,11 +26,11 @@ export function getOrderHistoryQueryKey() {
 
 export function useOrderHistory(
   params?: QueryParams,
-  config?: InfiniteQueryConfig<GetOrderHistoryResponse, ApiError>
+  config?: UseInfiniteQueryOptions<GetOrderHistoryResponse, ApiError>
 ) {
-  return useInfiniteQuery<GetOrderHistoryResponse, ApiError, [string, number]>(
+  return useInfiniteQuery<GetOrderHistoryResponse, ApiError>(
     getOrderHistoryQueryKey(),
-    async (_, page) => {
+    async ({ pageParam: page }) => {
       const response = await Api.get<GetOrderHistoryResponse>(
         "/order-history",
         {
@@ -44,7 +44,7 @@ export function useOrderHistory(
     },
     {
       ...config,
-      getFetchMore: (lastPage, allPages) => {
+      getNextPageParam: (lastPage, allPages) => {
         if (!params?.perPage) return undefined;
 
         const totalOrdersAvailable = lastPage.count;

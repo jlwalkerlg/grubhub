@@ -1,4 +1,4 @@
-import Router from "next/router";
+import { useRouter } from "next/router";
 import React, { FC, useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -14,16 +14,21 @@ import RegisterRestaurantFormStepTwo from "./RegisterRestaurantFormStepTwo";
 const MySwal = withReactContent(Swal);
 
 const RegisterRestaurantForm: FC = () => {
+  const router = useRouter();
+
   const { isLoggedIn } = useAuth();
 
   if (isLoggedIn) {
-    Router.push("/");
+    router.push("/");
   }
 
-  const [
-    register,
-    { isError, error, isLoading, isSuccess },
-  ] = useRegisterRestaurant();
+  const {
+    mutate: register,
+    isError,
+    error,
+    isLoading,
+    isSuccess,
+  } = useRegisterRestaurant();
 
   const [values, setValues] = useState<RegisterRestaurantCommand>({
     managerFirstName: "",
@@ -61,7 +66,7 @@ const RegisterRestaurantForm: FC = () => {
 
     setValues(command);
 
-    await register(command, {
+    register(command, {
       onSuccess: async () => {
         await MySwal.fire({
           title: <p>Thanks For Registering!</p>,
@@ -74,7 +79,7 @@ const RegisterRestaurantForm: FC = () => {
           showConfirmButton: true,
         });
 
-        Router.push("/login");
+        router.push("/login");
       },
 
       onError: (error) => {

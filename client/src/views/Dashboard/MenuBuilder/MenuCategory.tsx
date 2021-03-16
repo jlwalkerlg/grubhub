@@ -30,7 +30,12 @@ const MenuCategory: FC<{
 
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const [rename, renameStatus] = useRenameMenuCategory();
+  const {
+    mutate: rename,
+    isLoading: isRenaming,
+    reset: resetRenameMutation,
+    error: renameError,
+  } = useRenameMenuCategory();
 
   const form = useForm({
     defaultValues: {
@@ -43,7 +48,7 @@ const MenuCategory: FC<{
   });
 
   const onRename = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+    if (isRenaming) return;
 
     if (data.newName === category.name) {
       setIsFormOpen(false);
@@ -51,7 +56,7 @@ const MenuCategory: FC<{
       return;
     }
 
-    await rename(
+    rename(
       {
         restaurantId: restaurant.id,
         categoryId: category.id,
@@ -74,13 +79,17 @@ const MenuCategory: FC<{
   const onCancelEdit = () => {
     setIsFormOpen(false);
     form.reset();
-    renameStatus.reset();
+    resetRenameMutation();
   };
 
-  const [remove, removeStatus] = useRemoveMenuCategory();
+  const {
+    mutate: remove,
+    isLoading: isRemoving,
+    isSuccess: isRemoveSuccess,
+  } = useRemoveMenuCategory();
 
   const onDelete = async () => {
-    if (removeStatus.isLoading) return;
+    if (isRemoving) return;
 
     const confirmation = await MySwal.fire({
       title: <p>Delete category {category.name} from the menu?</p>,
@@ -95,7 +104,7 @@ const MenuCategory: FC<{
       return;
     }
 
-    await remove(
+    remove(
       {
         restaurantId: restaurant.id,
         categoryId: category.id,
@@ -108,7 +117,7 @@ const MenuCategory: FC<{
     );
   };
 
-  if (removeStatus.isSuccess) {
+  if (isRemoveSuccess) {
     return null;
   }
 
@@ -118,7 +127,7 @@ const MenuCategory: FC<{
         <p>{category.name}</p>
 
         <div className="ml-1">
-          {removeStatus.isLoading ? (
+          {isRemoving ? (
             <div>
               <SpinnerIcon className="w-4 h-4 animate-spin" />
             </div>
@@ -128,7 +137,7 @@ const MenuCategory: FC<{
                 type="button"
                 className="text-blue-700"
                 onClick={onEdit}
-                disabled={form.formState.isSubmitting}
+                disabled={isRenaming}
               >
                 <PencilIcon className="w-5 h-5" />
               </button>
@@ -136,7 +145,7 @@ const MenuCategory: FC<{
                 type="button"
                 className="text-primary ml-2"
                 onClick={onDelete}
-                disabled={removeStatus.isLoading}
+                disabled={isRemoving}
               >
                 <CloseIcon className="w-5 h-5" />
               </button>
@@ -147,9 +156,9 @@ const MenuCategory: FC<{
 
       {isFormOpen && (
         <form onSubmit={onRename} className="px-2 pb-3">
-          {renameStatus.isError && (
+          {renameError && (
             <div className="my-3">
-              <ErrorAlert message={renameStatus.error.detail} />
+              <ErrorAlert message={renameError.detail} />
             </div>
           )}
 
@@ -175,7 +184,7 @@ const MenuCategory: FC<{
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={isRenaming}
               className="w-full lg:w-auto btn btn-sm btn-primary mt-3 lg:mt-0"
             >
               Rename
@@ -183,7 +192,7 @@ const MenuCategory: FC<{
             <button
               type="button"
               onClick={onCancelEdit}
-              disabled={form.formState.isSubmitting}
+              disabled={isRenaming}
               className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel

@@ -1,4 +1,4 @@
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import Api, { ApiError } from "../api";
 import { OrderStatus } from "./useOrder";
 
@@ -25,7 +25,7 @@ function getActiveRestaurantOrdersQueryKey() {
 
 export default function useActiveRestaurantOrders(
   params?: QueryParams,
-  config?: QueryConfig<ActiveOrderDto[], ApiError>
+  config?: UseQueryOptions<ActiveOrderDto[], ApiError>
 ) {
   return useQuery<ActiveOrderDto[], ApiError>(
     getActiveRestaurantOrdersQueryKey(),

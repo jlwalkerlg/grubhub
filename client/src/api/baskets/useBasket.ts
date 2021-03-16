@@ -1,4 +1,4 @@
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import Api, { ApiError } from "../api";
 import useAuth from "../users/useAuth";
 
@@ -22,7 +22,7 @@ export function getBasketQueryKey(restaurantId: string) {
 
 export default function useBasket(
   restaurantId: string,
-  config: QueryConfig<BasketDto, ApiError> = {}
+  config: UseQueryOptions<BasketDto, ApiError> = {}
 ) {
   const { isLoggedIn } = useAuth();
 

@@ -18,10 +18,13 @@ const UpdateCuisinesForm: FC = () => {
     restaurant.cuisines.map((x) => x.name)
   );
 
-  const [
-    updateCuisines,
-    { isError, error, isSuccess, isLoading },
-  ] = useUpdateCuisines(restaurant.id);
+  const {
+    mutate: updateCuisines,
+    isError,
+    error,
+    isSuccess,
+    isLoading,
+  } = useUpdateCuisines(restaurant.id);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

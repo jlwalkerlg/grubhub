@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import useGeocodingServices from "./useGeocodingServices";
 
 export function useGoogleMap(
   divId: string,
   options?: google.maps.MapOptions,
-  config: QueryConfig<google.maps.Map> = {}
+  config: UseQueryOptions<google.maps.Map> = {}
 ) {
   const { isReady } = useGeocodingServices();
 

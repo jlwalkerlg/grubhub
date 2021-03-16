@@ -25,15 +25,17 @@ const UpdateManagerDetailsForm = () => {
     email: (builder) => builder.required().email(),
   });
 
-  const [
-    updateUserDetails,
-    { isError, error, isSuccess },
-  ] = useUpdateUserDetails();
+  const {
+    mutate: updateUserDetails,
+    isLoading,
+    error,
+    isSuccess,
+  } = useUpdateUserDetails();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+    if (isLoading) return;
 
-    await updateUserDetails(data, {
+    updateUserDetails(data, {
       onError: (error) => {
         if (error.isValidationError) {
           setFormErrors(error.errors, form);
@@ -44,7 +46,7 @@ const UpdateManagerDetailsForm = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      {isError && (
+      {error && (
         <div className="my-6">
           <ErrorAlert message={error.detail} />
         </div>
@@ -116,7 +118,7 @@ const UpdateManagerDetailsForm = () => {
       <div className="mt-4">
         <button
           type="submit"
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
           className="btn btn-primary font-semibold w-full"
         >
           Update

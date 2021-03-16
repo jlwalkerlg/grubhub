@@ -43,7 +43,7 @@ const MenuItemModal: FC<{
   const incrementQuantity = () => setQuantity(quantity + 1);
   const decrementQuantity = () => setQuantity(quantity - 1 || quantity);
 
-  const [addToBasket, { isLoading, isError, error }] = useAddToBasket();
+  const { mutate: addToBasket, isLoading, isError, error } = useAddToBasket();
 
   const submit = () => {
     if (isLoading) return;

@@ -1,4 +1,4 @@
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import Api, { ApiError } from "../api";
 
 interface BillingDetails {
@@ -13,7 +13,7 @@ export function getBillingDetailsQueryKey(restaurantId: string) {
 
 export default function useBillingDetails(
   restaurantId: string,
-  config?: QueryConfig<BillingDetails, ApiError>
+  config?: UseQueryOptions<BillingDetails, ApiError>
 ) {
   return useQuery<BillingDetails, ApiError>(
     getBillingDetailsQueryKey(restaurantId),

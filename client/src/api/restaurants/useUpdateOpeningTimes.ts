@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "./useRestaurant";
 
@@ -27,7 +27,7 @@ async function updateOpeningTimes(
 }
 
 export default function useUpdateOpeningTimes(restaurantId: string) {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, UpdateOpeningTimesCommand, null>(
     async (command) => {
@@ -35,7 +35,7 @@ export default function useUpdateOpeningTimes(restaurantId: string) {
     },
     {
       onSuccess: () => {
-        cache.invalidateQueries(getRestaurantQueryKey(restaurantId));
+        queryClient.invalidateQueries(getRestaurantQueryKey(restaurantId));
       },
     }
   );

@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "../restaurants/useRestaurant";
 
@@ -21,13 +21,13 @@ async function updateMenuItem(command: UpdateMenuItemCommand) {
 }
 
 export default function useUpdateMenuItem() {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, UpdateMenuItemCommand, null>(
     updateMenuItem,
     {
       onSuccess: (_, command) => {
-        queryCache.invalidateQueries(
+        queryClient.invalidateQueries(
           getRestaurantQueryKey(command.restaurantId)
         );
       },

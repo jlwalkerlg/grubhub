@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getAuthUserQueryKey } from "./useAuth";
 
@@ -10,7 +10,7 @@ interface UpdateDeliveryAddressCommand {
 }
 
 export default function useUpdateDeliveryAddress() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, UpdateDeliveryAddressCommand, null>(
     async (command) => {
@@ -18,7 +18,7 @@ export default function useUpdateDeliveryAddress() {
     },
     {
       onSuccess: () => {
-        cache.invalidateQueries(getAuthUserQueryKey());
+        queryClient.invalidateQueries(getAuthUserQueryKey());
       },
     }
   );

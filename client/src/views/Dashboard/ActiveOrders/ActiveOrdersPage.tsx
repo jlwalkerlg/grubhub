@@ -44,12 +44,12 @@ const OrderTableRow: FC<{
 
   const { addToast } = useToasts();
 
-  const [accept, { isLoading: isAccepting }] = useAcceptOrder();
+  const { mutate: accept, isLoading: isAccepting } = useAcceptOrder();
 
   const onAccept = async () => {
     if (isAccepting) return;
 
-    await accept(
+    accept(
       { orderId: order.id },
       {
         onSuccess: async () => {
@@ -63,12 +63,12 @@ const OrderTableRow: FC<{
     );
   };
 
-  const [reject, { isLoading: isRejecting }] = useRejectOrder();
+  const { mutate: reject, isLoading: isRejecting } = useRejectOrder();
 
   const onReject = async () => {
     if (isRejecting) return;
 
-    await reject(
+    reject(
       { orderId: order.id },
       {
         onSuccess: async () => {
@@ -82,12 +82,12 @@ const OrderTableRow: FC<{
     );
   };
 
-  const [deliver, { isLoading: isDelivering }] = useDeliverOrder();
+  const { mutate: deliver, isLoading: isDelivering } = useDeliverOrder();
 
   const onDeliver = async () => {
     if (isAccepting) return;
 
-    await deliver(
+    deliver(
       { orderId: order.id },
       {
         onSuccess: async () => {
@@ -101,12 +101,12 @@ const OrderTableRow: FC<{
     );
   };
 
-  const [cancel, { isLoading: isCancelling }] = useCancelOrder();
+  const { mutate: cancel, isLoading: isCancelling } = useCancelOrder();
 
   const onCancel = async () => {
     if (isAccepting) return;
 
-    await cancel(
+    cancel(
       { orderId: order.id },
       {
         onSuccess: async () => {

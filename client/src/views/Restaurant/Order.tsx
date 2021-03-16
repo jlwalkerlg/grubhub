@@ -49,10 +49,12 @@ const OrderItemModal: FC<{
   const incrementQuantity = () => setQuantity(quantity + 1);
   const decrementQuantity = () => setQuantity(quantity - 1 || quantity);
 
-  const [
-    updateItemQuantity,
-    { isLoading, isError, error },
-  ] = useUpdateBasketItemQuantity();
+  const {
+    mutate: updateItemQuantity,
+    isLoading,
+    isError,
+    error,
+  } = useUpdateBasketItemQuantity();
 
   const submit = () => {
     if (isLoading) return;
@@ -164,7 +166,7 @@ const OrderItem: FC<{ restaurantId: string; item: BasketItemDto }> = ({
 }) => {
   const { addToast } = useToasts();
 
-  const [remove, { isLoading }] = useRemoveFromBasket();
+  const { mutate: remove, isLoading } = useRemoveFromBasket();
 
   const onRemove = () => {
     if (isLoading) return;

@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getAuthUser, getAuthUserQueryKey } from "./useAuth";
 
@@ -12,7 +12,7 @@ async function login(command: LoginCommand) {
 }
 
 export default function useLogin() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, LoginCommand, null>(
     async (command) => {
@@ -24,7 +24,7 @@ export default function useLogin() {
       onSuccess: async () => {
         const user = await getAuthUser();
 
-        cache.setQueryData(getAuthUserQueryKey(), user);
+        queryClient.setQueryData(getAuthUserQueryKey(), user);
       },
       onError: () => {
         localStorage.removeItem("isLoggedIn");

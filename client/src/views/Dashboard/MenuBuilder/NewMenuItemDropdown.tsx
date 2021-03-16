@@ -18,7 +18,13 @@ const NewMenuItemDropdown: React.FC<{
 
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const [addItem, { isError, error, reset }] = useAddMenuItem();
+  const {
+    mutate: addItem,
+    isLoading,
+    isError,
+    error,
+    reset,
+  } = useAddMenuItem();
 
   const form = useForm({
     defaultValues: {
@@ -35,9 +41,9 @@ const NewMenuItemDropdown: React.FC<{
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+    if (isLoading) return;
 
-    await addItem(
+    addItem(
       {
         restaurantId: restaurant.id,
         categoryId: category.id,
@@ -146,7 +152,7 @@ const NewMenuItemDropdown: React.FC<{
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={isLoading}
               className="w-full lg:w-auto btn btn-sm btn-primary"
             >
               Add Item
@@ -154,7 +160,7 @@ const NewMenuItemDropdown: React.FC<{
             <button
               type="button"
               onClick={handleCancel}
-              disabled={form.formState.isSubmitting}
+              disabled={isLoading}
               className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel

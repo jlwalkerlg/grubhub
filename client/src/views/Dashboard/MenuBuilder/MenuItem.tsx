@@ -26,7 +26,13 @@ const UpdateForm: FC<{
   item: MenuItemDto;
   close: () => any;
 }> = ({ menu, category, item, close }) => {
-  const [update, { isError, error, reset }] = useUpdateMenuItem();
+  const {
+    mutate: update,
+    isLoading,
+    isError,
+    error,
+    reset,
+  } = useUpdateMenuItem();
 
   const form = useForm({
     defaultValues: {
@@ -43,9 +49,9 @@ const UpdateForm: FC<{
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+    if (isLoading) return;
 
-    await update(
+    update(
       {
         restaurantId: menu.restaurantId,
         categoryId: category.id,
@@ -144,7 +150,7 @@ const UpdateForm: FC<{
       <div className="mt-4">
         <button
           type="submit"
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
           className="w-full lg:w-auto btn btn-sm btn-primary"
         >
           Update Item
@@ -152,7 +158,7 @@ const UpdateForm: FC<{
         <button
           type="button"
           onClick={cancel}
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
           className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
         >
           Cancel
@@ -173,10 +179,14 @@ const MenuItem: React.FC<{
 
   const [isUpdateFormOpen, setIsUpdateFormOpen] = React.useState(false);
 
-  const [remove, removeStatus] = useRemoveMenuItem();
+  const {
+    mutate: remove,
+    isLoading: isRemoving,
+    isSuccess: isRemoved,
+  } = useRemoveMenuItem();
 
   const onRemove = async () => {
-    if (removeStatus.isLoading) return;
+    if (isRemoving) return;
 
     const confirmation = await MySwal.fire({
       title: (
@@ -195,7 +205,7 @@ const MenuItem: React.FC<{
       return;
     }
 
-    await remove(
+    remove(
       {
         restaurantId: restaurant.id,
         categoryId: category.id,
@@ -209,7 +219,7 @@ const MenuItem: React.FC<{
     );
   };
 
-  if (removeStatus.isSuccess) {
+  if (isRemoved) {
     return null;
   }
 
@@ -219,7 +229,7 @@ const MenuItem: React.FC<{
         <div className="flex items-center justify-between">
           <p className="font-semibold">{item.name}</p>
 
-          {removeStatus.isLoading ? (
+          {isRemoving ? (
             <div>
               <SpinnerIcon className="w-4 h-4 animate-spin text-primary" />
             </div>
@@ -236,7 +246,7 @@ const MenuItem: React.FC<{
                 type="button"
                 className="text-primary ml-2"
                 onClick={onRemove}
-                disabled={removeStatus.isLoading}
+                disabled={isRemoving}
               >
                 <CloseIcon className="w-5 h-5" />
               </button>

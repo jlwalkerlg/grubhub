@@ -16,7 +16,10 @@ const Billing: FC = () => {
     restaurant.id
   );
 
-  const [setupBilling, { isLoading: isSettingUpBilling }] = useSetupBilling();
+  const {
+    mutate: setupBilling,
+    isLoading: isSettingUpBilling,
+  } = useSetupBilling();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -29,7 +32,7 @@ const Billing: FC = () => {
   const onSetupBilling = async () => {
     if (isSettingUpBilling) return;
 
-    await setupBilling(restaurant.id, {
+    setupBilling(restaurant.id, {
       onSuccess: (link) => {
         window.location.href = link;
       },

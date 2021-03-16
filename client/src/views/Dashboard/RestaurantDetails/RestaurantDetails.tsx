@@ -35,15 +35,17 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
     estimatedDeliveryTimeInMinutes: (builder) => builder.required().min(1),
   });
 
-  const [
-    updateRestaurantDetails,
-    { isError, error, isSuccess },
-  ] = useUpdateRestaurantDetails();
+  const {
+    mutate: updateRestaurantDetails,
+    isLoading,
+    error,
+    isSuccess,
+  } = useUpdateRestaurantDetails();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+    if (isLoading) return;
 
-    await updateRestaurantDetails(
+    updateRestaurantDetails(
       {
         id: restaurant.id,
         ...data,
@@ -60,7 +62,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
 
   return (
     <form onSubmit={onSubmit}>
-      {isError && (
+      {error && (
         <div className="my-6">
           <ErrorAlert message={error.detail} />
         </div>
@@ -221,7 +223,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
       <div className="mt-5">
         <button
           type="submit"
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
           className="btn btn-primary font-semibold w-full"
         >
           Update
@@ -234,12 +236,9 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
 const RestaurantDetails: React.FC = () => {
   const { user } = useAuth();
 
-  const {
-    data: restaurant,
-    isLoading,
-    isError,
-    error: loadingError,
-  } = useRestaurant(user.restaurantId);
+  const { data: restaurant, isLoading, isError } = useRestaurant(
+    user.restaurantId
+  );
 
   if (isLoading) {
     return <SpinnerIcon className="w-6 h-6 animate-spin" />;

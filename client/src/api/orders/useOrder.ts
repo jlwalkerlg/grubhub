@@ -1,4 +1,4 @@
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import Api, { ApiError } from "../api";
 
 export interface OrderDto {
@@ -56,7 +56,7 @@ export function getOrderQueryKey(orderId: string) {
 
 export default function useOrder(
   orderId: string,
-  config?: QueryConfig<OrderDto, ApiError>
+  config?: UseQueryOptions<OrderDto, ApiError>
 ) {
   return useQuery<OrderDto, ApiError>(
     getOrderQueryKey(orderId),

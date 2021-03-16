@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useMemo } from "react";
-import { useQueryCache } from "react-query";
+import { useQueryClient } from "react-query";
+import { getBasketQueryKey } from "~/api/baskets/useBasket";
 import useOrder, {
   getOrderQueryKey,
   OrderDto,
@@ -422,7 +423,7 @@ const OrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
 };
 
 const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   useOrdersHub({
     enabled:
@@ -432,28 +433,29 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
 
     configure: (connection) => {
       connection.on(`order_${order.id}.confirmed`, () => {
-        cache.invalidateQueries(getOrderQueryKey(order.id));
+        queryClient.invalidateQueries(getOrderQueryKey(order.id));
+        queryClient.invalidateQueries(getBasketQueryKey(order.restaurantId));
       });
 
       connection.on(`order_${order.id}.accepted`, () => {
-        cache.invalidateQueries(getOrderQueryKey(order.id));
+        queryClient.invalidateQueries(getOrderQueryKey(order.id));
       });
 
       connection.on(`order_${order.id}.rejected`, () => {
-        cache.invalidateQueries(getOrderQueryKey(order.id));
+        queryClient.invalidateQueries(getOrderQueryKey(order.id));
       });
 
       connection.on(`order_${order.id}.delivered`, () => {
-        cache.invalidateQueries(getOrderQueryKey(order.id));
+        queryClient.invalidateQueries(getOrderQueryKey(order.id));
       });
 
       connection.on(`order_${order.id}.cancelled`, () => {
-        cache.invalidateQueries(getOrderQueryKey(order.id));
+        queryClient.invalidateQueries(getOrderQueryKey(order.id));
       });
     },
 
     onConnect: () => {
-      cache.invalidateQueries(getOrderQueryKey(order.id));
+      queryClient.invalidateQueries(getOrderQueryKey(order.id));
     },
   });
 

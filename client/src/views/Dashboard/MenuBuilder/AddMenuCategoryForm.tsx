@@ -12,7 +12,13 @@ const AddMenuCategoryForm: React.FC = () => {
 
   const { user } = useAuth();
 
-  const [addMenuCategory, { isError, error, reset }] = useAddMenuCategory();
+  const {
+    mutate: addMenuCategory,
+    isLoading,
+    isError,
+    error,
+    reset,
+  } = useAddMenuCategory();
 
   const form = useForm({
     defaultValues: {
@@ -25,9 +31,9 @@ const AddMenuCategoryForm: React.FC = () => {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+    if (isLoading) return;
 
-    await addMenuCategory(
+    addMenuCategory(
       {
         restaurantId: user.restaurantId,
         ...data,
@@ -93,7 +99,7 @@ const AddMenuCategoryForm: React.FC = () => {
           <div className="mt-4">
             <button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={isLoading}
               className="w-full lg:w-auto btn btn-sm btn-primary"
             >
               Add Category
@@ -101,7 +107,7 @@ const AddMenuCategoryForm: React.FC = () => {
             <button
               type="button"
               onClick={handleCancel}
-              disabled={form.formState.isSubmitting}
+              disabled={isLoading}
               className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel

@@ -28,7 +28,7 @@ const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
 
   const router = useRouter();
 
-  const [pay, { isError, error, isLoading }] = usePay();
+  const { mutate: pay, isError, error, isLoading } = usePay();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
       return;
     }
 
-    await pay(order.paymentIntentClientSecret, {
+    pay(order.paymentIntentClientSecret, {
       onSuccess: async () => {
         await router.push(`/orders/${order.id}`);
       },

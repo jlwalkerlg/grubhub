@@ -1,9 +1,9 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getBillingDetailsQueryKey } from "./useBillingDetails";
 
 export default function useSetupBilling() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<string, ApiError, string, null>(
     async (restaurantId) => {
@@ -14,7 +14,7 @@ export default function useSetupBilling() {
     },
     {
       onSuccess: (_, restaurantId) => {
-        cache.invalidateQueries(getBillingDetailsQueryKey(restaurantId));
+        queryClient.invalidateQueries(getBillingDetailsQueryKey(restaurantId));
       },
     }
   );

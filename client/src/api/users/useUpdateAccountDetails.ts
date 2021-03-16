@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getAuthUserQueryKey } from "./useAuth";
 
@@ -9,7 +9,7 @@ interface UpdateAccountDetailsCommand {
 }
 
 export default function useUpdateAccountDetails() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, UpdateAccountDetailsCommand, null>(
     async (command) => {
@@ -17,7 +17,7 @@ export default function useUpdateAccountDetails() {
     },
     {
       onSuccess: () => {
-        cache.invalidateQueries(getAuthUserQueryKey());
+        queryClient.invalidateQueries(getAuthUserQueryKey());
       },
     }
   );

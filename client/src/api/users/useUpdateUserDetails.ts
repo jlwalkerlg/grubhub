@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import useAuth, { getAuthUserQueryKey, UserDto } from "./useAuth";
 
@@ -13,7 +13,7 @@ async function updateUserDetails(command: UpdateUserDetailsCommand) {
 }
 
 export default function useUpdateUserDetails() {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   const { user } = useAuth();
 
@@ -28,7 +28,7 @@ export default function useUpdateUserDetails() {
           email: command.email,
         };
 
-        queryCache.setQueryData(getAuthUserQueryKey(), newUser);
+        queryClient.setQueryData(getAuthUserQueryKey(), newUser);
       },
     }
   );

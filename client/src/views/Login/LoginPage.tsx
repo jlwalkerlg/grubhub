@@ -19,12 +19,12 @@ const Login: React.FC = () => {
     password: (builder) => builder.required(),
   });
 
-  const [login, { isError, error }] = useLogin();
+  const { mutate: login, isLoading, error } = useLogin();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
+    if (isLoading) return;
 
-    await login(data, {
+    login(data, {
       onError: (error) => {
         if (error.isValidationError) {
           setFormErrors(error.errors, form);
@@ -52,7 +52,7 @@ const Login: React.FC = () => {
       </h1>
 
       <form onSubmit={onSubmit}>
-        {isError && (
+        {error && (
           <div className="my-6">
             <ErrorAlert message={error.detail} />
           </div>
@@ -107,7 +107,7 @@ const Login: React.FC = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={isLoading}
             className="btn btn-primary font-semibold w-full"
           >
             Login
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
         <div className="mt-4 md:flex items-center">
           <button
             type="button"
-            disabled={form.formState.isSubmitting}
+            disabled={isLoading}
             className="btn bg-green-600 hover:bg-green-800 text-white font-semibold flex-1 md:mr-2"
             onClick={loginAsDemoCustomer}
           >
@@ -137,7 +137,7 @@ const Login: React.FC = () => {
 
           <button
             type="button"
-            disabled={form.formState.isSubmitting}
+            disabled={isLoading}
             className="btn border border-green-800 hover:bg-green-800 text-green-900 hover:text-white font-semibold flex-1 md:ml-2"
             onClick={loginAsDemoManager}
           >

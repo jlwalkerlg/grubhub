@@ -27,10 +27,15 @@ const CustomerDetailsForm: FC = () => {
     mobileNumber: (builder) => builder.required().mobile(),
   });
 
-  const [update, { error, isSuccess }] = useUpdateAccountDetails();
+  const {
+    mutate: update,
+    isLoading,
+    error,
+    isSuccess,
+  } = useUpdateAccountDetails();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    await update(data, {
+    update(data, {
       onError: (error) => {
         if (error.isValidationError) {
           setFormErrors(error.errors, form);
@@ -110,10 +115,7 @@ const CustomerDetailsForm: FC = () => {
         )}
       </div>
 
-      <button
-        className="btn btn-primary w-full mt-6"
-        disabled={form.formState.isSubmitting}
-      >
+      <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
         Save details
       </button>
     </form>
@@ -138,10 +140,15 @@ const DeliveryAddressForm: FC = () => {
     postcode: (builder) => builder.required().postcode(),
   });
 
-  const [update, { error, isSuccess }] = useUpdateDeliveryAddress();
+  const {
+    mutate: update,
+    isLoading,
+    error,
+    isSuccess,
+  } = useUpdateDeliveryAddress();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    await update(data, {
+    update(data, {
       onError: (error) => {
         if (error.isValidationError) {
           setFormErrors(error.errors, form);
@@ -235,10 +242,7 @@ const DeliveryAddressForm: FC = () => {
         )}
       </div>
 
-      <button
-        className="btn btn-primary w-full mt-6"
-        disabled={form.formState.isSubmitting}
-      >
+      <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
         Save address
       </button>
     </form>
@@ -261,10 +265,10 @@ const ChangePasswordForm: FC = () => {
         .match(() => form.getValues("password"), "Passwords must match."),
   });
 
-  const [update, { error, isSuccess }] = useChangePassword();
+  const { mutate: update, isLoading, error, isSuccess } = useChangePassword();
 
   const onSubmit = form.handleSubmit(async ({ password }) => {
-    await update(
+    update(
       { password },
       {
         onError: (error) => {
@@ -328,10 +332,7 @@ const ChangePasswordForm: FC = () => {
         )}
       </div>
 
-      <button
-        className="btn btn-primary w-full mt-6"
-        disabled={form.formState.isSubmitting}
-      >
+      <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
         Change password
       </button>
     </form>

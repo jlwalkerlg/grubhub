@@ -65,16 +65,16 @@ const OrderHistoryList: FC<{ orders: OrderModel[] }> = ({ orders }) => {
 const OrderHistory: FC = () => {
   const {
     data,
-    isFetchingMore,
-    fetchMore,
-    canFetchMore,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
     isError,
     isLoading,
   } = useOrderHistory({ perPage: 15 });
 
-  const loadMoreOrders = () => fetchMore();
+  const loadMoreOrders = () => fetchNextPage();
 
-  const orders = data?.map((x) => x.orders).flat() ?? [];
+  const orders = data?.pages.map((x) => x.orders).flat() ?? [];
 
   return (
     <div className="container max-w-3xl bg-white rounded p-4">
@@ -90,11 +90,11 @@ const OrderHistory: FC = () => {
         <div className="mt-4">
           <OrderHistoryList orders={orders} />
 
-          {canFetchMore && (
+          {hasNextPage && (
             <button
               className="btn btn-primary mt-2 normal-case w-full"
               onClick={loadMoreOrders}
-              disabled={isFetchingMore !== false}
+              disabled={isFetchingNextPage !== false}
             >
               View more
             </button>

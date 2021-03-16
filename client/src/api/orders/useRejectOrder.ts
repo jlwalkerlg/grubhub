@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getRestaurantOrderHistoryQueryKey } from "./useRestaurantOrderHistory";
 
@@ -7,7 +7,7 @@ interface RejectOrderCommand {
 }
 
 export function useRejectOrder() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<string, ApiError, RejectOrderCommand, null>(
     async ({ orderId }) => {
@@ -16,7 +16,7 @@ export function useRejectOrder() {
     },
     {
       onSuccess: () => {
-        cache.invalidateQueries(getRestaurantOrderHistoryQueryKey());
+        queryClient.invalidateQueries(getRestaurantOrderHistoryQueryKey());
       },
     }
   );

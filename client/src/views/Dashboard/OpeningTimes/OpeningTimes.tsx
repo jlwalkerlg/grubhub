@@ -141,10 +141,12 @@ const OpeningTimesInput: React.FC<{
 const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
   restaurant,
 }) => {
-  const [
-    updateOpeningTimes,
-    { isError, error, isSuccess },
-  ] = useUpdateOpeningTimes(restaurant.id);
+  const {
+    mutate: updateOpeningTimes,
+    isLoading,
+    error,
+    isSuccess,
+  } = useUpdateOpeningTimes(restaurant.id);
 
   const form = useForm<UpdateOpeningTimesCommand>({
     defaultValues: {
@@ -166,9 +168,9 @@ const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
   });
 
   const onSubmit = form.handleSubmit(async (command) => {
-    if (form.formState.isSubmitting) return;
+    if (isLoading) return;
 
-    await updateOpeningTimes(command, {
+    updateOpeningTimes(command, {
       onError: (error) => {
         if (error.isValidationError) {
           setFormErrors(error.errors, form);
@@ -179,7 +181,7 @@ const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
 
   return (
     <form onSubmit={onSubmit}>
-      {isError && (
+      {error && (
         <div className="my-6">
           <ErrorAlert message={error.detail} />
         </div>
@@ -240,7 +242,7 @@ const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
         <button
           type="submit"
           className="btn btn-primary font-semibold w-full"
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
         >
           Update
         </button>

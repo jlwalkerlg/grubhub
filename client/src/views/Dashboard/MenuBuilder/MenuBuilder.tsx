@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
 import useRestaurant from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
@@ -44,8 +44,10 @@ const MenuBuilderWrapper: NextPage = () => {
     }
   );
 
+  const router = useRouter();
+
   if (!isLoggedIn && !isLoadingAuth) {
-    Router.push("/login");
+    router.push("/login");
     return null;
   }
 

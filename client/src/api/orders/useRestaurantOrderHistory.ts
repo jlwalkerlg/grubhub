@@ -1,4 +1,4 @@
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import Api, { ApiError } from "../api";
 
 export interface OrderModel {
@@ -14,7 +14,7 @@ export function getRestaurantOrderHistoryQueryKey() {
 }
 
 export default function useRestaurantOrderHistory(
-  config?: QueryConfig<OrderModel[], ApiError>
+  config?: UseQueryOptions<OrderModel[], ApiError>
 ) {
   return useQuery<OrderModel[], ApiError>(
     getRestaurantOrderHistoryQueryKey(),

@@ -1,13 +1,13 @@
-import { useQueryCache } from "react-query";
+import { useQueryClient } from "react-query";
 import useGeocodingServices from "./useGeocodingServices";
 
 export default function useAddressLookup() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   const { getGeocoder, refreshSession } = useGeocodingServices();
 
   const getAddressById = async (id: string) => {
-    const cached = cache.getQueryData<string>(`address:${id}`);
+    const cached = queryClient.getQueryData<string>(`address:${id}`);
 
     if (cached) {
       return cached;
@@ -24,7 +24,7 @@ export default function useAddressLookup() {
         // TODO: tidy up?
         refreshSession().then(() => {
           const address = results[0].formatted_address;
-          cache.setQueryData<string>(`address:${id}`, address);
+          queryClient.setQueryData<string>(`address:${id}`, address);
           resolve(address);
         });
       });

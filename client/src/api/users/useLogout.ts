@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getAuthUserQueryKey } from "./useAuth";
 
@@ -7,7 +7,7 @@ async function logout() {
 }
 
 export default function useLogout() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, null, null>(
     async () => {
@@ -17,7 +17,7 @@ export default function useLogout() {
     },
     {
       onSuccess: () => {
-        cache.setQueryData(getAuthUserQueryKey(), null);
+        queryClient.setQueryData(getAuthUserQueryKey(), null);
       },
     }
   );

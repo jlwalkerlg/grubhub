@@ -1,14 +1,14 @@
 import { AppProps } from "next/app";
 import React from "react";
-import { QueryCache, ReactQueryCacheProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ToastProvider } from "~/components/Toaster/Toaster";
 import useIsAppMounted from "~/services/useIsAppMounted";
 import "~/styles/index.css";
 import ErrorPage from "~/views/Error/ErrorPage";
 
-const queryCache = new QueryCache({
-  defaultConfig: {
+const queryClient = new QueryClient({
+  defaultOptions: {
     queries: {
       staleTime: 120 * 1000,
     },
@@ -28,11 +28,11 @@ export default function App(props: AppProps) {
 
   return (
     <ToastProvider>
-      <ReactQueryCacheProvider queryCache={queryCache}>
+      <QueryClientProvider client={queryClient}>
         <Hydrate state={props.pageProps.dehydratedState}>
           <Wrapper {...props} />
         </Hydrate>
-      </ReactQueryCacheProvider>
+      </QueryClientProvider>
     </ToastProvider>
   );
 }

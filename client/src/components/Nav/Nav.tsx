@@ -25,10 +25,10 @@ const Nav: React.FC = () => {
   usePreventBodyScroll(isOpen);
 
   const { user, isLoggedIn, isLoading } = useAuth();
-  const [logout] = useLogout();
+  const { mutate: logout } = useLogout();
 
   const onLogout = async () => {
-    await logout(null, {
+    logout(null, {
       onSuccess: () => {
         window.location.reload();
       },

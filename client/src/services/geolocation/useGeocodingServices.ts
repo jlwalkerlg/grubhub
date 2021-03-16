@@ -28,13 +28,13 @@ export default function useGeocodingServices() {
   );
 
   const getGeocoder = async () =>
-    isSuccess ? data.geocoder : (await refetch()).geocoder;
+    isSuccess ? data.geocoder : (await refetch()).data.geocoder;
 
   const getClient = async () =>
-    isSuccess ? data.client : (await refetch()).client;
+    isSuccess ? data.client : (await refetch()).data.client;
 
   const getSessionToken = async () =>
-    isSuccess ? data.sessionToken : (await refetch()).sessionToken;
+    isSuccess ? data.sessionToken : (await refetch()).data.sessionToken;
 
   const refreshSession = () => refetch();
 

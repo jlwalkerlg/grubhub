@@ -1,4 +1,4 @@
-import { QueryConfig, useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import api, { ApiError } from "../api";
 import { CuisineDto } from "../cuisines/useCuisines";
 
@@ -70,7 +70,7 @@ async function getRestaurant(id: string) {
 
 export default function useRestaurant(
   id: string,
-  config?: QueryConfig<RestaurantDto, ApiError>
+  config?: UseQueryOptions<RestaurantDto, ApiError>
 ) {
   return useQuery<RestaurantDto, ApiError>(
     getRestaurantQueryKey(id),

@@ -1,6 +1,5 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
-import { getBasketQueryKey } from "../baskets/useBasket";
 import { getOrderHistoryQueryKey } from "./useOrderHistory";
 
 export interface PlaceOrderCommand {
@@ -13,7 +12,7 @@ export interface PlaceOrderCommand {
 }
 
 export function usePlaceOrder() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<string, ApiError, PlaceOrderCommand, null>(
     async (command) => {
@@ -26,8 +25,7 @@ export function usePlaceOrder() {
     },
     {
       onSuccess: (_, { restaurantId }) => {
-        cache.invalidateQueries(getBasketQueryKey(restaurantId));
-        cache.invalidateQueries(getOrderHistoryQueryKey());
+        queryClient.invalidateQueries(getOrderHistoryQueryKey());
       },
     }
   );

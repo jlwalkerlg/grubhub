@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getBasketQueryKey } from "./useBasket";
 
@@ -8,7 +8,7 @@ interface RemoveFromBasketCommand {
 }
 
 export default function useRemoveFromBasket() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, RemoveFromBasketCommand, null>(
     async (command) => {
@@ -18,7 +18,7 @@ export default function useRemoveFromBasket() {
     },
     {
       onSuccess: (_, command) => {
-        cache.invalidateQueries(getBasketQueryKey(command.restaurantId));
+        queryClient.invalidateQueries(getBasketQueryKey(command.restaurantId));
       },
     }
   );

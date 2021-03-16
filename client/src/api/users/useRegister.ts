@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api, { ApiError } from "../api";
 import { getAuthUser, getAuthUserQueryKey } from "./useAuth";
 
@@ -10,7 +10,7 @@ export interface RegisterCommand {
 }
 
 export default function useRegister() {
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, RegisterCommand, null>(
     async (command) => {
@@ -22,7 +22,7 @@ export default function useRegister() {
       onSuccess: async () => {
         const user = await getAuthUser();
 
-        cache.setQueryData(getAuthUserQueryKey(), user);
+        queryClient.setQueryData(getAuthUserQueryKey(), user);
       },
       onError: () => {
         localStorage.removeItem("isLoggedIn");

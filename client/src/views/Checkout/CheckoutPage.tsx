@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useForm } from "react-hook-form";
-import { useQueryCache } from "react-query";
+import { useQueryClient } from "react-query";
 import useBasket from "~/api/baskets/useBasket";
 import { getOrderQueryKey } from "~/api/orders/useOrder";
 import { usePlaceOrder } from "~/api/orders/usePlaceOrder";
@@ -18,9 +18,9 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
   const { user } = useAuth();
 
-  const cache = useQueryCache();
+  const queryClient = useQueryClient();
 
-  const [placeOrder, { isError, error }] = usePlaceOrder();
+  const { mutate: placeOrder, isLoading, error } = usePlaceOrder();
 
   const form = useForm({
     defaultValues: {
@@ -40,14 +40,14 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    await placeOrder(
+    placeOrder(
       {
         restaurantId: restaurant.id,
         ...data,
       },
       {
         onSuccess: async (orderId) => {
-          cache.prefetchQuery(getOrderQueryKey(orderId));
+          queryClient.prefetchQuery(getOrderQueryKey(orderId));
           await router.push(`/orders/${orderId}/pay`);
         },
         onError: (error) => {
@@ -65,9 +65,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
         {user.firstName}, confirm your details.
       </h2>
 
-      {isError && (
-        <p className="text-primary text-center mt-2">{error.detail}</p>
-      )}
+      {error && <p className="text-primary text-center mt-2">{error.detail}</p>}
 
       <form onSubmit={handleSubmit} className="mt-4">
         <div>
@@ -167,10 +165,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           )}
         </div>
 
-        <button
-          className="btn btn-primary w-full mt-6"
-          disabled={form.formState.isSubmitting}
-        >
+        <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
           Go to payment
         </button>
       </form>
