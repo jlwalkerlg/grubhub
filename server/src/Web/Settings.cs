@@ -1,5 +1,14 @@
 namespace Web
 {
+    public record Settings
+    {
+        public AppSettings App { get; init; }
+        public DatabaseSettings Database { get; init; }
+        public GeocodingSettings Geocoding { get; init; }
+        public StripeSettings Stripe { get; init; }
+        public MailSettings Mail { get; init; }
+    }
+
     public record AppSettings
     {
         public string Environment { get; init; } = "Production";

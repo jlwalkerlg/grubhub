@@ -27,31 +27,23 @@ namespace Web
     public class Startup
     {
         private readonly IHostEnvironment env;
-        private readonly AppSettings appSettings;
-        private readonly GeocodingSettings geocodingSettings;
-        private readonly DatabaseSettings databaseSettings;
-        private readonly StripeSettings stripeSettings;
-        private readonly MailSettings mailSettings;
+        private readonly Settings settings = new();
 
         public Startup(IConfiguration configuration, IHostEnvironment env)
         {
-            appSettings = configuration.GetSection("App").Get<AppSettings>();
-            geocodingSettings = configuration.GetSection("Geocoding").Get<GeocodingSettings>();
-            databaseSettings = configuration.GetSection("Database").Get<DatabaseSettings>();
-            stripeSettings = configuration.GetSection("Stripe").Get<StripeSettings>();
-            mailSettings = configuration.GetSection("Mail").Get<MailSettings>();
+            configuration.Bind(settings);
+            env.EnvironmentName = settings.App.Environment;
 
-            env.EnvironmentName = appSettings.Environment;
             this.env = env;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(appSettings);
-            services.AddSingleton(geocodingSettings);
-            services.AddSingleton(databaseSettings);
-            services.AddSingleton(stripeSettings);
-            services.AddSingleton(mailSettings);
+            services.AddSingleton(settings.App);
+            services.AddSingleton(settings.Geocoding);
+            services.AddSingleton(settings.Database);
+            services.AddSingleton(settings.Stripe);
+            services.AddSingleton(settings.Mail);
 
             services.AddLogging(builder =>
             {
@@ -81,7 +73,7 @@ namespace Web
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins(appSettings.CorsOrigins)
+                        .WithOrigins(settings.App.CorsOrigins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -105,15 +97,15 @@ namespace Web
 
             services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
-            services.AddEntityFramework(databaseSettings);
+            services.AddEntityFramework(settings.Database);
 
             services.AddDapper();
 
             services.AddDateTimeProvider();
 
-            services.AddStripe(stripeSettings);
+            services.AddStripe(settings.Stripe);
 
-            services.AddQuartz(databaseSettings);
+            services.AddQuartz(settings.Database);
 
             services.AddEventWorker();
 
