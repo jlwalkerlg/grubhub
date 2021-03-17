@@ -7,6 +7,9 @@ namespace Web
     {
         public Guid Id { get; init; } = Guid.NewGuid();
 
-        public virtual EnqueueOptions Options { get; } = null;
+        public virtual EnqueueOptions Options { get; } = new()
+        {
+            MaxAttempts = 3,
+        };
     }
 }
