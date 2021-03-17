@@ -52,7 +52,7 @@ export default function useSearchRestaurants(query: SearchRestaurantsQuery) {
     },
     {
       staleTime: 0,
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnReconnect: true,
       refetchOnWindowFocus: false,
       retry: false,
@@ -64,10 +64,9 @@ export default function useSearchRestaurants(query: SearchRestaurantsQuery) {
           0
         );
 
-        if (numberOfRestaurantsLoaded === totalRestaurantsAvailable)
-          return undefined;
-
-        return pages.length + 1;
+        return numberOfRestaurantsLoaded === totalRestaurantsAvailable
+          ? undefined
+          : pages.length + 1;
       },
     }
   );
