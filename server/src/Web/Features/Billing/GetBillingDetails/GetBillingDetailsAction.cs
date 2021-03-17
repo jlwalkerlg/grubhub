@@ -1,10 +1,10 @@
 using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
-using Web.Data.Models;
 using Web.Domain.Users;
 using Web.Services.Authentication;
 
@@ -25,37 +25,40 @@ namespace Web.Features.Billing.GetBillingDetails
         [HttpGet("/restaurants/{restaurantId:guid}/billing")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
-            var sql = @"
-                SELECT
+            using var connection = await dbConnectionFactory.OpenConnection();
+
+            var billingDetails = await connection.QuerySingleOrDefaultAsync<BillingDetailsModel>(
+                @"SELECT
                     ba.id,
                     ba.restaurant_id,
-                    ba.billing_enabled,
+                    ba.billing_enabled AS is_billing_enabled,
                     r.manager_id
                 FROM
                     billing_accounts ba
                     INNER JOIN restaurants r ON r.id = ba.restaurant_id
                 WHERE
-                    ba.restaurant_id = @RestaurantId";
+                    ba.restaurant_id = @RestaurantId",
+                new { RestaurantId = restaurantId });
 
-            using (var connection = await dbConnectionFactory.OpenConnection())
+            if (billingDetails is null)
             {
-                var billingDetailsEntry = await connection
-                    .QuerySingleOrDefaultAsync<BillingDetailsModel>(
-                        sql,
-                        new { RestaurantId = restaurantId });
-
-                if (billingDetailsEntry == null)
-                {
-                    return StatusCode(200);
-                }
-
-                if (authenticator.UserId != billingDetailsEntry.manager_id)
-                {
-                    return Unauthorised();
-                }
-
-                return Ok(billingDetailsEntry.ToDto());
+                return StatusCode(200);
             }
+
+            if (authenticator.UserId != billingDetails.ManagerId)
+            {
+                return Unauthorised();
+            }
+
+            return Ok(billingDetails);
+        }
+
+        public class BillingDetailsModel
+        {
+            public string Id { get; init; }
+            public Guid RestaurantId { get; init; }
+            public bool IsBillingEnabled { get; init; }
+            [JsonIgnore] public Guid ManagerId { get; init; }
         }
     }
 }

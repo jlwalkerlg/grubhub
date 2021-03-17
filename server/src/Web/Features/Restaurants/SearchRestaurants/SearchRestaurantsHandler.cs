@@ -25,7 +25,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             var (coordinates, error) = await geocoder.LookupCoordinates(query.Postcode);
 
-            if (error) Error.BadRequest("Sorry, we don't recognise that postcode.");
+            if (error) return Error.BadRequest("Sorry, we don't recognise that postcode.");
 
             var response = await searcher.Search(
                 coordinates,

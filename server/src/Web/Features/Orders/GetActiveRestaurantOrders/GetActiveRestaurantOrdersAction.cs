@@ -35,14 +35,14 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
                         SELECT
                             o.id,
                             o.number,
+                            SUM(oi.price * oi.quantity) / 100.00 as subtotal,
                             o.status,
                             o.address_line1,
                             o.address_line2,
                             o.city,
                             o.postcode,
                             o.placed_at,
-                            r.estimated_delivery_time_in_minutes,
-                            SUM(oi.price * oi.quantity) / 100.00 as subtotal
+                            r.estimated_delivery_time_in_minutes
                         FROM
                             orders o
                             INNER JOIN order_items oi ON o.id = oi.order_id
@@ -67,17 +67,16 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
 
         public record OrderModel
         {
-            public string Id { get; set; }
-            public int Number { get; set; }
-            public decimal Subtotal { get; set; }
-            public string Status { get; set; }
-            public string AddressLine1 { get; set; }
-            public string AddressLine2 { get; set; }
-            public string City { get; set; }
-            public string Postcode { get; set; }
-            public DateTime PlacedAt { get; set; }
-            [JsonIgnore]
-            public int EstimatedDeliveryTimeInMinutes { get; set; }
+            public string Id { get; init; }
+            public int Number { get; init; }
+            public decimal Subtotal { get; init; }
+            public string Status { get; init; }
+            public string AddressLine1 { get; init; }
+            public string AddressLine2 { get; init; }
+            public string City { get; init; }
+            public string Postcode { get; init; }
+            public DateTime PlacedAt { get; init; }
+            [JsonIgnore] public int EstimatedDeliveryTimeInMinutes { get; init; }
             public DateTime EstimatedDeliveryTime => PlacedAt.AddMinutes(EstimatedDeliveryTimeInMinutes);
         }
     }

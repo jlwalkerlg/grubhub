@@ -22,7 +22,7 @@ const RestaurantSearchResults: FC = () => {
     isError: isSearchError,
     fetchNextPage,
     hasNextPage,
-  } = useSearchRestaurants({ ...router.query, perPage: 1, postcode });
+  } = useSearchRestaurants({ ...router.query, perPage: 15, postcode });
 
   const {
     data: coords,

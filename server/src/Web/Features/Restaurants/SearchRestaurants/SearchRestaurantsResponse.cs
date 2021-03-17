@@ -14,12 +14,29 @@ namespace Web.Features.Restaurants.SearchRestaurants
             public string Name { get; init; }
             public float Latitude { get; init; }
             public float Longitude { get; init; }
-            public OpeningTimesDto OpeningTimes { get; init; } = new();
+            public OpeningTimesModel OpeningTimes { get; init; } = new();
             public decimal DeliveryFee { get; init; }
             public decimal MinimumDeliverySpend { get; init; }
             public int MaxDeliveryDistanceInKm { get; init; }
             public int EstimatedDeliveryTimeInMinutes { get; init; }
             public List<CuisineDto> Cuisines { get; init; } = new();
+        }
+
+        public class OpeningTimesModel
+        {
+            public OpeningHoursModel Monday { get; init; }
+            public OpeningHoursModel Tuesday { get; init; }
+            public OpeningHoursModel Wednesday { get; init; }
+            public OpeningHoursModel Thursday { get; init; }
+            public OpeningHoursModel Friday { get; init; }
+            public OpeningHoursModel Saturday { get; init; }
+            public OpeningHoursModel Sunday { get; init; }
+        }
+
+        public class OpeningHoursModel
+        {
+            public string Open { get; init; }
+            public string Close { get; init; }
         }
 
         public class CuisineDto

@@ -194,39 +194,39 @@ namespace Web.Features.Restaurants.SearchRestaurants
                 Name = entry.name,
                 Latitude = entry.latitude,
                 Longitude = entry.longitude,
-                OpeningTimes = new OpeningTimesDto()
+                OpeningTimes = new SearchRestaurantsResponse.OpeningTimesModel()
                 {
-                    Monday = entry.monday_open.HasValue ? new OpeningHoursDto()
+                    Monday = entry.monday_open.HasValue ? new SearchRestaurantsResponse.OpeningHoursModel()
                     {
                         Open = FormatTimeSpan(entry.monday_open),
                         Close = FormatTimeSpan(entry.monday_close),
                     } : null,
-                    Tuesday = entry.tuesday_open.HasValue ? new OpeningHoursDto()
+                    Tuesday = entry.tuesday_open.HasValue ? new SearchRestaurantsResponse.OpeningHoursModel()
                     {
                         Open = FormatTimeSpan(entry.tuesday_open),
                         Close = FormatTimeSpan(entry.tuesday_close),
                     } : null,
-                    Wednesday = entry.wednesday_open.HasValue ? new OpeningHoursDto()
+                    Wednesday = entry.wednesday_open.HasValue ? new SearchRestaurantsResponse.OpeningHoursModel()
                     {
                         Open = FormatTimeSpan(entry.wednesday_open),
                         Close = FormatTimeSpan(entry.wednesday_close),
                     } : null,
-                    Thursday = entry.thursday_open.HasValue ? new OpeningHoursDto()
+                    Thursday = entry.thursday_open.HasValue ? new SearchRestaurantsResponse.OpeningHoursModel()
                     {
                         Open = FormatTimeSpan(entry.thursday_open),
                         Close = FormatTimeSpan(entry.thursday_close),
                     } : null,
-                    Friday = entry.friday_open.HasValue ? new OpeningHoursDto()
+                    Friday = entry.friday_open.HasValue ? new SearchRestaurantsResponse.OpeningHoursModel()
                     {
                         Open = FormatTimeSpan(entry.friday_open),
                         Close = FormatTimeSpan(entry.friday_close),
                     } : null,
-                    Saturday = entry.saturday_open.HasValue ? new OpeningHoursDto()
+                    Saturday = entry.saturday_open.HasValue ? new SearchRestaurantsResponse.OpeningHoursModel()
                     {
                         Open = FormatTimeSpan(entry.saturday_open),
                         Close = FormatTimeSpan(entry.saturday_close),
                     } : null,
-                    Sunday = entry.sunday_open.HasValue ? new OpeningHoursDto()
+                    Sunday = entry.sunday_open.HasValue ? new SearchRestaurantsResponse.OpeningHoursModel()
                     {
                         Open = FormatTimeSpan(entry.sunday_open),
                         Close = FormatTimeSpan(entry.sunday_close),

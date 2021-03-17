@@ -10,7 +10,7 @@ namespace WebTests.Doubles
             Coordinates coordinates,
             RestaurantSearchOptions options = null)
         {
-            return null;
+            return Task.FromResult<SearchRestaurantsResponse>(null);
         }
     }
 }

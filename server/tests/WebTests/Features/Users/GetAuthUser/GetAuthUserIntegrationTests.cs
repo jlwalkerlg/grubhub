@@ -1,6 +1,6 @@
 using Shouldly;
 using System.Threading.Tasks;
-using Web.Features.Users;
+using Web.Features.Users.GetAuthUser;
 using WebTests.TestData;
 using Xunit;
 
@@ -31,15 +31,15 @@ namespace WebTests.Features.Users.GetAuthUser
 
             response.StatusCode.ShouldBe(200);
 
-            var userDto = await response.GetData<UserDto>();
+            var model = await response.GetData<GetAuthUserAction.UserModel>();
 
-            userDto.Id.ShouldBe(user.Id);
-            userDto.FirstName.ShouldBe(user.FirstName);
-            userDto.LastName.ShouldBe(user.LastName);
-            userDto.Email.ShouldBe(user.Email);
-            userDto.RestaurantId.ShouldBe(restaurant.Id);
-            userDto.RestaurantName.ShouldBe(restaurant.Name);
-            userDto.Role.ShouldBe(user.Role);
+            model.Id.ShouldBe(user.Id);
+            model.FirstName.ShouldBe(user.FirstName);
+            model.LastName.ShouldBe(user.LastName);
+            model.Email.ShouldBe(user.Email);
+            model.RestaurantId.ShouldBe(restaurant.Id);
+            model.RestaurantName.ShouldBe(restaurant.Name);
+            model.Role.ShouldBe(user.Role);
         }
 
         [Fact]

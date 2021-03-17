@@ -2,7 +2,7 @@ using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Features.Restaurants;
+using Web.Features.Restaurants.GetRestaurantById;
 using WebTests.TestData;
 using Xunit;
 
@@ -43,40 +43,38 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
 
             Insert(restaurant);
 
-            var items = UseTestDbContext(db => db.MenuItems.ToArray());
-
             var response = await factory.GetClient().Get($"/restaurants/{restaurant.Id}");
 
             response.StatusCode.ShouldBe(200);
 
-            var restaurantDto = await response.GetData<RestaurantDto>();
+            var restaurantModel = await response.GetData<GetRestaurantByIdAction.RestaurantModel>();
 
-            restaurantDto.Id.ShouldBe(restaurant.Id);
-            restaurantDto.ManagerId.ShouldBe(restaurant.ManagerId);
-            restaurantDto.Name.ShouldBe(restaurant.Name);
-            restaurantDto.Description.ShouldBe(restaurant.Description);
-            restaurantDto.PhoneNumber.ShouldBe(restaurant.PhoneNumber);
-            restaurantDto.Status.ShouldBe(restaurant.Status);
-            restaurantDto.AddressLine1.ShouldBe(restaurant.AddressLine1);
-            restaurantDto.AddressLine2.ShouldBe(restaurant.AddressLine2);
-            restaurantDto.City.ShouldBe(restaurant.City);
-            restaurantDto.Postcode.ShouldBe(restaurant.Postcode);
-            restaurantDto.Latitude.ShouldBe(restaurant.Latitude);
-            restaurantDto.Longitude.ShouldBe(restaurant.Longitude);
-            restaurantDto.OpeningTimes.Monday.ShouldBe(restaurant.MondayOpen, restaurant.MondayClose);
-            restaurantDto.OpeningTimes.Tuesday.ShouldBe(restaurant.TuesdayOpen, restaurant.TuesdayClose);
-            restaurantDto.OpeningTimes.Wednesday.ShouldBe(restaurant.WednesdayOpen, restaurant.WednesdayClose);
-            restaurantDto.OpeningTimes.Thursday.ShouldBe(restaurant.ThursdayOpen, restaurant.ThursdayClose);
-            restaurantDto.OpeningTimes.Friday.ShouldBe(restaurant.FridayOpen, restaurant.FridayClose);
-            restaurantDto.OpeningTimes.Saturday.ShouldBe(restaurant.SaturdayOpen, restaurant.SaturdayClose);
-            restaurantDto.OpeningTimes.Sunday.ShouldBe(restaurant.SundayOpen, restaurant.SundayClose);
-            restaurantDto.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
-            restaurantDto.MaxDeliveryDistanceInKm.ShouldBe(restaurant.MaxDeliveryDistanceInKm);
-            restaurantDto.MinimumDeliverySpend.ShouldBe(restaurant.MinimumDeliverySpend);
-            restaurantDto.EstimatedDeliveryTimeInMinutes.ShouldBe(restaurant.EstimatedDeliveryTimeInMinutes);
-            restaurantDto.Menu.RestaurantId.ShouldBe(restaurant.Id);
+            restaurantModel.Id.ShouldBe(restaurant.Id);
+            restaurantModel.ManagerId.ShouldBe(restaurant.ManagerId);
+            restaurantModel.Name.ShouldBe(restaurant.Name);
+            restaurantModel.Description.ShouldBe(restaurant.Description);
+            restaurantModel.PhoneNumber.ShouldBe(restaurant.PhoneNumber);
+            restaurantModel.Status.ShouldBe(restaurant.Status);
+            restaurantModel.AddressLine1.ShouldBe(restaurant.AddressLine1);
+            restaurantModel.AddressLine2.ShouldBe(restaurant.AddressLine2);
+            restaurantModel.City.ShouldBe(restaurant.City);
+            restaurantModel.Postcode.ShouldBe(restaurant.Postcode);
+            restaurantModel.Latitude.ShouldBe(restaurant.Latitude);
+            restaurantModel.Longitude.ShouldBe(restaurant.Longitude);
+            restaurantModel.OpeningTimes.Monday?.ShouldBe(restaurant.MondayOpen, restaurant.MondayClose);
+            restaurantModel.OpeningTimes.Tuesday?.ShouldBe(restaurant.TuesdayOpen, restaurant.TuesdayClose);
+            restaurantModel.OpeningTimes.Wednesday?.ShouldBe(restaurant.WednesdayOpen, restaurant.WednesdayClose);
+            restaurantModel.OpeningTimes.Thursday?.ShouldBe(restaurant.ThursdayOpen, restaurant.ThursdayClose);
+            restaurantModel.OpeningTimes.Friday?.ShouldBe(restaurant.FridayOpen, restaurant.FridayClose);
+            restaurantModel.OpeningTimes.Saturday?.ShouldBe(restaurant.SaturdayOpen, restaurant.SaturdayClose);
+            restaurantModel.OpeningTimes.Sunday?.ShouldBe(restaurant.SundayOpen, restaurant.SundayClose);
+            restaurantModel.DeliveryFee.ShouldBe(restaurant.DeliveryFee);
+            restaurantModel.MaxDeliveryDistanceInKm.ShouldBe(restaurant.MaxDeliveryDistanceInKm);
+            restaurantModel.MinimumDeliverySpend.ShouldBe(restaurant.MinimumDeliverySpend);
+            restaurantModel.EstimatedDeliveryTimeInMinutes.ShouldBe(restaurant.EstimatedDeliveryTimeInMinutes);
+            restaurantModel.Menu.RestaurantId.ShouldBe(restaurant.Id);
 
-            var categories = restaurantDto.Menu.Categories
+            var categories = restaurantModel.Menu.Categories
                 .OrderBy(x => x.Name)
                 .ToArray();
 
@@ -106,10 +104,10 @@ namespace WebTests.Features.Restaurants.GetRestaurantById
 
             response.StatusCode.ShouldBe(200);
 
-            var restaurantDto = await response.GetData<RestaurantDto>();
+            var restaurantModel = await response.GetData<GetRestaurantByIdAction.RestaurantModel>();
 
-            restaurantDto.Id.ShouldBe(restaurant.Id);
-            restaurantDto.Menu.ShouldBeNull();
+            restaurantModel.Id.ShouldBe(restaurant.Id);
+            restaurantModel.Menu.ShouldBeNull();
         }
 
         [Fact]

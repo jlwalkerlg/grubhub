@@ -85,10 +85,8 @@ namespace Web.Features.Orders.GetOrderById
                 return Unauthorised();
             }
 
-            var items = await connection
-                .QueryAsync<OrderItemModel>(
+            var items = await connection.QueryAsync<OrderItemModel>(
                     @"SELECT
-                            oi.id,
                             oi.name,
                             oi.price / 100.00 as price,
                             oi.quantity
@@ -106,54 +104,50 @@ namespace Web.Features.Orders.GetOrderById
             return Ok(order);
         }
 
-        public record OrderModel
+        public class OrderModel
         {
-            public string Id { get; set; }
-            public int Number { get; set; }
-            public Guid UserId { get; set; }
-            public Guid RestaurantId { get; set; }
-            public decimal DeliveryFee { get; set; }
-            public decimal ServiceFee { get; set; }
-            public string Status { get; set; }
-            public string AddressLine1 { get; set; }
-            public string AddressLine2 { get; set; }
-            public string City { get; set; }
-            public string Postcode { get; set; }
-            public DateTime PlacedAt { get; set; }
-            public DateTime? ConfirmedAt { get; set; }
-            public DateTime? AcceptedAt { get; set; }
-            public DateTime? RejectedAt { get; set; }
-            public DateTime? DeliveredAt { get; set; }
-            public DateTime? CancelledAt { get; set; }
-            public string PaymentIntentClientSecret { get; set; }
-            public string RestaurantName { get; set; }
-            public string RestaurantAddressLine1 { get; set; }
-            public string RestaurantAddressLine2 { get; set; }
-            public string RestaurantCity { get; set; }
-            public string RestaurantPostcode { get; set; }
-            public string RestaurantPhoneNumber { get; set; }
-            [JsonIgnore]
-            public int EstimatedDeliveryTimeInMinutes { get; set; }
+            public string Id { get; init; }
+            public int Number { get; init; }
+            public Guid UserId { get; init; }
+            public Guid RestaurantId { get; init; }
+            public decimal DeliveryFee { get; init; }
+            public decimal ServiceFee { get; init; }
+            public string Status { get; init; }
+            public string AddressLine1 { get; init; }
+            public string AddressLine2 { get; init; }
+            public string City { get; init; }
+            public string Postcode { get; init; }
+            public DateTime PlacedAt { get; init; }
+            public DateTime? ConfirmedAt { get; init; }
+            public DateTime? AcceptedAt { get; init; }
+            public DateTime? RejectedAt { get; init; }
+            public DateTime? DeliveredAt { get; init; }
+            public DateTime? CancelledAt { get; init; }
+            public string PaymentIntentClientSecret { get; init; }
+            public string RestaurantName { get; init; }
+            public string RestaurantAddressLine1 { get; init; }
+            public string RestaurantAddressLine2 { get; init; }
+            public string RestaurantCity { get; init; }
+            public string RestaurantPostcode { get; init; }
+            public string RestaurantPhoneNumber { get; init; }
+            [JsonIgnore] public int EstimatedDeliveryTimeInMinutes { get; init; }
             public DateTime EstimatedDeliveryTime => PlacedAt.AddMinutes(EstimatedDeliveryTimeInMinutes);
-            public string CustomerFirstName { get; set; }
-            public string CustomerLastName { get; set; }
-            public string CustomerEmail { get; set; }
-            public string CustomerMobile { get; set; }
-            [JsonIgnore]
-            public Guid RestaurantManagerId { get; set; }
+            public string CustomerFirstName { get; init; }
+            public string CustomerLastName { get; init; }
+            public string CustomerEmail { get; init; }
+            public string CustomerMobile { get; init; }
+            [JsonIgnore] public Guid RestaurantManagerId { get; init; }
 
             public List<OrderItemModel> Items { get; set; }
-            public decimal Subtotal => Items.Aggregate(
-                0m,
+            public decimal Subtotal => Items.Aggregate(0m,
                 (acc, item) => acc + item.Price * item.Quantity);
         }
 
-        public record OrderItemModel
+        public class OrderItemModel
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public decimal Price { get; set; }
-            public int Quantity { get; set; }
+            public string Name { get; init; }
+            public decimal Price { get; init; }
+            public int Quantity { get; init; }
         }
     }
 }

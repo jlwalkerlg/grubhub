@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
 using Web.Features.Baskets;
+using Web.Features.Baskets.GetBasketByRestaurantId;
 using WebTests.TestData;
 using Xunit;
 
@@ -46,13 +47,13 @@ namespace WebTests.Features.Baskets.GetBasketByRestaurantId
 
             response.StatusCode.ShouldBe(200);
 
-            var data = await response.GetData<BasketDto>();
+            var basketModel = await response.GetData<GetBasketByRestaurantIdAction.BasketModel>();
 
-            data.RestaurantId.ShouldBe(basket.RestaurantId);
-            data.UserId.ShouldBe(basket.UserId);
-            data.Items.ShouldHaveSingleItem();
+            basketModel.RestaurantId.ShouldBe(basket.RestaurantId);
+            basketModel.UserId.ShouldBe(basket.UserId);
+            basketModel.Items.ShouldHaveSingleItem();
 
-            var item = data.Items.Single();
+            var item = basketModel.Items.Single();
 
             item.MenuItemId.ShouldBe(menuItem.Id);
             item.MenuItemName.ShouldBe(menuItem.Name);
@@ -75,9 +76,9 @@ namespace WebTests.Features.Baskets.GetBasketByRestaurantId
 
             response.StatusCode.ShouldBe(200);
 
-            var data = await response.GetData<BasketDto>();
+            var basketModel = await response.GetData<GetBasketByRestaurantIdAction.BasketModel>();
 
-            data.ShouldBeNull();
+            basketModel.ShouldBeNull();
         }
     }
 }

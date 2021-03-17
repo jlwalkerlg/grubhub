@@ -2,6 +2,7 @@ using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Features.Cuisines;
+using Web.Features.Cuisines.GetCuisines;
 using WebTests.TestData;
 using Xunit;
 
@@ -37,7 +38,7 @@ namespace WebTests.Features.Cuisines.GetCuisines
 
             response.StatusCode.ShouldBe(200);
 
-            var cuisines = await response.GetData<List<CuisineDto>>();
+            var cuisines = await response.GetData<List<GetCuisinesAction.CuisineModel>>();
 
             cuisines.Count.ShouldBe(3);
             cuisines.ShouldContain(x => x.Name == "Italian");

@@ -1,10 +1,11 @@
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Web.Data;
-using Web.Data.Models;
 
 namespace Web.Features.Restaurants.GetRestaurantById
 {
@@ -22,7 +23,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
         {
             using var connection = await dbConnectionFactory.OpenConnection();
 
-            var restaurantEntry = await connection
+            var restaurant = await connection
                 .QuerySingleOrDefaultAsync<RestaurantModel>(
                     @"SELECT
                         r.id,
@@ -61,12 +62,12 @@ namespace Web.Features.Restaurants.GetRestaurantById
                         r.id = @Id",
                     new { Id = id });
 
-            if (restaurantEntry == null)
+            if (restaurant is null)
             {
                 return NotFound("Restaurant not found.");
             }
 
-            var menuEntry = await connection
+            var menu = await connection
                 .QuerySingleOrDefaultAsync<MenuModel>(
                     @"SELECT
                             m.id,
@@ -77,13 +78,12 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             m.restaurant_id = @RestaurantId",
                     new
                     {
-                        RestaurantId = restaurantEntry.id,
+                        RestaurantId = restaurant.Id,
                     });
 
-            if (menuEntry != null)
+            if (menu != null)
             {
-
-                var categoryEntries = await connection
+                var categories = (await connection
                     .QueryAsync<MenuCategoryModel>(
                         @"SELECT
                             mc.id,
@@ -95,10 +95,10 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             mc.menu_id = @MenuId",
                         new
                         {
-                            MenuId = menuEntry.id,
-                        });
+                            MenuId = menu.Id,
+                        })).ToList();
 
-                var itemEntries = await connection
+                var items = await connection
                     .QueryAsync<MenuItemModel>(
                         @"SELECT
                             i.id,
@@ -112,53 +112,184 @@ namespace Web.Features.Restaurants.GetRestaurantById
                             i.menu_category_id = ANY(@CategoryIds)",
                         new
                         {
-                            CategoryIds = categoryEntries
-                                .Select(c => c.id)
+                            CategoryIds = categories
+                                .Select(c => c.Id)
                                 .ToArray(),
                         });
 
-                var menu = menuEntry.ToDto();
+                var itemMapByCategoryId = items
+                    .GroupBy(e => e.MenuCategoryId)
+                    .ToDictionary(e => e.Key);
 
-                var itemMapByCategoryId = itemEntries
-                    .GroupBy(e => e.menu_category_id)
-                    .ToDictionary(
-                        e => e.Key,
-                        e => e.Select(e => e.ToDto()));
-
-                foreach (var categoryEntry in categoryEntries)
+                foreach (var category in categories)
                 {
-                    var category = categoryEntry.ToDto();
-
-                    if (itemMapByCategoryId.ContainsKey(categoryEntry.id))
+                    if (itemMapByCategoryId.ContainsKey(category.Id))
                     {
-                        category.Items.AddRange(itemMapByCategoryId[categoryEntry.id]);
+                        category.Items = itemMapByCategoryId[category.Id].ToList();
                     }
-
-                    menu.Categories.Add(category);
                 }
 
-                restaurantEntry.Menu = menu;
+                menu.Categories = categories.ToList();
+                restaurant.Menu = menu;
             }
 
-            var cuisineEntries = await connection
-                .QueryAsync<RestaurantCuisineModel>(
+            var cuisines = await connection
+                .QueryAsync<CuisineModel>(
                     @"SELECT
-                            rc.restaurant_id,
-                            rc.cuisine_name
+                            rc.cuisine_name as name
                         FROM
                             restaurant_cuisines rc
                         WHERE
                             rc.restaurant_id = @RestaurantId",
                     new
                     {
-                        RestaurantId = restaurantEntry.id,
+                        RestaurantId = restaurant.Id,
                     });
 
-            var restaurant = restaurantEntry.ToDto();
-
-            restaurant.Cuisines.AddRange(cuisineEntries.Select(x => x.ToCuisineDto()));
+            restaurant.Cuisines = cuisines.ToList();
 
             return Ok(restaurant);
+        }
+
+        public class RestaurantModel
+        {
+            public Guid Id { get; init; }
+            public Guid ManagerId { get; init; }
+            public string Name { get; init; }
+            public string Description { get; init; }
+            public string PhoneNumber { get; init; }
+            public string AddressLine1 { get; init; }
+            public string AddressLine2 { get; init; }
+            public string City { get; init; }
+            public string Postcode { get; init; }
+            public float Latitude { get; init; }
+            public float Longitude { get; init; }
+            public string Status { get; init; }
+            [JsonIgnore] public TimeSpan? MondayOpen { get; init; }
+            [JsonIgnore] public TimeSpan? MondayClose { get; init; }
+            [JsonIgnore] public TimeSpan? TuesdayOpen { get; init; }
+            [JsonIgnore] public TimeSpan? TuesdayClose { get; init; }
+            [JsonIgnore] public TimeSpan? WednesdayOpen { get; init; }
+            [JsonIgnore] public TimeSpan? WednesdayClose { get; init; }
+            [JsonIgnore] public TimeSpan? ThursdayOpen { get; init; }
+            [JsonIgnore] public TimeSpan? ThursdayClose { get; init; }
+            [JsonIgnore] public TimeSpan? FridayOpen { get; init; }
+            [JsonIgnore] public TimeSpan? FridayClose { get; init; }
+            [JsonIgnore] public TimeSpan? SaturdayOpen { get; init; }
+            [JsonIgnore] public TimeSpan? SaturdayClose { get; init; }
+            [JsonIgnore] public TimeSpan? SundayOpen { get; init; }
+            [JsonIgnore] public TimeSpan? SundayClose { get; init; }
+
+            public OpeningTimesModel OpeningTimes => new OpeningTimesModel()
+            {
+                Monday = MondayOpen.HasValue
+                    ? new OpeningHoursModel()
+                    {
+                        Open = FormatTimeSpan(MondayOpen),
+                        Close = FormatTimeSpan(MondayClose),
+                    }
+                    : null,
+                Tuesday = TuesdayOpen.HasValue
+                    ? new OpeningHoursModel()
+                    {
+                        Open = FormatTimeSpan(TuesdayOpen),
+                        Close = FormatTimeSpan(TuesdayClose),
+                    }
+                    : null,
+                Wednesday = WednesdayOpen.HasValue
+                    ? new OpeningHoursModel()
+                    {
+                        Open = FormatTimeSpan(WednesdayOpen),
+                        Close = FormatTimeSpan(WednesdayClose),
+                    }
+                    : null,
+                Thursday = ThursdayOpen.HasValue
+                    ? new OpeningHoursModel()
+                    {
+                        Open = FormatTimeSpan(ThursdayOpen),
+                        Close = FormatTimeSpan(ThursdayClose),
+                    }
+                    : null,
+                Friday = FridayOpen.HasValue
+                    ? new OpeningHoursModel()
+                    {
+                        Open = FormatTimeSpan(FridayOpen),
+                        Close = FormatTimeSpan(FridayClose),
+                    }
+                    : null,
+                Saturday = SaturdayOpen.HasValue
+                    ? new OpeningHoursModel()
+                    {
+                        Open = FormatTimeSpan(SaturdayOpen),
+                        Close = FormatTimeSpan(SaturdayClose),
+                    }
+                    : null,
+                Sunday = SundayOpen.HasValue
+                    ? new OpeningHoursModel()
+                    {
+                        Open = FormatTimeSpan(SundayOpen),
+                        Close = FormatTimeSpan(SundayClose),
+                    }
+                    : null,
+            };
+            public decimal DeliveryFee { get; init; }
+            public decimal MinimumDeliverySpend { get; init; }
+            public float MaxDeliveryDistanceInKm { get; init; }
+            public int EstimatedDeliveryTimeInMinutes { get; init; }
+            public List<CuisineModel> Cuisines { get; set; }
+            public MenuModel Menu { get; set; }
+
+            private string FormatTimeSpan(TimeSpan? span)
+            {
+                return !span.HasValue
+                    ? null
+                    : $"{span?.Hours.ToString().PadLeft(2, '0')}:{span?.Minutes.ToString().PadLeft(2, '0')}";
+            }
+        }
+
+        public class OpeningTimesModel
+        {
+            public OpeningHoursModel Monday { get; init; }
+            public OpeningHoursModel Tuesday { get; init; }
+            public OpeningHoursModel Wednesday { get; init; }
+            public OpeningHoursModel Thursday { get; init; }
+            public OpeningHoursModel Friday { get; init; }
+            public OpeningHoursModel Saturday { get; init; }
+            public OpeningHoursModel Sunday { get; init; }
+        }
+
+        public class OpeningHoursModel
+        {
+            public string Open { get; init; }
+            public string Close { get; init; }
+        }
+
+        public class MenuModel
+        {
+            [JsonIgnore] public int Id { get; init; }
+            public Guid RestaurantId { get; init; }
+            public List<MenuCategoryModel> Categories { get; set; } = new();
+        }
+
+        public class MenuCategoryModel
+        {
+            public Guid Id { get; init; }
+            public string Name { get; init; }
+            public List<MenuItemModel> Items { get; set; } = new();
+        }
+
+        public class MenuItemModel
+        {
+            public Guid Id { get; init; }
+            [JsonIgnore] public Guid MenuCategoryId { get; init; }
+            public string Name { get; init; }
+            public string Description { get; init; }
+            public decimal Price { get; init; }
+        }
+
+        public class CuisineModel
+        {
+            public string Name { get; init; }
         }
     }
 }

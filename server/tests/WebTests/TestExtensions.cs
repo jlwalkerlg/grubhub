@@ -2,7 +2,7 @@ using Shouldly;
 using System;
 using System.Net;
 using Web;
-using Web.Features.Restaurants;
+using Web.Features.Restaurants.GetRestaurantById;
 
 namespace WebTests
 {
@@ -17,7 +17,7 @@ namespace WebTests
         {
             result.IsSuccess.ShouldBe(false);
         }
-        
+
         public static void ShouldBeAnError(this Result result, ErrorType type)
         {
             result.IsSuccess.ShouldBe(false);
@@ -29,10 +29,10 @@ namespace WebTests
             ((int)code).ShouldBe(expected);
         }
 
-        public static void ShouldBe(this OpeningHoursDto dto, TimeSpan? open, TimeSpan? close)
+        public static void ShouldBe(this GetRestaurantByIdAction.OpeningHoursModel model, TimeSpan? open, TimeSpan? close)
         {
-            dto.Open.ShouldBe(open?.ToString(@"hh\:mm"));
-            dto.Close.ShouldBe(close?.ToString(@"hh\:mm"));
+            model.Open.ShouldBe(open?.ToString(@"hh\:mm"));
+            model.Close.ShouldBe(close?.ToString(@"hh\:mm"));
         }
 
         public static void ShouldBe(this string sut, Enum expected)

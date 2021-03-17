@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Data;
-using Web.Data.Models;
 using Web.Services.Authentication;
 
 namespace Web.Features.Baskets.GetBasketByRestaurantId
@@ -27,11 +28,10 @@ namespace Web.Features.Baskets.GetBasketByRestaurantId
         [HttpGet("/restaurants/{restaurantId:guid}/basket")]
         public async Task<IActionResult> Execute([FromRoute] Guid restaurantId)
         {
-            using (var connection = await dbConnectionFactory.OpenConnection())
-            {
-                var basketEntry = await connection
-                    .QueryFirstOrDefaultAsync<BasketEntry>(
-                        @"SELECT
+            using var connection = await dbConnectionFactory.OpenConnection();
+
+            var basket = await connection.QueryFirstOrDefaultAsync<BasketModel>(
+                    @"SELECT
                             b.id,
                             b.user_id,
                             b.restaurant_id
@@ -41,22 +41,19 @@ namespace Web.Features.Baskets.GetBasketByRestaurantId
                             b.user_id = @UserId
                             AND b.restaurant_id = @RestaurantId
                         ORDER BY b.id",
-                        new
-                        {
-                            UserId = authenticator.UserId.Value,
-                            RestaurantId = restaurantId,
-                        });
+                    new
+                    {
+                        UserId = authenticator.UserId.Value,
+                        RestaurantId = restaurantId,
+                    });
 
-                if (basketEntry == null)
-                {
-                    return StatusCode(200);
-                }
+            if (basket is null)
+            {
+                return StatusCode(200);
+            }
 
-                var basketItemEntries = await connection
-                    .QueryAsync<BasketItemEntry>(
-                        @"SELECT
-                            bi.id,
-                            bi.basket_id,
+            var items = await connection.QueryAsync<BasketItemModel>(
+                    @"SELECT
                             bi.menu_item_id,
                             mi.name as menu_item_name,
                             mi.description as menu_item_description,
@@ -67,16 +64,31 @@ namespace Web.Features.Baskets.GetBasketByRestaurantId
                             INNER JOIN menu_items mi ON mi.id = bi.menu_item_id
                         WHERE
                             bi.basket_id = @BasketId",
-                        new
-                        {
-                            BasketId = basketEntry.id,
-                        });
+                    new
+                    {
+                        BasketId = basket.Id,
+                    });
 
-                var basket = basketEntry.ToDto();
-                basket.Items.AddRange(basketItemEntries.Select(x => x.ToDto()));
+            basket.Items = items.ToList();
 
-                return Ok(basket);
-            }
+            return Ok(basket);
+        }
+
+        public class BasketModel
+        {
+            [JsonIgnore] public int Id { get; init; }
+            public Guid UserId { get; init; }
+            public Guid RestaurantId { get; init; }
+            public List<BasketItemModel> Items { get; set; }
+        }
+
+        public class BasketItemModel
+        {
+            public Guid MenuItemId { get; init; }
+            public string MenuItemName { get; init; }
+            public string MenuItemDescription { get; init; }
+            public decimal MenuItemPrice { get; init; }
+            public int Quantity { get; init; }
         }
     }
 }

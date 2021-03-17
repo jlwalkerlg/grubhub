@@ -55,8 +55,7 @@ namespace Web.Features.Orders.GetOrderHistory
                 sql += " LIMIT @Limit OFFSET @Offset";
             }
 
-            var orders = await connection
-                .QueryAsync<OrderModel>(
+            var orders = await connection.QueryAsync<OrderModel>(
                     sql,
                     new
                     {
@@ -65,8 +64,7 @@ namespace Web.Features.Orders.GetOrderHistory
                         Limit = perPage,
                     });
 
-            var count = await connection
-                .ExecuteScalarAsync<int>(
+            var count = await connection.ExecuteScalarAsync<int>(
                     "SELECT COUNT(*) FROM orders o WHERE o.user_id = @UserId",
                     new
                     {
@@ -82,13 +80,13 @@ namespace Web.Features.Orders.GetOrderHistory
 
         public record OrderModel
         {
-            public string Id { get; set; }
-            public DateTime PlacedAt { get; set; }
-            public int TotalItems { get; set; }
-            public decimal Subtotal { get; set; }
-            public decimal ServiceFee { get; set; }
-            public decimal DeliveryFee { get; set; }
-            public string RestaurantName { get; set; }
+            public string Id { get; init; }
+            public DateTime PlacedAt { get; init; }
+            public int TotalItems { get; init; }
+            public decimal Subtotal { get; init; }
+            public decimal ServiceFee { get; init; }
+            public decimal DeliveryFee { get; init; }
+            public string RestaurantName { get; init; }
         }
 
         public record GetOrderHistoryResponse

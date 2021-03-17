@@ -39,7 +39,7 @@ namespace WebTests.Features.Billing.GetBillingDetails
 
             response.StatusCode.ShouldBe(200);
 
-            var details = await response.GetData<BillingDetails>();
+            var details = await response.GetData<GetBillingDetailsAction.BillingDetailsModel>();
 
             details.Id.ShouldBe(billingAccount.Id);
             details.RestaurantId.ShouldBe(restaurant.Id);
@@ -62,7 +62,7 @@ namespace WebTests.Features.Billing.GetBillingDetails
 
             response.StatusCode.ShouldBe(200);
 
-            var details = await response.GetData<BillingDetails>();
+            var details = await response.GetData<GetBillingDetailsAction.BillingDetailsModel>();
 
             details.ShouldBe(null);
         }

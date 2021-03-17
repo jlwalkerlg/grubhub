@@ -20,10 +20,17 @@ namespace Web.Features.Cuisines.GetCuisines
         {
             var sql = "SELECT c.name FROM cuisines c ORDER BY c.name ASC";
 
-            using (var connection = await dbConnectionFactory.OpenConnection())
-            {
-                return Ok((await connection.QueryAsync<CuisineDto>(sql)).ToList());
-            }
+            using var connection = await dbConnectionFactory.OpenConnection();
+
+            var cuisines = await connection.QueryAsync<CuisineModel>(
+                    "SELECT c.name FROM cuisines c ORDER BY c.name ASC");
+
+            return Ok(cuisines);
+        }
+
+        public class CuisineModel
+        {
+            public string Name { get; init; }
         }
     }
 }

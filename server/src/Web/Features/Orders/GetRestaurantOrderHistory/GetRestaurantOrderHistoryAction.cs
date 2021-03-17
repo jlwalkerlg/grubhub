@@ -90,16 +90,16 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
             });
         }
 
-        public record OrderModel
+        public class OrderModel
         {
-            public string Id { get; set; }
-            public int Number { get; set; }
-            public string Status { get; set; }
-            public DateTime PlacedAt { get; set; }
-            public decimal Subtotal { get; set; }
+            public string Id { get; init; }
+            public int Number { get; init; }
+            public string Status { get; init; }
+            public DateTime PlacedAt { get; init; }
+            public decimal Subtotal { get; init; }
         }
 
-        public record GetRestaurantOrderHistoryResponse
+        public class GetRestaurantOrderHistoryResponse
         {
             public IEnumerable<OrderModel> Orders { get; init; }
             public int Count { get; init; }
