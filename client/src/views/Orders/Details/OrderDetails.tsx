@@ -479,15 +479,16 @@ const OrderDetails: FC<{ order: OrderDto }> = ({ order }) => {
 const OrderDetailsPage: FC = () => {
   const router = useRouter();
   const orderId = router.query.id?.toString();
+  const isLoadingRouter = !orderId;
 
-  const isRouterLoading = !orderId;
+  const { isLoggedIn, isLoading: isLoadingAuth, user } = useAuth();
 
-  const { data: order, isLoading: isOrderLoading, isError } = useOrder(
+  const { data: order, isLoading: isLoadingOrder, isError } = useOrder(
     orderId,
-    { enabled: !isRouterLoading }
+    { enabled: !isLoadingRouter && isLoggedIn }
   );
 
-  const isLoading = isRouterLoading || isOrderLoading;
+  const isLoading = isLoadingRouter || isLoadingOrder || isLoadingAuth;
 
   if (isLoading) {
     return (
@@ -511,7 +512,7 @@ const OrderDetailsPage: FC = () => {
   }
 
   return (
-    <AuthLayout title="Your Order">
+    <AuthLayout title="Your Order" authorised={order.userId === user.id}>
       <OrderDetails order={order} />
     </AuthLayout>
   );

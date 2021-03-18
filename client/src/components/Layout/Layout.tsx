@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
-import useAuth, { UserRole } from "~/api/users/useAuth";
+import useAuth from "~/api/users/useAuth";
 import Nav from "~/components/Nav/Nav";
 import Toaster from "../Toaster/Toaster";
 
@@ -25,11 +25,11 @@ const Layout: React.FC<LayoutProps> = ({ title, children }) => {
 };
 
 interface AuthLayoutProps extends LayoutProps {
-  role?: UserRole;
+  authorised?: boolean;
 }
 
 export const AuthLayout: FC<AuthLayoutProps> = ({
-  role,
+  authorised = true,
   children,
   ...rest
 }) => {
@@ -38,7 +38,7 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
 
   if (!isLoading && !isLoggedIn) {
     router.push(`/login?redirect_to=${window.location.href}`);
-  } else if (!isLoading && role && user.role !== role) {
+  } else if (!isLoading && !authorised) {
     if (user.role === "RestaurantManager") {
       router.push("/dashboard");
     } else {
