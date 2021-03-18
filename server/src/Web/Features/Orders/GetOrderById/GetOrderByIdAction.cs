@@ -87,6 +87,7 @@ namespace Web.Features.Orders.GetOrderById
 
             var items = await connection.QueryAsync<OrderItemModel>(
                     @"SELECT
+                            oi.id,
                             oi.name,
                             oi.price / 100.00 as price,
                             oi.quantity
@@ -145,6 +146,7 @@ namespace Web.Features.Orders.GetOrderById
 
         public class OrderItemModel
         {
+            public int Id { get; init; }
             public string Name { get; init; }
             public decimal Price { get; init; }
             public int Quantity { get; init; }
