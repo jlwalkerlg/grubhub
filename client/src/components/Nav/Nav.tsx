@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import useAuth from "~/api/users/useAuth";
 import useLogout from "~/api/users/useLogout";
 import CloseIcon from "~/components/Icons/CloseIcon";
@@ -27,10 +29,14 @@ const Nav: React.FC = () => {
   const { user, isLoggedIn, isLoading } = useAuth();
   const { mutate: logout } = useLogout();
 
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const onLogout = async () => {
     logout(null, {
-      onSuccess: () => {
-        window.location.reload();
+      onSuccess: async () => {
+        await router.push("/");
+        queryClient.clear();
       },
 
       onError: (error) => {
