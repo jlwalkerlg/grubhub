@@ -15,14 +15,13 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
     public class ApproveRestaurantHandlerTests
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
-        private readonly EventBusSpy bus = new();
         private readonly ApproveRestaurantHandler handler;
 
         public ApproveRestaurantHandlerTests()
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            handler = new ApproveRestaurantHandler(unitOfWorkSpy, new DateTimeProviderStub(), bus);
+            handler = new ApproveRestaurantHandler(unitOfWorkSpy, new DateTimeProviderStub());
         }
 
         [Fact]
@@ -78,7 +77,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
 
             await handler.Handle(command, default);
 
-            var @event = bus.Events.OfType<RestaurantApprovedEvent>().Single();
+            var @event = unitOfWorkSpy.EventStoreSpy.Events.OfType<RestaurantApprovedEvent>().Single();
 
             @event.RestaurantId.ShouldBe(restaurant.Id);
         }

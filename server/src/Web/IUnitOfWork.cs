@@ -1,5 +1,3 @@
-using System;
-using System.Data;
 using System.Threading.Tasks;
 using Web.Features.Baskets;
 using Web.Features.Billing;
@@ -8,6 +6,7 @@ using Web.Features.Menus;
 using Web.Features.Orders;
 using Web.Features.Restaurants;
 using Web.Features.Users;
+using Web.Services.Events;
 
 namespace Web
 {
@@ -20,8 +19,8 @@ namespace Web
         IBasketRepository Baskets { get; }
         IOrderRepository Orders { get; }
         IBillingAccountRepository BillingAccounts { get; }
+        IEventStore Events { get; }
 
-        void Subscribe(Func<IDbTransaction, Task> subscriber);
         Task Commit();
     }
 }

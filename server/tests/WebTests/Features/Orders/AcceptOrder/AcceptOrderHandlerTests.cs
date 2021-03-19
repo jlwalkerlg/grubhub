@@ -21,7 +21,6 @@ namespace WebTests.Features.Orders.AcceptOrder
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly AuthenticatorSpy authenticator;
         private readonly DateTimeProviderStub dateTimeProvider;
-        private readonly EventBusSpy bus = new();
         private readonly AcceptOrderHandler handler;
 
         public AcceptOrderHandlerTests()
@@ -30,7 +29,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             authenticator = new AuthenticatorSpy();
             dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
 
-            handler = new AcceptOrderHandler(unitOfWork, authenticator, dateTimeProvider, bus);
+            handler = new AcceptOrderHandler(unitOfWork, authenticator, dateTimeProvider);
         }
 
         [Fact]
@@ -55,7 +54,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             order.Accepted.ShouldBeTrue();
             order.AcceptedAt.ShouldBe(dateTimeProvider.UtcNow);
 
-            var ev = bus.Events.OfType<OrderAcceptedEvent>().Single();
+            var ev = unitOfWork.EventStoreSpy.Events.OfType<OrderAcceptedEvent>().Single();
             ev.OrderId.ShouldBe(order.Id);
             ev.OccuredAt.ShouldBe(dateTimeProvider.UtcNow);
         }
@@ -85,7 +84,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             order.Accepted.ShouldBeTrue();
             order.AcceptedAt.ShouldBe(acceptedAt);
 
-            bus.Events.ShouldBeEmpty();
+            unitOfWork.EventStoreSpy.Events.ShouldBeEmpty();
         }
 
         [Fact]

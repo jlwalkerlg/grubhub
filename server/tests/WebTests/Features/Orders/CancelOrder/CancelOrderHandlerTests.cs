@@ -21,7 +21,6 @@ namespace WebTests.Features.Orders.CancelOrder
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly AuthenticatorSpy authenticator;
         private readonly DateTimeProviderStub dateTimeProvider;
-        private readonly EventBusSpy bus = new();
         private readonly CancelOrderHandler handler;
 
         public CancelOrderHandlerTests()
@@ -30,7 +29,7 @@ namespace WebTests.Features.Orders.CancelOrder
             authenticator = new AuthenticatorSpy();
             dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
 
-            handler = new CancelOrderHandler(unitOfWork, authenticator, dateTimeProvider, bus);
+            handler = new CancelOrderHandler(unitOfWork, authenticator, dateTimeProvider);
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace WebTests.Features.Orders.CancelOrder
             order.Cancelled.ShouldBeTrue();
             order.CancelledAt.ShouldBe(dateTimeProvider.UtcNow);
 
-            var evnt = bus.Events
+            var evnt = unitOfWork.EventStoreSpy.Events
                 .OfType<OrderCancelledEvent>()
                 .Single();
 
@@ -90,7 +89,7 @@ namespace WebTests.Features.Orders.CancelOrder
             order.Status.ShouldBe(OrderStatus.Cancelled);
             order.Cancelled.ShouldBeTrue();
 
-            bus.Events.ShouldBeEmpty();
+            unitOfWork.EventStoreSpy.Events.ShouldBeEmpty();
         }
 
         [Fact]

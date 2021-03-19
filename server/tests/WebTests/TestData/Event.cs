@@ -15,9 +15,6 @@ namespace WebTests.TestData
         [Column("occured_at")]
         public DateTime OccuredAt { get; set; }
 
-        [Column("handled")]
-        public bool Handled { get; set; }
-
         [Column("type")]
         public string Type { get; set; }
 
@@ -28,7 +25,7 @@ namespace WebTests.TestData
         {
             return (Web.Services.Events.Event)JsonSerializer.Deserialize(
                 Json,
-                System.Type.GetType(Type));
+                System.Type.GetType(Type)!);
         }
     }
 }

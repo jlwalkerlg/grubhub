@@ -1,5 +1,3 @@
-using System;
-using System.Data;
 using System.Threading.Tasks;
 using Web;
 using Web.Features.Baskets;
@@ -9,6 +7,7 @@ using Web.Features.Menus;
 using Web.Features.Orders;
 using Web.Features.Restaurants;
 using Web.Features.Users;
+using Web.Services.Events;
 
 namespace WebTests.Doubles
 {
@@ -35,11 +34,10 @@ namespace WebTests.Doubles
         public IBillingAccountRepository BillingAccounts => BillingAccountsRepositorySpy;
         public BillingAccountRepositorySpy BillingAccountsRepositorySpy { get; } = new();
 
-        public bool Commited { get; private set; } = false;
+        public IEventStore Events => EventStoreSpy;
+        public EventStoreSpy EventStoreSpy { get; } = new();
 
-        public void Subscribe(Func<IDbTransaction, Task> subscriber)
-        {
-        }
+        public bool Commited { get; private set; } = false;
 
         public Task Commit()
         {

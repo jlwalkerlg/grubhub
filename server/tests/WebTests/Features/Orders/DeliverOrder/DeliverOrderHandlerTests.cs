@@ -21,7 +21,6 @@ namespace WebTests.Features.Orders.DeliverOrder
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly AuthenticatorSpy authenticator;
         private readonly DateTimeProviderStub dateTimeProvider;
-        private readonly EventBusSpy bus = new();
         private readonly DeliverOrderHandler handler;
 
         public DeliverOrderHandlerTests()
@@ -30,7 +29,7 @@ namespace WebTests.Features.Orders.DeliverOrder
             authenticator = new AuthenticatorSpy();
             dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
 
-            handler = new DeliverOrderHandler(unitOfWork, authenticator, dateTimeProvider, bus);
+            handler = new DeliverOrderHandler(unitOfWork, authenticator, dateTimeProvider);
         }
 
         [Fact]
@@ -124,7 +123,7 @@ namespace WebTests.Features.Orders.DeliverOrder
 
             result.ShouldBeSuccessful();
 
-            var evnt = bus.Events
+            var evnt = unitOfWork.EventStoreSpy.Events
                 .OfType<OrderDeliveredEvent>()
                 .Single();
 
@@ -153,7 +152,7 @@ namespace WebTests.Features.Orders.DeliverOrder
 
             result.ShouldBeSuccessful();
 
-            bus.Events.ShouldBeEmpty();
+            unitOfWork.EventStoreSpy.Events.ShouldBeEmpty();
         }
 
         private static (RestaurantManager manager, Restaurant restaurant, Order order) SetupOrder(bool accept = true)

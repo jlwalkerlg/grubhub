@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Features.Billing;
 using Web.Services.DateTimeServices;
-using Web.Services.Events;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
@@ -11,18 +10,15 @@ namespace Web.Features.Orders.ConfirmOrder
         private readonly IUnitOfWork unitOfWork;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IBillingService billingService;
-        private readonly IEventBus bus;
 
         public ConfirmOrderHandler(
             IUnitOfWork unitOfWork,
             IDateTimeProvider dateTimeProvider,
-            IBillingService billingService,
-            IEventBus bus)
+            IBillingService billingService)
         {
             this.unitOfWork = unitOfWork;
             this.dateTimeProvider = dateTimeProvider;
             this.billingService = billingService;
-            this.bus = bus;
         }
 
         public async Task<Result> Handle(
@@ -59,7 +55,7 @@ namespace Web.Features.Orders.ConfirmOrder
                 await unitOfWork.Baskets.Remove(basket);
             }
 
-            await bus.Publish(new OrderConfirmedEvent(order.Id, now));
+            await unitOfWork.Events.Store(new OrderConfirmedEvent(order.Id, now));
 
             await unitOfWork.Commit();
 

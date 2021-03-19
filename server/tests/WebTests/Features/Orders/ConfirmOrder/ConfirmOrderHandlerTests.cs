@@ -21,7 +21,6 @@ namespace WebTests.Features.Orders.ConfirmOrder
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly DateTimeProviderStub dateTimeProviderStub;
         private readonly BillingServiceSpy billingServiceSpy;
-        private readonly EventBusSpy bus = new();
         private readonly ConfirmOrderHandler handler;
 
         public ConfirmOrderHandlerTests()
@@ -33,8 +32,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
             handler = new ConfirmOrderHandler(
                 unitOfWorkSpy,
                 dateTimeProviderStub,
-                billingServiceSpy,
-                bus);
+                billingServiceSpy);
         }
 
         [Fact]
@@ -115,7 +113,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             unitOfWorkSpy.BasketRepositorySpy.Baskets.ShouldBeEmpty();
 
-            var ocEvent = bus
+            var ocEvent = unitOfWorkSpy.EventStoreSpy
                 .Events
                 .OfType<OrderConfirmedEvent>()
                 .Single();
@@ -198,7 +196,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             order.Status.ShouldBe(OrderStatus.PaymentConfirmed);
 
-            bus.Events.ShouldBeEmpty();
+            unitOfWorkSpy.EventStoreSpy.Events.ShouldBeEmpty();
 
             billingServiceSpy.ConfirmedOrder.ShouldBeNull();
         }

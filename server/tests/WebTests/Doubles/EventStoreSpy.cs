@@ -4,13 +4,13 @@ using Web.Services.Events;
 
 namespace WebTests.Doubles
 {
-    public class EventBusSpy : IEventBus
+    public class EventStoreSpy : IEventStore
     {
         public List<Event> Events { get; } = new();
 
-        public Task Publish(Event ev)
+        public Task Store(Event @event)
         {
-            Events.Add(ev);
+            Events.Add(@event);
             return Task.CompletedTask;
         }
     }

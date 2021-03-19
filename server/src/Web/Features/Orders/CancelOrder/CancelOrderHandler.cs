@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Web.Domain.Orders;
 using Web.Services.Authentication;
 using Web.Services.DateTimeServices;
-using Web.Services.Events;
 
 namespace Web.Features.Orders.CancelOrder
 {
@@ -12,18 +11,15 @@ namespace Web.Features.Orders.CancelOrder
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IEventBus bus;
 
         public CancelOrderHandler(
             IUnitOfWork unitOfWork,
             IAuthenticator authenticator,
-            IDateTimeProvider dateTimeProvider,
-            IEventBus bus)
+            IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
             this.dateTimeProvider = dateTimeProvider;
-            this.bus = bus;
         }
 
         public async Task<Result> Handle(CancelOrderCommand command, CancellationToken cancellationToken)
@@ -45,7 +41,7 @@ namespace Web.Features.Orders.CancelOrder
 
             if (!result) return result.Error;
 
-            await bus.Publish(new OrderCancelledEvent(order.Id.Value, dateTimeProvider.UtcNow));
+            await unitOfWork.Events.Store(new OrderCancelledEvent(order.Id.Value, dateTimeProvider.UtcNow));
 
             await unitOfWork.Commit();
 

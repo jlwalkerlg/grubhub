@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
 using Web.Services.DateTimeServices;
-using Web.Services.Events;
 
 namespace Web.Features.Restaurants.ApproveRestaurant
 {
@@ -10,13 +9,11 @@ namespace Web.Features.Restaurants.ApproveRestaurant
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IEventBus bus;
 
-        public ApproveRestaurantHandler(IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider, IEventBus bus)
+        public ApproveRestaurantHandler(IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.dateTimeProvider = dateTimeProvider;
-            this.bus = bus;
         }
 
         public async Task<Result> Handle(
@@ -33,7 +30,7 @@ namespace Web.Features.Restaurants.ApproveRestaurant
 
             restaurant.Approve();
 
-            await bus.Publish(new RestaurantApprovedEvent(restaurant.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Events.Store(new RestaurantApprovedEvent(restaurant.Id, dateTimeProvider.UtcNow));
 
             await unitOfWork.Commit();
 

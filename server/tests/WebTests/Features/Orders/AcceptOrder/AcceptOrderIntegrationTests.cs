@@ -66,7 +66,7 @@ namespace WebTests.Features.Orders.AcceptOrder
 
             response.StatusCode.ShouldBe(200);
 
-            UseTestDbContext(db => db.Entry(order).Reload());
+            Reload(order);
 
             order.AcceptedAt?.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
 

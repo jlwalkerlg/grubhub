@@ -13,7 +13,6 @@ namespace WebTests.TestData
         }
 
         public DbSet<Cuisine> Cuisines { get; private set; }
-        public DbSet<Event> Events { get; private set; }
         public DbSet<Menu> Menus { get; private set; }
         public DbSet<MenuCategory> MenuCategories { get; private set; }
         public DbSet<MenuItem> MenuItems { get; private set; }
@@ -25,6 +24,7 @@ namespace WebTests.TestData
         public DbSet<Order> Orders { get; private set; }
         public DbSet<OrderItem> OrderItems { get; private set; }
         public DbSet<BillingAccount> BillingAccounts { get; private set; }
+        public DbSet<Event> Events { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -86,7 +86,7 @@ namespace WebTests.TestData
                 .HasConversion(
                     pounds => (int) (pounds * 100),
                     pence => ((decimal) pence) / 100);
-            
+
             modelBuilder.Entity<Order>()
                 .Property(x => x.ServiceFee)
                 .HasConversion(

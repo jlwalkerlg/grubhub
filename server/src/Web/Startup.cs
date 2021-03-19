@@ -109,7 +109,6 @@ namespace Web
 
             services.AddQuartz(settings.Database);
 
-            services.AddEventBus();
             services.AddEventWorker();
 
             services.AddGeocoding();
