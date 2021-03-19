@@ -20,6 +20,7 @@ using Web.Services.Jobs;
 using Web.Data.EF;
 using Web.Services.Billing;
 using Web.Services.DateTimeServices;
+using Web.Services.Events;
 using Web.Services.Mail;
 
 namespace Web
@@ -107,6 +108,7 @@ namespace Web
 
             services.AddQuartz(settings.Database);
 
+            services.AddEventBus();
             services.AddEventWorker();
 
             services.AddGeocoding();

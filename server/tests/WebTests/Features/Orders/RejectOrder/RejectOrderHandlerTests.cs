@@ -21,17 +21,16 @@ namespace WebTests.Features.Orders.RejectOrder
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly AuthenticatorSpy authenticator;
         private readonly DateTimeProviderStub dateTimeProvider;
+        private readonly EventBusSpy bus = new();
         private readonly RejectOrderHandler handler;
 
         public RejectOrderHandlerTests()
         {
             unitOfWork = new UnitOfWorkSpy();
-
             authenticator = new AuthenticatorSpy();
-
             dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
 
-            handler = new RejectOrderHandler(unitOfWork, authenticator, dateTimeProvider);
+            handler = new RejectOrderHandler(unitOfWork, authenticator, dateTimeProvider, bus);
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace WebTests.Features.Orders.RejectOrder
             order.Rejected.ShouldBeTrue();
             order.RejectedAt.ShouldBe(dateTimeProvider.UtcNow);
 
-            var evnt = unitOfWork.EventRepositorySpy.Events
+            var evnt = bus.Events
                 .OfType<OrderRejectedEvent>()
                 .Single();
 
@@ -91,7 +90,7 @@ namespace WebTests.Features.Orders.RejectOrder
             order.Status.ShouldBe(OrderStatus.Rejected);
             order.Rejected.ShouldBeTrue();
 
-            unitOfWork.EventRepositorySpy.Events.ShouldBeEmpty();
+            bus.Events.ShouldBeEmpty();
         }
 
         [Fact]

@@ -16,11 +16,9 @@ namespace Web.Features.Orders.DeliverOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(OrderDeliveredEvent evnt, CancellationToken cancellationToken)
+        public async Task Handle(OrderDeliveredEvent evnt, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(evnt.OrderId);
-
-            if (order is null) return Error.NotFound("Order not found.");
 
             await queue.Enqueue(new Job[]
             {
@@ -33,8 +31,6 @@ namespace Web.Features.Orders.DeliverOrder
                 new CapturePaymentJob(order.PaymentIntentId),
                 new EmailUserOrderDeliveredJob(order.Id.Value),
             }, cancellationToken);
-
-            return Result.Ok();
         }
     }
 }

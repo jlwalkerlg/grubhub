@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace Web.Services.Events
 {
-    public interface IEventListener<TEvent> : IRequestHandler<TEvent> where TEvent : Event
+    public interface IEventListener<in TEvent> : INotificationHandler<TEvent> where TEvent : Event
     {
     }
 }

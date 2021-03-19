@@ -1,3 +1,5 @@
+using System;
+using System.Data;
 using System.Threading.Tasks;
 using Web;
 using Web.Features.Baskets;
@@ -7,7 +9,6 @@ using Web.Features.Menus;
 using Web.Features.Orders;
 using Web.Features.Restaurants;
 using Web.Features.Users;
-using Web.Services.Events;
 
 namespace WebTests.Doubles
 {
@@ -21,9 +22,6 @@ namespace WebTests.Doubles
 
         public IUserRepository Users => UserRepositorySpy;
         public UserRepositorySpy UserRepositorySpy { get; } = new();
-
-        public IEventRepository Events => EventRepositorySpy;
-        public EventRepositorySpy EventRepositorySpy { get; } = new();
 
         public ICuisineRepository Cuisines => CuisineRepositorySpy;
         public CuisineRepositorySpy CuisineRepositorySpy { get; } = new();
@@ -39,6 +37,9 @@ namespace WebTests.Doubles
 
         public bool Commited { get; private set; } = false;
 
+        public void Subscribe(Func<IDbTransaction, Task> subscriber)
+        {
+        }
 
         public Task Commit()
         {

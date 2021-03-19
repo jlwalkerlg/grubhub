@@ -16,23 +16,16 @@ namespace Web.Features.Orders.AcceptOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(OrderAcceptedEvent evnt, CancellationToken cancellationToken)
+        public async Task Handle(OrderAcceptedEvent evnt, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(evnt.OrderId);
-
-            if (order is null) return Error.NotFound("Order not found.");
-
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
-
-            if (restaurant is null) return Error.NotFound("Restaurant not found.");
 
             await queue.Enqueue(new Job[]
             {
                 new NotifyUserOrderAcceptedJob(order.Id.Value, order.UserId.Value.ToString()),
                 new NotifyRestaurantOrderAcceptedJob(order.Id.Value, restaurant.ManagerId.Value.ToString()),
             }, cancellationToken);
-
-            return Result.Ok();
         }
     }
 }

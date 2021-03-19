@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Web.Features.Restaurants.SearchRestaurants;
 using Web.Services.Validation;
-using Web.Workers;
 
 namespace Web
 {
@@ -22,11 +21,6 @@ namespace Web
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
             services.AddScoped<IRestaurantSearcher, DPRestaurantSearcher>();
-        }
-
-        public static void AddEventWorker(this IServiceCollection services)
-        {
-            services.AddHostedService<EventWorker>();
         }
     }
 }

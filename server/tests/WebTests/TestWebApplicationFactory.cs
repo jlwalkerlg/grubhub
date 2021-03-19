@@ -11,8 +11,8 @@ using Microsoft.Extensions.Logging;
 using Web;
 using Web.Data.EF;
 using Web.Features.Billing;
+using Web.Services.Events;
 using Web.Services.Geocoding;
-using Web.Workers;
 using WebTests.Doubles;
 using WebTests.TestData;
 

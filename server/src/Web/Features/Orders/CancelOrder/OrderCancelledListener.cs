@@ -17,7 +17,7 @@ namespace Web.Features.Orders.CancelOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(OrderCancelledEvent evnt, CancellationToken cancellationToken)
+        public async Task Handle(OrderCancelledEvent evnt, CancellationToken cancellationToken)
         {
             var order = await unitOfWork.Orders.GetById(new OrderId(evnt.OrderId));
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
@@ -28,8 +28,6 @@ namespace Web.Features.Orders.CancelOrder
                 new NotifyRestaurantOrderCancelledJob(order.Id.Value, restaurant.ManagerId.Value.ToString()),
                 new RefundOrderJob(order.PaymentIntentId),
             }, cancellationToken);
-
-            return Result.Ok();
         }
     }
 }

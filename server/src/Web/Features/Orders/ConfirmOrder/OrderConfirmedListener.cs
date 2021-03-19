@@ -14,7 +14,7 @@ namespace Web.Features.Orders.ConfirmOrder
             this.queue = queue;
         }
 
-        public async Task<Result> Handle(OrderConfirmedEvent evnt, CancellationToken cancellationToken)
+        public async Task Handle(OrderConfirmedEvent evnt, CancellationToken cancellationToken)
         {
             await queue.Enqueue(new Job[]
             {
@@ -22,8 +22,6 @@ namespace Web.Features.Orders.ConfirmOrder
                 new NotifyRestaurantOrderConfirmedJob(evnt.OrderId),
             },
             cancellationToken);
-
-            return Result.Ok();
         }
     }
 }
