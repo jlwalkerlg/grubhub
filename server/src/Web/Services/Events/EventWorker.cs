@@ -34,13 +34,21 @@ namespace Web.Services.Events
                 await using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
                 var events = await db.Events
-                    .Where(x => !x.Handled)
                     .OrderBy(x => x.OccuredAt)
                     .ToListAsync(stoppingToken);
 
                 foreach (var ev in events)
                 {
-                    await ProcessEvent(ev, publisher, db, stoppingToken);
+                    logger.LogInformation($"Processing event: {ev.Type}");
+
+                    try
+                    {
+                        await ProcessEvent(ev, publisher, db, stoppingToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex.ToString());
+                    }
                 }
 
                 await Task.Delay(Interval, stoppingToken);
@@ -53,23 +61,14 @@ namespace Web.Services.Events
             AppDbContext db,
             CancellationToken stoppingToken)
         {
-            logger.LogInformation($"Processing event: {serialised.Type}");
-
             var ev = (Event)JsonSerializer.Deserialize(
                 serialised.Json,
                 Type.GetType(serialised.Type)!);
 
-            try
-            {
-                await publisher.Publish(ev!, stoppingToken);
+            await publisher.Publish(ev!, stoppingToken);
 
-                serialised.Handled = true;
-                await db.SaveChangesAsync(stoppingToken);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.ToString());
-            }
+            db.Events.Remove(serialised);
+            await db.SaveChangesAsync(stoppingToken);
         }
     }
 }

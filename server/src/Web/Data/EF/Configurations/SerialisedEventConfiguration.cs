@@ -18,11 +18,6 @@ namespace Web.Data.EF.Configurations
                 .HasColumnName("occured_at")
                 .IsRequired();
 
-            builder.Property(x => x.Handled)
-                .HasColumnName("handled")
-                .IsRequired()
-                .HasDefaultValue(false);
-
             builder.Property(x => x.Type)
                 .HasColumnName("type")
                 .IsRequired();
