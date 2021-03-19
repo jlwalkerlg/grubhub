@@ -1,4 +1,6 @@
-﻿namespace Web.Features.Orders.DeliverOrder
+﻿using Web.Services.Jobs;
+
+namespace Web.Features.Orders.DeliverOrder
 {
     public class NotifyRestaurantOrderDeliveredJob : Job
     {

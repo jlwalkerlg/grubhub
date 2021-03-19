@@ -1,4 +1,6 @@
-﻿namespace Web.Features.Orders.AcceptOrder
+﻿using Web.Services.Jobs;
+
+namespace Web.Features.Orders.AcceptOrder
 {
     public class NotifyUserOrderAcceptedJob : Job
     {

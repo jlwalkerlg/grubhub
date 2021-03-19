@@ -1,10 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Stripe;
+using Web.Services.Jobs;
 
 namespace Web.Features.Orders
 {
-    public class CapturePaymentProcessor : JobProcessor<CapturePaymentJob>
+    public class CapturePaymentProcessor : IJobProcessor<CapturePaymentJob>
     {
         private readonly PaymentIntentService service = new();
 

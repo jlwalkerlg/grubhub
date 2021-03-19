@@ -1,10 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Stripe;
+using Web.Services.Jobs;
 
 namespace Web.Features.Orders
 {
-    public class RefundOrderProcessor : JobProcessor<RefundOrderJob>
+    public class RefundOrderProcessor : IJobProcessor<RefundOrderJob>
     {
         private readonly PaymentIntentService service = new();
 

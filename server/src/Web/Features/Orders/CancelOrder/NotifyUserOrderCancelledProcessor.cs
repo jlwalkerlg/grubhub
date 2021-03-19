@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Web.Hubs;
+using Web.Services.Jobs;
 
 namespace Web.Features.Orders.CancelOrder
 {
-    public class NotifyUserOrderCancelledProcessor : JobProcessor<NotifyUserOrderCancelledJob>
+    public class NotifyUserOrderCancelledProcessor : IJobProcessor<NotifyUserOrderCancelledJob>
     {
         private readonly IHubContext<OrderHub> hubContext;
 

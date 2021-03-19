@@ -1,7 +1,6 @@
 using System;
-using Web.Services.Jobs;
 
-namespace Web
+namespace Web.Services.Jobs
 {
     public abstract class Job : IRequest
     {

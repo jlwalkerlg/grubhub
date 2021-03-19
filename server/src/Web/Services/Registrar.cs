@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Web.Features.Restaurants.SearchRestaurants;
 using Web.Services.Validation;
 
-namespace Web
+namespace Web.Services
 {
-    public static class ServiceRegistrar
+    public static class Registrar
     {
         public static void AddMediatR(this IServiceCollection services)
         {

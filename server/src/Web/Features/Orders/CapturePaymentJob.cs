@@ -1,4 +1,6 @@
-﻿namespace Web.Features.Orders
+﻿using Web.Services.Jobs;
+
+namespace Web.Features.Orders
 {
     public class CapturePaymentJob : Job
     {

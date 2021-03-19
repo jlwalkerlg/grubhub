@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Web.Hubs;
+using Web.Services.Jobs;
 
 namespace Web.Features.Orders.RejectOrder
 {
-    public class NotifyUserOrderRejectedProcessor : JobProcessor<NotifyUserOrderRejectedJob>
+    public class NotifyUserOrderRejectedProcessor : IJobProcessor<NotifyUserOrderRejectedJob>
     {
         private readonly IHubContext<OrderHub> hubContext;
 

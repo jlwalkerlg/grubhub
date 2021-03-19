@@ -1,11 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Orders;
+using Web.Services.Jobs;
 using Web.Services.Mail;
 
 namespace Web.Features.Orders.DeliverOrder
 {
-    public class EmailUserOrderDeliveredProcessor : JobProcessor<EmailUserOrderDeliveredJob>
+    public class EmailUserOrderDeliveredProcessor : IJobProcessor<EmailUserOrderDeliveredJob>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMailer mailer;

@@ -2,10 +2,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Web.Hubs;
+using Web.Services.Jobs;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
-    public class NotifyUserOrderConfirmedProcessor : JobProcessor<NotifyUserOrderConfirmedJob>
+    public class NotifyUserOrderConfirmedProcessor : IJobProcessor<NotifyUserOrderConfirmedJob>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IHubContext<OrderHub> hubContext;
