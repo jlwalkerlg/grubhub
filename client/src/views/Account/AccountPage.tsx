@@ -46,7 +46,7 @@ const CustomerDetailsForm: FC = () => {
 
   return (
     <form className="bg-white rounded shadow-sm p-4 mt-2" onSubmit={onSubmit}>
-      {error && (
+      {error && !error.isValidationError && (
         <div className="my-6">
           <ErrorAlert message={error.detail} />
         </div>
@@ -159,7 +159,7 @@ const DeliveryAddressForm: FC = () => {
 
   return (
     <form className="bg-white rounded shadow-sm p-4 mt-2" onSubmit={onSubmit}>
-      {error && (
+      {error && !error.isValidationError && (
         <div className="my-6">
           <ErrorAlert message={error.detail} />
         </div>
@@ -252,37 +252,42 @@ const DeliveryAddressForm: FC = () => {
 const ChangePasswordForm: FC = () => {
   const form = useForm({
     defaultValues: {
-      password: "",
-      confirm: "",
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
   const rules = useRules({
-    password: (builder) => builder.required().password(),
-    confirm: (builder) =>
+    currentPassword: (builder) => builder.required(),
+    newPassword: (builder) => builder.required().password(),
+    confirmNewPassword: (builder) =>
       builder
         .required()
-        .match(() => form.getValues("password"), "Passwords must match."),
+        .match(() => form.getValues().newPassword, "Passwords must match."),
   });
 
   const { mutate: update, isLoading, error, isSuccess } = useChangePassword();
 
-  const onSubmit = form.handleSubmit(async ({ password }) => {
-    update(
-      { password },
-      {
+  const onSubmit = form.handleSubmit(
+    async ({ confirmNewPassword, ...command }) => {
+      update(command, {
+        onSuccess: () => {
+          form.reset();
+        },
+
         onError: (error) => {
           if (error.isValidationError) {
             setFormErrors(error.errors, form);
           }
         },
-      }
-    );
-  });
+      });
+    }
+  );
 
   return (
     <form className="bg-white rounded shadow-sm p-4 mt-2" onSubmit={onSubmit}>
-      {error && (
+      {error && !error.isValidationError && (
         <div className="my-6">
           <ErrorAlert message={error.detail} />
         </div>
@@ -295,40 +300,63 @@ const ChangePasswordForm: FC = () => {
       )}
 
       <div>
-        <label className="label" htmlFor="password">
-          Password <span className="text-primary">*</span>
+        <label className="label" htmlFor="currentPassword">
+          Current Password <span className="text-primary">*</span>
         </label>
         <input
           ref={form.register({
-            validate: rules.password,
+            validate: rules.currentPassword,
           })}
           className="input bg-white"
           type="password"
-          name="password"
-          id="password"
-          data-invalid={!!form.errors.password}
+          name="currentPassword"
+          id="currentPassword"
+          data-invalid={!!form.errors.currentPassword}
         />
-        {form.errors.password && (
-          <p className="form-error mt-1">{form.errors.password.message}</p>
+        {form.errors.currentPassword && (
+          <p className="form-error mt-1">
+            {form.errors.currentPassword.message}
+          </p>
         )}
       </div>
 
       <div className="mt-4">
-        <label className="label" htmlFor="confirm">
-          Confirm Password <span className="text-primary">*</span>
+        <label className="label" htmlFor="newPassword">
+          New Password <span className="text-primary">*</span>
         </label>
         <input
           ref={form.register({
-            validate: rules.confirm,
+            validate: rules.newPassword,
           })}
           className="input bg-white"
           type="password"
-          name="confirm"
-          id="confirm"
-          data-invalid={!!form.errors.confirm}
+          name="newPassword"
+          id="newPassword"
+          data-invalid={!!form.errors.newPassword}
         />
-        {form.errors.confirm && (
-          <p className="form-error mt-1">{form.errors.confirm.message}</p>
+        {form.errors.newPassword && (
+          <p className="form-error mt-1">{form.errors.newPassword.message}</p>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <label className="label" htmlFor="confirmNewPassword">
+          Confirm New Password <span className="text-primary">*</span>
+        </label>
+        <input
+          ref={form.register({
+            validate: rules.confirmNewPassword,
+          })}
+          className="input bg-white"
+          type="password"
+          name="confirmNewPassword"
+          id="confirmNewPassword"
+          data-invalid={!!form.errors.confirmNewPassword}
+        />
+        {form.errors.confirmNewPassword && (
+          <p className="form-error mt-1">
+            {form.errors.confirmNewPassword.message}
+          </p>
         )}
       </div>
 

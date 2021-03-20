@@ -6,7 +6,10 @@ namespace Web.Features.Users.ChangePassword
     {
         public ChangePasswordValidator()
         {
-            CascadeRuleFor(x => x.Password)
+            CascadeRuleFor(x => x.CurrentPassword)
+                .Required();
+
+            CascadeRuleFor(x => x.NewPassword)
                 .Required()
                 .Password();
         }

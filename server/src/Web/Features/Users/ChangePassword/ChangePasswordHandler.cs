@@ -24,7 +24,12 @@ namespace Web.Features.Users.ChangePassword
 
             if (user is null) return Error.NotFound("User not found.");
 
-            user.Password = hasher.Hash(command.Password);
+            if (!hasher.CheckMatch(command.CurrentPassword, user.Password))
+            {
+                return Error.ValidationError(nameof(command.CurrentPassword), "Incorrect password.");
+            }
+
+            user.Password = hasher.Hash(command.NewPassword);
 
             await unitOfWork.Commit();
 

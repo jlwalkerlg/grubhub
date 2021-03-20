@@ -27,7 +27,7 @@ namespace WebTests.Features.Users.ChangePassword
 
             var command = new ChangePasswordCommand()
             {
-                Password = Guid.NewGuid().ToString(),
+                NewPassword = Guid.NewGuid().ToString(),
             };
 
             var response = await factory.GetAuthenticatedClient(user).Put(
@@ -38,7 +38,7 @@ namespace WebTests.Features.Users.ChangePassword
 
             Reload(user);
 
-            hasher.CheckMatch(command.Password, user.Password).ShouldBeTrue();
+            hasher.CheckMatch(command.NewPassword, user.Password).ShouldBeTrue();
         }
     }
 }
