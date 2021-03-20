@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Stripe;
 using Web.Services.Jobs;
 
-namespace Web.Features.Orders
+namespace Web.Features.Orders.CapturePayment
 {
     public class CapturePaymentProcessor : IJobProcessor<CapturePaymentJob>
     {

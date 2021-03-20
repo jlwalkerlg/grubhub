@@ -30,7 +30,7 @@ namespace Web.Services.Events
             while (!stoppingToken.IsCancellationRequested)
             {
                 using var scope = services.CreateScope();
-                var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+                var sender = scope.ServiceProvider.GetRequiredService<ISender>();
                 await using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
                 var events = await db.Events
@@ -43,7 +43,7 @@ namespace Web.Services.Events
 
                     try
                     {
-                        await ProcessEvent(ev, publisher, db, stoppingToken);
+                        await ProcessEvent(ev, sender, db, stoppingToken);
                     }
                     catch (Exception ex)
                     {
@@ -55,9 +55,9 @@ namespace Web.Services.Events
             }
         }
 
-        private async Task ProcessEvent(
+        private static async Task ProcessEvent(
             SerialisedEvent serialised,
-            IPublisher publisher,
+            ISender sender,
             AppDbContext db,
             CancellationToken stoppingToken)
         {
@@ -65,7 +65,7 @@ namespace Web.Services.Events
                 serialised.Json,
                 Type.GetType(serialised.Type)!);
 
-            await publisher.Publish(ev!, stoppingToken);
+            await sender.Send(ev!, stoppingToken);
 
             db.Events.Remove(serialised);
             await db.SaveChangesAsync(stoppingToken);

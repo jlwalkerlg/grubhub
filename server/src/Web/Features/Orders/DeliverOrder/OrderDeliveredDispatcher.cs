@@ -1,26 +1,25 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Web.Features.Orders.CapturePayment;
 using Web.Services.Events;
 using Web.Services.Jobs;
 
 namespace Web.Features.Orders.DeliverOrder
 {
-    public class OrderDeliveredListener : IEventListener<OrderDeliveredEvent>
+    public class OrderDeliveredDispatcher : EventDispatcher<OrderDeliveredEvent>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IJobQueue queue;
 
-        public OrderDeliveredListener(IUnitOfWork unitOfWork, IJobQueue queue)
+        public OrderDeliveredDispatcher(IUnitOfWork unitOfWork, IJobQueue queue) : base(queue)
         {
             this.unitOfWork = unitOfWork;
-            this.queue = queue;
         }
 
-        public async Task Handle(OrderDeliveredEvent evnt, CancellationToken cancellationToken)
+        protected override async Task<IEnumerable<Job>> GetJobs(OrderDeliveredEvent @event)
         {
-            var order = await unitOfWork.Orders.GetById(evnt.OrderId);
+            var order = await unitOfWork.Orders.GetById(@event.OrderId);
 
-            await queue.Enqueue(new Job[]
+            return new Job[]
             {
                 new NotifyUserOrderDeliveredJob(
                     order.Id.Value,
@@ -30,7 +29,7 @@ namespace Web.Features.Orders.DeliverOrder
                     order.RestaurantId.Value.ToString()),
                 new CapturePaymentJob(order.PaymentIntentId),
                 new EmailUserOrderDeliveredJob(order.Id.Value),
-            }, cancellationToken);
+            };
         }
     }
 }

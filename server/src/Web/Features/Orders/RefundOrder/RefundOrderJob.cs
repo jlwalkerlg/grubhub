@@ -1,7 +1,7 @@
 ﻿using System;
 using Web.Services.Jobs;
 
-namespace Web.Features.Orders
+namespace Web.Features.Orders.RefundOrder
 {
     public class RefundOrderJob : Job
     {

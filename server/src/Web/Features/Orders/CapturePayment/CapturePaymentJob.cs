@@ -1,6 +1,6 @@
 ﻿using Web.Services.Jobs;
 
-namespace Web.Features.Orders
+namespace Web.Features.Orders.CapturePayment
 {
     public class CapturePaymentJob : Job
     {

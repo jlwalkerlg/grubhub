@@ -13,13 +13,13 @@ namespace WebTests.Features.Orders
     public class OrderConfirmedListenerTests
     {
         private readonly JobQueueSpy queue;
-        private readonly OrderConfirmedListener listener;
+        private readonly OrderConfirmedDispatcher dispatcher;
 
         public OrderConfirmedListenerTests()
         {
             queue = new JobQueueSpy();
 
-            listener = new OrderConfirmedListener(queue);
+            dispatcher = new OrderConfirmedDispatcher(queue);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace WebTests.Features.Orders
                 new OrderId(Guid.NewGuid().ToString()),
                 DateTime.UtcNow);
 
-            await listener.Handle(ev, default);
+            await dispatcher.Handle(ev, default);
 
             queue.Jobs
                 .OfType<NotifyRestaurantOrderConfirmedJob>()

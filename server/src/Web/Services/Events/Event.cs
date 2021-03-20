@@ -1,9 +1,8 @@
 ﻿using System;
-using MediatR;
 
 namespace Web.Services.Events
 {
-    public abstract record Event : INotification
+    public abstract record Event : MediatR.IRequest
     {
         protected Event(DateTime occuredAt)
         {
