@@ -21,12 +21,18 @@ namespace WebTests.Features.Users.ChangePassword
         [Fact]
         public async Task It_Changes_The_Users_Password()
         {
-            var user = new User();
+            var currentPassword = "current-password";
+
+            var user = new User()
+            {
+                Password = hasher.Hash(currentPassword),
+            };
 
             Insert(user);
 
             var command = new ChangePasswordCommand()
             {
+                CurrentPassword = currentPassword,
                 NewPassword = Guid.NewGuid().ToString(),
             };
 
