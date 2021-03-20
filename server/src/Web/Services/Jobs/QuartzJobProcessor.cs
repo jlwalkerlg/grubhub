@@ -7,7 +7,7 @@ using Quartz;
 
 namespace Web.Services.Jobs
 {
-    public class QuartzJobProcessor : Quartz.IJob
+    public class QuartzJobProcessor : IJob
     {
         private readonly ILogger<QuartzJobProcessor> logger;
         private readonly ISender sender;
@@ -30,7 +30,7 @@ namespace Web.Services.Jobs
             {
                 result = await sender.Send(job, context.CancellationToken);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 exception = ex;
             }
