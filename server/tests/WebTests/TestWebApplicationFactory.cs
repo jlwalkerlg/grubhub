@@ -46,12 +46,12 @@ namespace WebTests
                 services.AddSingleton(databaseSettings);
 
                 services.Remove(
-                    services.Single(x => x.ImplementationType == typeof(EventWorker))
+                    services.Single(x => x.ImplementationType == typeof(EventProcessor))
                 );
 
                 services.Remove(
                     services.Single(x => x.ServiceType == typeof(IHostedService) &&
-                        (x.ImplementationType?.Namespace.StartsWith("Quartz") ?? false))
+                        (x.ImplementationType?.Namespace?.StartsWith("Quartz") ?? false))
                 );
 
                 // Set the default authentication scheme to "Test",

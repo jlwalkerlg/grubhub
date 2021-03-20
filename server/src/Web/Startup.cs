@@ -16,7 +16,6 @@ using Web.Services.Hashing;
 using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
-using Web.Services.Jobs;
 using Web.Data.EF;
 using Web.Services;
 using Web.Services.Billing;
@@ -108,8 +107,8 @@ namespace Web
             services.AddStripe(settings.Stripe);
 
             services.AddQuartz(settings.Database);
-
-            services.AddEventWorker();
+            services.AddQuartzEventBus();
+            services.AddEventProcessor();
 
             services.AddGeocoding();
 
