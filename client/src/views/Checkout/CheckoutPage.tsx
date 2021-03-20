@@ -220,7 +220,13 @@ const Checkout: FC = () => {
     );
   }
 
-  if (basket?.items.length === 0) {
+  const subtotal =
+    basket?.items.reduce(
+      (acc, item) => acc + item.menuItemPrice * item.quantity,
+      0
+    ) ?? 0;
+
+  if (subtotal < restaurant.minimumDeliverySpend) {
     router.push(`/restaurants/${restaurantId}`);
     return null;
   }

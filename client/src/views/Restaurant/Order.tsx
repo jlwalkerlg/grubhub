@@ -280,19 +280,28 @@ const MobileBasketModal: FC<{
           <span>£{subtotal.toFixed(2)}</span>
         </p>
 
-        <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
-          <span>Delivery fee</span>
-          <span>£{restaurant.deliveryFee.toFixed(2)}</span>
-        </p>
+        {subtotal >= restaurant.minimumDeliverySpend ? (
+          <>
+            <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
+              <span>Delivery fee</span>
+              <span>£{restaurant.deliveryFee.toFixed(2)}</span>
+            </p>
 
-        <p className="mt-3 text-gray-800 text-sm font-semibold flex items-center justify-between">
-          <span>Total</span>
-          <span>£{(subtotal + restaurant.deliveryFee).toFixed(2)}</span>
-        </p>
+            <p className="mt-3 text-gray-800 text-sm font-semibold flex items-center justify-between">
+              <span>Total</span>
+              <span>£{(subtotal + restaurant.deliveryFee).toFixed(2)}</span>
+            </p>
+          </>
+        ) : (
+          <p className="text-gray-800 text-sm mt-4">
+            Spend £{(restaurant.minimumDeliverySpend - subtotal).toFixed(2)}{" "}
+            more for delivery.
+          </p>
+        )}
       </div>
 
-      <div className="p-4 -shadow-lg flex-0">
-        {subtotal >= restaurant.minimumDeliverySpend ? (
+      {subtotal >= restaurant.minimumDeliverySpend && (
+        <div className="p-4 -shadow-lg flex-0">
           <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
             <a
               ref={paymentLinkRef}
@@ -301,13 +310,8 @@ const MobileBasketModal: FC<{
               Go to payment
             </a>
           </Link>
-        ) : (
-          <p className="text-gray-800 text-sm">
-            Spend £{(restaurant.minimumDeliverySpend - subtotal).toFixed(2)}{" "}
-            more for delivery.
-          </p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -401,27 +405,31 @@ const OrderAside: FC<{
 
       <hr className="my-6 border-gray-300" />
 
-      <p className="text-gray-800 text-sm font-semibold flex items-center justify-between">
-        <span>Subtotal</span>
-        <span>£{subtotal.toFixed(2)}</span>
-      </p>
-
-      <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
-        <span>Delivery fee</span>
-        <span>£{restaurant.deliveryFee.toFixed(2)}</span>
-      </p>
-
-      <p className="mt-3 text-gray-800 text-sm font-semibold flex items-center justify-between">
-        <span>Total</span>
-        <span>£{(subtotal + restaurant.deliveryFee).toFixed(2)}</span>
-      </p>
+      {basket?.items.length > 0 && (
+        <p className="text-gray-800 text-sm font-semibold flex items-center justify-between">
+          <span>Subtotal</span>
+          <span>£{subtotal.toFixed(2)}</span>
+        </p>
+      )}
 
       {subtotal >= restaurant.minimumDeliverySpend ? (
-        <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
-          <a className="btn btn-primary w-full block text-center mt-6">
-            Go to payment
-          </a>
-        </Link>
+        <>
+          <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
+            <span>Delivery fee</span>
+            <span>£{restaurant.deliveryFee.toFixed(2)}</span>
+          </p>
+
+          <p className="mt-3 text-gray-800 text-sm font-semibold flex items-center justify-between">
+            <span>Total</span>
+            <span>£{(subtotal + restaurant.deliveryFee).toFixed(2)}</span>
+          </p>
+
+          <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
+            <a className="btn btn-primary w-full block text-center mt-6">
+              Go to payment
+            </a>
+          </Link>
+        </>
       ) : (
         <p className="mt-6 text-gray-800 text-sm">
           Spend £{(restaurant.minimumDeliverySpend - subtotal).toFixed(2)} more
