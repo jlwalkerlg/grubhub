@@ -1,26 +1,19 @@
 import { useRouter } from "next/router";
 import React, { FC, useState } from "react";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { useQueryClient } from "react-query";
 import useRegisterRestaurant, {
   RegisterRestaurantCommand,
 } from "~/api/restaurants/useRegisterRestaurant";
-import useAuth from "~/api/users/useAuth";
+import { getAuthUser, getAuthUserQueryKey } from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import RegisterRestaurantFormStepOne from "./RegisterRestaurantFormStepOne";
 import RegisterRestaurantFormStepThree from "./RegisterRestaurantFormStepThree";
 import RegisterRestaurantFormStepTwo from "./RegisterRestaurantFormStepTwo";
 
-const MySwal = withReactContent(Swal);
-
 const RegisterRestaurantForm: FC = () => {
   const router = useRouter();
 
-  const { isLoggedIn } = useAuth();
-
-  if (isLoggedIn) {
-    router.push("/");
-  }
+  const queryClient = useQueryClient();
 
   const {
     mutate: register,
@@ -31,16 +24,16 @@ const RegisterRestaurantForm: FC = () => {
   } = useRegisterRestaurant();
 
   const [values, setValues] = useState<RegisterRestaurantCommand>({
-    managerFirstName: "",
-    managerLastName: "",
-    managerEmail: "",
-    managerPassword: "",
-    restaurantName: "",
-    restaurantPhoneNumber: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    postcode: "",
+    managerFirstName: "Jordan",
+    managerLastName: "Walker",
+    managerEmail: "jordan@microworld.co.uk",
+    managerPassword: "password123",
+    restaurantName: "Chow Main",
+    restaurantPhoneNumber: "01234567890",
+    addressLine1: "19 Bodmin Avenue",
+    addressLine2: "Wrose",
+    city: "Shipley",
+    postcode: "BD181LT",
   });
 
   const [errors, setErrors] = useState<
@@ -68,18 +61,11 @@ const RegisterRestaurantForm: FC = () => {
 
     register(command, {
       onSuccess: async () => {
-        await MySwal.fire({
-          title: <p>Thanks For Registering!</p>,
-          text:
-            "Your application to register your restaurant has been successfully recieved! We will review the application and get you up and running as soon as we can! Keep an eye on your emails for updates.",
-          icon: "success",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          allowEnterKey: false,
-          showConfirmButton: true,
-        });
+        const user = await getAuthUser();
+        queryClient.setQueryData(getAuthUserQueryKey(), user);
+        localStorage.setItem("isLoggedIn", "true");
 
-        router.push("/login");
+        await router.push("/dashboard");
       },
 
       onError: (error) => {

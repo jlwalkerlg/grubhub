@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Shouldly;
+using Web;
+using Web.Domain;
 using Web.Domain.Users;
 using Web.Features.Users.RegisterCustomer;
 using WebTests.Doubles;
 using Xunit;
-using Shouldly;
-using Web;
-using Web.Domain;
 
-namespace WebTests.Features.Users.Register
+namespace WebTests.Features.Users.RegisterCustomer
 {
-    public class RegisterHandlerTests
+    public class RegisterCustomerHandlerTests
     {
         private readonly UnitOfWorkSpy unitOfWork;
         private readonly HasherFake hasher;
         private readonly AuthenticatorSpy authenticator;
         private readonly RegisterCustomerHandler handler;
 
-        public RegisterHandlerTests()
+        public RegisterCustomerHandlerTests()
         {
             unitOfWork = new UnitOfWorkSpy();
             hasher = new HasherFake();

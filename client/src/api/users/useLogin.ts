@@ -7,24 +7,19 @@ export interface LoginCommand {
   password: string;
 }
 
-async function login(command: LoginCommand) {
-  await Api.post("/auth/login", command);
-}
-
 export default function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation<void, ApiError, LoginCommand, null>(
     async (command) => {
-      await login(command);
-
-      localStorage.setItem("isLoggedIn", "true");
+      await Api.post("/auth/login", command);
     },
     {
       onSuccess: async () => {
         const user = await getAuthUser();
-
         queryClient.setQueryData(getAuthUserQueryKey(), user);
+
+        localStorage.setItem("isLoggedIn", "true");
       },
       onError: () => {
         localStorage.removeItem("isLoggedIn");

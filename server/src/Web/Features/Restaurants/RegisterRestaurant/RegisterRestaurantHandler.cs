@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
+using Web.Services.Authentication;
 using Web.Services.Geocoding;
 using Web.Services.Hashing;
 
@@ -15,15 +16,18 @@ namespace Web.Features.Restaurants.RegisterRestaurant
         private readonly IHasher hasher;
         private readonly IUnitOfWork unitOfWork;
         private readonly IGeocoder geocoder;
+        private readonly IAuthenticator authenticator;
 
         public RegisterRestaurantHandler(
             IHasher hasher,
             IUnitOfWork unitOfWork,
-            IGeocoder geocoder)
+            IGeocoder geocoder,
+            IAuthenticator authenticator)
         {
             this.hasher = hasher;
             this.unitOfWork = unitOfWork;
             this.geocoder = geocoder;
+            this.authenticator = authenticator;
         }
 
         public async Task<Result> Handle(RegisterRestaurantCommand command, CancellationToken cancellationToken)
@@ -66,6 +70,8 @@ namespace Web.Features.Restaurants.RegisterRestaurant
             await unitOfWork.Restaurants.Add(restaurant);
 
             await unitOfWork.Commit();
+
+            await authenticator.SignIn(manager);
 
             return Result.Ok();
         }

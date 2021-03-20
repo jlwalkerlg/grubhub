@@ -14,12 +14,10 @@ export interface RegisterRestaurantCommand {
   postcode: string;
 }
 
-async function registerRestaurant(command: RegisterRestaurantCommand) {
-  await Api.post("/restaurants/register", command);
-}
-
 export default function useRegisterRestaurant() {
   return useMutation<void, ApiError, RegisterRestaurantCommand, null>(
-    registerRestaurant
+    async (command) => {
+      await Api.post("/restaurants/register", command);
+    }
   );
 }

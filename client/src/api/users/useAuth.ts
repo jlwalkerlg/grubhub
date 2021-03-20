@@ -37,7 +37,7 @@ export async function getAuthUser() {
   }
 }
 
-export function useAuthUser() {
+function useAuthUser() {
   return useQuery<UserDto, ApiError>(
     getAuthUserQueryKey(),
     () => {

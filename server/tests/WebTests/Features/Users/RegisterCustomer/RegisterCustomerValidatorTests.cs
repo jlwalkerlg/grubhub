@@ -3,7 +3,7 @@ using Shouldly;
 using Web.Features.Users.RegisterCustomer;
 using Xunit;
 
-namespace WebTests.Features.Users.Register
+namespace WebTests.Features.Users.RegisterCustomer
 {
     public class RegisterValidatorTests
     {

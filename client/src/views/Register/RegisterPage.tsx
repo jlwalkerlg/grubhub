@@ -2,7 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useForm } from "react-hook-form";
-import useAuth from "~/api/users/useAuth";
+import { useQueryClient } from "react-query";
+import useAuth, { getAuthUser, getAuthUserQueryKey } from "~/api/users/useAuth";
 import useRegister from "~/api/users/useRegister";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import Layout from "~/components/Layout/Layout";
@@ -10,6 +11,8 @@ import { useRules } from "~/services/useRules";
 import { setFormErrors } from "~/services/utils";
 
 const Register: FC = () => {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const { mutate: register, isLoading, error } = useRegister();
@@ -33,6 +36,10 @@ const Register: FC = () => {
   const onSubmit = form.handleSubmit(async (data) => {
     register(data, {
       onSuccess: async () => {
+        const user = await getAuthUser();
+        queryClient.setQueryData(getAuthUserQueryKey(), user);
+        localStorage.setItem("isLoggedIn", "true");
+
         await router.push("/");
       },
 
