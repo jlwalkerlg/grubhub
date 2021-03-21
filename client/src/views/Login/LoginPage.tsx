@@ -129,7 +129,7 @@ const Login: React.FC = () => {
           <button
             type="button"
             disabled={isLoading}
-            className="btn bg-green-600 hover:bg-green-800 text-white font-semibold flex-1 md:mr-2"
+            className="block w-full btn bg-green-600 hover:bg-green-800 text-white font-semibold flex-1 md:mr-2"
             onClick={loginAsDemoCustomer}
           >
             Login as Demo Customer
@@ -138,7 +138,7 @@ const Login: React.FC = () => {
           <button
             type="button"
             disabled={isLoading}
-            className="btn border border-green-800 hover:bg-green-800 text-green-900 hover:text-white font-semibold flex-1 md:ml-2"
+            className="block w-full mt-2 md:mt-0 btn border border-green-800 hover:bg-green-800 text-green-900 hover:text-white font-semibold flex-1 md:ml-2"
             onClick={loginAsDemoManager}
           >
             Login as Demo Manager
