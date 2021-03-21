@@ -45,7 +45,7 @@ const Main: FC<{
   isError: boolean;
   error: ApiError;
   restaurant: RestaurantDto;
-}> = ({ isLoading, isError, error, restaurant }) => {
+}> = ({ isLoading, isError, restaurant }) => {
   const [tab, setTab] = useState<"Menu" | "Information">("Menu");
 
   const [hash, setHash] = useState("");

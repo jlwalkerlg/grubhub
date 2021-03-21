@@ -160,10 +160,11 @@ const OrderItemModal: FC<{
   );
 };
 
-const OrderItem: FC<{ restaurantId: string; item: BasketItemDto }> = ({
-  restaurantId,
-  item,
-}) => {
+const OrderItem: FC<{
+  restaurantId: string;
+  item: BasketItemDto;
+  openUpdateModal: () => any;
+}> = ({ restaurantId, item, openUpdateModal }) => {
   const { addToast } = useToasts();
 
   const { mutate: remove, isLoading } = useRemoveFromBasket();
@@ -184,11 +185,6 @@ const OrderItem: FC<{ restaurantId: string; item: BasketItemDto }> = ({
     );
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   const price = item.menuItemPrice * item.quantity;
 
   return (
@@ -199,7 +195,7 @@ const OrderItem: FC<{ restaurantId: string; item: BasketItemDto }> = ({
 
       <button
         className="ml-4 text-primary text-sm flex-1 mr-4 text-left"
-        onClick={openModal}
+        onClick={openUpdateModal}
       >
         {item.menuItemName}
       </button>
@@ -217,17 +213,6 @@ const OrderItem: FC<{ restaurantId: string; item: BasketItemDto }> = ({
       <span className="ml-2 w-14 text-right flex-0 text-gray-700">
         £{price.toFixed(2)}
       </span>
-
-      {isModalOpen && (
-        <OrderItemModal
-          restaurantId={restaurantId}
-          menuItemId={item.menuItemId}
-          menuItemName={item.menuItemName}
-          menuItemDescription={item.menuItemDescription}
-          menuItemPrice={item.menuItemPrice}
-          closeModal={closeModal}
-        />
-      )}
     </li>
   );
 };
@@ -244,7 +229,13 @@ const MobileBasketModal: FC<{
 
   usePreventBodyScroll();
 
-  useEscapeKeyListener(close);
+  const [orderModalOpenFor, setOrderModalOpenFor] = useState<BasketItemDto>(
+    null
+  );
+
+  useEscapeKeyListener(() => {
+    if (!orderModalOpenFor) close();
+  });
 
   return (
     <div className="bg-white border border-gray-200 fixed h-screen w-screen top-0 left-0 flex flex-col z-40">
@@ -268,10 +259,22 @@ const MobileBasketModal: FC<{
                 key={item.menuItemId}
                 restaurantId={basket.restaurantId}
                 item={item}
+                openUpdateModal={() => setOrderModalOpenFor(item)}
               />
             );
           })}
         </ul>
+
+        {orderModalOpenFor && (
+          <OrderItemModal
+            restaurantId={basket.restaurantId}
+            menuItemId={orderModalOpenFor.menuItemId}
+            menuItemName={orderModalOpenFor.menuItemName}
+            menuItemDescription={orderModalOpenFor.menuItemDescription}
+            menuItemPrice={orderModalOpenFor.menuItemPrice}
+            closeModal={() => setOrderModalOpenFor(null)}
+          />
+        )}
 
         <hr className="my-8 border-gray-300" />
 
@@ -323,10 +326,14 @@ const OrderAside: FC<{
   restaurant: RestaurantDto;
   basket: BasketDto;
   subtotal: number;
-}> = ({ isLoading, isError, error, restaurant, basket, subtotal }) => {
+}> = ({ isLoading, isError, restaurant, basket, subtotal }) => {
   const { isLoggedIn } = useAuth();
 
   const router = useRouter();
+
+  const [orderModalOpenFor, setOrderModalOpenFor] = useState<BasketItemDto>(
+    null
+  );
 
   if (!isLoggedIn) {
     return (
@@ -385,17 +392,31 @@ const OrderAside: FC<{
       <hr className="my-6 border-gray-300" />
 
       {basket?.items.length > 0 ? (
-        <ul>
-          {basket.items.map((item) => {
-            return (
-              <OrderItem
-                key={item.menuItemId}
-                restaurantId={basket.restaurantId}
-                item={item}
-              />
-            );
-          })}
-        </ul>
+        <>
+          <ul>
+            {basket.items.map((item) => {
+              return (
+                <OrderItem
+                  key={item.menuItemId}
+                  restaurantId={basket.restaurantId}
+                  item={item}
+                  openUpdateModal={() => setOrderModalOpenFor(item)}
+                />
+              );
+            })}
+          </ul>
+
+          {orderModalOpenFor && (
+            <OrderItemModal
+              restaurantId={basket.restaurantId}
+              menuItemId={orderModalOpenFor.menuItemId}
+              menuItemName={orderModalOpenFor.menuItemName}
+              menuItemDescription={orderModalOpenFor.menuItemDescription}
+              menuItemPrice={orderModalOpenFor.menuItemPrice}
+              closeModal={() => setOrderModalOpenFor(null)}
+            />
+          )}
+        </>
       ) : (
         <p>
           You haven't added any items to your order...{" "}
