@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Menus.RemoveMenuItem
 {
-    public class RemoveMenuItemValidator : FluentValidator<RemoveMenuItemCommand>
+    public class RemoveMenuItemValidator : RequestValidator<RemoveMenuItemCommand>
     {
         public RemoveMenuItemValidator()
         {

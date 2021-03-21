@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Users.UpdateAuthUserDetails
 {
-    public class UpdateAuthUserDetailsValidator : FluentValidator<UpdateAuthUserDetailsCommand>
+    public class UpdateAuthUserDetailsValidator : RequestValidator<UpdateAuthUserDetailsCommand>
     {
         public UpdateAuthUserDetailsValidator()
         {

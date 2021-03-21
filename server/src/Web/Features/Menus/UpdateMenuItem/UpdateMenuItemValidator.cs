@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Menus.UpdateMenuItem
 {
-    public class UpdateMenuItemValidator : FluentValidator<UpdateMenuItemCommand>
+    public class UpdateMenuItemValidator : RequestValidator<UpdateMenuItemCommand>
     {
         public UpdateMenuItemValidator()
         {

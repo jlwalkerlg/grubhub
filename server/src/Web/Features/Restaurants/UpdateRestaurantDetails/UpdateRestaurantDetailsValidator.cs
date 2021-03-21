@@ -4,7 +4,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Restaurants.UpdateRestaurantDetails
 {
-    public class UpdateRestaurantDetailsValidator : FluentValidator<UpdateRestaurantDetailsCommand>
+    public class UpdateRestaurantDetailsValidator : RequestValidator<UpdateRestaurantDetailsCommand>
     {
         private static readonly Regex regex = new(
             @"^\d{2}:\d{2}$",

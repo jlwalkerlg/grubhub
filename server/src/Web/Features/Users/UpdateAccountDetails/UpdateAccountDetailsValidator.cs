@@ -2,7 +2,7 @@
 
 namespace Web.Features.Users.UpdateAccountDetails
 {
-    public class UpdateAccountDetailsValidator : FluentValidator<UpdateAccountDetailsCommand>
+    public class UpdateAccountDetailsValidator : RequestValidator<UpdateAccountDetailsCommand>
     {
         public UpdateAccountDetailsValidator()
         {

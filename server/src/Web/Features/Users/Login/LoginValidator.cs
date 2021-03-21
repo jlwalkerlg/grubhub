@@ -3,7 +3,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Restaurants.Login
 {
-    public class LoginValidator : FluentValidator<LoginCommand>
+    public class LoginValidator : RequestValidator<LoginCommand>
     {
         public LoginValidator()
         {

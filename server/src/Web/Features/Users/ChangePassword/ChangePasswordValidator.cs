@@ -2,7 +2,7 @@
 
 namespace Web.Features.Users.ChangePassword
 {
-    public class ChangePasswordValidator : FluentValidator<ChangePasswordCommand>
+    public class ChangePasswordValidator : RequestValidator<ChangePasswordCommand>
     {
         public ChangePasswordValidator()
         {

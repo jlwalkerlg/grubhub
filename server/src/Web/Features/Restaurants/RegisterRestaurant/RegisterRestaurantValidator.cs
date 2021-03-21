@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Restaurants.RegisterRestaurant
 {
-    public class RegisterRestaurantValidator : FluentValidator<RegisterRestaurantCommand>
+    public class RegisterRestaurantValidator : RequestValidator<RegisterRestaurantCommand>
     {
         public RegisterRestaurantValidator()
         {

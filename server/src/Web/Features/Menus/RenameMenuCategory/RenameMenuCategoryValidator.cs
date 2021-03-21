@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Menus.RenameMenuCategory
 {
-    public class RenameMenuCategoryValidator : FluentValidator<RenameMenuCategoryCommand>
+    public class RenameMenuCategoryValidator : RequestValidator<RenameMenuCategoryCommand>
     {
         public RenameMenuCategoryValidator()
         {

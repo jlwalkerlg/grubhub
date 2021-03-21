@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Menus.AddMenuCategory
 {
-    public class AddMenuCategoryValidator : FluentValidator<AddMenuCategoryCommand>
+    public class AddMenuCategoryValidator : RequestValidator<AddMenuCategoryCommand>
     {
         public AddMenuCategoryValidator()
         {

@@ -2,7 +2,7 @@
 
 namespace Web.Features.Users.RegisterCustomer
 {
-    public class RegisterCustomerValidator : FluentValidator<RegisterCustomerCommand>
+    public class RegisterCustomerValidator : RequestValidator<RegisterCustomerCommand>
     {
         public RegisterCustomerValidator()
         {

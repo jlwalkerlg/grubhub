@@ -2,7 +2,7 @@
 
 namespace Web.Features.Users.UpdateDeliveryAddress
 {
-    public class UpdateDeliveryAddressValidator : FluentValidator<UpdateDeliveryAddressCommand>
+    public class UpdateDeliveryAddressValidator : RequestValidator<UpdateDeliveryAddressCommand>
     {
         public UpdateDeliveryAddressValidator()
         {

@@ -2,7 +2,7 @@
 
 namespace Web.Features.Baskets.UpdateBasketItemQuantity
 {
-    public class UpdateBasketItemQuantityValidator : FluentValidator<UpdateBasketItemQuantityCommand>
+    public class UpdateBasketItemQuantityValidator : RequestValidator<UpdateBasketItemQuantityCommand>
     {
         public UpdateBasketItemQuantityValidator()
         {

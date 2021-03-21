@@ -6,7 +6,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Restaurants.UpdateOpeningHours
 {
-    public class UpdateOpeningHoursValidator : FluentValidator<UpdateOpeningHoursCommand>
+    public class UpdateOpeningHoursValidator : RequestValidator<UpdateOpeningHoursCommand>
     {
         private static readonly Regex regex = new(
             @"^\d{2}:\d{2}$",

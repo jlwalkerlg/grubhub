@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Web.Services.Validation
 {
-    public class FluentValidator<TRequest> : AbstractValidator<TRequest>, IValidator<TRequest>
+    public class RequestValidator<TRequest> : AbstractValidator<TRequest>, IValidator<TRequest>
     {
         protected IRuleBuilderInitial<TRequest, TProperty> CascadeRuleFor<TProperty>(Expression<Func<TRequest, TProperty>> expression)
         {
@@ -15,19 +15,11 @@ namespace Web.Services.Validation
 
         public new async Task<Result> Validate(TRequest request)
         {
-            var result = await base.ValidateAsync(request);
+            var result = await ValidateAsync(request);
 
-            if (result.IsValid)
-            {
-                return Result.Ok();
-            }
+            if (result.IsValid) return Result.Ok();
 
-            var errors = new Dictionary<string, string>();
-
-            foreach (var error in result.Errors)
-            {
-                errors.Add(error.PropertyName, error.ErrorMessage);
-            }
+            var errors = result.Errors.ToDictionary(error => error.PropertyName, error => error.ErrorMessage);
 
             return Error.ValidationError(errors);
         }

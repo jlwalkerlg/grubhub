@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Restaurants.UpdateCuisines
 {
-    public class UpdateCuisinesValidator : FluentValidator<UpdateCuisinesCommand>
+    public class UpdateCuisinesValidator : RequestValidator<UpdateCuisinesCommand>
     {
         public UpdateCuisinesValidator()
         {

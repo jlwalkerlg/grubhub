@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Orders.PlaceOrder
 {
-    public class PlaceOrderValidator : FluentValidator<PlaceOrderCommand>
+    public class PlaceOrderValidator : RequestValidator<PlaceOrderCommand>
     {
         public PlaceOrderValidator()
         {

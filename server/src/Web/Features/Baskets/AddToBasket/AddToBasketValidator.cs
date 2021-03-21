@@ -2,7 +2,7 @@ using Web.Services.Validation;
 
 namespace Web.Features.Baskets.AddToBasket
 {
-    public class AddToBasketValidator : FluentValidator<AddToBasketCommand>
+    public class AddToBasketValidator : RequestValidator<AddToBasketCommand>
     {
         public AddToBasketValidator()
         {

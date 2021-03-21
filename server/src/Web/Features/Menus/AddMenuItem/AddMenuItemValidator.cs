@@ -2,7 +2,7 @@
 
 namespace Web.Features.Menus.AddMenuItem
 {
-    public class AddMenuItemValidator : FluentValidator<AddMenuItemCommand>
+    public class AddMenuItemValidator : RequestValidator<AddMenuItemCommand>
     {
         public AddMenuItemValidator()
         {
