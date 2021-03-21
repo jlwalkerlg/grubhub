@@ -1,24 +1,12 @@
-import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
-import { getAuthUserQueryKey } from "./useAuth";
-
-async function logout() {
-  await Api.post("/auth/logout");
-}
+import { useMutation } from "react-query";
+import api, { ApiError } from "../Api";
+import useAuth from "./useAuth";
 
 export default function useLogout() {
-  const queryClient = useQueryClient();
+  const { setUser } = useAuth();
 
-  return useMutation<void, ApiError, null, null>(
-    async () => {
-      await logout();
-
-      localStorage.removeItem("isLoggedIn");
-    },
-    {
-      onSuccess: () => {
-        queryClient.setQueryData(getAuthUserQueryKey(), null);
-      },
-    }
-  );
+  return useMutation<void, ApiError, null, null>(async () => {
+    await api.post("/auth/logout");
+    setUser(null);
+  });
 }

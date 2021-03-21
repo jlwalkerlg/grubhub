@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import api, { ApiError } from "~/api/api";
+import { useQuery, useQueryClient } from "react-query";
+import api, { ApiError } from "~/api/Api";
 
 export interface UserDto {
   id: string;
@@ -18,34 +18,31 @@ export interface UserDto {
 
 export type UserRole = "RestaurantManager" | "Customer" | "Admin";
 
-export function getAuthUserQueryKey() {
-  return "auth.user";
-}
+export const getAuthUser = async () => {
+  const { data: user } = await api.get<UserDto>("/auth/user");
+  return user;
+};
 
-export async function getAuthUser() {
-  try {
-    const response = await api.get<UserDto>("/auth/user");
-    return response.data;
-  } catch (e) {
-    localStorage.removeItem("isLoggedIn");
+export default function useAuth() {
+  const queryClient = useQueryClient();
 
-    if (e instanceof ApiError && e.status === 401) {
-      return null;
-    }
-
-    throw e;
-  }
-}
-
-function useAuthUser() {
-  return useQuery<UserDto, ApiError>(
-    getAuthUserQueryKey(),
-    () => {
+  const { data: user, isLoading } = useQuery<UserDto, ApiError>(
+    "auth.user",
+    async () => {
       if (!localStorage.getItem("isLoggedIn")) {
         return null;
       }
 
-      return getAuthUser();
+      try {
+        return await getAuthUser();
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 401) {
+          localStorage.removeItem("isLoggedIn");
+          return null;
+        }
+
+        throw e;
+      }
     },
     {
       staleTime: Infinity,
@@ -53,16 +50,22 @@ function useAuthUser() {
       refetchOnWindowFocus: false,
     }
   );
-}
-
-export default function useAuth() {
-  const { data: user, isLoading } = useAuthUser();
 
   const isLoggedIn = !!user;
+
+  const setUser = (user: UserDto) => {
+    queryClient.setQueryData("auth.user", user);
+    if (user) {
+      localStorage.setItem("isLoggedIn", "true");
+    } else {
+      localStorage.removeItem("isLoggedIn");
+    }
+  };
 
   return {
     user,
     isLoggedIn,
     isLoading,
+    setUser,
   };
 }

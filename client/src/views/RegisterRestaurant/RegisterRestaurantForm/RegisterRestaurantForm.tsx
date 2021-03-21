@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
 import React, { FC, useState } from "react";
-import { useQueryClient } from "react-query";
 import useRegisterRestaurant, {
   RegisterRestaurantCommand,
 } from "~/api/restaurants/useRegisterRestaurant";
-import { getAuthUser, getAuthUserQueryKey } from "~/api/users/useAuth";
+import useAuth, { getAuthUser } from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import RegisterRestaurantFormStepOne from "./RegisterRestaurantFormStepOne";
 import RegisterRestaurantFormStepThree from "./RegisterRestaurantFormStepThree";
@@ -13,7 +12,7 @@ import RegisterRestaurantFormStepTwo from "./RegisterRestaurantFormStepTwo";
 const RegisterRestaurantForm: FC = () => {
   const router = useRouter();
 
-  const queryClient = useQueryClient();
+  const { setUser } = useAuth();
 
   const {
     mutate: register,
@@ -24,16 +23,16 @@ const RegisterRestaurantForm: FC = () => {
   } = useRegisterRestaurant();
 
   const [values, setValues] = useState<RegisterRestaurantCommand>({
-    managerFirstName: "Jordan",
-    managerLastName: "Walker",
-    managerEmail: "jordan@microworld.co.uk",
-    managerPassword: "password123",
-    restaurantName: "Chow Main",
-    restaurantPhoneNumber: "01234567890",
-    addressLine1: "19 Bodmin Avenue",
-    addressLine2: "Wrose",
-    city: "Shipley",
-    postcode: "BD181LT",
+    managerFirstName: "",
+    managerLastName: "",
+    managerEmail: "",
+    managerPassword: "",
+    restaurantName: "",
+    restaurantPhoneNumber: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    postcode: "",
   });
 
   const [errors, setErrors] = useState<
@@ -61,10 +60,7 @@ const RegisterRestaurantForm: FC = () => {
 
     register(command, {
       onSuccess: async () => {
-        const user = await getAuthUser();
-        queryClient.setQueryData(getAuthUserQueryKey(), user);
-        localStorage.setItem("isLoggedIn", "true");
-
+        setUser(await getAuthUser());
         await router.push("/dashboard");
       },
 
