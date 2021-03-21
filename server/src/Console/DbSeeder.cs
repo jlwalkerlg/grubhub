@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Npgsql;
 using Web.Data;
 using Web.Data.EF;
+using Web.Data.EF.Configurations;
 using Web.Domain;
 using Web.Domain.Billing;
 using Web.Domain.Cuisines;

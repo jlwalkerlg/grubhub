@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Web.Data.EF.Configurations;
 using Web.Domain.Baskets;
 using Web.Domain.Billing;
 using Web.Domain.Cuisines;
@@ -29,7 +30,14 @@ namespace Web.Data.EF
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.ConfigureBasketAggregate();
+            builder.ConfigureBillingAccountAggregate();
+            builder.ConfigureCuisineAggregate();
+            builder.ConfigureMenuAggregate();
+            builder.ConfigureOrderAggregate();
+            builder.ConfigureRestaurantAggregate();
+            builder.ConfigureEvents();
+            builder.ConfigureUserAggregate();
         }
 
         public override int SaveChanges()
@@ -38,8 +46,7 @@ namespace Web.Data.EF
             return base.SaveChanges();
         }
 
-        public override Task<int> SaveChangesAsync(
-            CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             DoSoftDeletes();
             return base.SaveChangesAsync(cancellationToken);
