@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace Web.Services.Events
 {
-    public interface IEventStore
+    public interface IOutbox
     {
-        Task Store(Event @event);
+        Task Add(Event @event);
     }
 }

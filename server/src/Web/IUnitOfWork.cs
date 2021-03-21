@@ -19,7 +19,7 @@ namespace Web
         IBasketRepository Baskets { get; }
         IOrderRepository Orders { get; }
         IBillingAccountRepository BillingAccounts { get; }
-        IEventStore Events { get; }
+        IOutbox Outbox { get; }
 
         Task Commit();
     }

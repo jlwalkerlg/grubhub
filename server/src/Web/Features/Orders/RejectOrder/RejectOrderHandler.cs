@@ -43,7 +43,7 @@ namespace Web.Features.Orders.RejectOrder
 
             if (!result) return result.Error;
 
-            await unitOfWork.Events.Store(new OrderRejectedEvent(order.Id.Value, dateTimeProvider.UtcNow));
+            await unitOfWork.Outbox.Add(new OrderRejectedEvent(order.Id.Value, dateTimeProvider.UtcNow));
 
             await unitOfWork.Commit();
 

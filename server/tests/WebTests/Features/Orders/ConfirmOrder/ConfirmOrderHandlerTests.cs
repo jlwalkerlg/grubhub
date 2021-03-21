@@ -113,7 +113,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             unitOfWorkSpy.BasketRepositorySpy.Baskets.ShouldBeEmpty();
 
-            var ocEvent = unitOfWorkSpy.EventStoreSpy
+            var ocEvent = unitOfWorkSpy.OutboxSpy
                 .Events
                 .OfType<OrderConfirmedEvent>()
                 .Single();
@@ -196,7 +196,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             order.Status.ShouldBe(OrderStatus.PaymentConfirmed);
 
-            unitOfWorkSpy.EventStoreSpy.Events.ShouldBeEmpty();
+            unitOfWorkSpy.OutboxSpy.Events.ShouldBeEmpty();
 
             billingServiceSpy.ConfirmedOrder.ShouldBeNull();
         }

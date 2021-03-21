@@ -34,8 +34,8 @@ namespace WebTests.Doubles
         public IBillingAccountRepository BillingAccounts => BillingAccountsRepositorySpy;
         public BillingAccountRepositorySpy BillingAccountsRepositorySpy { get; } = new();
 
-        public IEventStore Events => EventStoreSpy;
-        public EventStoreSpy EventStoreSpy { get; } = new();
+        public IOutbox Outbox => OutboxSpy;
+        public OutboxSpy OutboxSpy { get; } = new();
 
         public bool Commited { get; private set; } = false;
 

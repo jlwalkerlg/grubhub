@@ -4,11 +4,11 @@ using Web.Services.Events;
 
 namespace WebTests.Doubles
 {
-    public class EventStoreSpy : IEventStore
+    public class OutboxSpy : IOutbox
     {
         public List<Event> Events { get; } = new();
 
-        public Task Store(Event @event)
+        public Task Add(Event @event)
         {
             Events.Add(@event);
             return Task.CompletedTask;

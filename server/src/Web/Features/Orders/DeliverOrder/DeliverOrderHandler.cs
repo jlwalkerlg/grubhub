@@ -40,7 +40,7 @@ namespace Web.Features.Orders.DeliverOrder
 
             if (!result) return result.Error;
 
-            await unitOfWork.Events.Store(new OrderDeliveredEvent(order.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Outbox.Add(new OrderDeliveredEvent(order.Id, dateTimeProvider.UtcNow));
 
             await unitOfWork.Commit();
 

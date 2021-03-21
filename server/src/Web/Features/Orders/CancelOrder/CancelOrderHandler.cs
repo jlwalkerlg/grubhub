@@ -41,7 +41,7 @@ namespace Web.Features.Orders.CancelOrder
 
             if (!result) return result.Error;
 
-            await unitOfWork.Events.Store(new OrderCancelledEvent(order.Id.Value, dateTimeProvider.UtcNow));
+            await unitOfWork.Outbox.Add(new OrderCancelledEvent(order.Id.Value, dateTimeProvider.UtcNow));
 
             await unitOfWork.Commit();
 

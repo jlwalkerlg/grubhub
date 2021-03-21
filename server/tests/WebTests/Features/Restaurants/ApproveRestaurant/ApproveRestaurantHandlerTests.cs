@@ -77,7 +77,7 @@ namespace WebTests.Features.Restaurants.ApproveRestaurant
 
             await handler.Handle(command, default);
 
-            var @event = unitOfWorkSpy.EventStoreSpy.Events.OfType<RestaurantApprovedEvent>().Single();
+            var @event = unitOfWorkSpy.OutboxSpy.Events.OfType<RestaurantApprovedEvent>().Single();
 
             @event.RestaurantId.ShouldBe(restaurant.Id);
         }

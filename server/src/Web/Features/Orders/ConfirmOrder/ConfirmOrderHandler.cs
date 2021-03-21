@@ -55,7 +55,7 @@ namespace Web.Features.Orders.ConfirmOrder
                 await unitOfWork.Baskets.Remove(basket);
             }
 
-            await unitOfWork.Events.Store(new OrderConfirmedEvent(order.Id, now));
+            await unitOfWork.Outbox.Add(new OrderConfirmedEvent(order.Id, now));
 
             await unitOfWork.Commit();
 

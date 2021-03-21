@@ -27,7 +27,7 @@ namespace Web.Data.EF
         public IBasketRepository Baskets => new EFBasketRepository(context);
         public IOrderRepository Orders => new EFOrderRepository(context);
         public IBillingAccountRepository BillingAccounts => new EFBillingAccountRepository(context);
-        public IEventStore Events => new EFEventStore(context);
+        public IOutbox Outbox => new EFOutbox(context);
 
         public async Task Commit()
         {

@@ -56,7 +56,7 @@ namespace WebTests.Features.Orders.CancelOrder
             order.Cancelled.ShouldBeTrue();
             order.CancelledAt.ShouldBe(dateTimeProvider.UtcNow);
 
-            var evnt = unitOfWork.EventStoreSpy.Events
+            var evnt = unitOfWork.OutboxSpy.Events
                 .OfType<OrderCancelledEvent>()
                 .Single();
 
@@ -89,7 +89,7 @@ namespace WebTests.Features.Orders.CancelOrder
             order.Status.ShouldBe(OrderStatus.Cancelled);
             order.Cancelled.ShouldBeTrue();
 
-            unitOfWork.EventStoreSpy.Events.ShouldBeEmpty();
+            unitOfWork.OutboxSpy.Events.ShouldBeEmpty();
         }
 
         [Fact]

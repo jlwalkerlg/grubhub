@@ -4,16 +4,16 @@ using Web.Data.EF;
 
 namespace Web.Services.Events
 {
-    public class EFEventStore : IEventStore
+    public class EFOutbox : IOutbox
     {
         private readonly AppDbContext context;
 
-        public EFEventStore(AppDbContext context)
+        public EFOutbox(AppDbContext context)
         {
             this.context = context;
         }
 
-        public async Task Store(Event @event)
+        public async Task Add(Event @event)
         {
             var type = @event.GetType().AssemblyQualifiedName;
             var json = JsonSerializer.Serialize(@event, @event.GetType());

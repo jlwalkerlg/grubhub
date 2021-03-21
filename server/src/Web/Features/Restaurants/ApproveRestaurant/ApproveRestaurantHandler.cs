@@ -30,7 +30,7 @@ namespace Web.Features.Restaurants.ApproveRestaurant
 
             restaurant.Approve();
 
-            await unitOfWork.Events.Store(new RestaurantApprovedEvent(restaurant.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Outbox.Add(new RestaurantApprovedEvent(restaurant.Id, dateTimeProvider.UtcNow));
 
             await unitOfWork.Commit();
 
