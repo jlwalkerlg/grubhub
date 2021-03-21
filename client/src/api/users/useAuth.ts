@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import api, { ApiError } from "~/api/Api";
+import api, { ApiError } from "~/api/api";
 
 export interface UserDto {
   id: string;
@@ -23,11 +23,13 @@ export const getAuthUser = async () => {
   return user;
 };
 
+export const getAuthUserQueryKey = () => "auth.user";
+
 export default function useAuth() {
   const queryClient = useQueryClient();
 
   const { data: user, isLoading } = useQuery<UserDto, ApiError>(
-    "auth.user",
+    getAuthUserQueryKey(),
     async () => {
       if (!localStorage.getItem("isLoggedIn")) {
         return null;
@@ -54,7 +56,7 @@ export default function useAuth() {
   const isLoggedIn = !!user;
 
   const setUser = (user: UserDto) => {
-    queryClient.setQueryData("auth.user", user);
+    queryClient.setQueryData(getAuthUserQueryKey(), user);
     if (user) {
       localStorage.setItem("isLoggedIn", "true");
     } else {

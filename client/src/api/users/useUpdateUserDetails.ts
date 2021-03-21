@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
-import useAuth, { getAuthUserQueryKey, UserDto } from "./useAuth";
+import { useMutation } from "react-query";
+import api, { ApiError } from "../api";
+import useAuth, { UserDto } from "./useAuth";
 
 export interface UpdateUserDetailsCommand {
   firstName: string;
@@ -9,13 +9,11 @@ export interface UpdateUserDetailsCommand {
 }
 
 async function updateUserDetails(command: UpdateUserDetailsCommand) {
-  await Api.put("/auth/user", command);
+  await api.put("/auth/user", command);
 }
 
 export default function useUpdateUserDetails() {
-  const queryClient = useQueryClient();
-
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   return useMutation<void, ApiError, UpdateUserDetailsCommand, null>(
     updateUserDetails,
@@ -28,7 +26,7 @@ export default function useUpdateUserDetails() {
           email: command.email,
         };
 
-        queryClient.setQueryData(getAuthUserQueryKey(), newUser);
+        setUser(newUser);
       },
     }
   );

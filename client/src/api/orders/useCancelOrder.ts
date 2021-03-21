@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantOrderHistoryQueryKey } from "./useRestaurantOrderHistory";
 
 interface CancelOrderCommand {
@@ -11,7 +11,7 @@ export function useCancelOrder() {
 
   return useMutation<string, ApiError, CancelOrderCommand, null>(
     async ({ orderId }) => {
-      const response = await Api.put(`/orders/${orderId}/cancel`);
+      const response = await api.put(`/orders/${orderId}/cancel`);
       return response.data;
     },
     {

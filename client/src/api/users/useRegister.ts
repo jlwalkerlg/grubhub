@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 
 export interface RegisterCommand {
   firstName: string;
@@ -10,6 +10,6 @@ export interface RegisterCommand {
 
 export default function useRegister() {
   return useMutation<void, ApiError, RegisterCommand, null>(async (command) => {
-    await Api.post("/register", command);
+    await api.post("/register", command);
   });
 }

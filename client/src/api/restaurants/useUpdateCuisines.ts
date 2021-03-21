@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "./useRestaurant";
 
 export interface UpdateCuisinesRequest {
@@ -10,7 +10,7 @@ async function updateCuisines(
   restaurantId: string,
   request: UpdateCuisinesRequest
 ) {
-  return Api.put(`/restaurants/${restaurantId}/cuisines`, request);
+  return api.put(`/restaurants/${restaurantId}/cuisines`, request);
 }
 
 export default function useUpdateCuisines(restaurantId: string) {

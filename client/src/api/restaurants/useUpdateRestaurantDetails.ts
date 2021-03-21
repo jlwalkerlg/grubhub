@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "./useRestaurant";
 
 export interface UpdateRestaurantDetailsCommand {
@@ -18,7 +18,7 @@ async function updateRestaurantDetails(
 ) {
   const { id, ...data } = command;
 
-  await Api.put(`/restaurants/${id}`, data);
+  await api.put(`/restaurants/${id}`, data);
 }
 
 export default function useUpdateRestaurantDetails() {

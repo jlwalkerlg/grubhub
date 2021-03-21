@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "./useRestaurant";
 
 export interface UpdateOpeningTimesCommand {
@@ -23,7 +23,7 @@ async function updateOpeningTimes(
   restaurantId: string,
   command: UpdateOpeningTimesCommand
 ) {
-  return Api.put(`/restaurants/${restaurantId}/opening-times`, command);
+  return api.put(`/restaurants/${restaurantId}/opening-times`, command);
 }
 
 export default function useUpdateOpeningTimes(restaurantId: string) {

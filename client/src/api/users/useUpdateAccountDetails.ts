@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getAuthUserQueryKey } from "./useAuth";
 
 interface UpdateAccountDetailsCommand {
@@ -13,7 +13,7 @@ export default function useUpdateAccountDetails() {
 
   return useMutation<void, ApiError, UpdateAccountDetailsCommand, null>(
     async (command) => {
-      await Api.put("/account/details", command);
+      await api.put("/account/details", command);
     },
     {
       onSuccess: () => {

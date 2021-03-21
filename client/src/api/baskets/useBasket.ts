@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import useAuth from "../users/useAuth";
 
 export interface BasketDto {
@@ -29,7 +29,7 @@ export default function useBasket(
   return useQuery<BasketDto, ApiError>(
     getBasketQueryKey(restaurantId),
     async () => {
-      const response = await Api.get<BasketDto>(
+      const response = await api.get<BasketDto>(
         `/restaurants/${restaurantId}/basket`
       );
       return response.data;

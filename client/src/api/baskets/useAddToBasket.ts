@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getBasketQueryKey } from "./useBasket";
 
 interface AddToBasketCommand {
@@ -13,7 +13,7 @@ export function useAddToBasket() {
 
   return useMutation<void, ApiError, AddToBasketCommand, null>(
     async (command) => {
-      await Api.post(`/restaurants/${command.restaurantId}/basket`, command);
+      await api.post(`/restaurants/${command.restaurantId}/basket`, command);
     },
     {
       onSuccess: (_, command) => {

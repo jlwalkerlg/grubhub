@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 
 export interface RegisterRestaurantCommand {
   managerFirstName: string;
@@ -17,7 +17,7 @@ export interface RegisterRestaurantCommand {
 export default function useRegisterRestaurant() {
   return useMutation<void, ApiError, RegisterRestaurantCommand, null>(
     async (command) => {
-      await Api.post("/restaurants/register", command);
+      await api.post("/restaurants/register", command);
     }
   );
 }

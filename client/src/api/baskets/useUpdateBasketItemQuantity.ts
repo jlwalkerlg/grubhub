@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getBasketQueryKey } from "./useBasket";
 
 interface UpdateBasketItemQuantityCommand {
@@ -13,7 +13,7 @@ export function useUpdateBasketItemQuantity() {
 
   return useMutation<void, ApiError, UpdateBasketItemQuantityCommand, null>(
     async ({ restaurantId, menuItemId, quantity }) => {
-      await Api.put(`/restaurants/${restaurantId}/basket/items/${menuItemId}`, {
+      await api.put(`/restaurants/${restaurantId}/basket/items/${menuItemId}`, {
         quantity,
       });
     },

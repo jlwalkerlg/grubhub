@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getBillingDetailsQueryKey } from "./useBillingDetails";
 
 export default function useSetupBilling() {
@@ -7,7 +7,7 @@ export default function useSetupBilling() {
 
   return useMutation<string, ApiError, string, null>(
     async (restaurantId) => {
-      const response = await Api.post(
+      const response = await api.post(
         `/restaurants/${restaurantId}/billing/setup`
       );
       return response.data;

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getOrderHistoryQueryKey } from "./useOrderHistory";
 
 export interface PlaceOrderCommand {
@@ -17,7 +17,7 @@ export function usePlaceOrder() {
   return useMutation<string, ApiError, PlaceOrderCommand, null>(
     async (command) => {
       const { restaurantId, ...data } = command;
-      const response = await Api.post<string>(
+      const response = await api.post<string>(
         `/restaurants/${restaurantId}/orders`,
         data
       );

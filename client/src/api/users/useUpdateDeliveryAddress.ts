@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getAuthUserQueryKey } from "./useAuth";
 
 interface UpdateDeliveryAddressCommand {
@@ -14,7 +14,7 @@ export default function useUpdateDeliveryAddress() {
 
   return useMutation<void, ApiError, UpdateDeliveryAddressCommand, null>(
     async (command) => {
-      await Api.put("/account/delivery-address", command);
+      await api.put("/account/delivery-address", command);
     },
     {
       onSuccess: () => {

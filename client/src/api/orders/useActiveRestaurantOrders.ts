@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { OrderStatus } from "./useOrder";
 
 export interface ActiveOrderDto {
@@ -30,7 +30,7 @@ export default function useActiveRestaurantOrders(
   return useQuery<ActiveOrderDto[], ApiError>(
     getActiveRestaurantOrdersQueryKey(),
     async () => {
-      const response = await Api.get<ActiveOrderDto[]>(
+      const response = await api.get<ActiveOrderDto[]>(
         "/restaurant/active-orders",
         {
           params,

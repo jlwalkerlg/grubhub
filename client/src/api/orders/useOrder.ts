@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 
 export interface OrderDto {
   id: string;
@@ -61,7 +61,7 @@ export default function useOrder(
   return useQuery<OrderDto, ApiError>(
     getOrderQueryKey(orderId),
     async () => {
-      const response = await Api.get<OrderDto>(`/orders/${orderId}`);
+      const response = await api.get<OrderDto>(`/orders/${orderId}`);
       return response.data;
     },
     config

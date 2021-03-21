@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 
 interface BillingDetails {
   id: string;
@@ -18,7 +18,7 @@ export default function useBillingDetails(
   return useQuery<BillingDetails, ApiError>(
     getBillingDetailsQueryKey(restaurantId),
     async () => {
-      const response = await Api.get(`/restaurants/${restaurantId}/billing`);
+      const response = await api.get(`/restaurants/${restaurantId}/billing`);
       return response.data;
     },
     config

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "../restaurants/useRestaurant";
 
 export interface RenameMenuCategoryCommand {
@@ -11,7 +11,7 @@ export interface RenameMenuCategoryCommand {
 async function renameMenuCategory(command: RenameMenuCategoryCommand) {
   const { restaurantId, categoryId, ...data } = command;
 
-  await Api.put(
+  await api.put(
     `/restaurants/${restaurantId}/menu/categories/${categoryId}`,
     data
   );

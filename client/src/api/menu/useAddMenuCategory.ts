@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "../restaurants/useRestaurant";
 
 export interface AddMenuCategoryCommand {
@@ -10,7 +10,7 @@ export interface AddMenuCategoryCommand {
 async function addMenuCategory(command: AddMenuCategoryCommand) {
   const { restaurantId, ...data } = command;
 
-  await Api.post(`/restaurants/${restaurantId}/menu/categories`, data);
+  await api.post(`/restaurants/${restaurantId}/menu/categories`, data);
 }
 
 export default function useAddMenuCategory() {

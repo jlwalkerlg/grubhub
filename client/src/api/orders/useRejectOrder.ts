@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantOrderHistoryQueryKey } from "./useRestaurantOrderHistory";
 
 interface RejectOrderCommand {
@@ -11,7 +11,7 @@ export function useRejectOrder() {
 
   return useMutation<string, ApiError, RejectOrderCommand, null>(
     async ({ orderId }) => {
-      const response = await Api.put(`/orders/${orderId}/reject`);
+      const response = await api.put(`/orders/${orderId}/reject`);
       return response.data;
     },
     {

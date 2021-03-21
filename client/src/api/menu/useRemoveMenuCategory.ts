@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantQueryKey } from "../restaurants/useRestaurant";
 
 interface RemoveMenuCategoryCommand {
@@ -10,7 +10,7 @@ interface RemoveMenuCategoryCommand {
 async function removeMenuCategory(command: RemoveMenuCategoryCommand) {
   const { restaurantId, categoryId } = command;
 
-  await Api.delete(
+  await api.delete(
     `/restaurants/${restaurantId}/menu/categories/${categoryId}`
   );
 }

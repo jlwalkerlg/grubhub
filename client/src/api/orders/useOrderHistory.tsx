@@ -1,5 +1,5 @@
 import { useInfiniteQuery, UseInfiniteQueryOptions } from "react-query";
-import Api, { ApiError } from "~/api/api";
+import api, { ApiError } from "~/api/api";
 
 export interface GetOrderHistoryResponse {
   orders: OrderModel[];
@@ -31,7 +31,7 @@ export function useOrderHistory(
   return useInfiniteQuery<GetOrderHistoryResponse, ApiError>(
     getOrderHistoryQueryKey(),
     async ({ pageParam: page }) => {
-      const response = await Api.get<GetOrderHistoryResponse>(
+      const response = await api.get<GetOrderHistoryResponse>(
         "/order-history",
         {
           params: {

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getRestaurantOrderHistoryQueryKey } from "./useRestaurantOrderHistory";
 
 interface DeliverOrderCommand {
@@ -11,7 +11,7 @@ export function useDeliverOrder() {
 
   return useMutation<string, ApiError, DeliverOrderCommand, null>(
     async ({ orderId }) => {
-      const response = await Api.put(`/orders/${orderId}/deliver`);
+      const response = await api.put(`/orders/${orderId}/deliver`);
       return response.data;
     },
     {

@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 
 interface ChangePasswordCommand {
   currentPassword: string;
@@ -9,7 +9,7 @@ interface ChangePasswordCommand {
 export default function useChangePassword() {
   return useMutation<void, ApiError, ChangePasswordCommand, null>(
     async (command) => {
-      await Api.put("/account/password", command);
+      await api.put("/account/password", command);
     }
   );
 }

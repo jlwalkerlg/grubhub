@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { getBasketQueryKey } from "./useBasket";
 
 interface RemoveFromBasketCommand {
@@ -12,7 +12,7 @@ export default function useRemoveFromBasket() {
 
   return useMutation<void, ApiError, RemoveFromBasketCommand, null>(
     async (command) => {
-      await Api.delete(
+      await api.delete(
         `/restaurants/${command.restaurantId}/basket/items/${command.menuItemId}`
       );
     },

@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "react-query";
-import Api, { ApiError } from "../api";
+import api, { ApiError } from "../api";
 import { CuisineDto } from "../cuisines/useCuisines";
 import { OpeningTimes } from "./useRestaurant";
 
@@ -39,7 +39,7 @@ export default function useSearchRestaurants(query: SearchRestaurantsQuery) {
   return useInfiniteQuery<SearchRestaurantsResponse, ApiError>(
     getSearchRestaurantsQueryKey(query),
     async ({ pageParam: page }) => {
-      const response = await Api.get<SearchRestaurantsResponse>(
+      const response = await api.get<SearchRestaurantsResponse>(
         "/restaurants",
         {
           params: {
