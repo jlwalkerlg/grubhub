@@ -102,17 +102,16 @@ const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
 const Pay: FC = () => {
   const router = useRouter();
   const orderId = router.query.id?.toString();
-  const isLoadingRouter = !orderId;
 
   const {
     data: order,
     isLoading: isLoadingOrder,
     isError: isOrderError,
   } = useOrder(orderId, {
-    enabled: !isLoadingRouter,
+    enabled: router.isReady,
   });
 
-  const isLoading = isLoadingOrder || isLoadingRouter;
+  const isLoading = isLoadingOrder || !router.isReady;
   const isError = isOrderError;
 
   if (isLoading) {

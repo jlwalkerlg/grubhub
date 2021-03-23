@@ -176,14 +176,13 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 const Checkout: FC = () => {
   const router = useRouter();
   const restaurantId = router.query.id?.toString();
-  const isLoadingRouter = !restaurantId;
 
   const {
     data: restaurant,
     isLoading: isLoadingRestaurant,
     isError: isRestaurantError,
   } = useRestaurant(restaurantId, {
-    enabled: !isLoadingRouter,
+    enabled: router.isReady,
   });
 
   const {
@@ -191,10 +190,10 @@ const Checkout: FC = () => {
     isLoading: isLoadingBasket,
     isError: isBasketError,
   } = useBasket(restaurantId, {
-    enabled: !isLoadingRouter,
+    enabled: router.isReady,
   });
 
-  const isLoading = isLoadingRestaurant || isLoadingBasket || isLoadingRouter;
+  const isLoading = isLoadingRestaurant || isLoadingBasket || !router.isReady;
   const isError = isRestaurantError || isBasketError;
 
   if (isLoading) {

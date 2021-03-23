@@ -4,7 +4,6 @@ import useRestaurantOrderHistory, {
   OrderModel,
 } from "~/api/orders/useRestaurantOrderHistory";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import useIsRouterReady from "~/services/useIsRouterReady";
 import { formatDate } from "~/services/utils";
 import { DashboardLayout } from "../DashboardLayout";
 import OrderDetailsModal from "./OrderDetailsModal";
@@ -207,11 +206,9 @@ const OrderHistoryPage: FC = () => {
 };
 
 const OrderHistoryPageLayout: FC = () => {
-  const isRouterReady = useIsRouterReady();
+  const { isReady } = useRouter();
 
-  return (
-    <DashboardLayout>{isRouterReady && <OrderHistoryPage />}</DashboardLayout>
-  );
+  return <DashboardLayout>{isReady && <OrderHistoryPage />}</DashboardLayout>;
 };
 
 export default OrderHistoryPageLayout;

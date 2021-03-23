@@ -14,7 +14,6 @@ import ThumbsUpIcon from "~/components/Icons/ThumbsUpIcon";
 import Layout from "~/components/Layout/Layout";
 import useClickAwayListener from "~/services/useClickAwayListener";
 import useFocusTrap from "~/services/useFocusTrap";
-import useIsRouterReady from "~/services/useIsRouterReady";
 import { url } from "~/services/utils";
 import styles from "./Restaurants.module.css";
 import RestaurantSearchResults from "./RestaurantSearchResults";
@@ -405,11 +404,9 @@ const RestaurantsSearch: React.FC = () => {
 };
 
 const Restaurants: NextPage = () => {
-  const isRouterReady = useIsRouterReady();
-
   const router = useRouter();
 
-  if (!isRouterReady) {
+  if (!router.isReady) {
     return null;
   }
 
