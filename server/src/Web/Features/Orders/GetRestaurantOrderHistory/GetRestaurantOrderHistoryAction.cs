@@ -14,6 +14,8 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
 {
     public class GetRestaurantOrderHistoryAction : Action
     {
+        private const int PER_PAGE = 2;
+
         private readonly IDbConnectionFactory dbConnectionFactory;
         private readonly IAuthenticator authenticator;
 
@@ -25,48 +27,38 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
 
         [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpGet("/restaurant/order-history")]
-        public async Task<IActionResult> GetRestaurantOrderHistory([FromQuery] int? page, [FromQuery] int? perPage)
+        public async Task<IActionResult> GetRestaurantOrderHistory([FromQuery] int? page)
         {
+            page = Math.Max(page ?? 1, 1);
+            var offset = (page - 1) * PER_PAGE;
+
             using var connection = await dbConnectionFactory.OpenConnection();
 
-            var sql = @"SELECT
-                    o.id,
-                    o.number,
-                    o.status,
-                    o.placed_at,
-                    SUM(oi.price * oi.quantity) / 100.00 as subtotal
-                FROM
-                    orders o
-                    INNER JOIN order_items oi ON o.id = oi.order_id
-                    INNER JOIN restaurants r ON r.id = o.restaurant_id
-                WHERE
-                    r.manager_id = @UserId
-                    AND o.status = ANY(@InactiveStatuses)
-                GROUP BY o.id, r.estimated_delivery_time_in_minutes
-                ORDER BY o.placed_at";
-
-            int? offset = null;
-
-            if (perPage > 0)
-            {
-                perPage = Math.Max(perPage.Value, 0);
-
-                var currentPage = Math.Max(page ?? 1, 1);
-                offset = (currentPage - 1) * perPage;
-
-                sql += " LIMIT @Limit OFFSET @Offset";
-            }
-
             var orders = await connection.QueryAsync<OrderModel>(
-                    sql,
+                    @"SELECT
+                        o.id,
+                        o.number,
+                        o.status,
+                        o.placed_at,
+                        SUM(oi.price * oi.quantity) / 100.00 as subtotal
+                    FROM
+                        orders o
+                        INNER JOIN order_items oi ON o.id = oi.order_id
+                        INNER JOIN restaurants r ON r.id = o.restaurant_id
+                    WHERE
+                        r.manager_id = @UserId
+                        AND o.status = ANY(@InactiveStatuses)
+                    GROUP BY o.id, r.estimated_delivery_time_in_minutes
+                    ORDER BY o.placed_at
+                    LIMIT @Limit OFFSET @Offset",
                     new
                     {
                         UserId = authenticator.UserId.Value,
-                        InactiveStatuses = (new[] {OrderStatus.Delivered, OrderStatus.Rejected, OrderStatus.Cancelled})
+                        InactiveStatuses = (new[] { OrderStatus.Delivered, OrderStatus.Rejected, OrderStatus.Cancelled })
                             .Select(x => x.ToString())
                             .ToArray(),
                         Offset = offset,
-                        Limit = perPage,
+                        Limit = PER_PAGE,
                     });
 
             var count = await connection.ExecuteScalarAsync<int>(
@@ -78,15 +70,17 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                     new
                     {
                         UserId = authenticator.UserId.Value,
-                        InactiveStatuses = (new[] {OrderStatus.Delivered, OrderStatus.Rejected, OrderStatus.Cancelled})
+                        InactiveStatuses = (new[] { OrderStatus.Delivered, OrderStatus.Rejected, OrderStatus.Cancelled })
                             .Select(x => x.ToString())
                             .ToArray(),
                     });
 
+            var pages = (int)Math.Ceiling((double)count / PER_PAGE);
+
             return Ok(new GetRestaurantOrderHistoryResponse()
             {
                 Orders = orders,
-                Count = count,
+                Pages = Math.Max(1, pages),
             });
         }
 
@@ -102,7 +96,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
         public class GetRestaurantOrderHistoryResponse
         {
             public IEnumerable<OrderModel> Orders { get; init; }
-            public int Count { get; init; }
+            public int Pages { get; init; }
         }
     }
 }

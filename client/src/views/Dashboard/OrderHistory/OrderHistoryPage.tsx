@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useMemo, useState } from "react";
 import useRestaurantOrderHistory, {
@@ -84,7 +85,7 @@ const OrdersTable: FC<{
           </tr>
         </thead>
 
-        <tbody className="text-gray-700 text-sm">
+        <tbody className="text-gray-800 text-sm">
           {orders.map((order) => {
             return <OrderTableRow key={order.id} order={order} />;
           })}
@@ -97,53 +98,12 @@ const OrdersTable: FC<{
 const OrderHistoryPage: FC = () => {
   const router = useRouter();
 
-  const perPage = 15;
-  const [currentPage, setCurrentPage] = useState(1);
-  // TODO: causes errors on reload
-  // const [currentPage, setCurrentPage] = useState(() => +router.query.page || 1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [orders, setOrders] = useState<OrderModel[]>([]);
+  const page = Math.max(1, +router.query.page || 1);
 
-  // TODO: feels hacky, follow react-query guide instead
-  const {
-    isFetching,
-    fetchPreviousPage,
-    fetchNextPage,
-    isError,
-    isLoading,
-  } = useRestaurantOrderHistory(
-    { perPage },
-    {
-      onSuccess: (data) => {
-        const { pages } = data;
-        const { count, orders } = pages[currentPage - 1];
-        setOrders(orders);
-        setTotalPages(Math.ceil(count / perPage) || 1);
-      },
-      getPreviousPageParam: () => currentPage,
-      getNextPageParam: () => currentPage,
-    }
-  );
+  const { isLoading, isError, data } = useRestaurantOrderHistory(page);
 
-  const loadNextPage = () => {
-    const nextPage = currentPage + 1;
-    fetchNextPage({ pageParam: nextPage });
-    setCurrentPage(nextPage);
-    // TODO: causes errors on reload
-    // router.replace({
-    //   query: { ...router.query, page: nextPage },
-    // });
-  };
-
-  const loadPreviousPage = () => {
-    const previousPage = currentPage - 1;
-    fetchPreviousPage({ pageParam: previousPage });
-    setCurrentPage(previousPage);
-    // TODO: causes errors on reload
-    // router.replace({
-    //   query: { ...router.query, page: previousPage },
-    // });
-  };
+  const orders = data?.orders;
+  const totalPages = data?.pages || 1;
 
   return (
     <div>
@@ -165,34 +125,34 @@ const OrderHistoryPage: FC = () => {
             <>
               <OrdersTable orders={orders} />
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between text-sm mt-3">
                 <p>
-                  Page {currentPage} of {totalPages}
+                  Page {page} of {totalPages}
                 </p>
 
-                <nav className="mt-4 flex" aria-label="Pagination">
-                  <button
-                    disabled={isFetching || currentPage === 1}
-                    onClick={loadPreviousPage}
-                    className={`px-4 py-2 border text-sm font-medium rounded-sm ${
-                      currentPage > 1
-                        ? "text-red-700 border-red-700"
-                        : "text-gray-700 border-gray-500"
-                    }`}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    disabled={isFetching || currentPage === totalPages}
-                    onClick={loadNextPage}
-                    className={`px-4 py-2 border text-sm font-medium rounded-sm ml-2 ${
-                      currentPage < totalPages
-                        ? "text-red-700 border-red-700"
-                        : "text-gray-700 border-gray-500"
-                    }`}
-                  >
-                    Next
-                  </button>
+                <nav className="flex" aria-label="Pagination">
+                  {page > 1 ? (
+                    <Link href={`/dashboard/order-history?page=${page - 1}`}>
+                      <a className="px-4 py-2 text-sm font-medium rounded-sm text-red-700 hover:text-red-900">
+                        Previous
+                      </a>
+                    </Link>
+                  ) : (
+                    <span className="px-4 py-2 text-sm font-medium rounded-sm text-gray-800">
+                      Previous
+                    </span>
+                  )}
+                  {page < totalPages ? (
+                    <Link href={`/dashboard/order-history?page=${page + 1}`}>
+                      <a className="px-4 py-2 text-sm font-medium rounded-sm ml-2 text-red-700 hover:text-red-900">
+                        Next
+                      </a>
+                    </Link>
+                  ) : (
+                    <span className="px-4 py-2 text-sm font-medium rounded-sm ml-2 text-gray-800">
+                      Next
+                    </span>
+                  )}
                 </nav>
               </div>
             </>

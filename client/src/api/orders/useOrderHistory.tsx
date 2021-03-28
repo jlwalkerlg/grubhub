@@ -16,16 +16,11 @@ export interface OrderModel {
   restaurantName: string;
 }
 
-interface QueryParams {
-  perPage: number;
-}
-
 export function getOrderHistoryQueryKey() {
   return "order-history";
 }
 
 export function useOrderHistory(
-  { perPage }: QueryParams,
   config?: UseInfiniteQueryOptions<GetOrderHistoryResponse, ApiError>
 ) {
   return useInfiniteQuery<GetOrderHistoryResponse, ApiError>(
@@ -36,7 +31,6 @@ export function useOrderHistory(
         {
           params: {
             page,
-            perPage: perPage,
           },
         }
       );

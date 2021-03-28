@@ -219,14 +219,14 @@ const OrderDetailsModal: FC<{ order: OrderModel; onClose: () => any }> = ({
   const { data, isLoading, isError } = useOrder(order.id);
 
   return (
-    <div className="fixed inset-y-0 left-0 w-full z-50 flex items-center md:px-8">
+    <div className="fixed inset-y-0 left-0 w-full z-50 flex items-center md:px-8 md:py-4">
       <div
         className="fixed inset-0"
         style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
         onClick={onClose}
       ></div>
 
-      <div className="relative flex-1 max-w-3xl mx-auto h-full overflow-y-auto md:h-auto bg-white md:rounded-lg p-4">
+      <div className="relative flex-1 max-w-3xl mx-auto h-full overflow-y-auto bg-white md:rounded-lg p-4">
         {isLoading && <p>Loading order...</p>}
         {!isLoading && isError && <p>Error loading the order...</p>}
         {!isLoading && !isError && (

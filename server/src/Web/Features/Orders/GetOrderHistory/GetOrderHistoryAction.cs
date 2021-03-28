@@ -11,6 +11,8 @@ namespace Web.Features.Orders.GetOrderHistory
 {
     public class GetOrderHistoryAction : Action
     {
+        private const int PER_PAGE = 15;
+
         private readonly IDbConnectionFactory dbConnectionFactory;
         private readonly IAuthenticator authenticator;
 
@@ -22,46 +24,36 @@ namespace Web.Features.Orders.GetOrderHistory
 
         [Authorize]
         [HttpGet("/order-history")]
-        public async Task<IActionResult> GetOrderHistory([FromQuery] int? page, [FromQuery] int? perPage)
+        public async Task<IActionResult> GetOrderHistory([FromQuery] int? page)
         {
+            page = Math.Max(page ?? 1, 1);
+            var offset = (page - 1) * PER_PAGE;
+
             using var connection = await dbConnectionFactory.OpenConnection();
 
-            var sql = @"SELECT
-                    o.id,
-                    o.placed_at,
-                    SUM(oi.quantity) as total_items,
-                    SUM(oi.price * oi.quantity) / 100.00 as subtotal,
-                    o.service_fee / 100.00 as service_fee,
-                    o.delivery_fee / 100.00 as delivery_fee,
-                    r.name as restaurant_name
-                FROM
-                    orders o
-                    INNER JOIN order_items oi on o.id = oi.order_id
-                    INNER JOIN restaurants r on o.restaurant_id = r.id
-                WHERE
-                    o.user_id = @UserId
-                GROUP BY o.id, r.name
-                ORDER BY o.delivered_at";
-
-            int? offset = null;
-
-            if (perPage > 0)
-            {
-                perPage = Math.Max(perPage.Value, 0);
-
-                var currentPage = Math.Max(page ?? 1, 1);
-                offset = (currentPage - 1) * perPage;
-
-                sql += " LIMIT @Limit OFFSET @Offset";
-            }
-
             var orders = await connection.QueryAsync<OrderModel>(
-                    sql,
+                    @"SELECT
+                        o.id,
+                        o.placed_at,
+                        SUM(oi.quantity) as total_items,
+                        SUM(oi.price * oi.quantity) / 100.00 as subtotal,
+                        o.service_fee / 100.00 as service_fee,
+                        o.delivery_fee / 100.00 as delivery_fee,
+                        r.name as restaurant_name
+                    FROM
+                        orders o
+                        INNER JOIN order_items oi on o.id = oi.order_id
+                        INNER JOIN restaurants r on o.restaurant_id = r.id
+                    WHERE
+                        o.user_id = @UserId
+                    GROUP BY o.id, r.name
+                    ORDER BY o.delivered_at
+                    LIMIT @Limit OFFSET @Offset",
                     new
                     {
                         UserId = authenticator.UserId.Value,
                         Offset = offset,
-                        Limit = perPage,
+                        Limit = PER_PAGE,
                     });
 
             var count = await connection.ExecuteScalarAsync<int>(

@@ -34,7 +34,7 @@ namespace Console
             var builder = Web.Program.CreateHostBuilder(args);
             builder.ConfigureServices((ctx, s) =>
             {
-                s.AddScoped<DbSeeder>();
+                s.AddScoped<Seeder>();
             });
             var host = builder.Build();
 
@@ -56,7 +56,7 @@ namespace Console
 
         private static async Task Seed(IServiceProvider services)
         {
-            var seeder = services.GetRequiredService<DbSeeder>();
+            var seeder = services.GetRequiredService<Seeder>();
 
             await seeder.Seed();
         }

@@ -70,7 +70,7 @@ const OrderHistory: FC = () => {
     hasNextPage,
     isError,
     isLoading,
-  } = useOrderHistory({ perPage: 15 });
+  } = useOrderHistory();
 
   const orders = data?.pages.map((x) => x.orders).flat() ?? [];
 

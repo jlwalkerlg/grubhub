@@ -1,9 +1,9 @@
-import { useInfiniteQuery, UseInfiniteQueryOptions } from "react-query";
+import { useQuery } from "react-query";
 import api, { ApiError } from "../api";
 
 export interface GetRestaurantOrderHistoryResponse {
   orders: OrderModel[];
-  count: number;
+  pages: number;
 }
 
 export interface OrderModel {
@@ -14,32 +14,26 @@ export interface OrderModel {
   subtotal: number;
 }
 
-interface QueryParams {
-  perPage: number;
+export function getRestaurantOrderHistoryQueryKey(page: number) {
+  return ["restaurant-order-history", page];
 }
 
-export function getRestaurantOrderHistoryQueryKey() {
-  return "restaurant-order-history";
-}
-
-export default function useRestaurantOrderHistory(
-  { perPage }: QueryParams,
-  config?: UseInfiniteQueryOptions<GetRestaurantOrderHistoryResponse, ApiError>
-) {
-  return useInfiniteQuery<GetRestaurantOrderHistoryResponse, ApiError>(
-    getRestaurantOrderHistoryQueryKey(),
-    async ({ pageParam: page }) => {
-      const response = await api.get<GetRestaurantOrderHistoryResponse>(
+export default function useRestaurantOrderHistory(page: number) {
+  return useQuery<GetRestaurantOrderHistoryResponse, ApiError>(
+    getRestaurantOrderHistoryQueryKey(page),
+    async () => {
+      const { data } = await api.get<GetRestaurantOrderHistoryResponse>(
         "/restaurant/order-history",
         {
           params: {
-            page: page ?? 1,
-            perPage,
+            page,
           },
         }
       );
-      return response.data;
+      return data;
     },
-    config
+    {
+      keepPreviousData: true,
+    }
   );
 }
