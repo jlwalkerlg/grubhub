@@ -1,5 +1,4 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { FC, useState } from "react";
 import useAddMenuItem from "~/api/menu/useAddMenuItem";
 import useRestaurant, {
   MenuCategoryDto,
@@ -7,24 +6,18 @@ import useRestaurant, {
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
-const NewMenuItemDropdown: React.FC<{
+const NewMenuItemDropdown: FC<{
   category: MenuCategoryDto;
 }> = ({ category }) => {
   const { user } = useAuth();
   const { data: restaurant } = useRestaurant(user.restaurantId);
 
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    mutate: addItem,
-    isLoading,
-    isError,
-    error,
-    reset,
-  } = useAddMenuItem();
+  const { mutateAsync: addItem, reset } = useAddMenuItem();
 
   const form = useForm({
     defaultValues: {
@@ -41,27 +34,15 @@ const NewMenuItemDropdown: React.FC<{
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isLoading) return;
+    await addItem({
+      restaurantId: restaurant.id,
+      categoryId: category.id,
+      ...data,
+      price: +data.price,
+    });
 
-    addItem(
-      {
-        restaurantId: restaurant.id,
-        categoryId: category.id,
-        ...data,
-        price: +data.price,
-      },
-      {
-        onSuccess: () => {
-          setIsOpen(false);
-          form.reset();
-        },
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, form);
-          }
-        },
-      }
-    );
+    setIsOpen(false);
+    form.reset();
   });
 
   const handleCancel = () => {
@@ -83,9 +64,9 @@ const NewMenuItemDropdown: React.FC<{
 
       {isOpen && (
         <form onSubmit={onSubmit} className="px-4 pb-3">
-          {isError && (
+          {form.error && (
             <div className="my-3">
-              <ErrorAlert message={error.detail} />
+              <ErrorAlert message={form.error.message} />
             </div>
           )}
 
@@ -152,7 +133,7 @@ const NewMenuItemDropdown: React.FC<{
           <div className="mt-4">
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={form.isLoading}
               className="w-full lg:w-auto btn btn-sm btn-primary"
             >
               Add Item
@@ -160,7 +141,7 @@ const NewMenuItemDropdown: React.FC<{
             <button
               type="button"
               onClick={handleCancel}
-              disabled={isLoading}
+              disabled={form.isLoading}
               className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel

@@ -1,7 +1,7 @@
 import { flatten, padStart, range } from "lodash";
 import { NextPage } from "next";
 import React from "react";
-import { useForm, UseFormMethods } from "react-hook-form";
+import { UseFormMethods } from "react-hook-form";
 import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useUpdateOpeningTimes, {
   UpdateOpeningTimesCommand,
@@ -9,7 +9,7 @@ import useUpdateOpeningTimes, {
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
-import { setFormErrors } from "~/services/utils";
+import useForm from "~/services/useForm";
 import { DashboardLayout } from "../DashboardLayout";
 
 const openingTimes = flatten(
@@ -141,12 +141,9 @@ const OpeningTimesInput: React.FC<{
 const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
   restaurant,
 }) => {
-  const {
-    mutate: updateOpeningTimes,
-    isLoading,
-    error,
-    isSuccess,
-  } = useUpdateOpeningTimes(restaurant.id);
+  const { mutateAsync: updateOpeningTimes } = useUpdateOpeningTimes(
+    restaurant.id
+  );
 
   const form = useForm<UpdateOpeningTimesCommand>({
     defaultValues: {
@@ -168,26 +165,18 @@ const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
   });
 
   const onSubmit = form.handleSubmit(async (command) => {
-    if (isLoading) return;
-
-    updateOpeningTimes(command, {
-      onError: (error) => {
-        if (error.isValidationError) {
-          setFormErrors(error.errors, form);
-        }
-      },
-    });
+    await updateOpeningTimes(command);
   });
 
   return (
     <form onSubmit={onSubmit}>
-      {error && (
+      {form.error && (
         <div className="my-6">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 
-      {isSuccess && (
+      {form.isSuccess && (
         <div className="my-6">
           <SuccessAlert message="Opening times updated!" />
         </div>
@@ -242,7 +231,7 @@ const UpdateOpeningTimesForm: React.FC<{ restaurant: RestaurantDto }> = ({
         <button
           type="submit"
           className="btn btn-primary font-semibold w-full"
-          disabled={isLoading}
+          disabled={form.isLoading}
         >
           Update
         </button>

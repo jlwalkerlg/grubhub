@@ -1,11 +1,10 @@
 import { NextPage } from "next";
 import React from "react";
-import { useForm } from "react-hook-form";
 import useAuth from "~/api/users/useAuth";
 import useUpdateUserDetails from "~/api/users/useUpdateUserDetails";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 import { DashboardLayout } from "../DashboardLayout";
 
 const UpdateManagerDetailsForm = () => {
@@ -25,34 +24,21 @@ const UpdateManagerDetailsForm = () => {
     email: (builder) => builder.required().email(),
   });
 
-  const {
-    mutate: updateUserDetails,
-    isLoading,
-    error,
-    isSuccess,
-  } = useUpdateUserDetails();
+  const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isLoading) return;
-
-    updateUserDetails(data, {
-      onError: (error) => {
-        if (error.isValidationError) {
-          setFormErrors(error.errors, form);
-        }
-      },
-    });
+    await updateUserDetails(data);
   });
 
   return (
     <form onSubmit={onSubmit}>
-      {error && (
+      {form.error && (
         <div className="my-6">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.detail} />
         </div>
       )}
 
-      {isSuccess && (
+      {form.isSuccess && (
         <div className="my-6">
           <SuccessAlert message="Manager details updated!" />
         </div>
@@ -118,7 +104,7 @@ const UpdateManagerDetailsForm = () => {
       <div className="mt-4">
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={form.isLoading}
           className="btn btn-primary font-semibold w-full"
         >
           Update

@@ -1,19 +1,18 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
-import { useForm } from "react-hook-form";
 import useAuth, { getAuthUser } from "~/api/users/useAuth";
 import useRegister from "~/api/users/useRegister";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import Layout from "~/components/Layout/Layout";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 const Register: FC = () => {
   const router = useRouter();
 
   const { setUser } = useAuth();
-  const { mutate: register, isLoading, error } = useRegister();
+  const { mutateAsync: register } = useRegister();
 
   const form = useForm({
     defaultValues: {
@@ -32,18 +31,9 @@ const Register: FC = () => {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    register(data, {
-      onSuccess: async () => {
-        setUser(await getAuthUser());
-        await router.push("/");
-      },
-
-      onError: (error) => {
-        if (error.isValidationError) {
-          setFormErrors(error.errors, form);
-        }
-      },
-    });
+    await register(data);
+    setUser(await getAuthUser());
+    await router.push("/");
   });
 
   return (
@@ -52,9 +42,9 @@ const Register: FC = () => {
         Create account
       </h1>
 
-      {error && !error.isValidationError && (
+      {form.error && !form.hasValidationErrors && (
         <div className="my-6">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 

@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 interface StepThreeValues {
   addressLine1: string;
@@ -37,7 +36,7 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    setFormErrors(errors, form);
+    form.setErrors(errors);
   }, [errors]);
 
   return (

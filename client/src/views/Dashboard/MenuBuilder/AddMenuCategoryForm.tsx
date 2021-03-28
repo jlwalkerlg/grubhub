@@ -1,24 +1,17 @@
 import React from "react";
-import { useForm } from "react-hook-form";
 import useAddMenuCategory from "~/api/menu/useAddMenuCategory";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import PlusIcon from "~/components/Icons/PlusIcon";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 const AddMenuCategoryForm: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const { user } = useAuth();
 
-  const {
-    mutate: addMenuCategory,
-    isLoading,
-    isError,
-    error,
-    reset,
-  } = useAddMenuCategory();
+  const { mutateAsync: addMenuCategory, reset } = useAddMenuCategory();
 
   const form = useForm({
     defaultValues: {
@@ -31,25 +24,12 @@ const AddMenuCategoryForm: React.FC = () => {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isLoading) return;
-
-    addMenuCategory(
-      {
-        restaurantId: user.restaurantId,
-        ...data,
-      },
-      {
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, form);
-          }
-        },
-        onSuccess: () => {
-          setIsOpen(false);
-          form.reset();
-        },
-      }
-    );
+    await addMenuCategory({
+      restaurantId: user.restaurantId,
+      ...data,
+    });
+    setIsOpen(false);
+    form.reset();
   });
 
   const handleCancel = () => {
@@ -71,9 +51,9 @@ const AddMenuCategoryForm: React.FC = () => {
 
       {isOpen && (
         <form onSubmit={onSubmit} className="px-4 pb-3">
-          {isError && (
+          {form.error && (
             <div className="my-3">
-              <ErrorAlert message={error.detail} />
+              <ErrorAlert message={form.error.message} />
             </div>
           )}
 
@@ -99,7 +79,7 @@ const AddMenuCategoryForm: React.FC = () => {
           <div className="mt-4">
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={form.isLoading}
               className="w-full lg:w-auto btn btn-sm btn-primary"
             >
               Add Category
@@ -107,7 +87,7 @@ const AddMenuCategoryForm: React.FC = () => {
             <button
               type="button"
               onClick={handleCancel}
-              disabled={isLoading}
+              disabled={form.isLoading}
               className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel

@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
-import { useForm } from "react-hook-form";
 import useAuth from "~/api/users/useAuth";
 import useLogin from "~/api/users/useLogin";
 import { ErrorAlert } from "~/components/Alert/Alert";
 import Layout from "~/components/Layout/Layout";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
-const Login: React.FC = () => {
+const Login: FC = () => {
   const form = useForm({
     defaultValues: { email: "", password: "" },
   });
@@ -19,18 +18,10 @@ const Login: React.FC = () => {
     password: (builder) => builder.required(),
   });
 
-  const { mutate: login, isLoading, error } = useLogin();
+  const { mutateAsync: login } = useLogin();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isLoading) return;
-
-    login(data, {
-      onError: (error) => {
-        if (error.isValidationError) {
-          setFormErrors(error.errors, form);
-        }
-      },
-    });
+    await login(data);
   });
 
   const loginAsDemoCustomer = async () => {
@@ -52,9 +43,9 @@ const Login: React.FC = () => {
       </h1>
 
       <form onSubmit={onSubmit}>
-        {error && (
+        {form.error && (
           <div className="my-6">
-            <ErrorAlert message={error.detail} />
+            <ErrorAlert message={form.error.message} />
           </div>
         )}
 
@@ -107,7 +98,7 @@ const Login: React.FC = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={form.isLoading}
             className="btn btn-primary font-semibold w-full"
           >
             Login
@@ -128,7 +119,7 @@ const Login: React.FC = () => {
         <div className="mt-4 md:flex items-center">
           <button
             type="button"
-            disabled={isLoading}
+            disabled={form.isLoading}
             className="block w-full btn bg-green-600 hover:bg-green-800 text-white font-semibold flex-1 md:mr-2"
             onClick={loginAsDemoCustomer}
           >
@@ -137,7 +128,7 @@ const Login: React.FC = () => {
 
           <button
             type="button"
-            disabled={isLoading}
+            disabled={form.isLoading}
             className="block w-full mt-2 md:mt-0 btn border border-green-800 hover:bg-green-800 text-green-900 hover:text-white font-semibold flex-1 md:ml-2"
             onClick={loginAsDemoManager}
           >

@@ -32,7 +32,7 @@ const Nav: React.FC = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const onLogout = async () => {
+  const onLogout = () => {
     logout(null, {
       onSuccess: async () => {
         await router.push("/");

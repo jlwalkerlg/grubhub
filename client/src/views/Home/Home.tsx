@@ -1,12 +1,12 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import { useForm } from "react-hook-form";
 import GeolocationIcon from "~/components/Icons/GeolocationIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
 import { useToasts } from "~/components/Toaster/Toaster";
 import useCurrentLocation from "~/services/geolocation/useCurrentLocation";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
 
 const Home: NextPage = () => {
@@ -35,8 +35,6 @@ const Home: NextPage = () => {
   const router = useRouter();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.isSubmitting) return;
-
     localStorage.setItem("postcode", data.postcode);
 
     router.push(`/restaurants?postcode=${data.postcode}`);

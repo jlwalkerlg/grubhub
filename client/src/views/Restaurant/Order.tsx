@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { ApiError } from "~/api/api";
 import useBasket, { BasketDto, BasketItemDto } from "~/api/baskets/useBasket";
 import useRemoveFromBasket from "~/api/baskets/useRemoveFromBasket";
 import { useUpdateBasketItemQuantity } from "~/api/baskets/useUpdateBasketItemQuantity";
@@ -322,7 +321,6 @@ const MobileBasketModal: FC<{
 const OrderAside: FC<{
   isLoading: boolean;
   isError: boolean;
-  error: ApiError;
   restaurant: RestaurantDto;
   basket: BasketDto;
   subtotal: number;

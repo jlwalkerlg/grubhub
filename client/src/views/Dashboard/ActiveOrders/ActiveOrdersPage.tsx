@@ -46,7 +46,7 @@ const OrderTableRow: FC<{
 
   const { mutate: accept, isLoading: isAccepting } = useAcceptOrder();
 
-  const onAccept = async () => {
+  const onAccept = () => {
     if (isAccepting) return;
 
     accept(
@@ -65,7 +65,7 @@ const OrderTableRow: FC<{
 
   const { mutate: reject, isLoading: isRejecting } = useRejectOrder();
 
-  const onReject = async () => {
+  const onReject = () => {
     if (isRejecting) return;
 
     reject(
@@ -84,8 +84,8 @@ const OrderTableRow: FC<{
 
   const { mutate: deliver, isLoading: isDelivering } = useDeliverOrder();
 
-  const onDeliver = async () => {
-    if (isAccepting) return;
+  const onDeliver = () => {
+    if (isDelivering) return;
 
     deliver(
       { orderId: order.id },
@@ -103,8 +103,8 @@ const OrderTableRow: FC<{
 
   const { mutate: cancel, isLoading: isCancelling } = useCancelOrder();
 
-  const onCancel = async () => {
-    if (isAccepting) return;
+  const onCancel = () => {
+    if (isCancelling) return;
 
     cancel(
       { orderId: order.id },

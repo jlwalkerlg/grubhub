@@ -1,14 +1,13 @@
 import Head from "next/head";
 import React, { FC } from "react";
-import { useForm } from "react-hook-form";
 import useAuth from "~/api/users/useAuth";
 import useChangePassword from "~/api/users/useChangePassword";
 import useUpdateAccountDetails from "~/api/users/useUpdateAccountDetails";
 import useUpdateDeliveryAddress from "~/api/users/useUpdateDeliveryAddress";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import { AuthLayout } from "~/components/Layout/Layout";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 const CustomerDetailsForm: FC = () => {
   const { user } = useAuth();
@@ -27,32 +26,21 @@ const CustomerDetailsForm: FC = () => {
     mobileNumber: (builder) => builder.required().mobile(),
   });
 
-  const {
-    mutate: update,
-    isLoading,
-    error,
-    isSuccess,
-  } = useUpdateAccountDetails();
+  const { mutateAsync: update } = useUpdateAccountDetails();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    update(data, {
-      onError: (error) => {
-        if (error.isValidationError) {
-          setFormErrors(error.errors, form);
-        }
-      },
-    });
+    await update(data);
   });
 
   return (
     <form className="bg-white rounded shadow-sm p-4 mt-2" onSubmit={onSubmit}>
-      {error && !error.isValidationError && (
+      {form.error && !form.hasValidationErrors && (
         <div className="my-6">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 
-      {isSuccess && (
+      {form.isSuccess && (
         <div className="my-6">
           <SuccessAlert message="Account details updated." />
         </div>
@@ -115,7 +103,7 @@ const CustomerDetailsForm: FC = () => {
         )}
       </div>
 
-      <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
+      <button className="btn btn-primary w-full mt-6" disabled={form.isLoading}>
         Save details
       </button>
     </form>
@@ -140,32 +128,21 @@ const DeliveryAddressForm: FC = () => {
     postcode: (builder) => builder.required().postcode(),
   });
 
-  const {
-    mutate: update,
-    isLoading,
-    error,
-    isSuccess,
-  } = useUpdateDeliveryAddress();
+  const { mutateAsync: update } = useUpdateDeliveryAddress();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    update(data, {
-      onError: (error) => {
-        if (error.isValidationError) {
-          setFormErrors(error.errors, form);
-        }
-      },
-    });
+    await update(data);
   });
 
   return (
     <form className="bg-white rounded shadow-sm p-4 mt-2" onSubmit={onSubmit}>
-      {error && !error.isValidationError && (
+      {form.error && !form.hasValidationErrors && (
         <div className="my-6">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 
-      {isSuccess && (
+      {form.isSuccess && (
         <div className="my-6">
           <SuccessAlert message="Delivery address updated." />
         </div>
@@ -242,7 +219,7 @@ const DeliveryAddressForm: FC = () => {
         )}
       </div>
 
-      <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
+      <button className="btn btn-primary w-full mt-6" disabled={form.isLoading}>
         Save address
       </button>
     </form>
@@ -267,33 +244,24 @@ const ChangePasswordForm: FC = () => {
         .match(() => form.getValues().newPassword, "Passwords must match."),
   });
 
-  const { mutate: update, isLoading, error, isSuccess } = useChangePassword();
+  const { mutateAsync: update } = useChangePassword();
 
   const onSubmit = form.handleSubmit(
     async ({ confirmNewPassword, ...command }) => {
-      update(command, {
-        onSuccess: () => {
-          form.reset();
-        },
-
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, form);
-          }
-        },
-      });
+      await update(command);
+      form.reset();
     }
   );
 
   return (
     <form className="bg-white rounded shadow-sm p-4 mt-2" onSubmit={onSubmit}>
-      {error && !error.isValidationError && (
+      {form.error && !form.hasValidationErrors && (
         <div className="my-6">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 
-      {isSuccess && (
+      {form.isSuccess && (
         <div className="my-6">
           <SuccessAlert message="Password updated." />
         </div>
@@ -360,7 +328,7 @@ const ChangePasswordForm: FC = () => {
         )}
       </div>
 
-      <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
+      <button className="btn btn-primary w-full mt-6" disabled={form.isLoading}>
         Change password
       </button>
     </form>

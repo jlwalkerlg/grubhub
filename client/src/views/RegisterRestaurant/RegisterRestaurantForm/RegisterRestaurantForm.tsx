@@ -51,7 +51,7 @@ const RegisterRestaurantForm: FC = () => {
     setStep(step - 1);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: any) => {
     if (isLoading || isSuccess) return;
 
     const command = { ...values, ...data };

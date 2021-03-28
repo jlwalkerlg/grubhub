@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { FC, useEffect, useState } from "react";
-import { ApiError } from "~/api/api";
 import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import Layout from "~/components/Layout/Layout";
@@ -43,7 +42,6 @@ const Tabs: FC<{
 const Main: FC<{
   isLoading: boolean;
   isError: boolean;
-  error: ApiError;
   restaurant: RestaurantDto;
 }> = ({ isLoading, isError, restaurant }) => {
   const [tab, setTab] = useState<"Menu" | "Information">("Menu");

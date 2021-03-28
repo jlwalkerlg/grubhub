@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
-import { useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
 import useBasket from "~/api/baskets/useBasket";
 import { getOrderQueryKey } from "~/api/orders/useOrder";
@@ -10,8 +9,8 @@ import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { AuthLayout } from "~/components/Layout/Layout";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   const router = useRouter();
@@ -20,7 +19,7 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
   const queryClient = useQueryClient();
 
-  const { mutate: placeOrder, isLoading, error } = usePlaceOrder();
+  const { mutateAsync: placeOrder } = usePlaceOrder();
 
   const form = useForm({
     defaultValues: {
@@ -40,23 +39,12 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    placeOrder(
-      {
-        restaurantId: restaurant.id,
-        ...data,
-      },
-      {
-        onSuccess: async (orderId) => {
-          queryClient.prefetchQuery(getOrderQueryKey(orderId));
-          await router.push(`/orders/${orderId}/pay`);
-        },
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, form);
-          }
-        },
-      }
-    );
+    const orderId = await placeOrder({
+      restaurantId: restaurant.id,
+      ...data,
+    });
+    queryClient.prefetchQuery(getOrderQueryKey(orderId));
+    await router.push(`/orders/${orderId}/pay`);
   });
 
   return (
@@ -65,7 +53,9 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
         {user.firstName}, confirm your details.
       </h2>
 
-      {error && <p className="text-primary text-center mt-2">{error.detail}</p>}
+      {form.error && (
+        <p className="text-primary text-center mt-2">{form.error.message}</p>
+      )}
 
       <form onSubmit={handleSubmit} className="mt-4">
         <div>
@@ -165,7 +155,10 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
           )}
         </div>
 
-        <button className="btn btn-primary w-full mt-6" disabled={isLoading}>
+        <button
+          className="btn btn-primary w-full mt-6"
+          disabled={form.isLoading}
+        >
           Go to payment
         </button>
       </form>

@@ -29,7 +29,7 @@ const Billing: FC = () => {
     return <div>Billing details could not be loaded at this time.</div>;
   }
 
-  const onSetupBilling = async () => {
+  const onSetupBilling = () => {
     if (isSettingUpBilling) return;
 
     setupBilling(restaurant.id, {

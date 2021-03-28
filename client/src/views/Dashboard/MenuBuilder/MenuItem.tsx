@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import { useForm } from "react-hook-form";
+import React, { FC, useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import useRemoveMenuItem from "~/api/menu/useRemoveMenuItem";
@@ -15,8 +14,8 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { useToasts } from "~/components/Toaster/Toaster";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 const MySwal = withReactContent(Swal);
 
@@ -26,13 +25,7 @@ const UpdateForm: FC<{
   item: MenuItemDto;
   close: () => any;
 }> = ({ menu, category, item, close }) => {
-  const {
-    mutate: update,
-    isLoading,
-    isError,
-    error,
-    reset,
-  } = useUpdateMenuItem();
+  const { mutateAsync: update, reset } = useUpdateMenuItem();
 
   const form = useForm({
     defaultValues: {
@@ -49,30 +42,18 @@ const UpdateForm: FC<{
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isLoading) return;
+    await update({
+      restaurantId: menu.restaurantId,
+      categoryId: category.id,
+      itemId: item.id,
+      ...data,
+      price: +data.price,
+    });
 
-    update(
-      {
-        restaurantId: menu.restaurantId,
-        categoryId: category.id,
-        itemId: item.id,
-        ...data,
-        price: +data.price,
-      },
-      {
-        onSuccess: () => {
-          form.setValue("name", data.name);
-          form.setValue("description", data.description);
-          form.setValue("price", data.price);
-          close();
-        },
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, form);
-          }
-        },
-      }
-    );
+    form.setValue("name", data.name);
+    form.setValue("description", data.description);
+    form.setValue("price", data.price);
+    close();
   });
 
   const cancel = () => {
@@ -83,9 +64,9 @@ const UpdateForm: FC<{
 
   return (
     <form onSubmit={onSubmit} className="px-2 pb-3">
-      {isError && (
+      {form.error && (
         <div className="my-3">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 
@@ -150,7 +131,7 @@ const UpdateForm: FC<{
       <div className="mt-4">
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={form.isLoading}
           className="w-full lg:w-auto btn btn-sm btn-primary"
         >
           Update Item
@@ -158,7 +139,7 @@ const UpdateForm: FC<{
         <button
           type="button"
           onClick={cancel}
-          disabled={isLoading}
+          disabled={form.isLoading}
           className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
         >
           Cancel
@@ -177,7 +158,7 @@ const MenuItem: React.FC<{
   const { user } = useAuth();
   const { data: restaurant } = useRestaurant(user.restaurantId);
 
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = React.useState(false);
+  const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
 
   const {
     mutate: remove,

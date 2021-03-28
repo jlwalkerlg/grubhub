@@ -111,6 +111,10 @@ class Api {
       throw new ApiError(e.response);
     }
   }
+
+  public isApiError(payload: any): payload is ApiError {
+    return payload instanceof ApiError;
+  }
 }
 
 export default new Api();

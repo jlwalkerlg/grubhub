@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 interface StepTwoValues {
   restaurantName: string;
@@ -31,7 +30,7 @@ const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    setFormErrors(errors, form);
+    form.setErrors(errors);
   }, [errors]);
 
   return (

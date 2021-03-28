@@ -1,16 +1,15 @@
 import { NextPage } from "next";
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { FC } from "react";
 import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useUpdateRestaurantDetails from "~/api/restaurants/useUpdateRestaurantDetails";
 import useAuth from "~/api/users/useAuth";
 import { ErrorAlert, SuccessAlert } from "~/components/Alert/Alert";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 import { DashboardLayout } from "../DashboardLayout";
 
-const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
+const RestaurantDetailsForm: FC<{ restaurant: RestaurantDto }> = ({
   restaurant,
 }) => {
   const form = useForm({
@@ -35,40 +34,24 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
     estimatedDeliveryTimeInMinutes: (builder) => builder.required().min(1),
   });
 
-  const {
-    mutate: updateRestaurantDetails,
-    isLoading,
-    error,
-    isSuccess,
-  } = useUpdateRestaurantDetails();
+  const { mutateAsync: updateRestaurantDetails } = useUpdateRestaurantDetails();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isLoading) return;
-
-    updateRestaurantDetails(
-      {
-        id: restaurant.id,
-        ...data,
-      },
-      {
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, form);
-          }
-        },
-      }
-    );
+    await updateRestaurantDetails({
+      id: restaurant.id,
+      ...data,
+    });
   });
 
   return (
     <form onSubmit={onSubmit}>
-      {error && (
+      {form.error && (
         <div className="my-6">
-          <ErrorAlert message={error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 
-      {isSuccess && (
+      {form.isSuccess && (
         <div className="my-6">
           <SuccessAlert message="Restaurant details updated!" />
         </div>
@@ -223,7 +206,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
       <div className="mt-5">
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={form.isLoading}
           className="btn btn-primary font-semibold w-full"
         >
           Update
@@ -233,7 +216,7 @@ const RestaurantDetailsForm: React.FC<{ restaurant: RestaurantDto }> = ({
   );
 };
 
-const RestaurantDetails: React.FC = () => {
+const RestaurantDetails: FC = () => {
   const { user } = useAuth();
 
   const { data: restaurant, isLoading, isError } = useRestaurant(

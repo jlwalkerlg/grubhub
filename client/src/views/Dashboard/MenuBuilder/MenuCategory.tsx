@@ -1,5 +1,4 @@
 import React, { FC, useState } from "react";
-import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import useRemoveMenuCategory from "~/api/menu/useRemoveMenuCategory";
@@ -13,8 +12,8 @@ import CloseIcon from "~/components/Icons/CloseIcon";
 import PencilIcon from "~/components/Icons/PencilIcon";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import { useToasts } from "~/components/Toaster/Toaster";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 import MenuItem from "./MenuItem";
 import NewMenuItemDropdown from "./NewMenuItemDropdown";
 
@@ -31,10 +30,8 @@ const MenuCategory: FC<{
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const {
-    mutate: rename,
-    isLoading: isRenaming,
+    mutateAsync: rename,
     reset: resetRenameMutation,
-    error: renameError,
   } = useRenameMenuCategory();
 
   const form = useForm({
@@ -48,28 +45,17 @@ const MenuCategory: FC<{
   });
 
   const onRename = form.handleSubmit(async (data) => {
-    if (isRenaming) return;
-
     if (data.newName === category.name) {
       setIsFormOpen(false);
       form.reset(data);
       return;
     }
 
-    rename(
-      {
-        restaurantId: restaurant.id,
-        categoryId: category.id,
-        ...data,
-      },
-      {
-        onError: (error) => {
-          if (error.isValidationError) {
-            setFormErrors(error.errors, form);
-          }
-        },
-      }
-    );
+    await rename({
+      restaurantId: restaurant.id,
+      categoryId: category.id,
+      ...data,
+    });
   });
 
   const onEdit = () => {
@@ -137,7 +123,7 @@ const MenuCategory: FC<{
                 type="button"
                 className="text-blue-700"
                 onClick={onEdit}
-                disabled={isRenaming}
+                disabled={form.isLoading}
               >
                 <PencilIcon className="w-5 h-5" />
               </button>
@@ -156,9 +142,9 @@ const MenuCategory: FC<{
 
       {isFormOpen && (
         <form onSubmit={onRename} className="px-2 pb-3">
-          {renameError && (
+          {form.error && (
             <div className="my-3">
-              <ErrorAlert message={renameError.detail} />
+              <ErrorAlert message={form.error.message} />
             </div>
           )}
 
@@ -184,7 +170,7 @@ const MenuCategory: FC<{
           <div className="mt-4">
             <button
               type="submit"
-              disabled={isRenaming}
+              disabled={form.isLoading}
               className="w-full lg:w-auto btn btn-sm btn-primary mt-3 lg:mt-0"
             >
               Rename
@@ -192,7 +178,7 @@ const MenuCategory: FC<{
             <button
               type="button"
               onClick={onCancelEdit}
-              disabled={isRenaming}
+              disabled={form.isLoading}
               className="w-full lg:w-auto btn btn-sm btn-outline-primary mt-3 lg:mt-0 lg:ml-2"
             >
               Cancel

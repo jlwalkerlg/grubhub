@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { FC, useEffect } from "react";
+import useForm from "~/services/useForm";
 import { useRules } from "~/services/useRules";
-import { setFormErrors } from "~/services/utils";
 
 interface StepOneValues {
   managerFirstName: string;
@@ -16,7 +15,7 @@ interface Props {
   advanceStep(data: StepOneValues): any;
 }
 
-const RegisterRestaurantFormStepOne: React.FC<Props> = ({
+const RegisterRestaurantFormStepOne: FC<Props> = ({
   defaults,
   errors,
   advanceStep,
@@ -33,7 +32,7 @@ const RegisterRestaurantFormStepOne: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    setFormErrors(errors, form);
+    form.setErrors(errors);
   }, [errors]);
 
   return (
