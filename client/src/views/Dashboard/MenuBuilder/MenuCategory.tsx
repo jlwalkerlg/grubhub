@@ -41,7 +41,7 @@ const MenuCategory: FC<{
   });
 
   const rules = useRules({
-    newName: (builder) => builder.required(),
+    newName: (b) => b.required(),
   });
 
   const onRename = form.handleSubmit(async (data) => {

@@ -14,8 +14,8 @@ const Login: FC = () => {
   });
 
   const rules = useRules({
-    email: (builder) => builder.required().email(),
-    password: (builder) => builder.required(),
+    email: (b) => b.required().email(),
+    password: (b) => b.required(),
   });
 
   const { mutateAsync: login } = useLogin();

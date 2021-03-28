@@ -25,8 +25,8 @@ const RegisterRestaurantFormStepTwo: React.FC<Props> = ({
   });
 
   const rules = useRules({
-    restaurantName: (builder) => builder.required(),
-    restaurantPhoneNumber: (builder) => builder.required().phone(),
+    restaurantName: (b) => b.required(),
+    restaurantPhoneNumber: (b) => b.required().phone(),
   });
 
   useEffect(() => {

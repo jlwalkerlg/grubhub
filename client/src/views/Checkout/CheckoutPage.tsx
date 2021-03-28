@@ -32,10 +32,10 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   });
 
   const rules = useRules({
-    mobile: (builder) => builder.required().mobile(),
-    addressLine1: (builder) => builder.required(),
-    city: (builder) => builder.required(),
-    postcode: (builder) => builder.required().postcode(),
+    mobile: (b) => b.required().mobile(),
+    addressLine1: (b) => b.required(),
+    city: (b) => b.required(),
+    postcode: (b) => b.required().postcode(),
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {

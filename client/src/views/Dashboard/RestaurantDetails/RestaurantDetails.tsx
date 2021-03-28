@@ -25,13 +25,13 @@ const RestaurantDetailsForm: FC<{ restaurant: RestaurantDto }> = ({
   });
 
   const rules = useRules({
-    name: (builder) => builder.required(),
-    description: (builder) => builder.required().maxLength(280),
-    phoneNumber: (builder) => builder.required().phone(),
-    deliveryFee: (builder) => builder.required().min(0),
-    minimumDeliverySpend: (builder) => builder.required().min(0),
-    maxDeliveryDistanceInKm: (builder) => builder.required().min(0),
-    estimatedDeliveryTimeInMinutes: (builder) => builder.required().min(1),
+    name: (b) => b.required(),
+    description: (b) => b.required().maxLength(280),
+    phoneNumber: (b) => b.required().phone(),
+    deliveryFee: (b) => b.required().min(0),
+    minimumDeliverySpend: (b) => b.required().min(0),
+    maxDeliveryDistanceInKm: (b) => b.required().min(0),
+    estimatedDeliveryTimeInMinutes: (b) => b.required().min(1),
   });
 
   const { mutateAsync: updateRestaurantDetails } = useUpdateRestaurantDetails();

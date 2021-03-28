@@ -19,9 +19,9 @@ const UpdateManagerDetailsForm = () => {
   });
 
   const rules = useRules({
-    firstName: (builder) => builder.required(),
-    lastName: (builder) => builder.required(),
-    email: (builder) => builder.required().email(),
+    firstName: (b) => b.required(),
+    lastName: (b) => b.required(),
+    email: (b) => b.required().email(),
   });
 
   const { mutateAsync: updateUserDetails } = useUpdateUserDetails();

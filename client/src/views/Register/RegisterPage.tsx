@@ -24,10 +24,10 @@ const Register: FC = () => {
   });
 
   const rules = useRules({
-    firstName: (builder) => builder.required(),
-    lastName: (builder) => builder.required(),
-    email: (builder) => builder.required().email(),
-    password: (builder) => builder.required().password(),
+    firstName: (b) => b.required(),
+    lastName: (b) => b.required(),
+    email: (b) => b.required().email(),
+    password: (b) => b.required().password(),
   });
 
   const onSubmit = form.handleSubmit(async (data) => {

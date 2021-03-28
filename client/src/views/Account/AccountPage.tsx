@@ -21,9 +21,9 @@ const CustomerDetailsForm: FC = () => {
   });
 
   const rules = useRules({
-    firstName: (builder) => builder.required(),
-    lastName: (builder) => builder.required(),
-    mobileNumber: (builder) => builder.required().mobile(),
+    firstName: (b) => b.required(),
+    lastName: (b) => b.required(),
+    mobileNumber: (b) => b.required().mobile(),
   });
 
   const { mutateAsync: update } = useUpdateAccountDetails();
@@ -123,9 +123,9 @@ const DeliveryAddressForm: FC = () => {
   });
 
   const rules = useRules({
-    addressLine1: (builder) => builder.required(),
-    city: (builder) => builder.required(),
-    postcode: (builder) => builder.required().postcode(),
+    addressLine1: (b) => b.required(),
+    city: (b) => b.required(),
+    postcode: (b) => b.required().postcode(),
   });
 
   const { mutateAsync: update } = useUpdateDeliveryAddress();
@@ -236,10 +236,10 @@ const ChangePasswordForm: FC = () => {
   });
 
   const rules = useRules({
-    currentPassword: (builder) => builder.required(),
-    newPassword: (builder) => builder.required().password(),
-    confirmNewPassword: (builder) =>
-      builder
+    currentPassword: (b) => b.required(),
+    newPassword: (b) => b.required().password(),
+    confirmNewPassword: (b) =>
+      b
         .required()
         .match(() => form.getValues().newPassword, "Passwords must match."),
   });

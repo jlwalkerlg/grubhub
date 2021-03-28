@@ -25,10 +25,10 @@ const RegisterRestaurantFormStepOne: FC<Props> = ({
   });
 
   const rules = useRules({
-    managerFirstName: (builder) => builder.required(),
-    managerLastName: (builder) => builder.required(),
-    managerEmail: (builder) => builder.required().email(),
-    managerPassword: (builder) => builder.required().password(),
+    managerFirstName: (b) => b.required(),
+    managerLastName: (b) => b.required(),
+    managerEmail: (b) => b.required().email(),
+    managerPassword: (b) => b.required().password(),
   });
 
   useEffect(() => {

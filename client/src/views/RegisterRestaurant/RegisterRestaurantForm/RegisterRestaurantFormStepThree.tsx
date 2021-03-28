@@ -30,9 +30,9 @@ const RegisterRestaurantFormStepThree: React.FC<Props> = ({
   });
 
   const rules = useRules({
-    addressLine1: (builder) => builder.required(),
-    city: (builder) => builder.required(),
-    postcode: (builder) => builder.required().postcode(),
+    addressLine1: (b) => b.required(),
+    city: (b) => b.required(),
+    postcode: (b) => b.required().postcode(),
   });
 
   useEffect(() => {

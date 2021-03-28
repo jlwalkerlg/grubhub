@@ -29,7 +29,7 @@ const Home: NextPage = () => {
   });
 
   const rules = useRules({
-    postcode: (builder) => builder.required().postcode(),
+    postcode: (b) => b.required().postcode(),
   });
 
   const router = useRouter();
