@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,8 +13,7 @@ namespace WebTests.Doubles
 
         public Task<User> GetByEmail(string email)
         {
-            return Task.FromResult(
-                Users.FirstOrDefault(x => x.Email.Address == email));
+            return Task.FromResult(Users.FirstOrDefault(x => x.Email.Address == email));
         }
 
         public Task Add(User user)
@@ -22,16 +22,14 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<User> GetById(UserId id)
+        public Task<User> GetById(Guid id)
         {
-            return Task.FromResult(
-                Users.FirstOrDefault(x => x.Id == id));
+            return Task.FromResult(Users.FirstOrDefault(x => x.Id.Value == id));
         }
 
         public Task<bool> EmailExists(string email)
         {
-            return Task.FromResult(
-                Users.Any(x => x.Email.Address == email));
+            return Task.FromResult(Users.Any(x => x.Email.Address == email));
         }
 
         public Task Add(RestaurantManager manager)

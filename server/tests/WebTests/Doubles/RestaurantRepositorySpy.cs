@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace WebTests.Doubles
 {
     public class RestaurantRepositorySpy : IRestaurantRepository
     {
-        public List<Restaurant> Restaurants = new();
+        public List<Restaurant> Restaurants { get; } = new();
 
         public Task Add(Restaurant restaurant)
         {
@@ -16,9 +17,9 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<Restaurant> GetById(RestaurantId id)
+        public Task<Restaurant> GetById(Guid id)
         {
-            return Task.FromResult(Restaurants.FirstOrDefault(x => x.Id == id));
+            return Task.FromResult(Restaurants.FirstOrDefault(x => x.Id.Value == id));
         }
     }
 }

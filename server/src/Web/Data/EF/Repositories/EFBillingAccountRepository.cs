@@ -3,14 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Web.Domain.Billing;
-using Web.Domain.Restaurants;
 using Web.Features.Billing;
 
 namespace Web.Data.EF.Repositories
 {
     public class EFBillingAccountRepository : IBillingAccountRepository
     {
-        private AppDbContext context;
+        private readonly AppDbContext context;
 
         public EFBillingAccountRepository(AppDbContext context)
         {
@@ -22,14 +21,14 @@ namespace Web.Data.EF.Repositories
             await context.BillingAccounts.AddAsync(account);
         }
 
-        public async Task<BillingAccount> GetById(BillingAccountId id)
+        public async Task<BillingAccount> GetById(string id)
         {
             return await context.BillingAccounts
                 .OrderBy(x => x.Id)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<BillingAccount> GetByRestaurantId(RestaurantId restaurantId)
+        public async Task<BillingAccount> GetByRestaurantId(Guid restaurantId)
         {
             return await context.BillingAccounts
                 .OrderBy(x => x.RestaurantId)

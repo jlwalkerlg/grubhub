@@ -20,22 +20,20 @@ namespace Web.Data.EF.Repositories
             await context.Orders.AddAsync(order);
         }
 
-        public Task<Order> GetById(OrderId id)
+        public Task<Order> GetById(string id)
         {
             return context.Orders
-                .Where(x => x.Id == id)
                 .Include(x => x.Items)
                 .OrderBy(x => x.Id)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<Order> GetByPaymentIntentId(string paymentIntentId)
         {
             return context.Orders
-                .Where(x => x.PaymentIntentId == paymentIntentId)
                 .Include(x => x.Items)
                 .OrderBy(x => x.Id)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(x => x.PaymentIntentId == paymentIntentId);
         }
     }
 }

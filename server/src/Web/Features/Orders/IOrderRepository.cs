@@ -7,6 +7,6 @@ namespace Web.Features.Orders
     {
         Task Add(Order order);
         Task<Order> GetByPaymentIntentId(string paymentIntentId);
-        Task<Order> GetById(OrderId id);
+        Task<Order> GetById(string id);
     }
 }

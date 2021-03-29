@@ -15,5 +15,7 @@ namespace Web.Domain.Orders
         }
 
         public string Value { get; }
+
+        public static implicit operator string(OrderId id) => id.Value;
     }
 }

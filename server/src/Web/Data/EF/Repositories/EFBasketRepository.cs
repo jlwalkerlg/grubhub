@@ -1,9 +1,8 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Web.Domain.Baskets;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
 using Web.Features.Baskets;
 
 namespace Web.Data.EF.Repositories
@@ -22,11 +21,10 @@ namespace Web.Data.EF.Repositories
             await context.Baskets.AddAsync(order);
         }
 
-        public async Task<Basket> Get(UserId userId, RestaurantId restaurantId)
+        public async Task<Basket> Get(Guid userId, Guid restaurantId)
         {
             return await context.Baskets
-                .Where(x => x.UserId == userId &&
-                            x.RestaurantId == restaurantId)
+                .Where(x => x.UserId == userId && x.RestaurantId == restaurantId)
                 .Include(x => x.Items)
                 .OrderBy(x => "id")
                 .SingleOrDefaultAsync();

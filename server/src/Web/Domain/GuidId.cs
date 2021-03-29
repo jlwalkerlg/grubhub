@@ -2,9 +2,9 @@ using System;
 
 namespace Web.Domain
 {
-    public record GuidId
+    public abstract record GuidId
     {
-        public GuidId(Guid value)
+        protected GuidId(Guid value)
         {
             if (value == Guid.Empty)
             {

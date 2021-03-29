@@ -1,9 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Domain.Baskets;
-using Web.Domain.Restaurants;
-using Web.Domain.Users;
 using Web.Features.Baskets;
 
 namespace WebTests.Doubles
@@ -18,11 +17,11 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<Basket> Get(UserId userId, RestaurantId restaurantId)
+        public Task<Basket> Get(Guid userId, Guid restaurantId)
         {
             return Task.FromResult(
                 Baskets.SingleOrDefault(x =>
-                    x.UserId == userId && x.RestaurantId == restaurantId)
+                    x.UserId.Value == userId && x.RestaurantId.Value == restaurantId)
             );
         }
 

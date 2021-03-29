@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Domain.Orders;
 using Web.Services.Authentication;
 using Web.Services.DateTimeServices;
 
@@ -24,7 +23,7 @@ namespace Web.Features.Orders.AcceptOrder
 
         public async Task<Result> Handle(AcceptOrderCommand command, CancellationToken cancellationToken)
         {
-            var order = await unitOfWork.Orders.GetById(new OrderId(command.OrderId));
+            var order = await unitOfWork.Orders.GetById(command.OrderId);
 
             if (order.Accepted)
             {

@@ -16,10 +16,10 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<Order> GetById(OrderId id)
+        public Task<Order> GetById(string id)
         {
             return Task.FromResult(
-                Orders.SingleOrDefault(x => x.Id == id)
+                Orders.SingleOrDefault(x => x.Id.Value == id)
             );
         }
 

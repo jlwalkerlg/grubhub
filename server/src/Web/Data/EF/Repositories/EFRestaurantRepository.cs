@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
 using Web.Features.Restaurants;
@@ -18,9 +19,9 @@ namespace Web.Data.EF.Repositories
             await context.Restaurants.AddAsync(restaurant);
         }
 
-        public async Task<Restaurant> GetById(RestaurantId id)
+        public async Task<Restaurant> GetById(Guid id)
         {
-            var restaurant = await context.Restaurants.FindAsync(id);
+            var restaurant = await context.Restaurants.FindAsync(new RestaurantId(id));
 
             if (restaurant != null)
             {

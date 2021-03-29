@@ -1,15 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Domain.Billing;
-using Web.Domain.Restaurants;
 using Web.Features.Billing;
 
 namespace WebTests.Doubles
 {
     public class BillingAccountRepositorySpy : IBillingAccountRepository
     {
-        public List<BillingAccount> Accounts { get; set; } = new();
+        public List<BillingAccount> Accounts { get; } = new();
 
         public Task Add(BillingAccount account)
         {
@@ -17,16 +17,16 @@ namespace WebTests.Doubles
             return Task.CompletedTask;
         }
 
-        public Task<BillingAccount> GetById(BillingAccountId id)
+        public Task<BillingAccount> GetById(string id)
         {
             return Task.FromResult(
-                Accounts.SingleOrDefault(x => x.Id == id));
+                Accounts.SingleOrDefault(x => x.Id.Value == id));
         }
 
-        public Task<BillingAccount> GetByRestaurantId(RestaurantId restaurantId)
+        public Task<BillingAccount> GetByRestaurantId(Guid restaurantId)
         {
             return Task.FromResult(
-                Accounts.SingleOrDefault(x => x.RestaurantId == restaurantId));
+                Accounts.SingleOrDefault(x => x.RestaurantId.Value == restaurantId));
         }
     }
 }

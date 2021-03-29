@@ -1,8 +1,8 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Domain.Menus;
-using Web.Domain.Restaurants;
 using Web.Features.Menus;
 
 namespace Web.Data.EF.Repositories
@@ -21,7 +21,7 @@ namespace Web.Data.EF.Repositories
             await context.Menus.AddAsync(menu);
         }
 
-        public async Task<Menu> GetByRestaurantId(RestaurantId id)
+        public async Task<Menu> GetByRestaurantId(Guid id)
         {
             return await context.Menus
                 .Include(x => x.Categories.Where(c =>
