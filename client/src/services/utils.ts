@@ -116,3 +116,7 @@ export function formatAddress(
 ) {
   return [line1, line2, city, postcode].filter((x) => x ?? false).join(", ");
 }
+
+export function megabytesToBytes(mb: number) {
+  return mb * 2 ** 20;
+}

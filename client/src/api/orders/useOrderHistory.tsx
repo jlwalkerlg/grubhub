@@ -14,6 +14,7 @@ export interface OrderModel {
   serviceFee: number;
   deliveryFee: number;
   restaurantName: string;
+  restaurantThumbnail: string;
 }
 
 export function getOrderHistoryQueryKey() {

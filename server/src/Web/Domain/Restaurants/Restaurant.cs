@@ -17,9 +17,9 @@ namespace Web.Domain.Restaurants
         private PhoneNumber phoneNumber;
         private Money minimumDeliverySpend = Money.Zero;
         private Money deliveryFee = Money.Zero;
-        public Distance maxDeliveryDistance = Distance.Zero;
+        private Distance maxDeliveryDistance = Distance.Zero;
         private int estimatedDeliveryTime = 30;
-        private readonly List<Cuisine> _cuisines = new();
+        private readonly List<Cuisine> cuisines = new();
 
         public Restaurant(
             RestaurantId id,
@@ -170,12 +170,15 @@ namespace Web.Domain.Restaurants
             }
         }
 
-        public IReadOnlyList<Cuisine> Cuisines => _cuisines;
+        public IReadOnlyList<Cuisine> Cuisines => cuisines;
+
+        public string Thumbnail { get; set; }
+        public string Banner { get; set; }
 
         public void SetCuisines(params Cuisine[] cuisines)
         {
-            _cuisines.RemoveAll(x => !cuisines.Contains(x));
-            _cuisines.AddRange(cuisines.Where(x => !_cuisines.Contains(x)));
+            this.cuisines.RemoveAll(x => !cuisines.Contains(x));
+            this.cuisines.AddRange(cuisines.Where(x => !this.cuisines.Contains(x)));
         }
 
         public void SetCuisines(IEnumerable<Cuisine> cuisines)

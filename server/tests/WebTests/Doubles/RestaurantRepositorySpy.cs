@@ -21,5 +21,10 @@ namespace WebTests.Doubles
         {
             return Task.FromResult(Restaurants.FirstOrDefault(x => x.Id.Value == id));
         }
+
+        public Task<Restaurant> GetByManagerId(Guid managerId)
+        {
+            return Task.FromResult(Restaurants.SingleOrDefault(x => x.ManagerId.Value == managerId));
+        }
     }
 }

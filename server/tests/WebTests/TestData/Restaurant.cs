@@ -132,6 +132,12 @@ namespace WebTests.TestData
         [Column("estimated_delivery_time_in_minutes")]
         public int EstimatedDeliveryTimeInMinutes { get; set; } = 40;
 
+        [Column("thumbnail")]
+        public string Thumbnail { get; set; }
+
+        [Column("banner")]
+        public string Banner { get; set; }
+
         public List<Cuisine> Cuisines { get; set; } = new();
 
         public Menu Menu { get; set; }

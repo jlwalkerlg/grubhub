@@ -22,9 +22,9 @@ export default function useForm<
     onValid: SubmitHandler<TSubmitFieldValues>,
     onInvalid?: SubmitErrorHandler<TFieldValues>
   ) => {
-    if (form.formState.isSubmitting) return;
-
     return form.handleSubmit<TSubmitFieldValues>(async (values, event) => {
+      if (form.formState.isSubmitting) return;
+
       try {
         await onValid(values, event);
         setError(undefined);
@@ -38,11 +38,10 @@ export default function useForm<
             }
           }
 
-          setError(new Error(e.message));
           setHasValidationErrors(true);
-        } else {
-          setError(e);
         }
+
+        setError(e);
       }
     }, onInvalid);
   };

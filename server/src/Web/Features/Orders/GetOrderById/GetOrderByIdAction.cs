@@ -62,7 +62,8 @@ namespace Web.Features.Orders.GetOrderById
                             u.last_name as customer_last_name,
                             u.email as customer_email,
                             o.mobile_number as customer_mobile,
-                            r.manager_id as restaurant_manager_id
+                            r.manager_id as restaurant_manager_id,
+                            r.thumbnail as restaurant_thumbnail
                         FROM
                             orders o
                             INNER JOIN restaurants r ON r.id = o.restaurant_id
@@ -138,6 +139,15 @@ namespace Web.Features.Orders.GetOrderById
             public string CustomerEmail { get; init; }
             public string CustomerMobile { get; init; }
             [JsonIgnore] public Guid RestaurantManagerId { get; init; }
+
+            private readonly string restaurantThumbnail;
+            public string RestaurantThumbnail
+            {
+                get => restaurantThumbnail == null
+                    ? "https://d3bvhdd3xj1ghi.cloudfront.net/thumbnail.jpg"
+                    : $"https://d3bvhdd3xj1ghi.cloudfront.net/restaurants/{Id}/{restaurantThumbnail}";
+                init => restaurantThumbnail = value;
+            }
 
             public List<OrderItemModel> Items { get; set; }
             public decimal Subtotal => Items.Aggregate(0m,

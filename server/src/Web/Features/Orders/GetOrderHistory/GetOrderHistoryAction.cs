@@ -11,7 +11,7 @@ namespace Web.Features.Orders.GetOrderHistory
 {
     public class GetOrderHistoryAction : Action
     {
-        private const int PER_PAGE = 15;
+        private const int PerPage = 15;
 
         private readonly IDbConnectionFactory dbConnectionFactory;
         private readonly IAuthenticator authenticator;
@@ -27,7 +27,7 @@ namespace Web.Features.Orders.GetOrderHistory
         public async Task<IActionResult> GetOrderHistory([FromQuery] int? page)
         {
             page = Math.Max(page ?? 1, 1);
-            var offset = (page - 1) * PER_PAGE;
+            var offset = (page - 1) * PerPage;
 
             using var connection = await dbConnectionFactory.OpenConnection();
 
@@ -39,21 +39,22 @@ namespace Web.Features.Orders.GetOrderHistory
                         SUM(oi.price * oi.quantity) / 100.00 as subtotal,
                         o.service_fee / 100.00 as service_fee,
                         o.delivery_fee / 100.00 as delivery_fee,
-                        r.name as restaurant_name
+                        r.name as restaurant_name,
+                        r.thumbnail as restaurant_thumbnail
                     FROM
                         orders o
                         INNER JOIN order_items oi on o.id = oi.order_id
                         INNER JOIN restaurants r on o.restaurant_id = r.id
                     WHERE
                         o.user_id = @UserId
-                    GROUP BY o.id, r.name
+                    GROUP BY o.id, r.name, r.thumbnail
                     ORDER BY o.delivered_at
                     LIMIT @Limit OFFSET @Offset",
                     new
                     {
                         UserId = authenticator.UserId.Value,
                         Offset = offset,
-                        Limit = PER_PAGE,
+                        Limit = PerPage,
                     });
 
             var count = await connection.ExecuteScalarAsync<int>(
@@ -79,6 +80,15 @@ namespace Web.Features.Orders.GetOrderHistory
             public decimal ServiceFee { get; init; }
             public decimal DeliveryFee { get; init; }
             public string RestaurantName { get; init; }
+
+            private readonly string restaurantThumbnail;
+            public string RestaurantThumbnail
+            {
+                get => restaurantThumbnail == null
+                    ? "https://d3bvhdd3xj1ghi.cloudfront.net/thumbnail.jpg"
+                    : $"https://d3bvhdd3xj1ghi.cloudfront.net/restaurants/{Id}/{restaurantThumbnail}";
+                init => restaurantThumbnail = value;
+            }
         }
 
         public record GetOrderHistoryResponse

@@ -120,8 +120,7 @@ const Restaurant: FC = () => {
           aria-hidden
           className="h-72"
           style={{
-            background:
-              "url(http://foodbakery.chimpgroup.com/wp-content/uploads/cover-photo17.jpg) no-repeat scroll 0 0 / cover",
+            background: `url(${restaurant.banner}) no-repeat scroll 0 0 / cover`,
           }}
         ></div>
       )}

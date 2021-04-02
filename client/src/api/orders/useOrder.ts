@@ -27,6 +27,7 @@ export interface OrderDto {
   restaurantCity: string;
   restaurantPostcode: string;
   restaurantPhoneNumber: string;
+  restaurantThumbnail: string;
   paymentIntentClientSecret: string;
   customerFirstName: string;
   customerLastName: string;

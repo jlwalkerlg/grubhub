@@ -25,7 +25,7 @@ const Header: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
   return (
     <div className="bg-white rounded border border-gray-200 pb-8 flex flex-col items-center justify-start">
       <img
-        src="http://foodbakery.chimpgroup.com/wp-content/uploads/fb-restaurant-01-1.jpg"
+        src={restaurant.thumbnail}
         width="65"
         height="65"
         alt={`${restaurant.name} logo`}

@@ -19,6 +19,7 @@ export interface RestaurantModel {
   maxDeliveryDistanceInKm: number;
   estimatedDeliveryTimeInMinutes: number;
   cuisines: CuisineDto[];
+  thumbnail: string;
 }
 
 interface SearchRestaurantsQuery {

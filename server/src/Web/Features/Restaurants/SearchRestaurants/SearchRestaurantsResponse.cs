@@ -20,6 +20,15 @@ namespace Web.Features.Restaurants.SearchRestaurants
             public int MaxDeliveryDistanceInKm { get; init; }
             public int EstimatedDeliveryTimeInMinutes { get; init; }
             public List<CuisineDto> Cuisines { get; init; } = new();
+
+            private readonly string thumbnail;
+            public string Thumbnail
+            {
+                get => thumbnail == null
+                    ? "https://d3bvhdd3xj1ghi.cloudfront.net/thumbnail.jpg"
+                    : $"https://d3bvhdd3xj1ghi.cloudfront.net/restaurants/{Id}/{thumbnail}";
+                init => thumbnail = value;
+            }
         }
 
         public class OpeningTimesModel

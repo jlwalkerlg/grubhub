@@ -165,7 +165,7 @@ const MobileOrderSummary: FC<{ order: OrderDto }> = ({ order }) => {
             title={`View the menu for ${order.restaurantName}`}
           >
             <Image
-              src="https://d30v2pzvrfyzpo.cloudfront.net/uk/images/restaurants/125643.gif"
+              src={order.restaurantThumbnail}
               alt={order.restaurantName}
               width={55}
               height={55}
@@ -303,7 +303,7 @@ const OrderSummary: FC<{ order: OrderDto; user: UserDto }> = ({
                   title={`View the menu for ${order.restaurantName}`}
                 >
                   <Image
-                    src="https://d30v2pzvrfyzpo.cloudfront.net/uk/images/restaurants/125643.gif"
+                    src={order.restaurantThumbnail}
                     alt={order.restaurantName}
                     width={55}
                     height={55}

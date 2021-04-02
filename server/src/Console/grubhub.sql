@@ -7,222 +7,30 @@
 -- Generation Time: 2021-03-28 11:35:16.4830
 -- -------------------------------------------------------------
 
-
-DROP TABLE IF EXISTS "public"."basket_items";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."basket_items" (
-    "id" int4 NOT NULL,
-    "menu_item_id" uuid NOT NULL,
-    "quantity" int4 NOT NULL,
-    "basket_id" int4,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."baskets";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."baskets" (
-    "id" int4 NOT NULL,
-    "user_id" uuid NOT NULL,
-    "restaurant_id" uuid NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."billing_accounts";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."billing_accounts" (
-    "id" text NOT NULL,
-    "restaurant_id" uuid NOT NULL,
-    "billing_enabled" bool NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."cuisines";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."cuisines" (
-    "name" text NOT NULL,
-    PRIMARY KEY ("name")
-);
-
-DROP TABLE IF EXISTS "public"."events";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."events" (
-    "id" int8 NOT NULL,
-    "occured_at" timestamp NOT NULL,
-    "type" text NOT NULL,
-    "json" jsonb NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."menu_categories";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."menu_categories" (
-    "id" uuid NOT NULL,
-    "name" text NOT NULL,
-    "is_deleted" bool NOT NULL DEFAULT false,
-    "menu_id" int4 NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."menu_items";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."menu_items" (
-    "id" uuid NOT NULL,
-    "name" text NOT NULL,
-    "description" varchar(280),
-    "price" int4 NOT NULL,
-    "is_deleted" bool NOT NULL DEFAULT false,
-    "menu_category_id" uuid NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."menus";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."menus" (
-    "id" int4 NOT NULL,
-    "restaurant_id" uuid NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."order_items";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."order_items" (
-    "id" int4 NOT NULL,
-    "menu_item_id" uuid NOT NULL,
-    "name" text NOT NULL,
-    "price" int4 NOT NULL,
-    "quantity" int4 NOT NULL,
-    "order_id" text NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."orders";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."orders" (
-    "id" text NOT NULL,
-    "user_id" uuid,
-    "restaurant_id" uuid,
-    "delivery_fee" int4 NOT NULL,
-    "service_fee" int4 NOT NULL,
-    "status" text NOT NULL,
-    "mobile_number" text NOT NULL,
-    "address_line1" text,
-    "address_line2" text,
-    "city" text,
-    "postcode" text,
-    "placed_at" timestamp NOT NULL,
-    "confirmed_at" timestamp,
-    "accepted_at" timestamp,
-    "delivered_at" timestamp,
-    "rejected_at" timestamp,
-    "cancelled_at" timestamp,
-    "payment_intent_id" text NOT NULL,
-    "payment_intent_client_secret" text NOT NULL,
-    "number" int4 NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."restaurant_cuisines";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."restaurant_cuisines" (
-    "restaurant_id" uuid NOT NULL,
-    "cuisine_name" text NOT NULL,
-    PRIMARY KEY ("restaurant_id","cuisine_name")
-);
-
-DROP TABLE IF EXISTS "public"."restaurants";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."restaurants" (
-    "id" uuid NOT NULL,
-    "manager_id" uuid NOT NULL,
-    "name" text NOT NULL,
-    "description" varchar(400),
-    "phone_number" text NOT NULL,
-    "address_line1" text,
-    "address_line2" text,
-    "city" text,
-    "postcode" text,
-    "latitude" float4,
-    "longitude" float4,
-    "status" text NOT NULL,
-    "monday_open" interval,
-    "monday_close" interval,
-    "tuesday_open" interval,
-    "tuesday_close" interval,
-    "wednesday_open" interval,
-    "wednesday_close" interval,
-    "thursday_open" interval,
-    "thursday_close" interval,
-    "friday_open" interval,
-    "friday_close" interval,
-    "saturday_open" interval,
-    "saturday_close" interval,
-    "sunday_open" interval,
-    "sunday_close" interval,
-    "minimum_delivery_spend" int4 NOT NULL,
-    "delivery_fee" int4 NOT NULL,
-    "max_delivery_distance_in_km" float4 NOT NULL,
-    "estimated_delivery_time_in_minutes" int4 NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-DROP TABLE IF EXISTS "public"."users";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition
-CREATE TABLE "public"."users" (
-    "id" uuid NOT NULL,
-    "first_name" text NOT NULL,
-    "last_name" text NOT NULL,
-    "email" text NOT NULL,
-    "password" text NOT NULL,
-    "mobile_number" text,
-    "address_line1" text,
-    "address_line2" text,
-    "city" text,
-    "postcode" text,
-    "role" text NOT NULL,
-    PRIMARY KEY ("id")
-);
-
-INSERT INTO "public"."basket_items" ("id", "menu_item_id", "quantity", "basket_id") VALUES
-(1, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 2, 1);
-
-INSERT INTO "public"."baskets" ("id", "user_id", "restaurant_id") VALUES
-(1, '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01');
-
-INSERT INTO "public"."billing_accounts" ("id", "restaurant_id", "billing_enabled") VALUES
-('acct_1IID2yPTYOwNQdvb', '015caf13-8252-476b-9e7f-c43767998c02', 't'),
-('acct_1IIDXKPRU0NZyTXU', '015caf13-8252-476b-9e7f-c43767998c01', 't');
+INSERT INTO "public"."users" ("id", "first_name", "last_name", "email", "password", "mobile_number", "address_line1", "address_line2", "city", "postcode", "role") VALUES
+('979a79d6-7b7c-4c21-88c9-8f918be90d01', 'Mr', 'Manager', 'mr.manager@gmail.com', '$2a$11$V/MzgGUlIjqDEx4hnJdJ.OFqkDYsTYGeWyCaRaT76/I4fmihsyMb.', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
+('979a79d6-7b7c-4c21-88c9-8f918be90d02', 'Bruno', 'Walker', 'bruno@gmail.com', '$2a$11$UJpHe.HVBGsBKdQhgELUOeIlRQuv72C01vPNhAOLtvU5ZpUg0HPxO', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
+('979a79d6-7b7c-4c21-88c9-8f918be90d03', 'Joe', 'Bloggs', 'joe.bloggs@gmail.com', '$2a$11$Xd.CnplhUnPS4xtso35XBuoVqfHM11rf0CGyvqBWCFBgJ5fIV7uBS', '07234567890', '12 Maine Road', NULL, 'Shipley', 'BD18 1LT', 'Customer');
 
 INSERT INTO "public"."cuisines" ("name") VALUES
 ('Breakfast'),
 ('Café'),
 ('Spanish'),
 ('Tapas');
+
+INSERT INTO "public"."restaurants" ("id", "manager_id", "name", "description", "phone_number", "address_line1", "address_line2", "city", "postcode", "latitude", "longitude", "status", "monday_open", "monday_close", "tuesday_open", "tuesday_close", "wednesday_open", "wednesday_close", "thursday_open", "thursday_close", "friday_open", "friday_close", "saturday_open", "saturday_close", "sunday_open", "sunday_close", "minimum_delivery_spend", "delivery_fee", "max_delivery_distance_in_km", "estimated_delivery_time_in_minutes") VALUES
+('015caf13-8252-476b-9e7f-c43767998c01', '979a79d6-7b7c-4c21-88c9-8f918be90d01', 'Smorgasbord Coffee Bar', NULL, '01234567890', '2/4 Rawson Place', NULL, 'Bradford', 'BD1 3QQ', 53.830975, -1.75002, 'Approved', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', 1000, 249, 5, 40),
+('015caf13-8252-476b-9e7f-c43767998c02', '979a79d6-7b7c-4c21-88c9-8f918be90d02', 'Tapas Tree Restaurant', NULL, '01234567890', 'Wharf House Wharf Street', NULL, 'Shipley', 'BD17 7DW', 53.814545, -1.7230635, 'Approved', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', 1000, 249, 5, 45);
+
+INSERT INTO "public"."restaurant_cuisines" ("restaurant_id", "cuisine_name") VALUES
+('015caf13-8252-476b-9e7f-c43767998c01', 'Breakfast'),
+('015caf13-8252-476b-9e7f-c43767998c01', 'Café'),
+('015caf13-8252-476b-9e7f-c43767998c02', 'Spanish'),
+('015caf13-8252-476b-9e7f-c43767998c02', 'Tapas');
+
+INSERT INTO "public"."menus" ("id", "restaurant_id") VALUES
+(1, '015caf13-8252-476b-9e7f-c43767998c01'),
+(2, '015caf13-8252-476b-9e7f-c43767998c02');
 
 INSERT INTO "public"."menu_categories" ("id", "name", "is_deleted", "menu_id") VALUES
 ('140d5edf-ee89-40c7-b95a-a7df88ea3038', 'Vegetarian Sandwich', 'f', 2),
@@ -411,17 +219,15 @@ INSERT INTO "public"."menu_items" ("id", "name", "description", "price", "is_del
 ('febc3ace-a7af-45ab-ab73-05bc46e0b698', 'Pesto Pasta', 'Penne pasta cooked in extra virgin olive oil, pesto and fresh basil topped with Parmesan. Why not ask for melted cheese on top?', 750, 'f', '2351ad34-5170-4ca6-b94b-007f580371f7'),
 ('ffccaf79-294e-4cc8-b750-8643cc0b480d', 'Cheese Savoury Jacket Potato', 'Cheese mixed with red onions, sweetcorn, lettuce and creamy mayonnaise', 575, 'f', '2381e7d9-b192-4169-b222-de6d5311a7b0');
 
-INSERT INTO "public"."menus" ("id", "restaurant_id") VALUES
-(1, '015caf13-8252-476b-9e7f-c43767998c01'),
-(2, '015caf13-8252-476b-9e7f-c43767998c02');
+INSERT INTO "public"."billing_accounts" ("id", "restaurant_id", "billing_enabled") VALUES
+('acct_1IID2yPTYOwNQdvb', '015caf13-8252-476b-9e7f-c43767998c02', 't'),
+('acct_1IIDXKPRU0NZyTXU', '015caf13-8252-476b-9e7f-c43767998c01', 't');
 
-INSERT INTO "public"."order_items" ("id", "menu_item_id", "name", "price", "quantity", "order_id") VALUES
-(1, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27994'),
-(2, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27995'),
-(3, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27996'),
-(4, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27997'),
-(5, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27998'),
-(6, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27999');
+INSERT INTO "public"."baskets" ("id", "user_id", "restaurant_id") VALUES
+(1, '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01');
+
+INSERT INTO "public"."basket_items" ("id", "menu_item_id", "quantity", "basket_id") VALUES
+(1, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 2, 1);
 
 INSERT INTO "public"."orders" ("id", "user_id", "restaurant_id", "delivery_fee", "service_fee", "status", "mobile_number", "address_line1", "address_line2", "city", "postcode", "placed_at", "confirmed_at", "accepted_at", "delivered_at", "rejected_at", "cancelled_at", "payment_intent_id", "payment_intent_client_secret", "number") VALUES
 ('b0e2b662-b552-4f1d-b56a-d8f5e7e27994', '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01', 249, 50, 'Delivered', '07234567890', '12 Maine Road', '', 'Shipley', 'BD18 1LT', '2021-03-28 10:31:21.740762', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', NULL, NULL, 'pi_1IZvtuADp7wq6SbkhGVRlBR3', 'pi_1IZvtuADp7wq6SbkhGVRlBR3_secret_qwZg5EyFOiG78sIFudy3vkfz5', 1),
@@ -431,33 +237,10 @@ INSERT INTO "public"."orders" ("id", "user_id", "restaurant_id", "delivery_fee",
 ('b0e2b662-b552-4f1d-b56a-d8f5e7e27998', '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01', 249, 50, 'Delivered', '07234567890', '12 Maine Road', '', 'Shipley', 'BD18 1LT', '2021-03-28 10:31:21.740762', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', NULL, NULL, 'pi_1IZvtuADp7wq6SbkhGVRlBR3', 'pi_1IZvtuADp7wq6SbkhGVRlBR3_secret_qwZg5EyFOiG78sIFudy3vkfz5', 5),
 ('b0e2b662-b552-4f1d-b56a-d8f5e7e27999', '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01', 249, 50, 'Delivered', '07234567890', '12 Maine Road', '', 'Shipley', 'BD18 1LT', '2021-03-28 10:31:21.740762', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', NULL, NULL, 'pi_1IZvtuADp7wq6SbkhGVRlBR3', 'pi_1IZvtuADp7wq6SbkhGVRlBR3_secret_qwZg5EyFOiG78sIFudy3vkfz5', 6);
 
-INSERT INTO "public"."restaurant_cuisines" ("restaurant_id", "cuisine_name") VALUES
-('015caf13-8252-476b-9e7f-c43767998c01', 'Breakfast'),
-('015caf13-8252-476b-9e7f-c43767998c01', 'Café'),
-('015caf13-8252-476b-9e7f-c43767998c02', 'Spanish'),
-('015caf13-8252-476b-9e7f-c43767998c02', 'Tapas');
-
-INSERT INTO "public"."restaurants" ("id", "manager_id", "name", "description", "phone_number", "address_line1", "address_line2", "city", "postcode", "latitude", "longitude", "status", "monday_open", "monday_close", "tuesday_open", "tuesday_close", "wednesday_open", "wednesday_close", "thursday_open", "thursday_close", "friday_open", "friday_close", "saturday_open", "saturday_close", "sunday_open", "sunday_close", "minimum_delivery_spend", "delivery_fee", "max_delivery_distance_in_km", "estimated_delivery_time_in_minutes") VALUES
-('015caf13-8252-476b-9e7f-c43767998c01', '979a79d6-7b7c-4c21-88c9-8f918be90d01', 'Smorgasbord Coffee Bar', NULL, '01234567890', '2/4 Rawson Place', NULL, 'Bradford', 'BD1 3QQ', 53.830975, -1.75002, 'Approved', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', '09:00:00', '23:00:00', 1000, 249, 5, 40),
-('015caf13-8252-476b-9e7f-c43767998c02', '979a79d6-7b7c-4c21-88c9-8f918be90d02', 'Tapas Tree Restaurant', NULL, '01234567890', 'Wharf House Wharf Street', NULL, 'Shipley', 'BD17 7DW', 53.814545, -1.7230635, 'Approved', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', '07:45:00', '23:45:00', 1000, 249, 5, 45);
-
-INSERT INTO "public"."users" ("id", "first_name", "last_name", "email", "password", "mobile_number", "address_line1", "address_line2", "city", "postcode", "role") VALUES
-('979a79d6-7b7c-4c21-88c9-8f918be90d01', 'Mr', 'Manager', 'mr.manager@gmail.com', '$2a$11$V/MzgGUlIjqDEx4hnJdJ.OFqkDYsTYGeWyCaRaT76/I4fmihsyMb.', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
-('979a79d6-7b7c-4c21-88c9-8f918be90d02', 'Bruno', 'Walker', 'bruno@gmail.com', '$2a$11$UJpHe.HVBGsBKdQhgELUOeIlRQuv72C01vPNhAOLtvU5ZpUg0HPxO', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
-('979a79d6-7b7c-4c21-88c9-8f918be90d03', 'Joe', 'Bloggs', 'joe.bloggs@gmail.com', '$2a$11$Xd.CnplhUnPS4xtso35XBuoVqfHM11rf0CGyvqBWCFBgJ5fIV7uBS', '07234567890', '12 Maine Road', NULL, 'Shipley', 'BD18 1LT', 'Customer');
-
-ALTER TABLE "public"."basket_items" ADD FOREIGN KEY ("basket_id") REFERENCES "public"."baskets"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."basket_items" ADD FOREIGN KEY ("menu_item_id") REFERENCES "public"."menu_items"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."baskets" ADD FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurants"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."baskets" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."billing_accounts" ADD FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurants"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."menu_categories" ADD FOREIGN KEY ("menu_id") REFERENCES "public"."menus"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."menu_items" ADD FOREIGN KEY ("menu_category_id") REFERENCES "public"."menu_categories"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."menus" ADD FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurants"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."order_items" ADD FOREIGN KEY ("menu_item_id") REFERENCES "public"."menu_items"("id") ON DELETE RESTRICT;
-ALTER TABLE "public"."order_items" ADD FOREIGN KEY ("order_id") REFERENCES "public"."orders"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."orders" ADD FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurants"("id") ON DELETE RESTRICT;
-ALTER TABLE "public"."orders" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT;
-ALTER TABLE "public"."restaurant_cuisines" ADD FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurants"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."restaurant_cuisines" ADD FOREIGN KEY ("cuisine_name") REFERENCES "public"."cuisines"("name") ON DELETE CASCADE;
-ALTER TABLE "public"."restaurants" ADD FOREIGN KEY ("manager_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
+INSERT INTO "public"."order_items" ("id", "menu_item_id", "name", "price", "quantity", "order_id") VALUES
+(1, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27994'),
+(2, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27995'),
+(3, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27996'),
+(4, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27997'),
+(5, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27998'),
+(6, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27999');

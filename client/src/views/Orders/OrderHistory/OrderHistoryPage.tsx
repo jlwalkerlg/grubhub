@@ -23,7 +23,7 @@ const OrderListItem: FC<{ order: OrderModel; index: number }> = ({
         <a className="flex">
           <div>
             <Image
-              src="https://d30v2pzvrfyzpo.cloudfront.net/uk/images/restaurants/125643.gif"
+              src={order.restaurantThumbnail}
               alt={order.restaurantName}
               width={55}
               height={55}

@@ -22,6 +22,7 @@ using Web.Services.Billing;
 using Web.Services.DateTimeServices;
 using Web.Services.Events;
 using Web.Services.Mail;
+using Web.Services.Storage;
 
 namespace Web
 {
@@ -45,6 +46,7 @@ namespace Web
             services.AddSingleton(settings.Database);
             services.AddSingleton(settings.Stripe);
             services.AddSingleton(settings.Mail);
+            services.AddSingleton(settings.Aws);
 
             services.AddLogging(builder =>
             {
@@ -115,6 +117,8 @@ namespace Web
             services.AddHashing();
 
             services.AddMail();
+
+            services.AddImageStorage();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

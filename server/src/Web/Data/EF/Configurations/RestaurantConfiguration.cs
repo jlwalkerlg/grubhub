@@ -138,6 +138,12 @@ namespace Web.Data.EF.Configurations
                 builder.Property(x => x.EstimatedDeliveryTimeInMinutes)
                     .IsRequired()
                     .HasColumnName("estimated_delivery_time_in_minutes");
+
+                builder.Property(x => x.Thumbnail)
+                    .HasColumnName("thumbnail");
+
+                builder.Property(x => x.Banner)
+                    .HasColumnName("banner");
             });
         }
     }

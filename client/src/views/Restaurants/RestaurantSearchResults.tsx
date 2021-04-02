@@ -72,7 +72,7 @@ const RestaurantSearchResults: FC = () => {
               >
                 <div className="hidden sm:block">
                   <img
-                    src="http://foodbakery.chimpgroup.com/wp-content/uploads/fb-restaurant-01-1.jpg"
+                    src={restaurant.thumbnail}
                     width="95"
                     height="95"
                     alt={`${restaurant.name} logo`}

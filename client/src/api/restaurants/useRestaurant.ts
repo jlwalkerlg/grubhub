@@ -22,6 +22,8 @@ export interface RestaurantDto {
   estimatedDeliveryTimeInMinutes: number;
   menu: MenuDto;
   cuisines: CuisineDto[];
+  thumbnail: string;
+  banner: string;
 }
 
 export type RestaurantStatus = "PendingApproval" | "Approved";

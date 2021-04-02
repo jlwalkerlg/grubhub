@@ -8,5 +8,6 @@ namespace Web.Features.Restaurants
     {
         Task Add(Restaurant restaurant);
         Task<Restaurant> GetById(Guid id);
+        Task<Restaurant> GetByManagerId(Guid managerId);
     }
 }

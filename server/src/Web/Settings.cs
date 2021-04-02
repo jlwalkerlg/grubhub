@@ -7,6 +7,7 @@ namespace Web
         public GeocodingSettings Geocoding { get; init; }
         public StripeSettings Stripe { get; init; }
         public MailSettings Mail { get; init; }
+        public AwsSettings Aws { get; init; }
     }
 
     public record AppSettings
@@ -44,5 +45,13 @@ namespace Web
         public string Password { get; init; }
         public string Host { get; init; }
         public int Port { get; init; }
+    }
+
+    public record AwsSettings
+    {
+        public string AccessKeyId { get; init; }
+        public string SecretAccessKey { get; init; }
+        public string Region { get; init; }
+        public string Bucket { get; init; }
     }
 }

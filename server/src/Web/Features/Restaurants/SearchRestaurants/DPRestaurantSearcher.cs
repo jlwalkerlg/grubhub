@@ -51,7 +51,8 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     r.delivery_fee / 100.00 as delivery_fee,
                     r.minimum_delivery_spend / 100.00 as minimum_delivery_spend,
                     r.max_delivery_distance_in_km,
-                    r.estimated_delivery_time_in_minutes
+                    r.estimated_delivery_time_in_minutes,
+                    r.thumbnail
                 FROM
                     restaurants r
                     INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id ";

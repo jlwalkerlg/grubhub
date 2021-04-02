@@ -1,6 +1,6 @@
 module.exports = {
   images: {
-    domains: ["d30v2pzvrfyzpo.cloudfront.net"],
+    domains: ["d3bvhdd3xj1ghi.cloudfront.net"],
   },
 
   async redirects() {

@@ -112,7 +112,14 @@ export const Dashboard: React.FC<Props> = ({ children, route }) => {
     <main>
       <h1 className="sr-only">{route.title}</h1>
 
-      <div className="restaurant-banner py-8 lg:py-16 xl:py-24">
+      <div
+        className="restaurant-banner py-8 lg:py-16 xl:py-24"
+        style={{
+          background: restaurant
+            ? `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)) center / cover no-repeat, url("${restaurant.banner}") center / cover no-repeat`
+            : "rgba(0, 0, 0, 0.7)",
+        }}
+      >
         <div className="container">
           {isLoading && (
             <SpinnerIcon className="h-6 w-6 animate-spin text-gray-100" />

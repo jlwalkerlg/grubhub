@@ -55,7 +55,9 @@ namespace Web.Features.Restaurants.GetRestaurantById
                         r.delivery_fee / 100.00 as delivery_fee,
                         r.minimum_delivery_spend / 100.00 as minimum_delivery_spend,
                         r.max_delivery_distance_in_km,
-                        r.estimated_delivery_time_in_minutes
+                        r.estimated_delivery_time_in_minutes,
+                        r.thumbnail,
+                        r.banner
                     FROM
                         restaurants r
                     WHERE
@@ -180,7 +182,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             [JsonIgnore] public TimeSpan? SundayOpen { get; init; }
             [JsonIgnore] public TimeSpan? SundayClose { get; init; }
 
-            public OpeningTimesModel OpeningTimes => new OpeningTimesModel()
+            public OpeningTimesModel OpeningTimes => new()
             {
                 Monday = MondayOpen.HasValue
                     ? new OpeningHoursModel()
@@ -236,6 +238,25 @@ namespace Web.Features.Restaurants.GetRestaurantById
             public decimal MinimumDeliverySpend { get; init; }
             public float MaxDeliveryDistanceInKm { get; init; }
             public int EstimatedDeliveryTimeInMinutes { get; init; }
+
+            private readonly string thumbnail;
+            public string Thumbnail
+            {
+                get => thumbnail == null
+                    ? "https://d3bvhdd3xj1ghi.cloudfront.net/thumbnail.jpg"
+                    : $"https://d3bvhdd3xj1ghi.cloudfront.net/restaurants/{Id}/{thumbnail}";
+                init => thumbnail = value;
+            }
+
+            private readonly string banner;
+            public string Banner
+            {
+                get => banner == null
+                    ? "https://d3bvhdd3xj1ghi.cloudfront.net/banner.jpg"
+                    : $"https://d3bvhdd3xj1ghi.cloudfront.net/restaurants/{Id}/{banner}";
+                init => banner = value;
+            }
+
             public List<CuisineModel> Cuisines { get; set; }
             public MenuModel Menu { get; set; }
 
