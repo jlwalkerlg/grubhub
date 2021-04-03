@@ -14,8 +14,10 @@ export interface OrderModel {
   subtotal: number;
 }
 
-export function getRestaurantOrderHistoryQueryKey(page: number) {
-  return ["restaurant-order-history", page];
+export function getRestaurantOrderHistoryQueryKey(page?: number) {
+  return page === undefined
+    ? "restaurant-order-history"
+    : ["restaurant-order-history", page];
 }
 
 export default function useRestaurantOrderHistory(page: number) {
