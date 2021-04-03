@@ -1,5 +1,5 @@
 import { useInfiniteQuery, UseInfiniteQueryOptions } from "react-query";
-import api, { ApiError } from "~/api/api";
+import api, { ApiError } from "~/api/apii";
 
 export interface GetOrderHistoryResponse {
   orders: OrderModel[];

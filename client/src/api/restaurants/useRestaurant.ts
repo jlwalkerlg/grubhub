@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query";
-import api, { ApiError } from "../api";
+import api, { ApiError } from "../apii";
 import { CuisineDto } from "../cuisines/useCuisines";
 
 export interface RestaurantDto {

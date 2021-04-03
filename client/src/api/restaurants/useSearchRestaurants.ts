@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "react-query";
-import api, { ApiError } from "../api";
+import api, { ApiError } from "../apii";
 import { CuisineDto } from "../cuisines/useCuisines";
 import { OpeningTimes } from "./useRestaurant";
 

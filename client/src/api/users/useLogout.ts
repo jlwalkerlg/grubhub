@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import api, { ApiError } from "../api";
+import api, { ApiError } from "../apii";
 import useAuth from "./useAuth";
 
 export default function useLogout() {

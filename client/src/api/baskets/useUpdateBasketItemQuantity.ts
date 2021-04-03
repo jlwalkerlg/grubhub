@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import api, { ApiError } from "../api";
+import api, { ApiError } from "../apii";
 import { getBasketQueryKey } from "./useBasket";
 
 interface UpdateBasketItemQuantityCommand {

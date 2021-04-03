@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import api, { ApiError } from "../api";
+import api, { ApiError } from "../apii";
 import useAuth, { UserDto } from "./useAuth";
 
 export interface UpdateUserDetailsCommand {
