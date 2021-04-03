@@ -131,7 +131,6 @@ const Restaurant: FC = () => {
             <Main
               isLoading={loading}
               isError={isError}
-              error={error}
               restaurant={restaurant}
             />
           </main>

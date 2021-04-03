@@ -38,7 +38,11 @@ export function useOrdersHub(options?: Options) {
       })
       .finally(() => isMounted && setIsLoading(false));
 
-    return () => enabled && connection.stop();
+    return () => {
+      if (enabled) {
+        connection.stop();
+      }
+    };
   }, [enabled]);
 
   return { isLoading, isConnectionError: !!connectionError, connectionError };

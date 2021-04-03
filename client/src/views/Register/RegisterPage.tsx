@@ -126,7 +126,7 @@ const Register: FC = () => {
         <div className="mt-4">
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={form.isLoading}
             className="btn btn-primary font-semibold w-full normal-case"
           >
             Create account

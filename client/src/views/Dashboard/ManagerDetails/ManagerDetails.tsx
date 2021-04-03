@@ -34,7 +34,7 @@ const UpdateManagerDetailsForm = () => {
     <form onSubmit={onSubmit}>
       {form.error && (
         <div className="my-6">
-          <ErrorAlert message={form.error.detail} />
+          <ErrorAlert message={form.error.message} />
         </div>
       )}
 

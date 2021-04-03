@@ -487,7 +487,6 @@ const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       <OrderAside
         isLoading={isLoading}
         isError={isError}
-        error={error}
         restaurant={restaurant}
         basket={basket}
         subtotal={subtotal}
