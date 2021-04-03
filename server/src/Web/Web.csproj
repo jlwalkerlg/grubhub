@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <None Include="..\..\settings.json" CopyToOutputDirectory="Always" />
+    <None Include="..\..\settings.Production.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

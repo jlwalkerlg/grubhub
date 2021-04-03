@@ -22,6 +22,15 @@ namespace Web
                             .Build();
 
                     builder.AddConfiguration(config);
+
+                    var env = config["App:Environment"];
+
+                    if (env == "Production")
+                    {
+                        builder.AddConfiguration(new ConfigurationBuilder()
+                            .AddJsonFile("settings.Production.json")
+                            .Build());
+                    }
                 })
                 .ConfigureWebHostDefaults(builder =>
                 {

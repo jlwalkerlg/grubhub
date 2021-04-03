@@ -1,4 +1,5 @@
 /settings.json
+/settings.Production.json
 
 # Created by https://www.gitignore.io/api/macos,csharp,dotnetcore,aspnetcore
 # Edit at https://www.gitignore.io/?templates=macos,csharp,dotnetcore,aspnetcore
