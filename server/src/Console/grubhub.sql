@@ -28,9 +28,9 @@ INSERT INTO "public"."restaurant_cuisines" ("restaurant_id", "cuisine_name") VAL
 ('015caf13-8252-476b-9e7f-c43767998c02', 'Spanish'),
 ('015caf13-8252-476b-9e7f-c43767998c02', 'Tapas');
 
-INSERT INTO "public"."menus" ("id", "restaurant_id") VALUES
-(1, '015caf13-8252-476b-9e7f-c43767998c01'),
-(2, '015caf13-8252-476b-9e7f-c43767998c02');
+INSERT INTO "public"."menus" ("restaurant_id") VALUES
+('015caf13-8252-476b-9e7f-c43767998c01'),
+('015caf13-8252-476b-9e7f-c43767998c02');
 
 INSERT INTO "public"."menu_categories" ("id", "name", "is_deleted", "menu_id") VALUES
 ('140d5edf-ee89-40c7-b95a-a7df88ea3038', 'Vegetarian Sandwich', 'f', 2),
@@ -223,11 +223,11 @@ INSERT INTO "public"."billing_accounts" ("id", "restaurant_id", "billing_enabled
 ('acct_1IID2yPTYOwNQdvb', '015caf13-8252-476b-9e7f-c43767998c02', 't'),
 ('acct_1IIDXKPRU0NZyTXU', '015caf13-8252-476b-9e7f-c43767998c01', 't');
 
-INSERT INTO "public"."baskets" ("id", "user_id", "restaurant_id") VALUES
-(1, '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01');
+INSERT INTO "public"."baskets" ("user_id", "restaurant_id") VALUES
+('979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01');
 
-INSERT INTO "public"."basket_items" ("id", "menu_item_id", "quantity", "basket_id") VALUES
-(1, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 2, 1);
+INSERT INTO "public"."basket_items" ("menu_item_id", "quantity", "basket_id") VALUES
+('5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 2, 1);
 
 INSERT INTO "public"."orders" ("id", "user_id", "restaurant_id", "delivery_fee", "service_fee", "status", "mobile_number", "address_line1", "address_line2", "city", "postcode", "placed_at", "confirmed_at", "accepted_at", "delivered_at", "rejected_at", "cancelled_at", "payment_intent_id", "payment_intent_client_secret", "number") VALUES
 ('b0e2b662-b552-4f1d-b56a-d8f5e7e27994', '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01', 249, 50, 'Delivered', '07234567890', '12 Maine Road', '', 'Shipley', 'BD18 1LT', '2021-03-28 10:31:21.740762', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', NULL, NULL, 'pi_1IZvtuADp7wq6SbkhGVRlBR3', 'pi_1IZvtuADp7wq6SbkhGVRlBR3_secret_qwZg5EyFOiG78sIFudy3vkfz5', 1),
@@ -237,10 +237,10 @@ INSERT INTO "public"."orders" ("id", "user_id", "restaurant_id", "delivery_fee",
 ('b0e2b662-b552-4f1d-b56a-d8f5e7e27998', '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01', 249, 50, 'Delivered', '07234567890', '12 Maine Road', '', 'Shipley', 'BD18 1LT', '2021-03-28 10:31:21.740762', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', NULL, NULL, 'pi_1IZvtuADp7wq6SbkhGVRlBR3', 'pi_1IZvtuADp7wq6SbkhGVRlBR3_secret_qwZg5EyFOiG78sIFudy3vkfz5', 5),
 ('b0e2b662-b552-4f1d-b56a-d8f5e7e27999', '979a79d6-7b7c-4c21-88c9-8f918be90d03', '015caf13-8252-476b-9e7f-c43767998c01', 249, 50, 'Delivered', '07234567890', '12 Maine Road', '', 'Shipley', 'BD18 1LT', '2021-03-28 10:31:21.740762', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', '2021-03-28 11:32:12.216066', NULL, NULL, 'pi_1IZvtuADp7wq6SbkhGVRlBR3', 'pi_1IZvtuADp7wq6SbkhGVRlBR3_secret_qwZg5EyFOiG78sIFudy3vkfz5', 6);
 
-INSERT INTO "public"."order_items" ("id", "menu_item_id", "name", "price", "quantity", "order_id") VALUES
-(1, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27994'),
-(2, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27995'),
-(3, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27996'),
-(4, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27997'),
-(5, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27998'),
-(6, '5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27999');
+INSERT INTO "public"."order_items" ("menu_item_id", "name", "price", "quantity", "order_id") VALUES
+('5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27994'),
+('5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27995'),
+('5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27996'),
+('5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27997'),
+('5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27998'),
+('5a6124cc-6ec9-4337-9a70-fcbd0c084c18', 'Full English Breakfast', 750, 2, 'b0e2b662-b552-4f1d-b56a-d8f5e7e27999');
