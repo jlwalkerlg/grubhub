@@ -25,7 +25,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
             Coordinates coordinates,
             RestaurantSearchOptions options = null)
         {
-            var now = dateTimeProvider.UtcNow;
+            var now = dateTimeProvider.GmtNow;
             var day = now.DayOfWeek.ToString().ToLower();
 
             var sql = @"
