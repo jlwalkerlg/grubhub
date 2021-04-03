@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import api, { ApiError } from "../apii";
+import api, { ApiError } from "../api";
 
 interface AcceptOrderCommand {
   orderId: string;

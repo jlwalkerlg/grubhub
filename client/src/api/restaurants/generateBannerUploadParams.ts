@@ -1,4 +1,4 @@
-import api from "../apii";
+import api from "../api";
 
 interface GenerateBannerUploadParamsCommand {
   filename: string;

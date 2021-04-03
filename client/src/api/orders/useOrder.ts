@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query";
-import api, { ApiError } from "../apii";
+import api, { ApiError } from "../api";
 
 export interface OrderDto {
   id: string;

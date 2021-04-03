@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import api, { ApiError } from "~/api/apii";
+import api, { ApiError } from "~/api/api";
 
 export interface UserDto {
   id: string;

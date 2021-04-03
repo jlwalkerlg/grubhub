@@ -7,7 +7,7 @@ import {
   useForm as useHookForm,
   UseFormOptions,
 } from "react-hook-form";
-import api from "~/api/apii";
+import api from "~/api/api";
 
 export default function useForm<
   TFieldValues extends FieldValues = FieldValues,

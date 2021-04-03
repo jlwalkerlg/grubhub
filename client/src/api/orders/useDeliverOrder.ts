@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import api, { ApiError } from "../apii";
+import api, { ApiError } from "../api";
 import { getRestaurantOrderHistoryQueryKey } from "./useRestaurantOrderHistory";
 
 interface DeliverOrderCommand {

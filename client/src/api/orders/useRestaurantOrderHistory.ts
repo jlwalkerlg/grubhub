@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import api, { ApiError } from "../apii";
+import api, { ApiError } from "../api";
 
 export interface GetRestaurantOrderHistoryResponse {
   orders: OrderModel[];
