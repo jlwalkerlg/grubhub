@@ -10,6 +10,21 @@ services:
     depends_on:
       - db
 
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - web
+    restart: always
+    environment:
+      DOMAINS: "api.grub-hub.walkerjordan.com -> http://web:5000"
+      # STAGE: 'production' # Don't use production until staging works
+      # FORCE_RENEW: 'true'
+    volumes:
+      - https-portal-data:/var/lib/https-portal
+
   db:
     container_name: grubhub-db
     image: postgres:12
@@ -23,3 +38,4 @@ services:
 
 volumes:
   grubhub-db:
+  https-portal-data:
