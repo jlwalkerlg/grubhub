@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: grubhub-web
+    build: .
+    image: jlwalkerlg/grubhub:latest
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+
+  db:
+    container_name: grubhub-db
+    image: postgres:12
+    volumes:
+      - ./docker:/docker-entrypoint-initdb.d
+      - grubhub-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
+      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+
+volumes:
+  grubhub-db:
