@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ using Web.Services.Hashing;
 using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Web.Data.EF;
 using Web.Services;
 using Web.Services.Billing;
@@ -55,6 +57,18 @@ namespace Web
                 builder.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder
+                        .WithOrigins(settings.App.CorsOrigins)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
+
             services
                 .AddControllers(options =>
                 {
@@ -70,18 +84,6 @@ namespace Web
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                 });
-
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder
-                        .WithOrigins(settings.App.CorsOrigins)
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
-            });
 
             services.AddAntiforgery(options =>
             {
@@ -131,6 +133,20 @@ namespace Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            if (env.IsProduction())
+            {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions()
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
+
+                app.Use(async (context, next) =>
+                {
+                    await next();
+                    Console.WriteLine(JsonSerializer.Serialize(context.Response.Headers));
+                });
             }
 
             app.UseCors();
