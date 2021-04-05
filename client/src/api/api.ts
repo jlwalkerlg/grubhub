@@ -1,4 +1,4 @@
-import Axios, {
+import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
@@ -35,14 +35,20 @@ export class ApiError {
   readonly instance?: string;
   readonly errors?: { [key: string]: string[] };
 
-  public constructor(response: AxiosResponse<ProblemDetails>) {
-    this.type = response.data.type;
-    this.title = response.data.title;
-    this.status = response.data.status;
-    this.traceId = response.data.traceId;
-    this.detail = response.data.detail;
-    this.instance = response.data.instance;
-    this.errors = response.data.errors;
+  public constructor(error: Error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const details = error.response.data as ProblemDetails;
+
+      this.type = details.type;
+      this.title = details.title;
+      this.status = details.status;
+      this.traceId = details.traceId;
+      this.detail = details.detail;
+      this.instance = details.instance;
+      this.errors = details.errors;
+    } else {
+      this.detail = error.message;
+    }
   }
 
   get isValidationError() {
@@ -55,7 +61,7 @@ export class ApiError {
 }
 
 class Api {
-  private client: AxiosInstance = Axios.create({
+  private client: AxiosInstance = axios.create({
     withCredentials: true,
     baseURL: API_BASE_URL,
     xsrfCookieName: "XSRF-TOKEN",
@@ -108,7 +114,7 @@ class Api {
 
       return new ApiResult<T>(response);
     } catch (e) {
-      throw new ApiError(e.response);
+      throw new ApiError(e);
     }
   }
 
