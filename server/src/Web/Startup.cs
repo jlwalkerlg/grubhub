@@ -1,4 +1,3 @@
-using System;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -140,12 +139,6 @@ namespace Web
                 app.UseForwardedHeaders(new ForwardedHeadersOptions()
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                });
-
-                app.Use(async (context, next) =>
-                {
-                    await next();
-                    Console.WriteLine(JsonSerializer.Serialize(context.Response.Headers));
                 });
             }
 
