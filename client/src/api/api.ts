@@ -108,6 +108,10 @@ class Api {
     try {
       const response = await this.client.request<T>({
         ...config,
+        headers: {
+          ...(config?.headers ?? {}),
+          "X-XSRF-TOKEN": localStorage.getItem("XSRF-TOKEN") ?? undefined,
+        },
         url,
         method,
       });

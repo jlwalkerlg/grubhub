@@ -16,7 +16,6 @@ namespace Web
         public string ServerUrl { get; init; }
         public string ClientUrl { get; init; }
         public string[] CorsOrigins { get; init; }
-        public string CsrfCookieDomain { get; init; }
         public string StripeOnboardingRefreshUrl => $"{ServerUrl}/stripe/onboarding/refresh";
         public string StripeOnboardingReturnUrl => $"{ClientUrl}/dashboard/billing";
     }

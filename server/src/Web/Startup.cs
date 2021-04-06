@@ -88,7 +88,6 @@ namespace Web
             {
                 options.HeaderName = "X-XSRF-TOKEN"; // as expected from the client
                 options.Cookie.Name = "csrf_token"; // set automatically by asp.net as http only
-                options.Cookie.Domain = settings.App.CsrfCookieDomain;
             });
 
             services.AddHttpContextAccessor();

@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Web.Services.Antiforgery;
@@ -31,15 +30,10 @@ namespace Web.Features.Users.Login
 
             var token = antiforgery.GetAndStoreTokens(HttpContext);
 
-            HttpContext.Response.Cookies.Append(
-                "XSRF-TOKEN",
-                token.RequestToken,
-                new CookieOptions()
-                {
-                    HttpOnly = false,
-                });
-
-            return Ok();
+            return Ok(new LoginResponse()
+            {
+                XsrfToken = token.RequestToken,
+            });
         }
     }
 }

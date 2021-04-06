@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Web.Services.Antiforgery;
@@ -20,13 +19,6 @@ namespace Web.Features.Users.Logout
         public async Task<IActionResult> Execute()
         {
             await sender.Send(new LogoutCommand());
-
-            HttpContext.Response.Cookies.Delete(
-                "XSRF-TOKEN",
-                new CookieOptions()
-                {
-                    HttpOnly = false,
-                });
 
             return Ok();
         }

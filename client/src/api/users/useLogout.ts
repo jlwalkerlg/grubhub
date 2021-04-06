@@ -7,6 +7,7 @@ export default function useLogout() {
 
   return useMutation<void, ApiError, null, null>(async () => {
     await api.post("/auth/logout");
+    localStorage.removeItem("XSRF-TOKEN");
     setUser(null);
   });
 }
