@@ -19,6 +19,7 @@ services:
     environment:
       DOMAINS: "api.grub-hub.walkerjordan.com -> http://web:5000"
       STAGE: ${DOCKER_HTTPS_PORTAL_STAGE}
+      WEBSOCKET: "true"
     volumes:
       - https-portal-data:/var/lib/https-portal
 
