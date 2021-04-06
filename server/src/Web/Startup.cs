@@ -88,6 +88,7 @@ namespace Web
             {
                 options.HeaderName = "X-XSRF-TOKEN"; // as expected from the client
                 options.Cookie.Name = "csrf_token"; // set automatically by asp.net as http only
+                options.Cookie.Domain = settings.App.CsrfCookieDomain;
             });
 
             services.AddHttpContextAccessor();
@@ -129,18 +130,10 @@ namespace Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseForwardedHeaders(new ForwardedHeadersOptions()
             {
-                app.UseDeveloperExceptionPage();
-            }
-
-            if (env.IsProduction())
-            {
-                app.UseForwardedHeaders(new ForwardedHeadersOptions()
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                });
-            }
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseCors();
 
