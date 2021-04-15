@@ -26,7 +26,7 @@ const Nav: React.FC = () => {
 
   usePreventBodyScroll(isOpen);
 
-  const { user, isLoggedIn, isLoading } = useAuth();
+  const { user, isLoggedIn, isLoading, setUser } = useAuth();
   const { mutate: logout } = useLogout();
 
   const router = useRouter();
@@ -36,6 +36,7 @@ const Nav: React.FC = () => {
     logout(null, {
       onSuccess: async () => {
         await router.push("/");
+        setUser(null);
         queryClient.clear();
       },
 
