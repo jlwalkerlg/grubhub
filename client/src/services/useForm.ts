@@ -5,7 +5,7 @@ import {
   SubmitErrorHandler,
   SubmitHandler,
   useForm as useHookForm,
-  UseFormOptions,
+  UseFormOptions
 } from "react-hook-form";
 import api from "~/api/api";
 
@@ -57,7 +57,7 @@ export default function useForm<
     }
   };
 
-  const isSuccess = form.formState.isSubmitSuccessful;
+  const isSuccess = form.formState.isSubmitSuccessful && !error;
   const isLoading = form.formState.isSubmitting;
 
   return {
