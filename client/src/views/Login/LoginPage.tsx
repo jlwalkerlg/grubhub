@@ -25,13 +25,13 @@ const Login: FC = () => {
   });
 
   const loginAsDemoCustomer = async () => {
-    form.setValue("email", "joe.bloggs@gmail.com");
+    form.setValue("email", "demo@customer.com");
     form.setValue("password", "password123");
     await onSubmit();
   };
 
   const loginAsDemoManager = async () => {
-    form.setValue("email", "mr.manager@gmail.com");
+    form.setValue("email", "demo@manager.com");
     form.setValue("password", "password123");
     await onSubmit();
   };
