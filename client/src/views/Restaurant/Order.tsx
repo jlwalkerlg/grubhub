@@ -282,7 +282,8 @@ const MobileBasketModal: FC<{
           <span>£{subtotal.toFixed(2)}</span>
         </p>
 
-        {subtotal >= restaurant.minimumDeliverySpend ? (
+        {basket?.items.length > 0 &&
+        subtotal >= restaurant.minimumDeliverySpend ? (
           <>
             <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
               <span>Delivery fee</span>
@@ -431,7 +432,8 @@ const OrderAside: FC<{
         </p>
       )}
 
-      {subtotal >= restaurant.minimumDeliverySpend ? (
+      {basket?.items.length > 0 &&
+      subtotal >= restaurant.minimumDeliverySpend ? (
         <>
           <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
             <span>Delivery fee</span>
