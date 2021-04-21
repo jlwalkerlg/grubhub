@@ -7,7 +7,6 @@ COPY src/Web/Web.csproj ./src/Web/
 RUN dotnet restore src/Web
 
 # copy source code and build app
-COPY settings*.json ./
 COPY src/Web/. ./src/Web/
 WORKDIR /build/src/Web
 RUN dotnet publish -c release -o /app --no-restore
