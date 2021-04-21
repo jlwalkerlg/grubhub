@@ -12,7 +12,6 @@ namespace Web
 
     public record AppSettings
     {
-        public string Environment { get; init; } = "Production";
         public string ServerUrl { get; init; }
         public string ClientUrl { get; init; }
         public string[] CorsOrigins { get; init; }

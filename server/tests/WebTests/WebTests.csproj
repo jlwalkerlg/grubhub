@@ -27,9 +27,4 @@
     <ProjectReference Include="..\..\src\Web\Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\settings.json" CopyToOutputDirectory="Always" />
-    <None Include="..\..\settings.Production.json" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
 </Project>

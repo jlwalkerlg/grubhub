@@ -1,11 +1,9 @@
 using Autofac;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Web.Data;
 using Web.Filters;
@@ -30,14 +28,12 @@ namespace Web
     public class Startup
     {
         private readonly IHostEnvironment env;
-        private readonly Settings settings = new();
+        private readonly Settings settings;
 
         public Startup(IConfiguration configuration, IHostEnvironment env)
         {
-            configuration.Bind(settings);
-            env.EnvironmentName = settings.App.Environment;
-
             this.env = env;
+            settings = configuration.Get<Settings>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -48,13 +44,6 @@ namespace Web
             services.AddSingleton(settings.Stripe);
             services.AddSingleton(settings.Mail);
             services.AddSingleton(settings.Aws);
-
-            services.AddLogging(builder =>
-            {
-                builder.AddFilter("Default", LogLevel.Information);
-                builder.AddFilter("Microsoft", LogLevel.Warning);
-                builder.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
-            });
 
             services.AddCors(options =>
             {
@@ -127,7 +116,7 @@ namespace Web
             builder.AddValidators();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions()
             {

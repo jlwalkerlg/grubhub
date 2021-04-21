@@ -1,5 +1,4 @@
-settings.json
-settings.Production.json
+appsettings*.json
 .env
 
 # Created by https://www.gitignore.io/api/macos,csharp,dotnetcore,aspnetcore

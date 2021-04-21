@@ -19,8 +19,4 @@
     <PackageReference Include="Stripe.net" Version="39.39.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\settings*.json" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
 </Project>

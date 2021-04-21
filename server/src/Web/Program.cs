@@ -1,6 +1,5 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Web
@@ -15,23 +14,6 @@ namespace Web
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureAppConfiguration(builder =>
-                {
-                    var config = new ConfigurationBuilder()
-                            .AddJsonFile("settings.json")
-                            .Build();
-
-                    builder.AddConfiguration(config);
-
-                    var env = config["App:Environment"];
-
-                    if (env == "Production")
-                    {
-                        builder.AddConfiguration(new ConfigurationBuilder()
-                            .AddJsonFile("settings.Production.json")
-                            .Build());
-                    }
-                })
                 .ConfigureWebHostDefaults(builder =>
                 {
                     builder.UseStartup<Startup>();

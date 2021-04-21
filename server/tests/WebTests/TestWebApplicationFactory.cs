@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Web;
-using Web.Data.EF;
 using Web.Features.Billing;
 using Web.Services.Events;
 using Web.Services.Geocoding;
@@ -32,18 +31,7 @@ namespace WebTests
             // Can be used to override other services registered in Startup.
             builder.ConfigureServices((ctx, services) =>
             {
-                var appSettings = ctx.Configuration.GetSection("App").Get<AppSettings>() with
-                {
-                    Environment = "Testing",
-                };
-
-                var databaseSettings = ctx.Configuration.GetSection("Database").Get<DatabaseSettings>() with
-                {
-                    ConnectionString = ctx.Configuration.GetSection("Database").GetValue<string>("TestConnectionString"),
-                };
-
-                services.AddSingleton(appSettings);
-                services.AddSingleton(databaseSettings);
+                var settings = ctx.Configuration.Get<Settings>();
 
                 services.Remove(
                     services.Single(x => x.ImplementationType == typeof(EventProcessor))
@@ -67,22 +55,9 @@ namespace WebTests
                         LogLevel.Warning);
                 });
 
-                services.Remove(
-                    services.Single(x => x.ServiceType ==
-                        typeof(DbContextOptions<AppDbContext>))
-                );
-
-                services.AddDbContext<AppDbContext>(options =>
-                {
-                    options.UseNpgsql(databaseSettings.ConnectionString, b =>
-                    {
-                        b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                    });
-                });
-
                 services.AddDbContext<TestDbContext>(options =>
                 {
-                    options.UseNpgsql(databaseSettings.ConnectionString, b =>
+                    options.UseNpgsql(settings.Database.ConnectionString, b =>
                     {
                         b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                     });
