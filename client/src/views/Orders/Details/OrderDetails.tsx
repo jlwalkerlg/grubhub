@@ -71,14 +71,14 @@ const OrderStatusDescription: FC<{ order: OrderDto }> = ({ order }) => {
     if (order.status !== "Accepted") return null;
 
     const date = new Date(order.estimatedDeliveryTime);
-    return formatDate(date, "hh:mm");
+    return formatDate(date, "HH:mm");
   }, [order.status, order.estimatedDeliveryTime]);
 
   const deliveredAt = useMemo(() => {
     if (order.status !== "Delivered") return null;
 
     const date = new Date(order.deliveredAt);
-    return formatDate(date, "hh:mm");
+    return formatDate(date, "HH:mm");
   }, [order.status, order.deliveredAt]);
 
   if (order.status === "Accepted") {
@@ -119,7 +119,7 @@ const OrderStatusDescription: FC<{ order: OrderDto }> = ({ order }) => {
 const OrderHeader: FC<{ order: OrderDto }> = ({ order }) => {
   const formattedPlacedAt = useMemo(() => {
     const date = new Date(order.placedAt);
-    return formatDate(date);
+    return formatDate(date, "HH:mm:ss");
   }, [order.placedAt]);
 
   return (

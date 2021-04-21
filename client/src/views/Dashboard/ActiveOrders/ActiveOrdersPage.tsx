@@ -38,7 +38,7 @@ const OrderTableRow: FC<{
   onOrderStatusChanged: (id: string) => any;
 }> = ({ order, onOrderStatusChanged }) => {
   const estimatedDeliveryTime = useMemo(
-    () => formatDate(new Date(order.estimatedDeliveryTime), "hh:mm"),
+    () => formatDate(new Date(order.estimatedDeliveryTime), "HH:mm"),
     [order.estimatedDeliveryTime]
   );
 

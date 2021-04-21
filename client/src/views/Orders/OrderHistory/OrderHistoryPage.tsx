@@ -12,7 +12,7 @@ const OrderListItem: FC<{ order: OrderModel; index: number }> = ({
 }) => {
   const placedAt = useMemo(() => {
     const date = new Date(order.placedAt);
-    return formatDate(date, "dd/mm/yyyy");
+    return formatDate(date, "dd/MM/yyyy");
   }, []);
 
   const total = order.subtotal + order.deliveryFee + order.serviceFee;

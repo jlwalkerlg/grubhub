@@ -38,7 +38,7 @@ const OrderTableRow: FC<{
 }> = ({ order }) => {
   const placedAt = useMemo(() => {
     const date = new Date(order.placedAt);
-    return formatDate(date, "dd/mm/yyyy hh:mm");
+    return formatDate(date, "dd/MM/yyyy HH:mm");
   }, [order.placedAt]);
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);

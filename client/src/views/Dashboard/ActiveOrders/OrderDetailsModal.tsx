@@ -14,12 +14,12 @@ const OrderDetails: FC<{
 }> = ({ order, closeButtonRef, onClose }) => {
   const placedAt = useMemo(() => {
     const date = new Date(order.placedAt);
-    return formatDate(date, "hh:mm");
+    return formatDate(date, "HH:mm");
   }, [order.placedAt]);
 
   const estimatedDeliveryTime = useMemo(() => {
     const date = new Date(order.estimatedDeliveryTime);
-    return formatDate(date, "hh:mm");
+    return formatDate(date, "HH:mm");
   }, [order.estimatedDeliveryTime]);
 
   return (

@@ -38,28 +38,28 @@ const OrderDetails: FC<{
 }> = ({ order, closeButtonRef, onClose }) => {
   const placedAt = useMemo(() => {
     const date = new Date(order.placedAt);
-    return formatDate(date, "dd/mm/yyyy hh:mm");
+    return formatDate(date, "dd/MM/yyyy HH:mm");
   }, [order.placedAt]);
 
   const deliveredAt = useMemo(() => {
     if (order.status !== "Delivered") return null;
 
     const date = new Date(order.deliveredAt);
-    return formatDate(date, "dd/mm/yyyy hh:mm");
+    return formatDate(date, "dd/MM/yyyy HH:mm");
   }, [order.status, order.deliveredAt]);
 
   const rejectedAt = useMemo(() => {
     if (order.status !== "Rejected") return null;
 
     const date = new Date(order.rejectedAt);
-    return formatDate(date, "dd/mm/yyyy hh:mm");
+    return formatDate(date, "dd/MM/yyyy HH:mm");
   }, [order.status, order.rejectedAt]);
 
   const cancelledAt = useMemo(() => {
     if (order.status !== "Cancelled") return null;
 
     const date = new Date(order.cancelledAt);
-    return formatDate(date, "dd/mm/yyyy hh:mm");
+    return formatDate(date, "dd/MM/yyyy HH:mm");
   }, [order.status, order.cancelledAt]);
 
   return (

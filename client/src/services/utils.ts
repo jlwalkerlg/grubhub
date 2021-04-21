@@ -1,4 +1,5 @@
-import { padStart } from "lodash";
+import { format, parse } from "date-fns";
+import { upperFirst } from "lodash";
 import { OpeningHours, OpeningTimes } from "~/api/restaurants/useRestaurant";
 import Coordinates from "./geolocation/Coordinates";
 import { daysOfWeek } from "./useDate";
@@ -42,70 +43,58 @@ export function url(
 }
 
 export function isRestaurantOpen(openingHours: OpeningHours) {
-  const currentDate = new Date();
+  const now = new Date();
 
-  const openingDate = new Date();
-  openingDate.setUTCHours(+openingHours.open.slice(0, 2));
-  openingDate.setUTCMinutes(+openingHours.open.slice(3));
+  const opensAt = parse(openingHours.open, "HH:mm", new Date());
 
-  if (openingDate > currentDate) return false;
+  if (opensAt > now) return false;
 
   if (openingHours.close === null) return true;
 
-  const closingDate = new Date();
-  closingDate.setUTCHours(+openingHours.close.slice(0, 2));
-  closingDate.setUTCMinutes(+openingHours.close.slice(3));
+  const closesAt = parse(openingHours.close, "HH:mm", new Date());
 
-  return closingDate > currentDate;
+  return closesAt > now;
 }
 
 export function nextOpenDay(openingTimes: OpeningTimes) {
-  const currentDay = new Date().getDay();
+  // if opens later today today, return opening time
+  // otherwise, return next day when it opens
+
+  const now = new Date();
+
+  const openingHoursToday = openingTimes[
+    daysOfWeek[now.getDay()]
+  ] as OpeningHours;
+
+  if (openingHoursToday.open) {
+    const openingTimeToday = parse(openingHoursToday.open, "HH:mm", new Date());
+
+    // if opens later today, return that time
+    if (openingTimeToday > now) {
+      return openingHoursToday.open;
+    }
+  }
+
+  const dayOfWeek = now.getDay();
 
   const days = [
-    ...daysOfWeek.slice(currentDay),
-    ...daysOfWeek.slice(0, currentDay),
-  ];
+    ...daysOfWeek.slice(dayOfWeek),
+    ...daysOfWeek.slice(0, dayOfWeek),
+  ].slice(1);
 
   for (const day of days) {
     if (openingTimes[day].open !== null) {
-      return day;
+      return upperFirst(day);
     }
   }
 
   return null;
 }
 
-type DateFormat = "dd/mm/yyyy" | "hh:mm:ss" | "hh:mm" | "dd/mm/yyyy hh:mm";
+type DateFormat = "dd/MM/yyyy" | "HH:mm:ss" | "HH:mm" | "dd/MM/yyyy HH:mm";
 
-export function formatDate(date: Date, format: DateFormat = "dd/mm/yyyy") {
-  if (format === "dd/mm/yyyy") {
-    return (
-      padStart(date.getDate().toString(), 2, "0") +
-      "/" +
-      padStart((date.getMonth() + 1).toString(), 2, "0") +
-      "/" +
-      date.getFullYear().toString()
-    );
-  }
-
-  if (format === "hh:mm") {
-    return (
-      padStart(date.getHours().toString(), 2, "0") +
-      ":" +
-      padStart(date.getMinutes().toString(), 2, "0")
-    );
-  }
-
-  if (format === "dd/mm/yyyy hh:mm") {
-    return formatDate(date, "dd/mm/yyyy") + " " + formatDate(date, "hh:mm");
-  }
-
-  return (
-    formatDate(date, "hh:mm") +
-    ":" +
-    padStart(date.getSeconds().toString(), 2, "0")
-  );
+export function formatDate(date: Date, formatString: DateFormat) {
+  return format(date, formatString);
 }
 
 export function formatAddress(
