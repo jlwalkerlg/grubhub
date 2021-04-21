@@ -1,17 +1,18 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Web.Domain.Orders;
 using Web.Features.Billing;
 using Web.Services.DateTimeServices;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
-    public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderCommand>
+    public abstract class ConfirmOrderHandler
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IBillingService billingService;
 
-        public ConfirmOrderHandler(
+        protected ConfirmOrderHandler(
             IUnitOfWork unitOfWork,
             IDateTimeProvider dateTimeProvider,
             IBillingService billingService)
@@ -21,41 +22,23 @@ namespace Web.Features.Orders.ConfirmOrder
             this.billingService = billingService;
         }
 
-        public async Task<Result> Handle(
-            ConfirmOrderCommand command, CancellationToken cancellationToken)
+        protected async Task<Result> Handle(Order order, CancellationToken cancellationToken)
         {
-            var order = await unitOfWork.Orders
-                .GetByPaymentIntentId(command.PaymentIntentId);
+            if (order is null) return Error.NotFound("Order not found.");
 
-            if (order is null)
-            {
-                return Error.NotFound("Order not found.");
-            }
-
-            if (order.Confirmed)
-            {
-                return Result.Ok();
-            }
-
-            var now = dateTimeProvider.UtcNow;
+            if (order.Confirmed) return Result.Ok();
 
             var accepted = await billingService.CheckPaymentWasAccepted(order);
 
-            if (!accepted)
-            {
-                return Error.BadRequest("Payment not accepted.");
-            }
+            if (!accepted) return Error.BadRequest("Payment not accepted.");
 
             order.Confirm(dateTimeProvider.UtcNow);
 
             var basket = await unitOfWork.Baskets.Get(order.UserId, order.RestaurantId);
 
-            if (basket != null)
-            {
-                await unitOfWork.Baskets.Remove(basket);
-            }
+            if (basket != null) await unitOfWork.Baskets.Remove(basket);
 
-            await unitOfWork.Outbox.Add(new OrderConfirmedEvent(order.Id, now));
+            await unitOfWork.Outbox.Add(new OrderConfirmedEvent(order.Id, order.ConfirmedAt!.Value));
 
             await unitOfWork.Commit();
 

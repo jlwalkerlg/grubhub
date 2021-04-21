@@ -95,7 +95,7 @@ namespace Web.Webhooks
                 return Result.Ok();
             }
 
-            var command = new ConfirmOrderCommand()
+            var command = new ConfirmOrderByPaymentIntentIdCommand()
             {
                 PaymentIntentId = intent.Id,
             };

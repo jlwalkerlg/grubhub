@@ -8,6 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, FormEvent } from "react";
+import { confirmOrder } from "~/api/orders/useConfirmOrder";
 import useOrder, { OrderDto } from "~/api/orders/useOrder";
 import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import TruckIcon from "~/components/Icons/TruckIcon";
@@ -40,6 +41,10 @@ const PaymentForm: FC<{ order: OrderDto }> = ({ order }) => {
     pay(order.paymentIntentClientSecret, {
       onSuccess: async () => {
         await router.push(`/orders/${order.id}`);
+
+        try {
+          await confirmOrder({ orderId: order.id });
+        } catch (e) {}
       },
     });
   };

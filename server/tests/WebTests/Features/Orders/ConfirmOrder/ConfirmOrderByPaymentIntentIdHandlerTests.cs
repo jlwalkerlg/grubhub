@@ -16,20 +16,20 @@ using Xunit;
 
 namespace WebTests.Features.Orders.ConfirmOrder
 {
-    public class ConfirmOrderHandlerTests
+    public class ConfirmOrderByPaymentIntentIdHandlerTests
     {
         private readonly UnitOfWorkSpy unitOfWorkSpy;
         private readonly DateTimeProviderStub dateTimeProviderStub;
         private readonly BillingServiceSpy billingServiceSpy;
-        private readonly ConfirmOrderHandler handler;
+        private readonly ConfirmOrderByPaymentIntentIdHandler handler;
 
-        public ConfirmOrderHandlerTests()
+        public ConfirmOrderByPaymentIntentIdHandlerTests()
         {
             unitOfWorkSpy = new UnitOfWorkSpy();
             dateTimeProviderStub = new DateTimeProviderStub();
             billingServiceSpy = new BillingServiceSpy();
 
-            handler = new ConfirmOrderHandler(
+            handler = new ConfirmOrderByPaymentIntentIdHandler(
                 unitOfWorkSpy,
                 dateTimeProviderStub,
                 billingServiceSpy);
@@ -99,7 +99,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             billingServiceSpy.PaymentAccepted = true;
 
-            var command = new ConfirmOrderCommand()
+            var command = new ConfirmOrderByPaymentIntentIdCommand()
             {
                 PaymentIntentId = order.PaymentIntentId,
             };
@@ -185,7 +185,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             await unitOfWorkSpy.Orders.Add(order);
 
-            var command = new ConfirmOrderCommand()
+            var command = new ConfirmOrderByPaymentIntentIdCommand()
             {
                 PaymentIntentId = order.PaymentIntentId,
             };
@@ -204,7 +204,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
         [Fact]
         public async Task It_Fails_If_The_Order_Is_Not_Found()
         {
-            var command = new ConfirmOrderCommand()
+            var command = new ConfirmOrderByPaymentIntentIdCommand()
             {
                 PaymentIntentId = Guid.NewGuid().ToString(),
             };
@@ -278,7 +278,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             billingServiceSpy.PaymentAccepted = false;
 
-            var command = new ConfirmOrderCommand()
+            var command = new ConfirmOrderByPaymentIntentIdCommand()
             {
                 PaymentIntentId = order.PaymentIntentId,
             };

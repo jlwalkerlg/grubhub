@@ -13,9 +13,9 @@ using Xunit;
 
 namespace WebTests.Features.Orders.ConfirmOrder
 {
-    public class ConfirmOrderIntegrationTests : IntegrationTestBase
+    public class ConfirmOrderByPaymentIntentIdIntegrationTests : IntegrationTestBase
     {
-        public ConfirmOrderIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
+        public ConfirmOrderByPaymentIntentIdIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
         {
         }
 
@@ -50,7 +50,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             Insert(basket, order);
 
-            var command = new ConfirmOrderCommand()
+            var command = new ConfirmOrderByPaymentIntentIdCommand()
             {
                 PaymentIntentId = order.PaymentIntentId,
             };
