@@ -29,6 +29,8 @@ services:
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
       - grubhub-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_DB=${DOCKER_POSTGRES_DB}
       - POSTGRES_USER=${DOCKER_POSTGRES_USER}

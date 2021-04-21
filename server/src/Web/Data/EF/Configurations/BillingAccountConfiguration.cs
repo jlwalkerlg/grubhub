@@ -12,23 +12,24 @@ namespace Web.Data.EF.Configurations
             {
                 builder.ToTable("billing_accounts");
 
-                builder.HasKey(x => x.Id);
+                builder.Property<int>("id")
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+                builder.HasKey("id");
+
                 builder.Property(x => x.Id)
                     .HasConversion(
                         x => x.Value,
                         x => new BillingAccountId(x))
-                    .HasColumnName("id")
+                    .HasColumnName("account_id")
                     .ValueGeneratedNever();
 
-                builder.HasOne<Restaurant>()
-                    .WithMany()
-                    .HasForeignKey(x => x.RestaurantId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Cascade);
                 builder.Property(x => x.RestaurantId)
-                    .HasColumnName("restaurant_id");
-                builder.HasIndex(x => x.RestaurantId)
-                    .IsUnique();
+                    .HasConversion(
+                        x => x.Value,
+                        x => new RestaurantId(x))
+                    .HasColumnName("restaurant_id")
+                    .IsRequired();
 
                 builder.Property(x => x.Enabled)
                     .HasColumnName("billing_enabled")
