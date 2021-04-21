@@ -7,8 +7,7 @@ namespace WebTests.TestData
     [Table("billing_accounts")]
     public class BillingAccount
     {
-        [Key]
-        [Column("id")]
+        [Column("account_id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Column("restaurant_id")]

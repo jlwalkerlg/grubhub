@@ -13,8 +13,10 @@ namespace WebTests.Services.Geocoding
 
         public GoogleGeocoderTests()
         {
+            // TODO: use a shared base class that sets up DI container instead of this
             var settings = new ConfigurationBuilder()
-                .AddJsonFile("settings.json")
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Testing.json")
                 .Build()
                 .GetSection("Geocoding")
                 .Get<GeocodingSettings>();

@@ -29,7 +29,7 @@ namespace Web.Features.Billing.GetBillingDetails
 
             var billingDetails = await connection.QuerySingleOrDefaultAsync<BillingDetailsModel>(
                 @"SELECT
-                    ba.id,
+                    ba.account_id as id,
                     ba.restaurant_id,
                     ba.billing_enabled AS is_billing_enabled,
                     r.manager_id
