@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useQueryClient } from "react-query";
 import useBasket from "~/api/baskets/useBasket";
-import { getOrderQueryKey } from "~/api/orders/useOrder";
+import { getOrder, getOrderQueryKey } from "~/api/orders/useOrder";
 import { usePlaceOrder } from "~/api/orders/usePlaceOrder";
 import useRestaurant, { RestaurantDto } from "~/api/restaurants/useRestaurant";
 import useAuth from "~/api/users/useAuth";
@@ -43,7 +43,9 @@ const CheckoutForm: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       restaurantId: restaurant.id,
       ...data,
     });
-    queryClient.prefetchQuery(getOrderQueryKey(orderId));
+    queryClient.prefetchQuery(getOrderQueryKey(orderId), () =>
+      getOrder(orderId)
+    );
     await router.push(`/orders/${orderId}/pay`);
   });
 

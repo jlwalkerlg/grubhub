@@ -55,16 +55,18 @@ export function getOrderQueryKey(orderId: string) {
   return `/orders/${orderId}`;
 }
 
+export async function getOrder(orderId: string) {
+  const response = await api.get<OrderDto>(`/orders/${orderId}`);
+  return response.data;
+}
+
 export default function useOrder(
   orderId: string,
   config?: UseQueryOptions<OrderDto, ApiError>
 ) {
   return useQuery<OrderDto, ApiError>(
     getOrderQueryKey(orderId),
-    async () => {
-      const response = await api.get<OrderDto>(`/orders/${orderId}`);
-      return response.data;
-    },
+    () => getOrder(orderId),
     config
   );
 }
