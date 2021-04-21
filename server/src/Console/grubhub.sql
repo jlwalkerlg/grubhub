@@ -8,9 +8,9 @@
 -- -------------------------------------------------------------
 
 INSERT INTO "public"."users" ("id", "first_name", "last_name", "email", "password", "mobile_number", "address_line1", "address_line2", "city", "postcode", "role") VALUES
-('979a79d6-7b7c-4c21-88c9-8f918be90d01', 'Mr', 'Manager', 'mr.manager@gmail.com', '$2a$11$V/MzgGUlIjqDEx4hnJdJ.OFqkDYsTYGeWyCaRaT76/I4fmihsyMb.', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
-('979a79d6-7b7c-4c21-88c9-8f918be90d02', 'Bruno', 'Walker', 'bruno@gmail.com', '$2a$11$UJpHe.HVBGsBKdQhgELUOeIlRQuv72C01vPNhAOLtvU5ZpUg0HPxO', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
-('979a79d6-7b7c-4c21-88c9-8f918be90d03', 'Joe', 'Bloggs', 'joe.bloggs@gmail.com', '$2a$11$Xd.CnplhUnPS4xtso35XBuoVqfHM11rf0CGyvqBWCFBgJ5fIV7uBS', '07234567890', '12 Maine Road', NULL, 'Shipley', 'BD18 1LT', 'Customer');
+('979a79d6-7b7c-4c21-88c9-8f918be90d01', 'Demo', 'Manager', 'demo@manager.com', '$2a$11$MuR3/5MS81YyOgAwWTTAy.kUFxuK7tErD0WZU0U.MnrO4CjrF4lMu', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
+('979a79d6-7b7c-4c21-88c9-8f918be90d02', 'Bruno', 'Walker', 'bruno@gmail.com', '$2a$11$MuR3/5MS81YyOgAwWTTAy.kUFxuK7tErD0WZU0U.MnrO4CjrF4lMu', NULL, NULL, NULL, NULL, NULL, 'RestaurantManager'),
+('979a79d6-7b7c-4c21-88c9-8f918be90d03', 'Demo', 'Customer', 'demo@customer.com', '$2a$11$MuR3/5MS81YyOgAwWTTAy.kUFxuK7tErD0WZU0U.MnrO4CjrF4lMu', '07234567890', '12 Maine Road', NULL, 'Shipley', 'BD18 1LT', 'Customer');
 
 INSERT INTO "public"."cuisines" ("name") VALUES
 ('Breakfast'),
@@ -219,7 +219,7 @@ INSERT INTO "public"."menu_items" ("id", "name", "description", "price", "is_del
 ('febc3ace-a7af-45ab-ab73-05bc46e0b698', 'Pesto Pasta', 'Penne pasta cooked in extra virgin olive oil, pesto and fresh basil topped with Parmesan. Why not ask for melted cheese on top?', 750, 'f', '2351ad34-5170-4ca6-b94b-007f580371f7'),
 ('ffccaf79-294e-4cc8-b750-8643cc0b480d', 'Cheese Savoury Jacket Potato', 'Cheese mixed with red onions, sweetcorn, lettuce and creamy mayonnaise', 575, 'f', '2381e7d9-b192-4169-b222-de6d5311a7b0');
 
-INSERT INTO "public"."billing_accounts" ("id", "restaurant_id", "billing_enabled") VALUES
+INSERT INTO "public"."billing_accounts" ("account_id", "restaurant_id", "billing_enabled") VALUES
 ('acct_1IID2yPTYOwNQdvb', '015caf13-8252-476b-9e7f-c43767998c02', 't'),
 ('acct_1IIDXKPRU0NZyTXU', '015caf13-8252-476b-9e7f-c43767998c01', 't');
 
