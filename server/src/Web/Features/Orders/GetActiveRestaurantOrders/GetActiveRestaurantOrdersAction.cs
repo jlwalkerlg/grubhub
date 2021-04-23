@@ -25,7 +25,7 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
 
         [Authorize(Roles = nameof(UserRole.RestaurantManager))]
         [HttpGet("/restaurant/active-orders")]
-        public async Task<IActionResult> Execute([FromQuery] DateTime confirmedAfter = default)
+        public async Task<IActionResult> Execute([FromQuery] DateTimeOffset confirmedAfter = default)
         {
             using var connection = await dbConnectionFactory.OpenConnection();
 
@@ -56,7 +56,7 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
                     new
                     {
                         UserId = authenticator.UserId.Value,
-                        ActiveStatuses = (new[] {OrderStatus.PaymentConfirmed, OrderStatus.Accepted})
+                        ActiveStatuses = (new[] { OrderStatus.PaymentConfirmed, OrderStatus.Accepted })
                             .Select(x => x.ToString())
                             .ToArray(),
                         ConfirmedAfter = confirmedAfter,
@@ -75,9 +75,9 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
             public string AddressLine2 { get; init; }
             public string City { get; init; }
             public string Postcode { get; init; }
-            public DateTime PlacedAt { get; init; }
+            public DateTimeOffset PlacedAt { get; init; }
             [JsonIgnore] public int EstimatedDeliveryTimeInMinutes { get; init; }
-            public DateTime EstimatedDeliveryTime => PlacedAt.AddMinutes(EstimatedDeliveryTimeInMinutes);
+            public DateTimeOffset EstimatedDeliveryTime => PlacedAt.AddMinutes(EstimatedDeliveryTimeInMinutes);
         }
     }
 }

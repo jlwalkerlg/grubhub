@@ -97,7 +97,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             await authenticatorSpy.SignIn(basket.UserId);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
             dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
@@ -196,7 +196,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             await authenticatorSpy.SignIn(basket.UserId);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
             dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
@@ -268,7 +268,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             await authenticatorSpy.SignIn(basket.UserId);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
             dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
@@ -348,7 +348,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             await authenticatorSpy.SignIn(basket.UserId);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
             dateTimeProviderStub.UtcNow = now;
 
             var paymentIntent = new PaymentIntent()
@@ -429,7 +429,7 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             await authenticatorSpy.SignIn(basket.UserId);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
             dateTimeProviderStub.UtcNow = now;
 
             billingServiceSpy.PaymentIntentResult = Error.Internal("Billing service failed.");

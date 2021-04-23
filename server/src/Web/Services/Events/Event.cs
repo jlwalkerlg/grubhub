@@ -4,11 +4,11 @@ namespace Web.Services.Events
 {
     public abstract record Event : MediatR.IRequest
     {
-        protected Event(DateTime occuredAt)
+        protected Event(DateTimeOffset occuredAt)
         {
             OccuredAt = occuredAt;
         }
 
-        public DateTime OccuredAt { get; }
+        public DateTimeOffset OccuredAt { get; }
     }
 }

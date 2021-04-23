@@ -27,7 +27,7 @@ namespace WebTests.Features.Orders.AcceptOrder
         {
             unitOfWork = new UnitOfWorkSpy();
             authenticator = new AuthenticatorSpy();
-            dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
+            dateTimeProvider = new DateTimeProviderStub() { UtcNow = DateTimeOffset.UtcNow };
 
             handler = new AcceptOrderHandler(unitOfWork, authenticator, dateTimeProvider);
         }
@@ -64,7 +64,7 @@ namespace WebTests.Features.Orders.AcceptOrder
         {
             var (manager, restaurant, order) = SetupOrder();
 
-            var acceptedAt = DateTime.UtcNow;
+            var acceptedAt = DateTimeOffset.UtcNow;
             order.Accept(acceptedAt);
 
             await unitOfWork.Orders.Add(order);
@@ -210,9 +210,9 @@ namespace WebTests.Features.Orders.AcceptOrder
                     new Postcode("MN12 1NM")),
                     new Coordinates(54, -2)),
                 billingAccount,
-                DateTime.UtcNow);
+                DateTimeOffset.UtcNow);
 
-            if (confirm) order.Confirm(DateTime.UtcNow);
+            if (confirm) order.Confirm(DateTimeOffset.UtcNow);
 
             return (manager, restaurant, order);
         }

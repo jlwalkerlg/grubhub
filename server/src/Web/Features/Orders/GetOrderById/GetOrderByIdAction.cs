@@ -119,12 +119,12 @@ namespace Web.Features.Orders.GetOrderById
             public string AddressLine2 { get; init; }
             public string City { get; init; }
             public string Postcode { get; init; }
-            public DateTime PlacedAt { get; init; }
-            public DateTime? ConfirmedAt { get; init; }
-            public DateTime? AcceptedAt { get; init; }
-            public DateTime? RejectedAt { get; init; }
-            public DateTime? DeliveredAt { get; init; }
-            public DateTime? CancelledAt { get; init; }
+            public DateTimeOffset PlacedAt { get; init; }
+            public DateTimeOffset? ConfirmedAt { get; init; }
+            public DateTimeOffset? AcceptedAt { get; init; }
+            public DateTimeOffset? RejectedAt { get; init; }
+            public DateTimeOffset? DeliveredAt { get; init; }
+            public DateTimeOffset? CancelledAt { get; init; }
             public string PaymentIntentClientSecret { get; init; }
             public string RestaurantName { get; init; }
             public string RestaurantAddressLine1 { get; init; }
@@ -133,7 +133,7 @@ namespace Web.Features.Orders.GetOrderById
             public string RestaurantPostcode { get; init; }
             public string RestaurantPhoneNumber { get; init; }
             [JsonIgnore] public int EstimatedDeliveryTimeInMinutes { get; init; }
-            public DateTime EstimatedDeliveryTime => PlacedAt.AddMinutes(EstimatedDeliveryTimeInMinutes);
+            public DateTimeOffset EstimatedDeliveryTime => PlacedAt.AddMinutes(EstimatedDeliveryTimeInMinutes);
             public string CustomerFirstName { get; init; }
             public string CustomerLastName { get; init; }
             public string CustomerEmail { get; init; }

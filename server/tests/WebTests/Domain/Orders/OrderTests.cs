@@ -70,7 +70,7 @@ namespace WebTests.Domain.Orders
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.UtcNow;
 
             var orderId = new OrderId(Guid.NewGuid().ToString());
 

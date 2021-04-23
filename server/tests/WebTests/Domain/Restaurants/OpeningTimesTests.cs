@@ -15,11 +15,11 @@ namespace WebTests.Domain.Restaurants
 
             times = new OpeningTimes();
 
-            times.IsOpen(DateTime.UtcNow).ShouldBe(false);
+            times.IsOpen(DateTimeOffset.UtcNow).ShouldBe(false);
 
             times = OpeningTimes.Always;
 
-            times.IsOpen(DateTime.UtcNow).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.UtcNow).ShouldBe(true);
 
             times = new OpeningTimes()
             {
@@ -27,11 +27,11 @@ namespace WebTests.Domain.Restaurants
                 Tuesday = OpeningHours.Parse("00:00", null),
             };
 
-            times.IsOpen(DateTime.Parse("Mon 01 Feb 2021 00:00:00 GMT")).ShouldBe(false);
-            times.IsOpen(DateTime.Parse("Mon 01 Feb 2021 01:00:00 GMT")).ShouldBe(true);
-            times.IsOpen(DateTime.Parse("Mon 01 Feb 2021 02:00:00 GMT")).ShouldBe(true);
-            times.IsOpen(DateTime.Parse("Mon 01 Feb 2021 02:00:01 GMT")).ShouldBe(false);
-            times.IsOpen(DateTime.Parse("Tue 02 Feb 2021 00:00:00 GMT")).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 00:00:00 GMT")).ShouldBe(false);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 01:00:00 GMT")).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 02:00:00 GMT")).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 02:00:01 GMT")).ShouldBe(false);
+            times.IsOpen(DateTimeOffset.Parse("Tue 02 Feb 2021 00:00:00 GMT")).ShouldBe(true);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace WebTests.Domain.Restaurants
 
             times.Tuesday.ShouldBe(null);
 
-            times.IsOpen(DateTime.Parse("Mon 01 Feb 2021 16:00:00 GMT")).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 16:00:00 GMT")).ShouldBe(true);
         }
     }
 }

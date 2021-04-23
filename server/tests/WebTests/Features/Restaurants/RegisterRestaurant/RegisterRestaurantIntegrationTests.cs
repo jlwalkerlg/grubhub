@@ -23,7 +23,7 @@ namespace WebTests.Features.Restaurants.RegisterRestaurant
         [Fact]
         public async Task It_Registers_A_Restaurant_And_A_Manager()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             using var factory = this.factory.WithWebHostBuilder(builder =>
             {

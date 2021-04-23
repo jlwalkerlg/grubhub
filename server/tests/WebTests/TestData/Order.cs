@@ -79,22 +79,22 @@ namespace WebTests.TestData
         public string Postcode { get; set; } = "MN12 1NM";
 
         [Column("placed_at")]
-        public DateTime PlacedAt { get; set; } = DateTime.UtcNow;
+        public DateTimeOffset PlacedAt { get; set; } = DateTimeOffset.UtcNow;
 
         [Column("confirmed_at")]
-        public DateTime? ConfirmedAt { get; set; }
+        public DateTimeOffset? ConfirmedAt { get; set; }
 
         [Column("accepted_at")]
-        public DateTime? AcceptedAt { get; set; }
+        public DateTimeOffset? AcceptedAt { get; set; }
 
         [Column("delivered_at")]
-        public DateTime? DeliveredAt { get; set; }
+        public DateTimeOffset? DeliveredAt { get; set; }
 
         [Column("rejected_at")]
-        public DateTime? RejectedAt { get; set; }
+        public DateTimeOffset? RejectedAt { get; set; }
 
         [Column("cancelled_at")]
-        public DateTime? CancelledAt { get; set; }
+        public DateTimeOffset? CancelledAt { get; set; }
 
         [Column("payment_intent_id")]
         public string PaymentIntentId { get; set; } = Guid.NewGuid().ToString();

@@ -5,7 +5,7 @@ namespace Web.Features.Orders.RejectOrder
 {
     public record OrderRejectedEvent : Event
     {
-        public OrderRejectedEvent(string orderId, DateTime occuredAt) : base(occuredAt)
+        public OrderRejectedEvent(string orderId, DateTimeOffset occuredAt) : base(occuredAt)
         {
             OrderId = orderId ?? throw new ArgumentNullException(nameof(orderId));
         }

@@ -5,7 +5,6 @@ namespace WebTests.Doubles
 {
     public class DateTimeProviderStub : IDateTimeProvider
     {
-        public DateTime UtcNow { get; set; }
-        public DateTime GmtNow => UtcNow;
+        public DateTimeOffset UtcNow { get; set; }
     }
 }

@@ -74,7 +74,7 @@ namespace Web.Features.Orders.GetOrderHistory
         public record OrderModel
         {
             public string Id { get; init; }
-            public DateTime PlacedAt { get; init; }
+            public DateTimeOffset PlacedAt { get; init; }
             public int TotalItems { get; init; }
             public decimal Subtotal { get; init; }
             public decimal ServiceFee { get; init; }

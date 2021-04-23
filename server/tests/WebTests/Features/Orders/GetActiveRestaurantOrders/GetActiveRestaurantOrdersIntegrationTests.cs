@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Shouldly;
 using Web.Domain.Orders;
@@ -32,7 +33,7 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
             var order1 = new Order()
             {
                 Status = OrderStatus.PaymentConfirmed,
-                ConfirmedAt = DateTime.UtcNow,
+                ConfirmedAt = DateTimeOffset.UtcNow,
                 Restaurant = restaurant,
                 Items = new()
                 {
@@ -48,7 +49,7 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
             var order2 = new Order()
             {
                 Status = OrderStatus.PaymentConfirmed,
-                ConfirmedAt = DateTime.UtcNow.AddSeconds(-5),
+                ConfirmedAt = DateTimeOffset.UtcNow.AddSeconds(-5),
                 Restaurant = restaurant,
                 Items = new()
                 {
@@ -64,7 +65,7 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
             var order3 = new Order()
             {
                 Status = OrderStatus.PaymentConfirmed,
-                ConfirmedAt = DateTime.UtcNow.AddSeconds(-10),
+                ConfirmedAt = DateTimeOffset.UtcNow.AddSeconds(-10),
                 Restaurant = restaurant,
                 Items = new()
                 {
@@ -80,7 +81,7 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
             var order4 = new Order()
             {
                 Status = OrderStatus.Placed,
-                PlacedAt = DateTime.UtcNow,
+                PlacedAt = DateTimeOffset.UtcNow,
                 Restaurant = restaurant,
                 Items = new()
                 {
@@ -96,8 +97,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
             var order5 = new Order()
             {
                 Status = OrderStatus.Delivered,
-                ConfirmedAt = DateTime.UtcNow,
-                DeliveredAt = DateTime.UtcNow,
+                ConfirmedAt = DateTimeOffset.UtcNow,
+                DeliveredAt = DateTimeOffset.UtcNow,
                 Restaurant = restaurant,
                 Items = new()
                 {
@@ -114,7 +115,7 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
             var confirmedAfter = order3.ConfirmedAt.Value.ToString("O");
 
             var response = await factory.GetAuthenticatedClient(restaurant.Manager).Get(
-                $"/restaurant/active-orders?confirmedAfter={confirmedAfter}");
+                $"/restaurant/active-orders?confirmedAfter={WebUtility.UrlEncode(confirmedAfter)}");
 
             response.StatusCode.ShouldBe(200);
 

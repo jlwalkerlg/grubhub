@@ -22,7 +22,7 @@ namespace WebTests.Features.Orders.PlaceOrder
         [Fact]
         public async Task It_Places_An_Order()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             var paymentIntent = new PaymentIntent()
             {

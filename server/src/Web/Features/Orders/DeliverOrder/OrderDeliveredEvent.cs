@@ -6,7 +6,7 @@ namespace Web.Features.Orders.DeliverOrder
 {
     public record OrderDeliveredEvent : Event
     {
-        public OrderDeliveredEvent(OrderId orderId, DateTime occuredAt) : base(occuredAt)
+        public OrderDeliveredEvent(OrderId orderId, DateTimeOffset occuredAt) : base(occuredAt)
         {
             OrderId = orderId ?? throw new ArgumentNullException(nameof(orderId));
         }

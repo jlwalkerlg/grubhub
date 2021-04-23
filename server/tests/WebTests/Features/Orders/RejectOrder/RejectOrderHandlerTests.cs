@@ -27,7 +27,7 @@ namespace WebTests.Features.Orders.RejectOrder
         {
             unitOfWork = new UnitOfWorkSpy();
             authenticator = new AuthenticatorSpy();
-            dateTimeProvider = new DateTimeProviderStub() {UtcNow = DateTime.UtcNow};
+            dateTimeProvider = new DateTimeProviderStub() { UtcNow = DateTimeOffset.UtcNow };
 
             handler = new RejectOrderHandler(unitOfWork, authenticator, dateTimeProvider);
         }
@@ -69,7 +69,7 @@ namespace WebTests.Features.Orders.RejectOrder
         {
             var (manager, restaurant, order) = SetupOrder();
 
-            order.Reject(DateTime.Now);
+            order.Reject(DateTimeOffset.UtcNow);
 
             await unitOfWork.Orders.Add(order);
             await unitOfWork.Restaurants.Add(restaurant);
@@ -118,7 +118,7 @@ namespace WebTests.Features.Orders.RejectOrder
         {
             var (manager, restaurant, order) = SetupOrder();
 
-            order.Accept(DateTime.Now);
+            order.Accept(DateTimeOffset.UtcNow);
 
             await unitOfWork.Orders.Add(order);
             await unitOfWork.Restaurants.Add(restaurant);
@@ -259,9 +259,9 @@ namespace WebTests.Features.Orders.RejectOrder
                         new Postcode("MN12 1NM")),
                     new Coordinates(54, -2)),
                 billingAccount,
-                DateTime.UtcNow);
+                DateTimeOffset.UtcNow);
 
-            if (confirm) order.Confirm(DateTime.Now);
+            if (confirm) order.Confirm(DateTimeOffset.UtcNow);
 
             return (manager, restaurant, order);
         }

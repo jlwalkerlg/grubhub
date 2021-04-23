@@ -22,7 +22,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
         [Fact]
         public async Task It_Confirms_An_Order()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             using var factory = this.factory.WithWebHostBuilder(builder =>
             {

@@ -13,8 +13,10 @@ namespace Web.Domain.Restaurants
         public OpeningHours Saturday { get; init; }
         public OpeningHours Sunday { get; init; }
 
-        public bool IsOpen(DateTime time)
+        public bool IsOpen(DateTimeOffset time)
         {
+            // TODO: should this take into account the restaurant's timezone? Unit test.
+
             var hours = time.DayOfWeek switch
             {
                 DayOfWeek.Monday => Monday,

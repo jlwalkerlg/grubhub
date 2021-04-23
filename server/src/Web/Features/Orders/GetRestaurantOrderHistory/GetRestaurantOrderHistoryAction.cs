@@ -89,7 +89,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
             public string Id { get; init; }
             public int Number { get; init; }
             public string Status { get; init; }
-            public DateTime PlacedAt { get; init; }
+            public DateTimeOffset PlacedAt { get; init; }
             public decimal Subtotal { get; init; }
         }
 

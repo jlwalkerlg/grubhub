@@ -33,7 +33,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Only_Returns_Suitable_Restaurants()
         {
-            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTimeOffset.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             // not approved
             var r1 = new Restaurant()
@@ -121,7 +121,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Distance()
         {
-            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTimeOffset.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -171,7 +171,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Min_Order()
         {
-            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTimeOffset.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -224,7 +224,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Delivery_Fee()
         {
-            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTimeOffset.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -277,7 +277,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Sorts_Restaurants_By_Time()
         {
-            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTimeOffset.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var r1 = new Restaurant()
             {
@@ -330,7 +330,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
         [Fact]
         public async Task It_Filters_Restaurants_By_Cuisine()
         {
-            dateTimeProvider.UtcNow = DateTime.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
+            dateTimeProvider.UtcNow = DateTimeOffset.Parse("Tue, 15 Mar 2005 12:00:00 GMT");
 
             var thai = new Cuisine() { Name = "Thai" };
             var italian = new Cuisine() { Name = "Italian" };

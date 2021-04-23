@@ -60,7 +60,7 @@ namespace WebTests.Domain.Restaurants
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.UtcNow;
 
             var orderId = new OrderId(Guid.NewGuid().ToString());
 
@@ -140,7 +140,7 @@ namespace WebTests.Domain.Restaurants
                     new Postcode("MN12 1NM")),
                 new Coordinates(53, -3));
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.UtcNow;
 
             var orderId = new OrderId(Guid.NewGuid().ToString());
 
@@ -203,7 +203,7 @@ namespace WebTests.Domain.Restaurants
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.UtcNow;
 
             var orderId = new OrderId(Guid.NewGuid().ToString());
 
@@ -264,7 +264,7 @@ namespace WebTests.Domain.Restaurants
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.UtcNow;
 
             var orderId = new OrderId(Guid.NewGuid().ToString());
 
@@ -327,7 +327,7 @@ namespace WebTests.Domain.Restaurants
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.UtcNow;
 
             var orderId = new OrderId(Guid.NewGuid().ToString());
 
@@ -390,7 +390,7 @@ namespace WebTests.Domain.Restaurants
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.UtcNow;
 
             var orderId = new OrderId(Guid.NewGuid().ToString());
 

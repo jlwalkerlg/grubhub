@@ -41,7 +41,7 @@ namespace Web.Services.Authentication
 
             var properties = new AuthenticationProperties()
             {
-                ExpiresUtc = DateTime.Now.AddDays(14),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(14),
             };
 
             await HttpContext

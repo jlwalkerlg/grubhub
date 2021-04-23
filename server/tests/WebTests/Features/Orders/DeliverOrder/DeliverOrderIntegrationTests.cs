@@ -36,7 +36,7 @@ namespace WebTests.Features.Orders.DeliverOrder
             var order = new Order()
             {
                 Status = OrderStatus.Accepted,
-                AcceptedAt = DateTime.UtcNow,
+                AcceptedAt = DateTimeOffset.UtcNow,
                 Restaurant = restaurant,
                 Items = new()
                 {
@@ -51,13 +51,13 @@ namespace WebTests.Features.Orders.DeliverOrder
 
             Insert(restaurant, order);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             using var factory = this.factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {
-                    services.AddSingleton<IDateTimeProvider>(new DateTimeProviderStub() {UtcNow = now});
+                    services.AddSingleton<IDateTimeProvider>(new DateTimeProviderStub() { UtcNow = now });
                 });
             });
 

@@ -4,7 +4,6 @@ namespace Web.Services.DateTimeServices
 {
     public interface IDateTimeProvider
     {
-        DateTime UtcNow { get; }
-        DateTime GmtNow { get; }
+        DateTimeOffset UtcNow { get; }
     }
 }

@@ -79,7 +79,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             billingAccount.Enable();
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             var order = restaurant.PlaceOrder(
                 new OrderId(Guid.NewGuid().ToString()),
@@ -168,7 +168,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             billingAccount.Enable();
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             var order = restaurant.PlaceOrder(
                 new OrderId(Guid.NewGuid().ToString()),
@@ -181,7 +181,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             order.PaymentIntentId = Guid.NewGuid().ToString();
 
-            order.Confirm(DateTime.UtcNow);
+            order.Confirm(DateTimeOffset.UtcNow);
 
             await unitOfWorkSpy.Orders.Add(order);
 
@@ -259,7 +259,7 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             billingAccount.Enable();
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             var order = restaurant.PlaceOrder(
                 new OrderId(Guid.NewGuid().ToString()),

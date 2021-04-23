@@ -13,7 +13,7 @@ namespace WebTests.TestData
         public int Id { get; set; }
 
         [Column("occured_at")]
-        public DateTime OccuredAt { get; set; }
+        public DateTimeOffset OccuredAt { get; set; }
 
         [Column("type")]
         public string Type { get; set; }

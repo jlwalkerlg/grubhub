@@ -19,7 +19,7 @@ namespace Web.Domain.Orders
             Money deliveryFee,
             MobileNumber mobileNumber,
             Address address,
-            DateTime placedAt)
+            DateTimeOffset placedAt)
         {
             Id = id;
             UserId = basket.UserId;
@@ -45,12 +45,12 @@ namespace Web.Domain.Orders
         public OrderStatus Status { get; private set; } = OrderStatus.Placed;
         public MobileNumber MobileNumber { get; }
         public Address Address { get; }
-        public DateTime PlacedAt { get; }
-        public DateTime? ConfirmedAt { get; private set; }
-        public DateTime? AcceptedAt { get; private set; }
-        public DateTime? DeliveredAt { get; private set; }
-        public DateTime? RejectedAt { get; private set; }
-        public DateTime? CancelledAt { get; private set; }
+        public DateTimeOffset PlacedAt { get; }
+        public DateTimeOffset? ConfirmedAt { get; private set; }
+        public DateTimeOffset? AcceptedAt { get; private set; }
+        public DateTimeOffset? DeliveredAt { get; private set; }
+        public DateTimeOffset? RejectedAt { get; private set; }
+        public DateTimeOffset? CancelledAt { get; private set; }
         public string PaymentIntentId { get; set; }
         public string PaymentIntentClientSecret { get; set; }
 
@@ -69,7 +69,7 @@ namespace Web.Domain.Orders
             return Subtotal + DeliveryFee + ServiceFee;
         }
 
-        public void Confirm(DateTime now)
+        public void Confirm(DateTimeOffset now)
         {
             if (!Confirmed)
             {
@@ -78,7 +78,7 @@ namespace Web.Domain.Orders
             }
         }
 
-        public Result Accept(DateTime now)
+        public Result Accept(DateTimeOffset now)
         {
             if (!Confirmed)
             {
@@ -94,7 +94,7 @@ namespace Web.Domain.Orders
             return Result.Ok();
         }
 
-        public Result Deliver(DateTime now)
+        public Result Deliver(DateTimeOffset now)
         {
             if (!Accepted)
             {
@@ -110,7 +110,7 @@ namespace Web.Domain.Orders
             return Result.Ok();
         }
 
-        public Result Reject(DateTime time)
+        public Result Reject(DateTimeOffset time)
         {
             if (!Confirmed) return Error.BadRequest("Order must be confirmed before it can be rejected.");
 
@@ -126,7 +126,7 @@ namespace Web.Domain.Orders
         }
 
 
-        public Result Cancel(DateTime time)
+        public Result Cancel(DateTimeOffset time)
         {
             if (!Accepted) return Error.BadRequest("Only accepted orders can be cancelled.");
 

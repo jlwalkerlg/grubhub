@@ -25,19 +25,19 @@ namespace WebTests.Features.Orders.RejectOrder
             var order = new Order()
             {
                 Status = OrderStatus.PaymentConfirmed,
-                ConfirmedAt = DateTime.Now.AddMinutes(-1),
+                ConfirmedAt = DateTimeOffset.UtcNow.AddMinutes(-1),
             };
 
             Insert(order);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             using var factory = this.factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {
                     services.AddSingleton<IDateTimeProvider>(
-                        new DateTimeProviderStub() {UtcNow = now});
+                        new DateTimeProviderStub() { UtcNow = now });
                 });
             });
 

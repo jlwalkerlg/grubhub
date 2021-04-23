@@ -24,19 +24,19 @@ namespace WebTests.Features.Orders.CancelOrder
             var order = new Order()
             {
                 Status = OrderStatus.Accepted,
-                AcceptedAt = DateTime.Now.AddMinutes(-1),
+                AcceptedAt = DateTimeOffset.UtcNow.AddMinutes(-1),
             };
 
             Insert(order);
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             using var factory = this.factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {
                     services.AddSingleton<IDateTimeProvider>(
-                        new DateTimeProviderStub() {UtcNow = now});
+                        new DateTimeProviderStub() { UtcNow = now });
                 });
             });
 
