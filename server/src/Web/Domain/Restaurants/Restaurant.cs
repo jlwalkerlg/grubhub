@@ -203,7 +203,8 @@ namespace Web.Domain.Restaurants
             MobileNumber mobileNumber,
             DeliveryLocation deliveryLocation,
             BillingAccount billingAccount,
-            DateTimeOffset time)
+            DateTimeOffset time,
+            TimeZoneInfo tz)
         {
             if (basket.RestaurantId != Id)
             {
@@ -217,7 +218,7 @@ namespace Web.Domain.Restaurants
 
             var timeAtDelivery = time.AddMinutes(EstimatedDeliveryTimeInMinutes);
 
-            if (OpeningTimes == null || !OpeningTimes.IsOpen(timeAtDelivery))
+            if (OpeningTimes == null || !OpeningTimes.IsOpen(timeAtDelivery, tz))
             {
                 return Error.BadRequest("Restaurant is closed at time of delivery.");
             }

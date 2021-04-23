@@ -13,11 +13,11 @@ namespace Web.Domain.Restaurants
         public OpeningHours Saturday { get; init; }
         public OpeningHours Sunday { get; init; }
 
-        public bool IsOpen(DateTimeOffset time)
+        public bool IsOpen(DateTimeOffset time, TimeZoneInfo tz)
         {
-            // TODO: should this take into account the restaurant's timezone? Unit test.
+            var localTime = TimeZoneInfo.ConvertTime(time, tz);
 
-            var hours = time.DayOfWeek switch
+            var hours = localTime.DayOfWeek switch
             {
                 DayOfWeek.Monday => Monday,
                 DayOfWeek.Tuesday => Tuesday,
@@ -29,12 +29,9 @@ namespace Web.Domain.Restaurants
                 _ => throw new Exception("Day of week not recognised."),
             };
 
-            if (hours == null)
-            {
-                return false;
-            }
+            if (hours == null) return false;
 
-            var ts = new TimeSpan(time.Hour, time.Minute, time.Second);
+            var ts = new TimeSpan(localTime.Hour, localTime.Minute, localTime.Second);
 
             return hours.Open <= ts && (hours.Close == null || hours.Close >= ts);
         }

@@ -11,15 +11,17 @@ namespace WebTests.Domain.Restaurants
         [Fact]
         public void IsOpen()
         {
+            var tz = TimeZoneInfo.Utc;
+
             OpeningTimes times;
 
             times = new OpeningTimes();
 
-            times.IsOpen(DateTimeOffset.UtcNow).ShouldBe(false);
+            times.IsOpen(DateTimeOffset.UtcNow, tz).ShouldBe(false);
 
             times = OpeningTimes.Always;
 
-            times.IsOpen(DateTimeOffset.UtcNow).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.UtcNow, tz).ShouldBe(true);
 
             times = new OpeningTimes()
             {
@@ -27,11 +29,11 @@ namespace WebTests.Domain.Restaurants
                 Tuesday = OpeningHours.Parse("00:00", null),
             };
 
-            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 00:00:00 GMT")).ShouldBe(false);
-            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 01:00:00 GMT")).ShouldBe(true);
-            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 02:00:00 GMT")).ShouldBe(true);
-            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 02:00:01 GMT")).ShouldBe(false);
-            times.IsOpen(DateTimeOffset.Parse("Tue 02 Feb 2021 00:00:00 GMT")).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 00:00:00 GMT"), tz).ShouldBe(false);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 01:00:00 GMT"), tz).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 02:00:00 GMT"), tz).ShouldBe(true);
+            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 02:00:01 GMT"), tz).ShouldBe(false);
+            times.IsOpen(DateTimeOffset.Parse("Tue 02 Feb 2021 00:00:00 GMT"), tz).ShouldBe(true);
         }
 
         [Fact]
@@ -47,7 +49,10 @@ namespace WebTests.Domain.Restaurants
 
             times.Tuesday.ShouldBe(null);
 
-            times.IsOpen(DateTimeOffset.Parse("Mon 01 Feb 2021 16:00:00 GMT")).ShouldBe(true);
+            times.IsOpen(
+                DateTimeOffset.Parse("Mon 01 Feb 2021 16:00:00 GMT"),
+                TimeZoneInfo.Utc)
+            .ShouldBe(true);
         }
     }
 }

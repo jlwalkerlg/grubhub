@@ -71,7 +71,8 @@ namespace WebTests.Domain.Restaurants
                 mobileNumber,
                 deliveryLocation,
                 billingAccount,
-                now);
+                now,
+                TimeZoneInfo.Utc);
 
             result.ShouldBeSuccessful();
 
@@ -151,7 +152,8 @@ namespace WebTests.Domain.Restaurants
                 mobileNumber,
                 deliveryLocation,
                 billingAccount,
-                now);
+                now,
+                TimeZoneInfo.Utc);
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.BadRequest);
@@ -214,7 +216,8 @@ namespace WebTests.Domain.Restaurants
                 mobileNumber,
                 deliveryLocation,
                 billingAccount,
-                now);
+                now,
+                TimeZoneInfo.Utc);
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.BadRequest);
@@ -275,7 +278,8 @@ namespace WebTests.Domain.Restaurants
                 mobileNumber,
                 deliveryLocation,
                 billingAccount,
-                now);
+                now,
+                TimeZoneInfo.Utc);
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.BadRequest);
@@ -338,7 +342,8 @@ namespace WebTests.Domain.Restaurants
                 mobileNumber,
                 deliveryLocation,
                 billingAccount,
-                now);
+                now,
+                TimeZoneInfo.Utc);
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.BadRequest);
@@ -401,7 +406,8 @@ namespace WebTests.Domain.Restaurants
                 mobileNumber,
                 deliveryLocation,
                 billingAccount,
-                now);
+                now,
+                TimeZoneInfo.Utc);
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.BadRequest);

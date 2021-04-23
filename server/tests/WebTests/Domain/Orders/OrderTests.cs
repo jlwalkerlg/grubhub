@@ -81,7 +81,8 @@ namespace WebTests.Domain.Orders
                 mobileNumber,
                 deliveryLocation,
                 billingAccount,
-                now);
+                now,
+                TimeZoneInfo.Utc);
 
             order.Subtotal.ShouldBe(Money.FromPounds(2 * 9.99m + 12.99m));
         }

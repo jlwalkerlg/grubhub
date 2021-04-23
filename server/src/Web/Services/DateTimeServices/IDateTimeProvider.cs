@@ -5,5 +5,6 @@ namespace Web.Services.DateTimeServices
     public interface IDateTimeProvider
     {
         DateTimeOffset UtcNow { get; }
+        TimeZoneInfo BritishTimeZone { get; }
     }
 }

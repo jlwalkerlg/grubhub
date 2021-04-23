@@ -88,7 +88,9 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new MobileNumber("07123456789"),
                 deliveryLocation,
                 billingAccount,
-                now).Value;
+                now,
+                TimeZoneInfo.Utc)
+                .Value;
 
             order.PaymentIntentId = Guid.NewGuid().ToString();
 
@@ -177,7 +179,8 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new MobileNumber("07123456789"),
                 deliveryLocation,
                 billingAccount,
-                now).Value;
+                now,
+                TimeZoneInfo.Utc).Value;
 
             order.PaymentIntentId = Guid.NewGuid().ToString();
 
@@ -268,7 +271,8 @@ namespace WebTests.Features.Orders.ConfirmOrder
                 new MobileNumber("07123456789"),
                 deliveryLocation,
                 billingAccount,
-                now).Value;
+                now,
+                TimeZoneInfo.Utc).Value;
 
             order.PaymentIntentId = Guid.NewGuid().ToString();
 

@@ -259,7 +259,8 @@ namespace WebTests.Features.Orders.CancelOrder
                     new Postcode("MN12 1NM")),
                     new Coordinates(54, -2)),
                 billingAccount,
-                DateTimeOffset.UtcNow);
+                DateTimeOffset.UtcNow,
+                TimeZoneInfo.Utc);
 
             order.Confirm(DateTimeOffset.UtcNow);
 

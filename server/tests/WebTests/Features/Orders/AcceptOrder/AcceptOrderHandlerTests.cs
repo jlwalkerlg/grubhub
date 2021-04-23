@@ -210,7 +210,8 @@ namespace WebTests.Features.Orders.AcceptOrder
                     new Postcode("MN12 1NM")),
                     new Coordinates(54, -2)),
                 billingAccount,
-                DateTimeOffset.UtcNow);
+                DateTimeOffset.UtcNow,
+                TimeZoneInfo.Utc);
 
             if (confirm) order.Confirm(DateTimeOffset.UtcNow);
 

@@ -85,7 +85,8 @@ namespace Web.Features.Orders.PlaceOrder
                 new MobileNumber(command.Mobile),
                 deliveryLocation,
                 billingAccount,
-                dateTimeProvider.UtcNow);
+                dateTimeProvider.UtcNow,
+                dateTimeProvider.BritishTimeZone);
 
             if (placeOrderError)
             {
