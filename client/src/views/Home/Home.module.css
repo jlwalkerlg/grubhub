@@ -1,0 +1,46 @@
+.banner {
+  height: 220px;
+}
+
+.header {
+  margin-top: -112px;
+}
+
+@media (min-width: 500px) {
+  .banner {
+    height: 300px;
+  }
+
+  .header {
+    margin-top: -150px;
+  }
+}
+
+@media (min-width: 640px) {
+  .banner {
+    height: 320px;
+  }
+
+  .header {
+    margin-top: -170px;
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 768px) {
+  .banner {
+    height: 350px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .banner {
+    height: 400px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .banner {
+    height: 500px;
+  }
+}
