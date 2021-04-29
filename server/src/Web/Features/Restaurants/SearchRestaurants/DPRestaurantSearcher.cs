@@ -25,8 +25,8 @@ namespace Web.Features.Restaurants.SearchRestaurants
             Coordinates coordinates,
             RestaurantSearchOptions options = null)
         {
-            var now = dateTimeProvider.UtcNow;
-            var day = now.DayOfWeek.ToString().ToLower();
+            var localTime = TimeZoneInfo.ConvertTime(dateTimeProvider.UtcNow, dateTimeProvider.BritishTimeZone);
+            var day = localTime.DayOfWeek.ToString().ToLower();
 
             var sql = @"
                 SELECT
@@ -98,7 +98,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
                 new
                 {
                     Status = RestaurantStatus.Approved.ToString(),
-                    Now = now.TimeOfDay,
+                    Now = localTime.TimeOfDay,
                     OriginLatitude = coordinates.Latitude,
                     OriginLongitude = coordinates.Longitude,
                     Cuisines = options?.Cuisines,
@@ -109,7 +109,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     new
                     {
                         Status = RestaurantStatus.Approved.ToString(),
-                        Now = now.TimeOfDay,
+                        Now = localTime.TimeOfDay,
                         OriginLatitude = coordinates.Latitude,
                         OriginLongitude = coordinates.Longitude,
                         Cuisines = options?.Cuisines,
