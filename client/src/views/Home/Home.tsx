@@ -103,7 +103,7 @@ const Home: NextPage = () => {
   return (
     <Layout title="Home">
       <main>
-        <h1 className="sr-only">Order takeaway on Food Snap</h1>
+        <h1 className="sr-only">Order takeaway on Grub Hub</h1>
 
         <div
           aria-hidden

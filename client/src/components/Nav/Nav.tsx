@@ -58,8 +58,8 @@ const Nav: React.FC = () => {
           <Link href="/">
             <a className="font-semibold">
               <RestaurantMenuIcon className="w-6 h-6 inline" />
-              <span className="align-middle ml-1">FOOD</span>
-              <span className="text-primary align-middle ml-1">SNAP</span>
+              <span className="align-middle ml-1">GRUB</span>
+              <span className="text-primary align-middle ml-1">HUB</span>
             </a>
           </Link>
 
