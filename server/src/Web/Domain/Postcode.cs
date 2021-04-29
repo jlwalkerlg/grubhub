@@ -5,9 +5,9 @@ namespace Web.Domain
 {
     public record Postcode
     {
-        private static readonly Regex regex = new(
-            "^[A-Za-z]{2}[0-9]{1,2} ?[0-9]{1}[A-Za-z]{2}$",
-            RegexOptions.Compiled,
+        private static readonly Regex Regex = new(
+            "^([a-z]{1,2}[0-9]{1,2}|[a-z]{1,2}[0-9][a-z]) ?[0-9]{1}[a-z]{2}$",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase,
             TimeSpan.FromMilliseconds(250));
 
         public Postcode(string value)
@@ -24,7 +24,7 @@ namespace Web.Domain
 
         public static bool IsValid(string value)
         {
-            return value is not null && regex.IsMatch(value);
+            return value is not null && Regex.IsMatch(value);
         }
     }
 }

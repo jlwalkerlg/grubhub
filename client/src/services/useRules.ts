@@ -3,8 +3,8 @@ import { useMemo } from "react";
 type ValidateFunction = (value?: string) => true | string;
 
 class RuleBuilder {
-  private static emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  private static postcodeRegex = /^[A-Za-z]{2}\d{1,2} ?\d[A-Za-z]{2}$/;
+  private static emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-z\-0-9]+\.)+[a-z]{2,}))$/i;
+  private static postcodeRegex = /^([a-z]{1,2}[0-9]{1,2}|[a-z]{1,2}[0-9][a-z]) ?[0-9]{1}[a-z]{2}$/i;
   private static landlineRegex = /^[0-9]{5} ?[0-9]{6}$/;
 
   private fns: ValidateFunction[] = [];
