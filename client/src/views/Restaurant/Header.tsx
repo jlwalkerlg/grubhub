@@ -1,11 +1,8 @@
 import React, { FC } from "react";
 import { RestaurantDto } from "~/api/restaurants/useRestaurant";
-import useDate from "~/services/useDate";
 import { formatAddress, isRestaurantOpen, nextOpenDay } from "~/services/utils";
 
 const Header: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
-  const { dayOfWeek } = useDate();
-
   const formattedDeliveryFee =
     restaurant.deliveryFee === +restaurant.deliveryFee.toFixed()
       ? restaurant.deliveryFee.toFixed()
@@ -17,7 +14,7 @@ const Header: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
       ? restaurant.minimumDeliverySpend.toFixed()
       : restaurant.minimumDeliverySpend.toFixed(2);
 
-  const isOpen = isRestaurantOpen(restaurant.openingTimes[dayOfWeek]);
+  const isOpen = isRestaurantOpen(restaurant);
   const nextOpens = isOpen
     ? null
     : nextOpenDay(restaurant.openingTimes) ?? null;

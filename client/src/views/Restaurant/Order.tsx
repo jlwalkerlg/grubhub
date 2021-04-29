@@ -17,6 +17,7 @@ import { useToasts } from "~/components/Toaster/Toaster";
 import useEscapeKeyListener from "~/services/useEscapeKeyListener";
 import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
+import { isRestaurantOpen } from "~/services/utils";
 
 const OrderItemModal: FC<{
   restaurantId: string;
@@ -325,7 +326,8 @@ const OrderAside: FC<{
   restaurant: RestaurantDto;
   basket: BasketDto;
   subtotal: number;
-}> = ({ isLoading, isError, restaurant, basket, subtotal }) => {
+  isOpen: boolean;
+}> = ({ isLoading, isError, restaurant, basket, subtotal, isOpen }) => {
   const { isLoggedIn } = useAuth();
 
   const router = useRouter();
@@ -349,6 +351,22 @@ const OrderAside: FC<{
             <a className="text-primary">login</a>
           </Link>{" "}
           to order.
+        </p>
+      </div>
+    );
+  }
+
+  if (!isOpen) {
+    return (
+      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
+        <h2 className="font-bold text-xl tracking-wider text-gray-800">
+          Your order
+        </h2>
+
+        <hr className="my-3 border-gray-300" />
+
+        <p className="text-gray-800">
+          Restaurant is not accepting orders at this time.
         </p>
       </div>
     );
@@ -462,7 +480,7 @@ const OrderAside: FC<{
 };
 
 const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
-  const { data: basket, isLoading, isError, error } = useBasket(restaurant.id);
+  const { data: basket, isLoading, isError } = useBasket(restaurant.id);
 
   const subtotal =
     basket?.items.reduce(
@@ -484,6 +502,8 @@ const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
     }
   }, [totalItems]);
 
+  const isOpen = isRestaurantOpen(restaurant);
+
   return (
     <>
       <OrderAside
@@ -492,9 +512,10 @@ const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
         restaurant={restaurant}
         basket={basket}
         subtotal={subtotal}
+        isOpen={isOpen}
       />
 
-      {basket?.items.length > 0 && (
+      {isOpen && basket?.items.length > 0 && (
         <>
           <button
             onClick={openModal}

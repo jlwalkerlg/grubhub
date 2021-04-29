@@ -1,8 +1,8 @@
 import { format, parse } from "date-fns";
 import { upperFirst } from "lodash";
-import { OpeningHours, OpeningTimes } from "~/api/restaurants/useRestaurant";
+import { OpeningTimes, RestaurantDto } from "~/api/restaurants/useRestaurant";
 import Coordinates from "./geolocation/Coordinates";
-import { daysOfWeek } from "./useDate";
+import { daysOfWeek, getDayOfWeek } from "./useDate";
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -42,8 +42,10 @@ export function url(
   );
 }
 
-export function isRestaurantOpen(openingHours: OpeningHours) {
+export function isRestaurantOpen(restaurant: RestaurantDto) {
   const now = new Date();
+  const dayOfWeek = getDayOfWeek(now);
+  const openingHours = restaurant.openingTimes[dayOfWeek];
 
   const opensAt = parse(openingHours.open, "HH:mm", new Date());
 
@@ -53,28 +55,14 @@ export function isRestaurantOpen(openingHours: OpeningHours) {
 
   const closesAt = parse(openingHours.close, "HH:mm", new Date());
 
-  return closesAt > now;
+  return (
+    closesAt.getTime() >
+    now.getTime() + restaurant.estimatedDeliveryTimeInMinutes * 60 * 1000
+  );
 }
 
 export function nextOpenDay(openingTimes: OpeningTimes) {
-  // if opens later today today, return opening time
-  // otherwise, return next day when it opens
-
   const now = new Date();
-
-  const openingHoursToday = openingTimes[
-    daysOfWeek[now.getDay()]
-  ] as OpeningHours;
-
-  if (openingHoursToday.open) {
-    const openingTimeToday = parse(openingHoursToday.open, "HH:mm", new Date());
-
-    // if opens later today, return that time
-    if (openingTimeToday > now) {
-      return openingHoursToday.open;
-    }
-  }
-
   const dayOfWeek = now.getDay();
 
   const days = [
