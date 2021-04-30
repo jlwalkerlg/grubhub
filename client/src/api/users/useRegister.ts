@@ -8,8 +8,16 @@ export interface RegisterCommand {
   password: string;
 }
 
+interface RegisterResponse {
+  xsrfToken: string;
+}
+
 export default function useRegister() {
   return useMutation<void, ApiError, RegisterCommand, null>(async (command) => {
-    await api.post("/register", command);
+    const {
+      data: { xsrfToken },
+    } = await api.post<RegisterResponse>("/register", command);
+
+    localStorage.setItem("XSRF-TOKEN", xsrfToken);
   });
 }

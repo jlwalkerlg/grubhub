@@ -14,10 +14,21 @@ export interface RegisterRestaurantCommand {
   postcode: string;
 }
 
+interface RegisterRestaurantResponse {
+  xsrfToken: string;
+}
+
 export default function useRegisterRestaurant() {
   return useMutation<void, ApiError, RegisterRestaurantCommand, null>(
     async (command) => {
-      await api.post("/restaurants/register", command);
+      const {
+        data: { xsrfToken },
+      } = await api.post<RegisterRestaurantResponse>(
+        "/restaurants/register",
+        command
+      );
+
+      localStorage.setItem("XSRF-TOKEN", xsrfToken);
     }
   );
 }

@@ -31,7 +31,7 @@ export default function useAuth() {
   const { data: user, isLoading } = useQuery<UserDto, ApiError>(
     getAuthUserQueryKey(),
     async () => {
-      if (!localStorage.getItem("isLoggedIn")) {
+      if (!localStorage.getItem("XSRF-TOKEN")) {
         return null;
       }
 
@@ -39,7 +39,7 @@ export default function useAuth() {
         return await getAuthUser();
       } catch (e) {
         if (e instanceof ApiError && e.status === 401) {
-          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("XSRF-TOKEN");
           return null;
         }
 
@@ -57,11 +57,11 @@ export default function useAuth() {
 
   const setUser = (user: UserDto) => {
     queryClient.setQueryData(getAuthUserQueryKey(), user);
-    if (user) {
-      localStorage.setItem("isLoggedIn", "true");
-    } else {
-      localStorage.removeItem("isLoggedIn");
-    }
+  };
+
+  const removeUser = () => {
+    queryClient.setQueryData(getAuthUserQueryKey(), null);
+    localStorage.removeItem("XSRF-TOKEN");
   };
 
   return {
@@ -69,5 +69,6 @@ export default function useAuth() {
     isLoggedIn,
     isLoading,
     setUser,
+    removeUser,
   };
 }

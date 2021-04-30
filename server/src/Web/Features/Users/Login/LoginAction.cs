@@ -23,10 +23,7 @@ namespace Web.Features.Users.Login
         {
             var result = await sender.Send(command);
 
-            if (!result)
-            {
-                return Problem(result.Error);
-            }
+            if (!result) return Problem(result.Error);
 
             var token = antiforgery.GetAndStoreTokens(HttpContext);
 

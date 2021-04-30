@@ -18,11 +18,11 @@ export default function useLogin() {
     const {
       data: { xsrfToken },
     } = await api.post<LoginResponse>("/auth/login", command);
+
     localStorage.setItem("XSRF-TOKEN", xsrfToken);
 
     const user = await getAuthUser();
     setUser(user);
-
     return user;
   });
 }

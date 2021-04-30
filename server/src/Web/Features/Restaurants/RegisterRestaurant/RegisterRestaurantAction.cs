@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery;
 using Web.Services.Antiforgery;
 
 namespace Web.Features.Restaurants.RegisterRestaurant
@@ -8,11 +9,12 @@ namespace Web.Features.Restaurants.RegisterRestaurant
     public class RegisterRestaurantAction : Action
     {
         private readonly ISender sender;
+        private readonly IAntiforgery antiforgery;
 
-        public RegisterRestaurantAction(
-            ISender sender)
+        public RegisterRestaurantAction(ISender sender, IAntiforgery antiforgery)
         {
             this.sender = sender;
+            this.antiforgery = antiforgery;
         }
 
         [IgnoreAntiforgeryValidation]
@@ -21,12 +23,14 @@ namespace Web.Features.Restaurants.RegisterRestaurant
         {
             var result = await sender.Send(command);
 
-            if (!result)
-            {
-                return Problem(result.Error);
-            }
+            if (!result) return Problem(result.Error);
 
-            return StatusCode(201);
+            var token = antiforgery.GetAndStoreTokens(HttpContext);
+
+            return StatusCode(201, new RegisterRestaurantResponse()
+            {
+                XsrfToken = token.RequestToken,
+            });
         }
     }
 }
