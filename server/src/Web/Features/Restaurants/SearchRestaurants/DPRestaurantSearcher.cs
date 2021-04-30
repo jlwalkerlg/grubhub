@@ -170,7 +170,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
                         INNER JOIN menu_categories mc ON mc.menu_id = m.id
                         INNER JOIN menu_items mi ON mi.menu_category_id = mc.id
                     GROUP BY
-                        m.id)";
+                        m.id, m.restaurant_id)";
 
             if (options?.Cuisines.Count > 0)
             {
