@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useQueryClient } from "react-query";
 import useAuth from "~/api/users/useAuth";
 import useLogout from "~/api/users/useLogout";
 import CloseIcon from "~/components/Icons/CloseIcon";
@@ -26,20 +24,11 @@ const Nav: React.FC = () => {
 
   usePreventBodyScroll(isOpen);
 
-  const { user, isLoggedIn, isLoading, removeUser } = useAuth();
+  const { user, isLoggedIn, isLoading } = useAuth();
   const { mutate: logout } = useLogout();
-
-  const router = useRouter();
-  const queryClient = useQueryClient();
 
   const onLogout = () => {
     logout(null, {
-      onSuccess: async () => {
-        await router.push("/");
-        removeUser();
-        queryClient.clear();
-      },
-
       onError: (error) => {
         addToast(error.message);
       },

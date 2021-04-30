@@ -28,7 +28,7 @@ export const getAuthUserQueryKey = () => "auth.user";
 export default function useAuth() {
   const queryClient = useQueryClient();
 
-  const { data: user, isLoading } = useQuery<UserDto, ApiError>(
+  const { data: user, isLoading, refetch } = useQuery<UserDto, ApiError>(
     getAuthUserQueryKey(),
     async () => {
       if (!localStorage.getItem("XSRF-TOKEN")) {

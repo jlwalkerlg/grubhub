@@ -38,7 +38,7 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
 
   if (!isLoading) {
     if (!isLoggedIn) {
-      router.push(`/login?redirect_to=${window.location.href}`);
+      router.push("/");
     } else if (!authorised) {
       router.push(user.role === "RestaurantManager" ? "/dashboard" : "/");
     }
