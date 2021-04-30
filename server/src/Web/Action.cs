@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Web
@@ -7,15 +6,7 @@ namespace Web
     [ApiController]
     public abstract class Action : ControllerBase
     {
-        private static readonly Dictionary<ErrorType, int> Statuses = new()
-        {
-            { ErrorType.BadRequest, 400 },
-            { ErrorType.Unauthenticated, 401 },
-            { ErrorType.Unauthorised, 403 },
-            { ErrorType.NotFound, 404 },
-            { ErrorType.ValidationError, 422 },
-            { ErrorType.Internal, 500 },
-        };
+        private static readonly ProblemFactory ProblemFactory = new();
 
         protected IActionResult NotFound(string message)
         {
@@ -29,38 +20,14 @@ namespace Web
 
         protected IActionResult Problem(Error error)
         {
-            var problem = GetProblemDetails(error);
+            return Problem(ProblemFactory.Make(error));
+        }
 
-            return problem is ValidationProblemDetails validationProblemDetails
+        private IActionResult Problem(ProblemDetails details)
+        {
+            return details is ValidationProblemDetails validationProblemDetails
                 ? ValidationProblem(validationProblemDetails)
-                : Problem(problem.Detail, problem.Instance, problem.Status, problem.Title, problem.Type);
-        }
-
-        private static ProblemDetails GetProblemDetails(Error error)
-        {
-            if (error.Type == ErrorType.ValidationError)
-            {
-                return new ValidationProblemDetails(
-                    error.Errors.ToDictionary(
-                        x => ToCamelCase(x.Key),
-                        x => new[] {x.Value}));
-            }
-
-            if (!Statuses.TryGetValue(error.Type, out var status))
-            {
-                status = 500;
-            }
-
-            return new ProblemDetails()
-            {
-                Status = status,
-                Detail = error.Message,
-            };
-        }
-
-        private static string ToCamelCase(string err)
-        {
-            return err.Substring(0, 1).ToLower() + err.Substring(1);
+                : Problem(details.Detail, details.Instance, details.Status, details.Title, details.Type);
         }
     }
 }
