@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Web
 {
     [ApiController]
     public abstract class Action : ControllerBase
     {
-        private readonly Dictionary<ErrorType, int> statuses = new()
+        private static readonly Dictionary<ErrorType, int> Statuses = new()
         {
             { ErrorType.BadRequest, 400 },
             { ErrorType.Unauthenticated, 401 },
@@ -28,30 +29,33 @@ namespace Web
 
         protected IActionResult Problem(Error error)
         {
-            if (!statuses.TryGetValue(error.Type, out var status))
+            var problem = GetProblemDetails(error);
+
+            return problem is ValidationProblemDetails validationProblemDetails
+                ? ValidationProblem(validationProblemDetails)
+                : Problem(problem.Detail, problem.Instance, problem.Status, problem.Title, problem.Type);
+        }
+
+        private static ProblemDetails GetProblemDetails(Error error)
+        {
+            if (error.Type == ErrorType.ValidationError)
+            {
+                return new ValidationProblemDetails(
+                    error.Errors.ToDictionary(
+                        x => ToCamelCase(x.Key),
+                        x => new[] {x.Value}));
+            }
+
+            if (!Statuses.TryGetValue(error.Type, out var status))
             {
                 status = 500;
             }
 
-            if (error.Type != ErrorType.ValidationError)
+            return new ProblemDetails()
             {
-                return Problem(error.Message, null, status, null, null);
-            }
-
-            var errors = new Dictionary<string, string[]>();
-
-            foreach (var err in error.Errors)
-            {
-                errors.Add(ToCamelCase(err.Key), new[] { err.Value });
-            }
-
-            var details = new ValidationProblemDetails(errors)
-            {
-                Detail = error.Message,
                 Status = status,
+                Detail = error.Message,
             };
-
-            return StatusCode(status, details);
         }
 
         private static string ToCamelCase(string err)

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using TimeZoneConverter;
 
 namespace Console
 {
@@ -41,14 +40,6 @@ namespace Console
         private static async Task Run(IServiceProvider services)
         {
             await Task.CompletedTask;
-
-            var bst = TZConvert.GetTimeZoneInfo("Europe/London");
-
-            var time = DateTimeOffset.Parse("2021-04-23T00:00:00+02:00");
-            System.Console.WriteLine(time);
-
-            var localTime = TimeZoneInfo.ConvertTime(time, bst);
-            System.Console.WriteLine(localTime);
         }
     }
 }
