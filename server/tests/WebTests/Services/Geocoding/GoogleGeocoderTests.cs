@@ -1,25 +1,20 @@
 using Microsoft.Extensions.Configuration;
 using Shouldly;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Web;
 using Web.Services.Geocoding;
 using Xunit;
 
 namespace WebTests.Services.Geocoding
 {
-    public class GoogleGeocoderTests
+    public class GoogleGeocoderTests : IClassFixture<TestWebApplicationFactory>
     {
         private readonly GoogleGeocoder geocoder;
 
-        public GoogleGeocoderTests()
+        public GoogleGeocoderTests(TestWebApplicationFactory factory)
         {
-            // TODO: use a shared base class that sets up DI container instead of this
-            var settings = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile("appsettings.Testing.json")
-                .Build()
-                .GetSection("Geocoding")
-                .Get<GeocodingSettings>();
+            var settings = factory.Services.GetRequiredService<GeocodingSettings>();
 
             geocoder = new GoogleGeocoder(settings);
         }
