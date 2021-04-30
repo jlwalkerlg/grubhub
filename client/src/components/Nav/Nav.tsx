@@ -41,7 +41,7 @@ const Nav: React.FC = () => {
       },
 
       onError: (error) => {
-        addToast(error.detail);
+        addToast(error.message);
       },
     });
   };

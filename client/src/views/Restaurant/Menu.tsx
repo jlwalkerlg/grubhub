@@ -92,7 +92,7 @@ const MenuItemModal: FC<{
         <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center text-center px-4 py-12">
           {isError && (
             <div className="mb-4">
-              <ErrorAlert message={error.detail} />
+              <ErrorAlert message={error.message} />
             </div>
           )}
 

@@ -38,7 +38,7 @@ export default function useAuth() {
       try {
         return await getAuthUser();
       } catch (e) {
-        if (e instanceof ApiError && e.status === 401) {
+        if (api.isApiError(e) && e.status === 401) {
           localStorage.removeItem("XSRF-TOKEN");
           return null;
         }

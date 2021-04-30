@@ -65,8 +65,8 @@ const RegisterRestaurantForm: FC = () => {
       },
 
       onError: (error) => {
-        if (error.isValidationError) {
-          setErrors(error.errors);
+        if (error.isValidationError && error.problem?.errors) {
+          setErrors(error.problem.errors);
 
           for (const field of [
             "managerFirstName",
@@ -74,14 +74,14 @@ const RegisterRestaurantForm: FC = () => {
             "managerEmail",
             "managerPassword",
           ]) {
-            if (error.errors.hasOwnProperty(field)) {
+            if (error.problem.errors.hasOwnProperty(field)) {
               setStep(1);
               return;
             }
           }
 
           for (const field of ["restaurantName", "restaurantPhoneNumber"]) {
-            if (error.errors.hasOwnProperty(field)) {
+            if (error.problem.errors.hasOwnProperty(field)) {
               setStep(2);
               return;
             }

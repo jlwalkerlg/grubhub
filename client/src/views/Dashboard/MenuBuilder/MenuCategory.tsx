@@ -97,7 +97,7 @@ const MenuCategory: FC<{
       },
       {
         onError: (error) => {
-          addToast(error.detail);
+          addToast(error.message);
         },
       }
     );

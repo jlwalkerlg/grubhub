@@ -5,7 +5,7 @@ import {
   SubmitErrorHandler,
   SubmitHandler,
   useForm as useHookForm,
-  UseFormOptions
+  UseFormOptions,
 } from "react-hook-form";
 import api from "~/api/api";
 
@@ -30,10 +30,10 @@ export default function useForm<
         setError(undefined);
         setHasValidationErrors(false);
       } catch (e) {
-        if (api.isApiError(e) && e.status === 422) {
-          for (const field in e.errors) {
-            if (Object.prototype.hasOwnProperty.call(e.errors, field)) {
-              const message = e.errors[field][0];
+        if (api.isApiError(e) && e.status === 422 && e.problem?.errors) {
+          for (const field in e.problem.errors) {
+            if (Object.prototype.hasOwnProperty.call(e.problem.errors, field)) {
+              const message = e.problem.errors[field][0];
               form.setError(field as FieldName<TFieldValues>, { message });
             }
           }
@@ -46,7 +46,7 @@ export default function useForm<
     }, onInvalid);
   };
 
-  const setErrors = (errors: { [key: string]: string[] }) => {
+  const setErrors = (errors: Record<string, string[]>) => {
     const values = form.getValues();
 
     for (const field in errors) {

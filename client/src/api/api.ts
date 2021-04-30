@@ -1,4 +1,5 @@
 import axios, {
+  AxiosError,
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
@@ -7,10 +8,10 @@ import axios, {
 import { API_BASE_URL } from "~/config";
 
 interface ProblemDetails {
-  type: string;
-  title: string;
-  status: number;
-  traceId: string;
+  type?: string;
+  title?: string;
+  status?: number;
+  traceId?: string;
   detail?: string;
   instance?: string;
   errors?: { [key: string]: string[] };
@@ -26,37 +27,19 @@ export class ApiResult<T = void> {
   }
 }
 
-export class ApiError {
-  readonly type: string;
-  readonly title: string;
-  readonly status: number;
-  readonly traceId: string;
-  readonly detail?: string;
-  readonly instance?: string;
-  readonly errors?: { [key: string]: string[] };
+export class ApiError extends Error {
+  problem?: ProblemDetails;
+  status: number;
 
-  public constructor(error: Error) {
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const details = error.response.data as ProblemDetails;
-
-      this.type = details.type;
-      this.title = details.title;
-      this.status = details.status;
-      this.traceId = details.traceId;
-      this.detail = details.detail;
-      this.instance = details.instance;
-      this.errors = details.errors;
-    } else {
-      this.detail = error.message;
-    }
+  public constructor(error: AxiosError<any>) {
+    const problem = error.response?.data as ProblemDetails;
+    super(problem?.detail ?? error.message);
+    this.problem = problem;
+    this.status = error.response?.status ?? 500;
   }
 
   get isValidationError() {
     return this.status === 422;
-  }
-
-  get message() {
-    return this.detail;
   }
 }
 
@@ -118,7 +101,7 @@ class Api {
 
       return new ApiResult<T>(response);
     } catch (e) {
-      throw new ApiError(e);
+      throw axios.isAxiosError(e) ? new ApiError(e) : e;
     }
   }
 

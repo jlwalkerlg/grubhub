@@ -10,7 +10,7 @@ export function getCuisinesQueryKey() {
 }
 
 async function getCuisines() {
-  const response = await api.get("/cuisines");
+  const response = await api.get<CuisineDto[]>("/cuisines");
   return response.data;
 }
 

@@ -57,7 +57,7 @@ const OrderTableRow: FC<{
         },
 
         onError: (error) => {
-          addToast(error.detail);
+          addToast(error.message);
         },
       }
     );
@@ -76,7 +76,7 @@ const OrderTableRow: FC<{
         },
 
         onError: (error) => {
-          addToast(error.detail);
+          addToast(error.message);
         },
       }
     );
@@ -95,7 +95,7 @@ const OrderTableRow: FC<{
         },
 
         onError: (error) => {
-          addToast(error.detail);
+          addToast(error.message);
         },
       }
     );
@@ -114,7 +114,7 @@ const OrderTableRow: FC<{
         },
 
         onError: (error) => {
-          addToast(error.detail);
+          addToast(error.message);
         },
       }
     );
