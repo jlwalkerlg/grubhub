@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import React, { FC, MouseEvent } from "react";
 import { RestaurantDto } from "~/api/restaurants/useRestaurant";
 
 const CuisineList: FC<{
@@ -6,24 +6,21 @@ const CuisineList: FC<{
   hash: string;
   setHash: (hash: string) => any;
 }> = ({ restaurant, hash, setHash }) => {
-  const onClickCategoryLink = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
+  const onClickCategoryLink = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
 
-      const id = e.currentTarget.dataset.target;
+    const id = e.currentTarget.dataset.target;
 
-      const el = document.getElementById(id);
-      const nav = document.getElementById("nav");
+    const el = document.getElementById(id);
+    const nav = document.getElementById("nav");
 
-      window.scrollBy({
-        top: el.getBoundingClientRect().top - nav.offsetHeight,
-        behavior: "smooth",
-      });
+    window.scrollBy({
+      top: el.getBoundingClientRect().top - nav.offsetHeight,
+      behavior: "smooth",
+    });
 
-      setHash(id);
-    },
-    []
-  );
+    setHash(id);
+  };
 
   return (
     <ul className="sticky top-20 mt-8 text-gray-600">
