@@ -17,7 +17,7 @@ services:
       - "443:443"
     restart: always
     environment:
-      DOMAINS: "api.grub-hub.walkerjordan.com -> http://web:5000"
+      DOMAINS: "api.grubhub.walkerjordan.com -> http://web:5000"
       STAGE: ${DOCKER_HTTPS_PORTAL_STAGE}
       WEBSOCKET: "true"
     volumes:
