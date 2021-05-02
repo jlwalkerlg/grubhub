@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Web.Data;
+using Web.Extensions;
 
 namespace Web.Features.Restaurants.GetRestaurantById
 {
@@ -28,27 +27,15 @@ namespace Web.Features.Restaurants.GetRestaurantById
         [HttpGet("/restaurants/{id:guid}")]
         public async Task<IActionResult> Execute([FromRoute] Guid id)
         {
-            var restaurant = await GetFromCache(id);
+            var restaurant = await cache.GetAsync<RestaurantModel>($"restaurant:{id}");
             if (restaurant is not null) return Ok(restaurant);
 
             restaurant = await GetFromDatabase(id);
             if (restaurant is null) return NotFound("Restaurant not found.");
 
-            await PutInCache(restaurant);
+            await cache.SetAsync($"restaurant:{id}", restaurant);
 
             return Ok(restaurant);
-        }
-
-        private async Task<RestaurantModel> GetFromCache(Guid id)
-        {
-            var json = await cache.GetStringAsync($"restaurant:{id}");
-            return json is null ? null : JsonSerializer.Deserialize<RestaurantModel>(json);
-        }
-
-        private async Task PutInCache(RestaurantModel restaurant)
-        {
-            var json = JsonSerializer.Serialize(restaurant);
-            await cache.SetStringAsync($"restaurant:{restaurant.Id}", json);
         }
 
         private async Task<RestaurantModel> GetFromDatabase(Guid id)

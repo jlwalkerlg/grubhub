@@ -1,4 +1,4 @@
-namespace Web
+namespace Web.Extensions
 {
     public static class StringExtensions
     {
