@@ -1,6 +1,10 @@
 import { format, parse } from "date-fns";
 import { upperFirst } from "lodash";
-import { OpeningTimes, RestaurantDto } from "~/api/restaurants/useRestaurant";
+import {
+  OpeningHours,
+  OpeningTimes,
+  RestaurantDto,
+} from "~/api/restaurants/useRestaurant";
 import Coordinates from "./geolocation/Coordinates";
 import { daysOfWeek, getDayOfWeek } from "./useDate";
 
@@ -45,7 +49,9 @@ export function url(
 export function isRestaurantOpen(restaurant: RestaurantDto) {
   const now = new Date();
   const dayOfWeek = getDayOfWeek(now);
-  const openingHours = restaurant.openingTimes[dayOfWeek];
+  const openingHours = restaurant.openingTimes[dayOfWeek] as OpeningHours;
+
+  if (!openingHours?.open) return false;
 
   const opensAt = parse(openingHours.open, "HH:mm", new Date());
 
@@ -71,7 +77,7 @@ export function nextOpenDay(openingTimes: OpeningTimes) {
   ].slice(1);
 
   for (const day of days) {
-    if (openingTimes[day].open !== null) {
+    if (openingTimes[day]?.open) {
       return upperFirst(day);
     }
   }

@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Web.Data.EF.Configurations;
 using Web.Domain.Baskets;
 using Web.Domain.Billing;
@@ -15,8 +17,11 @@ namespace Web.Data.EF
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        private readonly IDistributedCache cache;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IDistributedCache cache) : base(options)
         {
+            this.cache = cache;
         }
 
         public DbSet<Restaurant> Restaurants { get; protected set; }
@@ -42,21 +47,27 @@ namespace Web.Data.EF
 
         public override int SaveChanges()
         {
-            DoSoftDeletes();
+            DoPreCommitActions().Wait();
             return base.SaveChanges();
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            await DoPreCommitActions();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private async Task DoPreCommitActions()
         {
             DoSoftDeletes();
-            return base.SaveChangesAsync(cancellationToken);
+            await BustRestaurantCache();
         }
 
         private void DoSoftDeletes()
         {
             foreach (var entry in ChangeTracker.Entries<MenuCategory>())
             {
-                if (entry.State == EntityState.Deleted)
+                if (entry.State is EntityState.Deleted)
                 {
                     entry.State = EntityState.Modified;
                     entry.CurrentValues["isDeleted"] = true;
@@ -65,11 +76,59 @@ namespace Web.Data.EF
 
             foreach (var entry in ChangeTracker.Entries<MenuItem>())
             {
-                if (entry.State == EntityState.Deleted)
+                if (entry.State is EntityState.Deleted)
                 {
                     entry.State = EntityState.Modified;
                     entry.CurrentValues["isDeleted"] = true;
                 }
+            }
+        }
+
+        private async Task BustRestaurantCache()
+        {
+            var ids = new HashSet<RestaurantId>();
+
+            foreach (var entry in ChangeTracker.Entries<Restaurant>())
+            {
+                if (ids.Contains(entry.Entity.Id)) continue;
+
+                if (entry.State is EntityState.Modified or EntityState.Deleted)
+                {
+                    ids.Add(entry.Entity.Id);
+                }
+            }
+
+            var menuCategoryEntries = ChangeTracker.Entries<MenuCategory>().ToDictionary(x => x.Entity);
+            var menuItemEntries = ChangeTracker.Entries<MenuItem>().ToDictionary(x => x.Entity);
+
+            foreach (var entry in ChangeTracker.Entries<Menu>())
+            {
+                if (ids.Contains(entry.Entity.RestaurantId)) continue;
+
+                if (entry.State is EntityState.Modified or EntityState.Deleted)
+                {
+                    ids.Add(entry.Entity.RestaurantId);
+                    continue;
+                }
+
+                if (entry.Entity.Categories.Any(category =>
+                    menuCategoryEntries[category].State is EntityState.Modified or EntityState.Deleted))
+                {
+                    ids.Add(entry.Entity.RestaurantId);
+                    continue;
+                }
+
+                if (entry.Entity.Categories.SelectMany(x => x.Items).Any(item =>
+                    menuItemEntries[item].State is EntityState.Modified or EntityState.Deleted))
+                {
+                    ids.Add(entry.Entity.RestaurantId);
+                }
+            }
+
+            foreach (var id in ids)
+            {
+                var key = $"restaurant:{id.Value}";
+                await cache.RemoveAsync(key);
             }
         }
     }

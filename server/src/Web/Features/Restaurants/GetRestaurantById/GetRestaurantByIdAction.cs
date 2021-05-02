@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Web.Data;
 
 namespace Web.Features.Restaurants.GetRestaurantById
@@ -12,19 +15,48 @@ namespace Web.Features.Restaurants.GetRestaurantById
     public class GetRestaurantByIdAction : Action
     {
         private readonly IDbConnectionFactory dbConnectionFactory;
+        private readonly IDistributedCache cache;
 
-        public GetRestaurantByIdAction(IDbConnectionFactory dbConnectionFactory)
+        public GetRestaurantByIdAction(
+            IDbConnectionFactory dbConnectionFactory,
+            IDistributedCache cache)
         {
             this.dbConnectionFactory = dbConnectionFactory;
+            this.cache = cache;
         }
 
         [HttpGet("/restaurants/{id:guid}")]
         public async Task<IActionResult> Execute([FromRoute] Guid id)
         {
+            var restaurant = await GetFromCache(id);
+            if (restaurant is not null) return Ok(restaurant);
+
+            restaurant = await GetFromDatabase(id);
+            if (restaurant is null) return NotFound("Restaurant not found.");
+
+            await PutInCache(restaurant);
+
+            return Ok(restaurant);
+        }
+
+        private async Task<RestaurantModel> GetFromCache(Guid id)
+        {
+            var json = await cache.GetStringAsync($"restaurant:{id}");
+            return json is null ? null : JsonSerializer.Deserialize<RestaurantModel>(json);
+        }
+
+        private async Task PutInCache(RestaurantModel restaurant)
+        {
+            var json = JsonSerializer.Serialize(restaurant);
+            await cache.SetStringAsync($"restaurant:{restaurant.Id}", json);
+        }
+
+        private async Task<RestaurantModel> GetFromDatabase(Guid id)
+        {
             using var connection = await dbConnectionFactory.OpenConnection();
 
             var restaurant = await connection
-                .QuerySingleOrDefaultAsync<RestaurantModel>(
+                .QuerySingleOrDefaultAsync<RestaurantDatabaseModel>(
                     @"SELECT
                         r.id,
                         r.manager_id,
@@ -64,10 +96,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
                         r.id = @Id",
                     new { Id = id });
 
-            if (restaurant is null)
-            {
-                return NotFound("Restaurant not found.");
-            }
+            if (restaurant is null) return null;
 
             var menu = await connection
                 .QuerySingleOrDefaultAsync<MenuModel>(
@@ -150,10 +179,10 @@ namespace Web.Features.Restaurants.GetRestaurantById
 
             restaurant.Cuisines = cuisines.ToList();
 
-            return Ok(restaurant);
+            return restaurant.ToResponseModel();
         }
 
-        public class RestaurantModel
+        private class RestaurantDatabaseModel
         {
             public Guid Id { get; init; }
             public Guid ManagerId { get; init; }
@@ -167,73 +196,20 @@ namespace Web.Features.Restaurants.GetRestaurantById
             public float Latitude { get; init; }
             public float Longitude { get; init; }
             public string Status { get; init; }
-            [JsonIgnore] public TimeSpan? MondayOpen { get; init; }
-            [JsonIgnore] public TimeSpan? MondayClose { get; init; }
-            [JsonIgnore] public TimeSpan? TuesdayOpen { get; init; }
-            [JsonIgnore] public TimeSpan? TuesdayClose { get; init; }
-            [JsonIgnore] public TimeSpan? WednesdayOpen { get; init; }
-            [JsonIgnore] public TimeSpan? WednesdayClose { get; init; }
-            [JsonIgnore] public TimeSpan? ThursdayOpen { get; init; }
-            [JsonIgnore] public TimeSpan? ThursdayClose { get; init; }
-            [JsonIgnore] public TimeSpan? FridayOpen { get; init; }
-            [JsonIgnore] public TimeSpan? FridayClose { get; init; }
-            [JsonIgnore] public TimeSpan? SaturdayOpen { get; init; }
-            [JsonIgnore] public TimeSpan? SaturdayClose { get; init; }
-            [JsonIgnore] public TimeSpan? SundayOpen { get; init; }
-            [JsonIgnore] public TimeSpan? SundayClose { get; init; }
-
-            public OpeningTimesModel OpeningTimes => new()
-            {
-                Monday = MondayOpen.HasValue
-                    ? new OpeningHoursModel()
-                    {
-                        Open = FormatTimeSpan(MondayOpen),
-                        Close = FormatTimeSpan(MondayClose),
-                    }
-                    : null,
-                Tuesday = TuesdayOpen.HasValue
-                    ? new OpeningHoursModel()
-                    {
-                        Open = FormatTimeSpan(TuesdayOpen),
-                        Close = FormatTimeSpan(TuesdayClose),
-                    }
-                    : null,
-                Wednesday = WednesdayOpen.HasValue
-                    ? new OpeningHoursModel()
-                    {
-                        Open = FormatTimeSpan(WednesdayOpen),
-                        Close = FormatTimeSpan(WednesdayClose),
-                    }
-                    : null,
-                Thursday = ThursdayOpen.HasValue
-                    ? new OpeningHoursModel()
-                    {
-                        Open = FormatTimeSpan(ThursdayOpen),
-                        Close = FormatTimeSpan(ThursdayClose),
-                    }
-                    : null,
-                Friday = FridayOpen.HasValue
-                    ? new OpeningHoursModel()
-                    {
-                        Open = FormatTimeSpan(FridayOpen),
-                        Close = FormatTimeSpan(FridayClose),
-                    }
-                    : null,
-                Saturday = SaturdayOpen.HasValue
-                    ? new OpeningHoursModel()
-                    {
-                        Open = FormatTimeSpan(SaturdayOpen),
-                        Close = FormatTimeSpan(SaturdayClose),
-                    }
-                    : null,
-                Sunday = SundayOpen.HasValue
-                    ? new OpeningHoursModel()
-                    {
-                        Open = FormatTimeSpan(SundayOpen),
-                        Close = FormatTimeSpan(SundayClose),
-                    }
-                    : null,
-            };
+            public TimeSpan? MondayOpen { get; init; }
+            public TimeSpan? MondayClose { get; init; }
+            public TimeSpan? TuesdayOpen { get; init; }
+            public TimeSpan? TuesdayClose { get; init; }
+            public TimeSpan? WednesdayOpen { get; init; }
+            public TimeSpan? WednesdayClose { get; init; }
+            public TimeSpan? ThursdayOpen { get; init; }
+            public TimeSpan? ThursdayClose { get; init; }
+            public TimeSpan? FridayOpen { get; init; }
+            public TimeSpan? FridayClose { get; init; }
+            public TimeSpan? SaturdayOpen { get; init; }
+            public TimeSpan? SaturdayClose { get; init; }
+            public TimeSpan? SundayOpen { get; init; }
+            public TimeSpan? SundayClose { get; init; }
             public decimal DeliveryFee { get; init; }
             public decimal MinimumDeliverySpend { get; init; }
             public float MaxDeliveryDistanceInKm { get; init; }
@@ -260,12 +236,116 @@ namespace Web.Features.Restaurants.GetRestaurantById
             public List<CuisineModel> Cuisines { get; set; }
             public MenuModel Menu { get; set; }
 
+            public RestaurantModel ToResponseModel()
+            {
+                return new()
+                {
+                    Id = Id,
+                    ManagerId = ManagerId,
+                    Name = Name,
+                    Description = Description,
+                    PhoneNumber = PhoneNumber,
+                    AddressLine1 = AddressLine1,
+                    AddressLine2 = AddressLine2,
+                    City = City,
+                    Postcode = Postcode,
+                    Latitude = Latitude,
+                    Longitude = Longitude,
+                    Status = Status,
+                    DeliveryFee = DeliveryFee,
+                    MinimumDeliverySpend = MinimumDeliverySpend,
+                    MaxDeliveryDistanceInKm = MaxDeliveryDistanceInKm,
+                    EstimatedDeliveryTimeInMinutes = EstimatedDeliveryTimeInMinutes,
+                    Thumbnail = Thumbnail,
+                    Banner = Banner,
+                    Cuisines = Cuisines,
+                    Menu = Menu,
+                    OpeningTimes = new OpeningTimesModel()
+                    {
+                        Monday = MondayOpen.HasValue
+                            ? new OpeningHoursModel()
+                            {
+                                Open = FormatTimeSpan(MondayOpen),
+                                Close = FormatTimeSpan(MondayClose),
+                            }
+                            : null,
+                        Tuesday = TuesdayOpen.HasValue
+                            ? new OpeningHoursModel()
+                            {
+                                Open = FormatTimeSpan(TuesdayOpen),
+                                Close = FormatTimeSpan(TuesdayClose),
+                            }
+                            : null,
+                        Wednesday = WednesdayOpen.HasValue
+                            ? new OpeningHoursModel()
+                            {
+                                Open = FormatTimeSpan(WednesdayOpen),
+                                Close = FormatTimeSpan(WednesdayClose),
+                            }
+                            : null,
+                        Thursday = ThursdayOpen.HasValue
+                            ? new OpeningHoursModel()
+                            {
+                                Open = FormatTimeSpan(ThursdayOpen),
+                                Close = FormatTimeSpan(ThursdayClose),
+                            }
+                            : null,
+                        Friday = FridayOpen.HasValue
+                            ? new OpeningHoursModel()
+                            {
+                                Open = FormatTimeSpan(FridayOpen),
+                                Close = FormatTimeSpan(FridayClose),
+                            }
+                            : null,
+                        Saturday = SaturdayOpen.HasValue
+                            ? new OpeningHoursModel()
+                            {
+                                Open = FormatTimeSpan(SaturdayOpen),
+                                Close = FormatTimeSpan(SaturdayClose),
+                            }
+                            : null,
+                        Sunday = SundayOpen.HasValue
+                            ? new OpeningHoursModel()
+                            {
+                                Open = FormatTimeSpan(SundayOpen),
+                                Close = FormatTimeSpan(SundayClose),
+                            }
+                            : null,
+                    },
+                };
+            }
+
             private string FormatTimeSpan(TimeSpan? span)
             {
                 return !span.HasValue
                     ? null
                     : $"{span?.Hours.ToString().PadLeft(2, '0')}:{span?.Minutes.ToString().PadLeft(2, '0')}";
             }
+        }
+
+        public class RestaurantModel
+        {
+            public Guid Id { get; init; }
+            public Guid ManagerId { get; init; }
+            public string Name { get; init; }
+            public string Description { get; init; }
+            public string PhoneNumber { get; init; }
+            public string AddressLine1 { get; init; }
+            public string AddressLine2 { get; init; }
+            public string City { get; init; }
+            public string Postcode { get; init; }
+            public float Latitude { get; init; }
+            public float Longitude { get; init; }
+            public string Status { get; init; }
+            public OpeningTimesModel OpeningTimes { get; init; }
+            public decimal DeliveryFee { get; init; }
+            public decimal MinimumDeliverySpend { get; init; }
+            public float MaxDeliveryDistanceInKm { get; init; }
+            public int EstimatedDeliveryTimeInMinutes { get; init; }
+            public string Thumbnail { get; init; }
+            public string Banner { get; init; }
+            public List<CuisineModel> Cuisines { get; init; }
+            public MenuModel Menu { get; init; }
         }
 
         public class OpeningTimesModel

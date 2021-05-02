@@ -109,6 +109,8 @@ namespace Web
             services.AddMail();
 
             services.AddImageStorage();
+
+            services.AddDistributedMemoryCache();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
