@@ -58,7 +58,12 @@ namespace Web
     public record CacheSettings
     {
         public string Driver { get; init; }
+        public InMemoryCacheSettings InMemory { get; init; }
         public RedisSettings Redis { get; init; }
+    }
+
+    public record InMemoryCacheSettings
+    {
     }
 
     public record RedisSettings
