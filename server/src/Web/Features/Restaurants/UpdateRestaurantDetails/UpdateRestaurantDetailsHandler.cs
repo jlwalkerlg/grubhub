@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Web.Domain;
 using Web.Domain.Restaurants;
 using Web.Services.Authentication;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Restaurants.UpdateRestaurantDetails
 {
@@ -10,11 +11,16 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public UpdateRestaurantDetailsHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator)
+        public UpdateRestaurantDetailsHandler(
+            IUnitOfWork unitOfWork,
+            IAuthenticator authenticator,
+            IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(
@@ -44,6 +50,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             restaurant.MaxDeliveryDistance = Distance.FromKm(command.MaxDeliveryDistanceInKm);
             restaurant.EstimatedDeliveryTimeInMinutes = command.EstimatedDeliveryTimeInMinutes;
 
+            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

@@ -22,7 +22,7 @@ namespace WebTests.Features.Restaurants.UpdateRestaurantDetails
             unitOfWorkSpy = new UnitOfWorkSpy();
             authenticatorSpy = new AuthenticatorSpy();
 
-            handler = new UpdateRestaurantDetailsHandler(unitOfWorkSpy, authenticatorSpy);
+            handler = new UpdateRestaurantDetailsHandler(unitOfWorkSpy, authenticatorSpy, new DateTimeProviderStub());
         }
 
         [Fact]

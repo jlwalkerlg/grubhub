@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Web.Services.Authentication;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Restaurants.ConfirmThumbnailUpload
 {
@@ -8,11 +9,16 @@ namespace Web.Features.Restaurants.ConfirmThumbnailUpload
     {
         private readonly IAuthenticator authenticator;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public ConfirmThumbnailUploadHandler(IAuthenticator authenticator, IUnitOfWork unitOfWork)
+        public ConfirmThumbnailUploadHandler(
+            IAuthenticator authenticator,
+            IUnitOfWork unitOfWork,
+            IDateTimeProvider dateTimeProvider)
         {
             this.authenticator = authenticator;
             this.unitOfWork = unitOfWork;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(ConfirmThumbnailUploadCommand command, CancellationToken cancellationToken)
@@ -23,6 +29,7 @@ namespace Web.Features.Restaurants.ConfirmThumbnailUpload
 
             restaurant.Thumbnail = command.Filename;
 
+            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

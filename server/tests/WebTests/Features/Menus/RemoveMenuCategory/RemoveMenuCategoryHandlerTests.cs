@@ -23,7 +23,7 @@ namespace WebTests.Features.Menus.RemoveMenuCategory
             unitOfWorkSpy = new UnitOfWorkSpy();
             authenticatorSpy = new AuthenticatorSpy();
 
-            handler = new RemoveMenuCategoryHandler(unitOfWorkSpy, authenticatorSpy);
+            handler = new RemoveMenuCategoryHandler(unitOfWorkSpy, authenticatorSpy, new DateTimeProviderStub());
         }
 
         [Fact]

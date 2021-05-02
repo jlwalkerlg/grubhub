@@ -23,7 +23,7 @@ namespace WebTests.Features.Menus.RenameMenuCategory
             unitOfWorkSpy = new UnitOfWorkSpy();
             authenticatorSpy = new AuthenticatorSpy();
 
-            handler = new RenameMenuCategoryHandler(unitOfWorkSpy, authenticatorSpy);
+            handler = new RenameMenuCategoryHandler(unitOfWorkSpy, authenticatorSpy, new DateTimeProviderStub());
         }
 
         [Fact]

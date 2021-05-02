@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
 using Web.Services.Authentication;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Menus.RemoveMenuItem
 {
@@ -9,11 +10,16 @@ namespace Web.Features.Menus.RemoveMenuItem
     {
         private readonly IAuthenticator authenticator;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public RemoveMenuItemHandler(IAuthenticator authenticator, IUnitOfWork unitOfWork)
+        public RemoveMenuItemHandler(
+            IAuthenticator authenticator,
+            IUnitOfWork unitOfWork,
+            IDateTimeProvider dateTimeProvider)
         {
             this.authenticator = authenticator;
             this.unitOfWork = unitOfWork;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(RemoveMenuItemCommand command, CancellationToken cancellationToken)
@@ -43,6 +49,7 @@ namespace Web.Features.Menus.RemoveMenuItem
 
             if (result)
             {
+                await unitOfWork.Outbox.Add(new MenuUpdatedEvent(menu.RestaurantId, dateTimeProvider.UtcNow));
                 await unitOfWork.Commit();
             }
 

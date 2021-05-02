@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
 using Web.Services.Authentication;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Menus.RenameMenuCategory
 {
@@ -9,11 +10,16 @@ namespace Web.Features.Menus.RenameMenuCategory
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public RenameMenuCategoryHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator)
+        public RenameMenuCategoryHandler(
+            IUnitOfWork unitOfWork,
+            IAuthenticator authenticator,
+            IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(RenameMenuCategoryCommand command, CancellationToken cancellationToken)
@@ -43,6 +49,7 @@ namespace Web.Features.Menus.RenameMenuCategory
 
             if (result)
             {
+                await unitOfWork.Outbox.Add(new MenuUpdatedEvent(menu.RestaurantId, dateTimeProvider.UtcNow));
                 await unitOfWork.Commit();
             }
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Web.Domain.Menus;
 using Web.Domain.Restaurants;
 using Web.Services.Authentication;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Menus.AddMenuCategory
 {
@@ -11,11 +12,16 @@ namespace Web.Features.Menus.AddMenuCategory
     {
         private readonly IAuthenticator authenticator;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public AddMenuCategoryHandler(IAuthenticator authenticator, IUnitOfWork unitOfWork)
+        public AddMenuCategoryHandler(
+            IAuthenticator authenticator,
+            IUnitOfWork unitOfWork,
+            IDateTimeProvider dateTimeProvider)
         {
             this.authenticator = authenticator;
             this.unitOfWork = unitOfWork;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(AddMenuCategoryCommand command, CancellationToken cancellationToken)
@@ -48,6 +54,7 @@ namespace Web.Features.Menus.AddMenuCategory
 
             if (result)
             {
+                await unitOfWork.Outbox.Add(new MenuUpdatedEvent(menu.RestaurantId, dateTimeProvider.UtcNow));
                 await unitOfWork.Commit();
             }
 

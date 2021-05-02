@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
 using Web.Services.Authentication;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Restaurants.UpdateCuisines
 {
@@ -10,11 +11,16 @@ namespace Web.Features.Restaurants.UpdateCuisines
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public UpdateCuisinesHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator)
+        public UpdateCuisinesHandler(
+            IUnitOfWork unitOfWork,
+            IAuthenticator authenticator,
+            IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(
@@ -40,6 +46,7 @@ namespace Web.Features.Restaurants.UpdateCuisines
 
             restaurant.SetCuisines(cuisines);
 
+            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

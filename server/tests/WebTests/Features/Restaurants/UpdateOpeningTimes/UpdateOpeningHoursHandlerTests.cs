@@ -23,7 +23,7 @@ namespace WebTests.Features.Restaurants.UpdateOpeningTimes
 
             authenticatorSpy = new AuthenticatorSpy();
 
-            handler = new UpdateOpeningHoursHandler(unitOfWorkSpy, authenticatorSpy);
+            handler = new UpdateOpeningHoursHandler(unitOfWorkSpy, authenticatorSpy, new DateTimeProviderStub());
         }
 
         [Fact]

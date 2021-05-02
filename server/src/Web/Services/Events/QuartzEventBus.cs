@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Quartz;
 
 namespace Web.Services.Events
@@ -13,15 +14,19 @@ namespace Web.Services.Events
     {
         private readonly IScheduler scheduler;
         private readonly IServiceProvider services;
+        private readonly ILogger<QuartzEventBus> logger;
 
-        public QuartzEventBus(IScheduler scheduler, IServiceProvider services)
+        public QuartzEventBus(IScheduler scheduler, IServiceProvider services, ILogger<QuartzEventBus> logger)
         {
             this.scheduler = scheduler;
             this.services = services;
+            this.logger = logger;
         }
 
         public async Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken) where TEvent : Event
         {
+            logger.LogInformation("Publishing event: " + @event.GetType().FullName);
+
             var listenerInterfaceType = typeof(IEventListener<>).MakeGenericType(@event.GetType());
             var listeners = services.GetServices(listenerInterfaceType).Where(x => x != null).ToList();
 
@@ -29,6 +34,8 @@ namespace Web.Services.Events
 
             foreach (var listener in listeners)
             {
+                logger.LogInformation("Listener: " + listener.GetType().FullName);
+
                 IDictionary data = new Dictionary<string, object>()
                 {
                     { "event", @event },

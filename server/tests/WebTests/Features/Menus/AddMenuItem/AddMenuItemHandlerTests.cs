@@ -23,7 +23,7 @@ namespace WebTests.Features.Menus.AddMenuItem
             authenticatorSpy = new AuthenticatorSpy();
             unitOfWorkSpy = new UnitOfWorkSpy();
 
-            handler = new AddMenuItemHandler(authenticatorSpy, unitOfWorkSpy);
+            handler = new AddMenuItemHandler(authenticatorSpy, unitOfWorkSpy, new DateTimeProviderStub());
         }
 
         [Fact]

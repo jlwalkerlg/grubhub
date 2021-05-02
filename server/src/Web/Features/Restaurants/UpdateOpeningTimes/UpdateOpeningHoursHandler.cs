@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Domain.Restaurants;
 using Web.Services.Authentication;
+using Web.Services.DateTimeServices;
 
 namespace Web.Features.Restaurants.UpdateOpeningHours
 {
@@ -9,11 +10,16 @@ namespace Web.Features.Restaurants.UpdateOpeningHours
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAuthenticator authenticator;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public UpdateOpeningHoursHandler(IUnitOfWork unitOfWork, IAuthenticator authenticator)
+        public UpdateOpeningHoursHandler(
+            IUnitOfWork unitOfWork,
+            IAuthenticator authenticator,
+            IDateTimeProvider dateTimeProvider)
         {
             this.unitOfWork = unitOfWork;
             this.authenticator = authenticator;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(UpdateOpeningHoursCommand command, CancellationToken cancellationToken)
@@ -41,6 +47,7 @@ namespace Web.Features.Restaurants.UpdateOpeningHours
                 Sunday = OpeningHours.Parse(command.SundayOpen, command.SundayClose),
             };
 
+            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

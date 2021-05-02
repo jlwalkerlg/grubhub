@@ -6,7 +6,7 @@ namespace WebTests.Doubles
 {
     public class DateTimeProviderStub : IDateTimeProvider
     {
-        public DateTimeOffset UtcNow { get; set; }
-        public TimeZoneInfo BritishTimeZone => TZConvert.GetTimeZoneInfo("Europe/London");
+        public DateTimeOffset UtcNow { get; set; } = DateTimeOffset.UtcNow;
+        public TimeZoneInfo BritishTimeZone { get; } = TZConvert.GetTimeZoneInfo("Europe/London");
     }
 }

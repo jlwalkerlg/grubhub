@@ -24,7 +24,7 @@ namespace Web.Services.Events
                 });
             });
 
-            services.AddSingleton<IScheduler>(sp =>
+            services.AddSingleton(_ =>
                 SchedulerRepository
                     .Instance
                     .Lookup("QuartzScheduler")
