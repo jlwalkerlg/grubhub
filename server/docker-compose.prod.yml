@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  https-portal:
+    container_name: proxy
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    environment:
+      DOMAINS: "api.grubhub.walkerjordan.com -> http://web:5000"
+      STAGE: ${DOCKER_HTTPS_PORTAL_STAGE}
+      WEBSOCKET: "true"
+    volumes:
+      - https-portal-data:/var/lib/https-portal
+
+volumes:
+  https-portal-data:

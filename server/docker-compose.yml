@@ -13,19 +13,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${DOCKER_ASPNETCORE_ENVIRONMENT}
 
-  https-portal:
-    image: steveltn/https-portal:1
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: always
-    environment:
-      DOMAINS: "api.grubhub.walkerjordan.com -> http://web:5000"
-      STAGE: ${DOCKER_HTTPS_PORTAL_STAGE}
-      WEBSOCKET: "true"
-    volumes:
-      - https-portal-data:/var/lib/https-portal
-
   db:
     container_name: grubhub-db
     image: postgres:12
