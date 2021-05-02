@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Web.Data.EF;
 using Web.Services;
 using Web.Services.Billing;
+using Web.Services.Cache;
 using Web.Services.DateTimeServices;
 using Web.Services.Events;
 using Web.Services.Mail;
@@ -44,6 +45,7 @@ namespace Web
             services.AddSingleton(settings.Stripe);
             services.AddSingleton(settings.Mail);
             services.AddSingleton(settings.Aws);
+            services.AddSingleton(settings.Cache);
 
             services.AddCors(options =>
             {
@@ -110,7 +112,7 @@ namespace Web
 
             services.AddImageStorage();
 
-            services.AddDistributedMemoryCache();
+            services.AddDistributedCache(settings.Cache);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

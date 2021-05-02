@@ -33,7 +33,10 @@ namespace Web.Features.Restaurants.GetRestaurantById
             restaurant = await GetFromDatabase(id);
             if (restaurant is null) return NotFound("Restaurant not found.");
 
-            await cache.SetAsync($"restaurant:{id}", restaurant);
+            await cache.SetAsync($"restaurant:{id}", restaurant, new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+            });
 
             return Ok(restaurant);
         }

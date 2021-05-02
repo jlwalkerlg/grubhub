@@ -8,6 +8,7 @@ namespace Web
         public StripeSettings Stripe { get; init; }
         public MailSettings Mail { get; init; }
         public AwsSettings Aws { get; init; }
+        public CacheSettings Cache { get; init; }
     }
 
     public record AppSettings
@@ -52,5 +53,17 @@ namespace Web
         public string SecretAccessKey { get; init; }
         public string Region { get; init; }
         public string Bucket { get; init; }
+    }
+
+    public record CacheSettings
+    {
+        public string Driver { get; init; }
+        public RedisSettings Redis { get; init; }
+    }
+
+    public record RedisSettings
+    {
+        public string ConnectionString { get; init; }
+        public string InstanceName { get; init; }
     }
 }
