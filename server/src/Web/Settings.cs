@@ -9,6 +9,7 @@ namespace Web
         public MailSettings Mail { get; init; }
         public AwsSettings Aws { get; init; }
         public CacheSettings Cache { get; init; }
+        public CapSettings Cap { get; init; }
     }
 
     public record AppSettings
@@ -58,17 +59,37 @@ namespace Web
     public record CacheSettings
     {
         public string Driver { get; init; }
-        public InMemoryCacheSettings InMemory { get; init; }
         public RedisSettings Redis { get; init; }
+
+        public record RedisSettings
+        {
+            public string ConnectionString { get; init; }
+            public string InstanceName { get; init; }
+        }
     }
 
-    public record InMemoryCacheSettings
+    public record CapSettings
     {
-    }
+        public TransportSettings Transport { get; init; }
+        public StorageSettings Storage { get; init; }
 
-    public record RedisSettings
-    {
-        public string ConnectionString { get; init; }
-        public string InstanceName { get; init; }
+        public record TransportSettings
+        {
+            public string Driver { get; init; }
+            public RabbitMqSettings RabbitMq { get; init; }
+
+            public record RabbitMqSettings
+            {
+                public string HostName { get; init; }
+                public string UserName { get; init; }
+                public string Password { get; init; }
+                public int Port { get; init; }
+            }
+        }
+
+        public record StorageSettings
+        {
+            public string Driver { get; init; }
+        }
     }
 }

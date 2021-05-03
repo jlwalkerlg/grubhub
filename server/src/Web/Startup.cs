@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
+using DotNetCore.CAP;
 using Web.Data;
 using Web.Filters;
 using Web.Hubs;
@@ -15,6 +16,7 @@ using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Savorboard.CAP.InMemoryMessageQueue;
 using Web.Data.EF;
 using Web.Services;
 using Web.Services.Billing;
@@ -100,9 +102,7 @@ namespace Web
 
             services.AddStripe(settings.Stripe);
 
-            services.AddQuartz(settings.Database);
-            services.AddQuartzEventBus();
-            services.AddEventProcessor();
+            services.AddCap(settings);
 
             services.AddGeocoding();
 

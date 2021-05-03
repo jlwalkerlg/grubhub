@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Web.Services.Events;
 using Web.Services.Mail;
 
@@ -18,7 +18,8 @@ namespace Web.Features.Orders.DeliverOrder
             this.settings = settings;
         }
 
-        public async Task Handle(OrderDeliveredEvent @event, CancellationToken cancellationToken)
+        [CapSubscribe(nameof(OrderDeliveredEvent) + ":" + nameof(EmailUserOrderDeliveredListener))]
+        public async Task Handle(OrderDeliveredEvent @event)
         {
             var order = await unitOfWork.Orders.GetById(@event.OrderId);
             var user = await unitOfWork.Users.GetById(order.UserId);
@@ -30,7 +31,7 @@ namespace Web.Features.Orders.DeliverOrder
                 FromName = settings.FromName,
                 Subject = "Order delivered!",
                 Body = $"{restaurant.Name} delivered your order at {order.DeliveredAt?.ToString("h:mm:ss tt")}. The total cost was £{order.CalculateTotal().Pounds}.",
-            }, cancellationToken);
+            });
         }
     }
 }

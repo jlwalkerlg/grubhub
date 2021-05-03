@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   https-portal:
-    container_name: proxy
+    container_name: grubhub-proxy
     image: steveltn/https-portal:1
     ports:
       - "80:80"

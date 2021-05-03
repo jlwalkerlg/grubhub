@@ -1,5 +1,5 @@
-using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Web.Hubs;
 using Web.Services.Events;
@@ -17,7 +17,8 @@ namespace Web.Features.Orders.ConfirmOrder
             this.hubContext = hubContext;
         }
 
-        public async Task Handle(OrderConfirmedEvent @event, CancellationToken cancellationToken)
+        [CapSubscribe(nameof(OrderConfirmedEvent) + ":" + nameof(NotifyRestaurantOrderConfirmedListener))]
+        public async Task Handle(OrderConfirmedEvent @event)
         {
             var order = await unitOfWork.Orders.GetById(@event.OrderId);
             var restaurant = await unitOfWork.Restaurants.GetById(order.RestaurantId);
@@ -25,7 +26,7 @@ namespace Web.Features.Orders.ConfirmOrder
             await hubContext
                 .Clients
                 .Users(restaurant.ManagerId.Value.ToString())
-                .SendAsync("new-order", order.Id.Value, cancellationToken);
+                .SendAsync("new-order", order.Id.Value);
         }
     }
 }

@@ -1,5 +1,5 @@
-using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Stripe;
 using Web.Domain.Orders;
 using Web.Services.Events;
@@ -16,14 +16,12 @@ namespace Web.Features.Orders.CancelOrder
             this.uow = uow;
         }
 
-        public async Task Handle(OrderCancelledEvent @event, CancellationToken cancellationToken)
+        [CapSubscribe(nameof(OrderCancelledEvent) + ":" + nameof(RefundPaymentOrderCancelledListener))]
+        public async Task Handle(OrderCancelledEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));
 
-            await service.CancelAsync(
-                order.PaymentIntentId,
-                new PaymentIntentCancelOptions(),
-                cancellationToken: cancellationToken);
+            await service.CancelAsync(order.PaymentIntentId, new PaymentIntentCancelOptions());
         }
     }
 }

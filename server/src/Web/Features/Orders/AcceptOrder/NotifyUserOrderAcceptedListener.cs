@@ -1,5 +1,5 @@
-using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Web.Hubs;
 using Web.Services.Events;
@@ -17,13 +17,14 @@ namespace Web.Features.Orders.AcceptOrder
             this.hub = hub;
         }
 
-        public async Task Handle(OrderAcceptedEvent @event, CancellationToken cancellationToken)
+        [CapSubscribe(nameof(OrderAcceptedEvent) + ":" + nameof(NotifyUserOrderAcceptedListener))]
+        public async Task Handle(OrderAcceptedEvent @event)
         {
             var order = await uow.Orders.GetById(@event.OrderId);
 
             await hub.Clients
                 .Users(order.UserId.Value.ToString())
-                .SendAsync($"order_{order.Id.Value}.accepted", cancellationToken);
+                .SendAsync($"order_{order.Id.Value}.accepted");
         }
     }
 }

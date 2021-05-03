@@ -12,7 +12,7 @@ namespace Web.Services.Events
     {
         public override Task Dispatch(object @event, object listener, CancellationToken cancellationToken)
         {
-            return ((IEventListener<TEvent>)listener).Handle((TEvent)@event, cancellationToken);
+            return ((IEventListener<TEvent>)listener).Handle((TEvent)@event);
         }
     }
 }

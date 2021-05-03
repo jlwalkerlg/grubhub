@@ -23,13 +23,9 @@ namespace Console
             await context.Database.EnsureCreatedAsync();
 
             using var connection = await dbConnectionFactory.OpenConnection();
-            
-            var sql = await File.ReadAllTextAsync("quartz.sql");
-            var command = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
-            command.ExecuteNonQuery();
 
-            sql = await File.ReadAllTextAsync("grubhub.sql");
-            command = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
+            var sql = await File.ReadAllTextAsync("grubhub.sql");
+            var command = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
             command.ExecuteNonQuery();
         }
     }

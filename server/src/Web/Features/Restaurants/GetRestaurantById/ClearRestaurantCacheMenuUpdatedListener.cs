@@ -1,5 +1,5 @@
-using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.Extensions.Caching.Distributed;
 using Web.Features.Menus;
 using Web.Services.Events;
@@ -16,9 +16,10 @@ namespace Web.Features.Restaurants.GetRestaurantById
             this.cache = cache;
         }
 
-        public async Task Handle(MenuUpdatedEvent @event, CancellationToken cancellationToken)
+        [CapSubscribe(nameof(MenuUpdatedEvent) + ":" + nameof(ClearRestaurantCacheMenuUpdatedListener))]
+        public async Task Handle(MenuUpdatedEvent @event)
         {
-            await cache.RemoveAsync($"restaurant:{@event.RestaurantId}", cancellationToken);
+            await cache.RemoveAsync($"restaurant:{@event.RestaurantId}");
         }
     }
 }

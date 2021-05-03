@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Web.Data.EF.Repositories;
 using Web.Features.Baskets;
 using Web.Features.Billing;
@@ -14,10 +16,12 @@ namespace Web.Data.EF
     public class EFUnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext context;
+        private readonly EFOutbox outbox;
 
-        public EFUnitOfWork(AppDbContext context)
+        public EFUnitOfWork(AppDbContext context, ICapPublisher publisher)
         {
             this.context = context;
+            outbox = new EFOutbox(publisher, context);
         }
 
         public IRestaurantRepository Restaurants => new EFRestaurantRepository(context);
@@ -27,11 +31,18 @@ namespace Web.Data.EF
         public IBasketRepository Baskets => new EFBasketRepository(context);
         public IOrderRepository Orders => new EFOrderRepository(context);
         public IBillingAccountRepository BillingAccounts => new EFBillingAccountRepository(context);
-        public IOutbox Outbox => new EFOutbox(context);
+        public IOutbox Outbox => outbox;
 
         public async Task Commit()
         {
-            await context.SaveChangesAsync();
+            if (outbox.Events.Any())
+            {
+                await outbox.Commit();
+            }
+            else
+            {
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

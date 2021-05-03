@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Web.Domain.Orders;
 using Web.Hubs;
@@ -18,14 +18,15 @@ namespace Web.Features.Orders.RejectOrder
             this.hubContext = hubContext;
         }
 
-        public async Task Handle(OrderRejectedEvent @event, CancellationToken cancellationToken)
+        [CapSubscribe(nameof(OrderRejectedEvent) + ":" + nameof(NotifyRestaurantOrderRejectedListener))]
+        public async Task Handle(OrderRejectedEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));
             var restaurant = await uow.Restaurants.GetById(order.RestaurantId);
 
             await hubContext.Clients
                 .Users(restaurant.ManagerId.Value.ToString())
-                .SendAsync("order-rejected", order.Id.Value, cancellationToken);
+                .SendAsync("order-rejected", order.Id.Value);
         }
     }
 }

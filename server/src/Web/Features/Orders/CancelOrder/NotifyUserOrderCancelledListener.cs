@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Web.Domain.Orders;
 using Web.Hubs;
@@ -18,13 +18,14 @@ namespace Web.Features.Orders.CancelOrder
             this.hubContext = hubContext;
         }
 
-        public async Task Handle(OrderCancelledEvent @event, CancellationToken cancellationToken)
+        [CapSubscribe(nameof(OrderCancelledEvent) + ":" + nameof(NotifyUserOrderCancelledListener))]
+        public async Task Handle(OrderCancelledEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));
 
             await hubContext.Clients
                 .Users(order.UserId.Value.ToString())
-                .SendAsync($"order_{order.Id.Value}.cancelled", cancellationToken);
+                .SendAsync($"order_{order.Id.Value}.cancelled");
         }
     }
 }
