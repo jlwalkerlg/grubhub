@@ -6,7 +6,6 @@ using Web.Services.Events;
 
 namespace Web.Features.Restaurants.GetRestaurantById
 {
-    [Retry(MaxAttempts = 5)]
     public class ClearRestaurantCacheMenuUpdatedListener : IEventListener<MenuUpdatedEvent>
     {
         private readonly IDistributedCache cache;

@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -6,11 +5,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Web;
 using Web.Features.Billing;
-using Web.Services.Events;
 using Web.Services.Geocoding;
 using WebTests.Doubles;
 using WebTests.TestData;
@@ -32,15 +29,6 @@ namespace WebTests
             builder.ConfigureServices((ctx, services) =>
             {
                 var settings = ctx.Configuration.Get<Settings>();
-
-                services.Remove(
-                    services.Single(x => x.ImplementationType == typeof(EventProcessor))
-                );
-
-                services.Remove(
-                    services.Single(x => x.ServiceType == typeof(IHostedService) &&
-                        (x.ImplementationType?.Namespace?.StartsWith("Quartz") ?? false))
-                );
 
                 // Set the default authentication scheme to "Test",
                 // and register the handler for it.
