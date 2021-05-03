@@ -1,5 +1,5 @@
 import { AppProps } from "next/app";
-import React, { useRef } from "react";
+import React, { FC, useRef } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ToastProvider } from "~/components/Toaster/Toaster";
@@ -7,9 +7,13 @@ import useIsAppMounted from "~/services/useIsAppMounted";
 import "~/styles/index.css";
 import ErrorPage from "~/views/Error/ErrorPage";
 
-export default function App({ Component, pageProps }: AppProps) {
+const ComponentWrapper: FC<AppProps> = ({ Component, pageProps }) => {
   useIsAppMounted();
 
+  return <Component {...pageProps} />;
+};
+
+export default function App({ Component, pageProps }: AppProps) {
   const queryClientRef = useRef<QueryClient>();
 
   if (!queryClientRef.current) {
@@ -30,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ToastProvider>
       <QueryClientProvider client={queryClientRef.current}>
         <Hydrate state={pageProps.dehydratedState}>
-          <Component {...pageProps} />
+          <ComponentWrapper Component={Component} {...pageProps} />
         </Hydrate>
       </QueryClientProvider>
     </ToastProvider>
