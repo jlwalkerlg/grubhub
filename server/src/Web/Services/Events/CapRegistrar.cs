@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Savorboard.CAP.InMemoryMessageQueue;
 
@@ -8,6 +9,15 @@ namespace Web.Services.Events
     {
         public static void AddCap(this IServiceCollection services, Settings settings)
         {
+            var listeners = typeof(Startup).Assembly.GetTypes()
+                .Where(x => !x.IsAbstract && !x.IsInterface && x.GetInterfaces().Any(i =>
+                    i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventListener<>)));
+
+            foreach (var listener in listeners)
+            {
+                services.AddTransient(listener);
+            }
+
             services.AddCap(x =>
             {
                 if (settings.Cap.Storage.Driver == "PostgreSql")
@@ -39,17 +49,6 @@ namespace Web.Services.Events
 
                 x.UseDashboard();
             });
-
-            var listeners = typeof(Startup).Assembly.GetTypes()
-                .Where(x => !x.IsAbstract
-                            && !x.IsInterface
-                            && x.GetInterfaces().Any(i => i.IsGenericType
-                                && i.GetGenericTypeDefinition() == typeof(IEventListener<>)));
-
-            foreach (var listener in listeners)
-            {
-                services.AddTransient(listener);
-            }
         }
     }
 }

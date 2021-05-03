@@ -6,6 +6,7 @@ using Web.Services.Events;
 
 namespace Web.Features.Orders.AcceptOrder
 {
+    [CapSubscribe(nameof(NotifyUserOrderAcceptedListener))]
     public class NotifyUserOrderAcceptedListener : IEventListener<OrderAcceptedEvent>
     {
         private readonly IUnitOfWork uow;
@@ -17,7 +18,7 @@ namespace Web.Features.Orders.AcceptOrder
             this.hub = hub;
         }
 
-        [CapSubscribe(nameof(OrderAcceptedEvent) + ":" + nameof(NotifyUserOrderAcceptedListener))]
+        [CapSubscribe(nameof(OrderAcceptedEvent), isPartial: true)]
         public async Task Handle(OrderAcceptedEvent @event)
         {
             var order = await uow.Orders.GetById(@event.OrderId);

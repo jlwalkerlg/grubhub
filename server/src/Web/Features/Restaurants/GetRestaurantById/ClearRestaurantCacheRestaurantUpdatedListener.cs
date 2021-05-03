@@ -5,6 +5,7 @@ using Web.Services.Events;
 
 namespace Web.Features.Restaurants.GetRestaurantById
 {
+    [CapSubscribe(nameof(ClearRestaurantCacheRestaurantUpdatedListener))]
     public class ClearRestaurantCacheRestaurantUpdatedListener : IEventListener<RestaurantUpdatedEvent>
     {
         private readonly IDistributedCache cache;
@@ -14,7 +15,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             this.cache = cache;
         }
 
-        [CapSubscribe(nameof(RestaurantUpdatedEvent) + ":" + nameof(ClearRestaurantCacheRestaurantUpdatedListener))]
+        [CapSubscribe(nameof(RestaurantUpdatedEvent), isPartial: true)]
         public async Task Handle(RestaurantUpdatedEvent @event)
         {
             await cache.RemoveAsync($"restaurant:{@event.RestaurantId}");

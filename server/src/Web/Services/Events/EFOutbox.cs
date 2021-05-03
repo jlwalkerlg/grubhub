@@ -57,7 +57,7 @@ namespace Web.Services.Events
             {
                 foreach (var listener in Types[ev.GetType()])
                 {
-                    await publisher.PublishAsync(ev.GetType().Name + ":" + listener.Name, ev);
+                    await publisher.PublishAsync(listener.Name + "." + ev.GetType().Name, ev);
                 }
             }
 

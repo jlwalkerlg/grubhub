@@ -5,6 +5,7 @@ using Web.Services.Mail;
 
 namespace Web.Features.Orders.DeliverOrder
 {
+    [CapSubscribe(nameof(EmailUserOrderDeliveredListener))]
     public class EmailUserOrderDeliveredListener : IEventListener<OrderDeliveredEvent>
     {
         private readonly IUnitOfWork unitOfWork;
@@ -18,7 +19,7 @@ namespace Web.Features.Orders.DeliverOrder
             this.settings = settings;
         }
 
-        [CapSubscribe(nameof(OrderDeliveredEvent) + ":" + nameof(EmailUserOrderDeliveredListener))]
+        [CapSubscribe(nameof(OrderDeliveredEvent), isPartial: true)]
         public async Task Handle(OrderDeliveredEvent @event)
         {
             var order = await unitOfWork.Orders.GetById(@event.OrderId);

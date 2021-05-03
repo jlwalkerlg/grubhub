@@ -7,6 +7,7 @@ using Web.Services.Events;
 
 namespace Web.Features.Orders.CancelOrder
 {
+    [CapSubscribe(nameof(NotifyRestaurantOrderCancelledListener))]
     public class NotifyRestaurantOrderCancelledListener : IEventListener<OrderCancelledEvent>
     {
         private readonly IUnitOfWork uow;
@@ -18,7 +19,7 @@ namespace Web.Features.Orders.CancelOrder
             this.hubContext = hubContext;
         }
 
-        [CapSubscribe(nameof(OrderCancelledEvent) + ":" + nameof(NotifyRestaurantOrderCancelledListener))]
+        [CapSubscribe(nameof(OrderCancelledEvent), isPartial: true)]
         public async Task Handle(OrderCancelledEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));

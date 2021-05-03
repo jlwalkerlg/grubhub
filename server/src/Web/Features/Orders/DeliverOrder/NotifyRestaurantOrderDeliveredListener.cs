@@ -6,6 +6,7 @@ using Web.Services.Events;
 
 namespace Web.Features.Orders.DeliverOrder
 {
+    [CapSubscribe(nameof(NotifyRestaurantOrderDeliveredListener))]
     public class NotifyRestaurantOrderDeliveredListener : IEventListener<OrderDeliveredEvent>
     {
         private readonly IUnitOfWork uow;
@@ -17,7 +18,7 @@ namespace Web.Features.Orders.DeliverOrder
             this.hubContext = hubContext;
         }
 
-        [CapSubscribe(nameof(OrderDeliveredEvent) + ":" + nameof(NotifyRestaurantOrderDeliveredListener))]
+        [CapSubscribe(nameof(OrderDeliveredEvent), isPartial: true)]
         public async Task Handle(OrderDeliveredEvent @event)
         {
             var order = await uow.Orders.GetById(@event.OrderId);
