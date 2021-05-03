@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import useBasket, { BasketDto, BasketItemDto } from "~/api/baskets/useBasket";
 import useRemoveFromBasket from "~/api/baskets/useRemoveFromBasket";
 import { useUpdateBasketItemQuantity } from "~/api/baskets/useUpdateBasketItemQuantity";
@@ -19,23 +19,11 @@ import useFocusTrap from "~/services/useFocusTrap";
 import { usePreventBodyScroll } from "~/services/usePreventBodyScroll";
 import { isRestaurantOpen } from "~/services/utils";
 
-const OrderItemModal: FC<{
-  restaurantId: string;
-  menuItemId: string;
-  menuItemName: string;
-  menuItemDescription: string;
-  menuItemPrice: number;
-  closeModal: () => any;
-}> = ({
-  restaurantId,
-  menuItemId,
-  menuItemName,
-  menuItemDescription,
-  menuItemPrice,
-  closeModal,
-}) => {
-  const { data: basket } = useBasket(restaurantId);
-
+const BasketItemModal: FC<{
+  basket: BasketDto;
+  item: BasketItemDto;
+  close: () => any;
+}> = ({ basket, item, close }) => {
   const closeButtonRef = useRef<HTMLButtonElement>();
   const updateBasketItemButtonRef = useRef<HTMLButtonElement>();
   useFocusTrap(true, closeButtonRef, updateBasketItemButtonRef);
@@ -43,7 +31,7 @@ const OrderItemModal: FC<{
   usePreventBodyScroll(true);
 
   const [quantity, setQuantity] = useState(() => {
-    return basket.items.find((x) => x.menuItemId === menuItemId).quantity;
+    return basket.items.find((x) => x.menuItemId === item.menuItemId).quantity;
   });
 
   const incrementQuantity = () => setQuantity(quantity + 1);
@@ -61,41 +49,37 @@ const OrderItemModal: FC<{
 
     updateItemQuantity(
       {
-        restaurantId,
-        menuItemId,
+        restaurantId: basket.restaurantId,
+        menuItemId: item.menuItemId,
         quantity,
       },
       {
-        onSuccess: closeModal,
+        onSuccess: close,
       }
     );
   };
 
-  const close = () => {
-    if (!isLoading) closeModal();
+  const onClose = () => {
+    if (!isLoading) close();
   };
 
-  useEscapeKeyListener(close, [close]);
-
-  const router = useRouter();
-
-  const { isLoggedIn } = useAuth();
+  useEscapeKeyListener(onClose);
 
   return (
     <div className="fixed w-screen h-screen md:py-8 top-0 left-0 flex items-center justify-center z-50">
       <div
         className="fixed w-screen h-screen top-0 left-0"
         style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-        onClick={close}
+        onClick={onClose}
       ></div>
 
       <div className="relative max-h-full h-full sm:h-auto w-full sm:w-3/4 sm:max-w-md sm:rounded overflow-hidden flex flex-col bg-gray-50">
         <div className="bg-white shadow-lg h-12 flex items-center justify-between p-4">
           <div className="h-6 w-6" aria-hidden></div>
 
-          <p className="font-semibold text-gray-800">{menuItemName}</p>
+          <p className="font-semibold text-gray-800">{item.menuItemName}</p>
 
-          <button ref={closeButtonRef} onClick={close}>
+          <button ref={closeButtonRef} onClick={onClose}>
             <CloseIcon className="h-6 w-6 text-primary" />
           </button>
         </div>
@@ -107,10 +91,10 @@ const OrderItemModal: FC<{
             </div>
           )}
 
-          <p className="font-semibold">£{menuItemPrice.toFixed(2)}</p>
+          <p className="font-semibold">£{item.menuItemPrice.toFixed(2)}</p>
 
-          {menuItemDescription && (
-            <p className="mt-4 text-sm">{menuItemDescription}</p>
+          {item.menuItemDescription && (
+            <p className="mt-4 text-sm">{item.menuItemDescription}</p>
           )}
 
           <div className="flex items-center mt-4">
@@ -135,44 +119,32 @@ const OrderItemModal: FC<{
         </div>
 
         <div className="p-4 bg-white -shadow-lg">
-          {isLoggedIn ? (
-            <button
-              ref={updateBasketItemButtonRef}
-              onClick={submit}
-              className={`btn btn-primary w-full ${
-                isLoading ? "disabled" : ""
-              }`}
-            >
-              Update £{(menuItemPrice * quantity).toFixed(2)}
-            </button>
-          ) : (
-            <p>
-              Please{" "}
-              <Link href={`/login?redirect_to=${router.asPath}`}>
-                <a className="text-primary">login</a>
-              </Link>{" "}
-              to start an order.
-            </p>
-          )}
+          <button
+            ref={updateBasketItemButtonRef}
+            onClick={submit}
+            className={`btn btn-primary w-full ${isLoading ? "disabled" : ""}`}
+          >
+            Update £{(item.menuItemPrice * quantity).toFixed(2)}
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-const OrderItem: FC<{
+const BasketItem: FC<{
   restaurantId: string;
   item: BasketItemDto;
   openUpdateModal: () => any;
 }> = ({ restaurantId, item, openUpdateModal }) => {
   const { addToast } = useToasts();
 
-  const { mutate: remove, isLoading } = useRemoveFromBasket();
+  const { mutate: removeBasketItem, isLoading } = useRemoveFromBasket();
 
   const onRemove = () => {
     if (isLoading) return;
 
-    remove(
+    removeBasketItem(
       {
         restaurantId,
         menuItemId: item.menuItemId,
@@ -229,17 +201,15 @@ const MobileBasketModal: FC<{
 
   usePreventBodyScroll();
 
-  const [orderModalOpenFor, setOrderModalOpenFor] = useState<BasketItemDto>(
-    null
-  );
+  const [selectedBasketItem, setSelectedBasketItem] = useState<BasketItemDto>();
 
   useEscapeKeyListener(() => {
-    if (!orderModalOpenFor) close();
+    if (!selectedBasketItem) close();
   });
 
   return (
-    <div className="bg-white border border-gray-200 fixed h-screen w-screen top-0 left-0 flex flex-col z-40">
-      <div className="shadow-lg p-4 text-center flex items-center justify-between flex-0">
+    <div className="bg-white border border-gray-200 fixed h-screen w-screen top-0 left-0 z-40">
+      <div className="shadow-lg p-4 text-center flex items-center justify-between">
         <button ref={closeButtonRef} onClick={close}>
           <ChevronIcon direction="left" className="w-10 h-10 text-primary" />
         </button>
@@ -251,28 +221,25 @@ const MobileBasketModal: FC<{
         <div aria-hidden className="w-10 h-10"></div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-8">
+      <div className="px-4 py-8">
         <ul>
           {basket.items.map((item) => {
             return (
-              <OrderItem
+              <BasketItem
                 key={item.menuItemId}
                 restaurantId={basket.restaurantId}
                 item={item}
-                openUpdateModal={() => setOrderModalOpenFor(item)}
+                openUpdateModal={() => setSelectedBasketItem(item)}
               />
             );
           })}
         </ul>
 
-        {orderModalOpenFor && (
-          <OrderItemModal
-            restaurantId={basket.restaurantId}
-            menuItemId={orderModalOpenFor.menuItemId}
-            menuItemName={orderModalOpenFor.menuItemName}
-            menuItemDescription={orderModalOpenFor.menuItemDescription}
-            menuItemPrice={orderModalOpenFor.menuItemPrice}
-            closeModal={() => setOrderModalOpenFor(null)}
+        {selectedBasketItem && (
+          <BasketItemModal
+            basket={basket}
+            item={selectedBasketItem}
+            close={() => setSelectedBasketItem(null)}
           />
         )}
 
@@ -283,8 +250,12 @@ const MobileBasketModal: FC<{
           <span>£{subtotal.toFixed(2)}</span>
         </p>
 
-        {basket?.items.length > 0 &&
-        subtotal >= restaurant.minimumDeliverySpend ? (
+        {subtotal < restaurant.minimumDeliverySpend ? (
+          <p className="text-gray-800 text-sm mt-4">
+            Spend £{(restaurant.minimumDeliverySpend - subtotal).toFixed(2)}{" "}
+            more for delivery.
+          </p>
+        ) : (
           <>
             <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
               <span>Delivery fee</span>
@@ -296,16 +267,11 @@ const MobileBasketModal: FC<{
               <span>£{(subtotal + restaurant.deliveryFee).toFixed(2)}</span>
             </p>
           </>
-        ) : (
-          <p className="text-gray-800 text-sm mt-4">
-            Spend £{(restaurant.minimumDeliverySpend - subtotal).toFixed(2)}{" "}
-            more for delivery.
-          </p>
         )}
       </div>
 
       {subtotal >= restaurant.minimumDeliverySpend && (
-        <div className="p-4 -shadow-lg flex-0">
+        <div className="p-4 -shadow-lg absolute bottom-0 left-0 w-full bg-white">
           <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
             <a
               ref={paymentLinkRef}
@@ -320,138 +286,65 @@ const MobileBasketModal: FC<{
   );
 };
 
-const OrderAside: FC<{
-  isLoading: boolean;
-  isError: boolean;
-  restaurant: RestaurantDto;
-  basket: BasketDto;
-  subtotal: number;
-  isOpen: boolean;
-}> = ({ isLoading, isError, restaurant, basket, subtotal, isOpen }) => {
-  const { isLoggedIn } = useAuth();
-
+const OrderDetails: FC<{ restaurant: RestaurantDto; basket: BasketDto }> = ({
+  restaurant,
+  basket,
+}) => {
   const router = useRouter();
 
-  const [orderModalOpenFor, setOrderModalOpenFor] = useState<BasketItemDto>(
-    null
-  );
+  const { isLoggedIn } = useAuth();
+
+  const [selectedBasketItem, setSelectedBasketItem] = useState<BasketItemDto>();
 
   if (!isLoggedIn) {
     return (
-      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
-        <h2 className="font-bold text-xl tracking-wider text-gray-800">
-          Your order
-        </h2>
-
-        <hr className="my-3 border-gray-300" />
-
-        <p>
-          Please{" "}
-          <Link href={`/login?redirect_to=${router.asPath}`}>
-            <a className="text-primary">login</a>
-          </Link>{" "}
-          to order.
-        </p>
-      </div>
+      <p>
+        Please{" "}
+        <Link href={`/login?redirect_to=${router.asPath}`}>
+          <a className="text-primary">login</a>
+        </Link>{" "}
+        to order.
+      </p>
     );
   }
 
-  if (!isOpen) {
-    return (
-      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
-        <h2 className="font-bold text-xl tracking-wider text-gray-800">
-          Your order
-        </h2>
-
-        <hr className="my-3 border-gray-300" />
-
-        <p className="text-gray-800">
-          Restaurant is not accepting orders at this time.
-        </p>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
-        <h2 className="font-bold text-xl tracking-wider text-gray-800">
-          Your order
-        </h2>
-
-        <hr className="my-3 border-gray-300" />
-
-        <p>Loading your order...</p>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
-        <h2 className="font-bold text-xl tracking-wider text-gray-800">
-          Your order
-        </h2>
-
-        <hr className="my-3 border-gray-300" />
-
-        <p>Order could not be loaded at this time.</p>
-      </div>
-    );
-  }
+  const subtotal =
+    basket.items.reduce(
+      (carry, item) => carry + item.menuItemPrice * item.quantity,
+      0
+    ) || 0;
 
   return (
-    <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
-      <h2 className="font-bold text-xl tracking-wider text-gray-800">
-        Your order
-      </h2>
-
-      <hr className="my-6 border-gray-300" />
-
-      {basket?.items.length > 0 ? (
-        <>
-          <ul>
-            {basket.items.map((item) => {
-              return (
-                <OrderItem
-                  key={item.menuItemId}
-                  restaurantId={basket.restaurantId}
-                  item={item}
-                  openUpdateModal={() => setOrderModalOpenFor(item)}
-                />
-              );
-            })}
-          </ul>
-
-          {orderModalOpenFor && (
-            <OrderItemModal
+    <>
+      <ul>
+        {basket.items.map((item) => {
+          return (
+            <BasketItem
+              key={item.menuItemId}
               restaurantId={basket.restaurantId}
-              menuItemId={orderModalOpenFor.menuItemId}
-              menuItemName={orderModalOpenFor.menuItemName}
-              menuItemDescription={orderModalOpenFor.menuItemDescription}
-              menuItemPrice={orderModalOpenFor.menuItemPrice}
-              closeModal={() => setOrderModalOpenFor(null)}
+              item={item}
+              openUpdateModal={() => setSelectedBasketItem(item)}
             />
-          )}
-        </>
-      ) : (
-        <p>
-          You haven't added any items to your order...{" "}
-          <span className="font-medium italic">yet</span>.
-        </p>
+          );
+        })}
+      </ul>
+
+      {selectedBasketItem && (
+        <BasketItemModal
+          basket={basket}
+          item={selectedBasketItem}
+          close={() => setSelectedBasketItem(null)}
+        />
       )}
 
-      <hr className="my-6 border-gray-300" />
+      <hr className="my-3 border-gray-300" />
 
-      {basket?.items.length > 0 && (
-        <p className="text-gray-800 text-sm font-semibold flex items-center justify-between">
-          <span>Subtotal</span>
-          <span>£{subtotal.toFixed(2)}</span>
-        </p>
-      )}
+      <p className="text-gray-800 text-sm font-semibold flex items-center justify-between">
+        <span>Subtotal</span>
+        <span>£{subtotal.toFixed(2)}</span>
+      </p>
 
-      {basket?.items.length > 0 &&
-      subtotal >= restaurant.minimumDeliverySpend ? (
+      {subtotal >= restaurant.minimumDeliverySpend ? (
         <>
           <p className="mt-2 text-gray-800 text-sm flex items-center justify-between">
             <span>Delivery fee</span>
@@ -475,15 +368,30 @@ const OrderAside: FC<{
           for delivery.
         </p>
       )}
+    </>
+  );
+};
+
+const OrderAsideBox: FC = ({ children }) => {
+  return (
+    <div className="sticky top-20 -mt-36 bg-white rounded border border-gray-200 shadow-lg p-4 hidden md:block">
+      <h2 className="font-bold text-xl tracking-wider text-gray-800">
+        Your order
+      </h2>
+
+      <hr className="my-3 border-gray-300" />
+
+      {children}
     </div>
   );
 };
 
-const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
-  const { data: basket, isLoading, isError } = useBasket(restaurant.id);
-
+const OrderMobile: FC<{ restaurant: RestaurantDto; basket: BasketDto }> = ({
+  restaurant,
+  basket,
+}) => {
   const subtotal =
-    basket?.items.reduce(
+    basket.items.reduce(
       (carry, item) => carry + item.menuItemPrice * item.quantity,
       0
     ) || 0;
@@ -493,55 +401,87 @@ const Order: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = useCallback(() => setIsModalOpen(true), []);
-  const closeModal = useCallback(() => setIsModalOpen(false), []);
-
   useEffect(() => {
     if (totalItems === 0) {
       setIsModalOpen(false);
     }
   }, [totalItems]);
 
-  const isOpen = isRestaurantOpen(restaurant);
-
   return (
     <>
-      <OrderAside
-        isLoading={isLoading}
-        isError={isError}
-        restaurant={restaurant}
-        basket={basket}
-        subtotal={subtotal}
-        isOpen={isOpen}
-      />
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="fixed left-0 bottom-0 w-full bg-white -shadow-lg flex items-center p-4 md:hidden"
+      >
+        <div className="relative pr-2">
+          <CartIcon className="w-8 h-8" />
+          <span className="absolute top-0 right-0 border border-white rounded-full px-1 bg-black text-white text-xs font-semibold">
+            {totalItems}
+          </span>
+        </div>
+        <span className="ml-4">£{subtotal.toFixed(2)}</span>
+      </button>
 
-      {isOpen && basket?.items.length > 0 && (
-        <>
-          <button
-            onClick={openModal}
-            className="fixed left-0 bottom-0 w-full bg-white -shadow-lg flex items-center p-4 md:hidden"
-          >
-            <div className="relative pr-2">
-              <CartIcon className="w-8 h-8" />
-              <span className="absolute top-0 right-0 border border-white rounded-full px-1 bg-black text-white text-xs font-semibold">
-                {totalItems}
-              </span>
-            </div>
-            <span className="ml-4">£{subtotal.toFixed(2)}</span>
-          </button>
-
-          {isModalOpen && (
-            <MobileBasketModal
-              restaurant={restaurant}
-              basket={basket}
-              subtotal={subtotal}
-              close={closeModal}
-            />
-          )}
-        </>
+      {isModalOpen && (
+        <MobileBasketModal
+          restaurant={restaurant}
+          basket={basket}
+          subtotal={subtotal}
+          close={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );
 };
 
-export default Order;
+const OrderContainer: FC<{ restaurant: RestaurantDto }> = ({ restaurant }) => {
+  const { data: basket, isLoading, isError } = useBasket(restaurant.id);
+
+  const restaurantIsOpen = isRestaurantOpen(restaurant);
+
+  if (isLoading) {
+    return (
+      <OrderAsideBox>
+        <SpinnerIcon className="w-6 h-6 animate-spin" />
+      </OrderAsideBox>
+    );
+  }
+
+  if (isError) {
+    return (
+      <OrderAsideBox>
+        <p>There was an unexpected error while loaded your order.</p>
+      </OrderAsideBox>
+    );
+  }
+
+  if (!restaurantIsOpen) {
+    return (
+      <OrderAsideBox>
+        <p>Restaurant is closed.</p>
+      </OrderAsideBox>
+    );
+  }
+
+  if (!basket?.items.length) {
+    return (
+      <OrderAsideBox>
+        <p className="text-gray-800 text-sm">
+          Spend £{restaurant.minimumDeliverySpend.toFixed(2)} for delivery.
+        </p>
+      </OrderAsideBox>
+    );
+  }
+
+  return (
+    <>
+      <OrderAsideBox>
+        <OrderDetails restaurant={restaurant} basket={basket} />
+      </OrderAsideBox>
+
+      <OrderMobile restaurant={restaurant} basket={basket} />
+    </>
+  );
+};
+
+export default OrderContainer;

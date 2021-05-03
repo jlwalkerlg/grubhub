@@ -7,12 +7,12 @@ import Toaster from "../Toaster/Toaster";
 
 interface LayoutProps {
   title: string;
-  children: React.ReactNode;
+  padded?: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = ({ title, children }) => {
+const Layout: FC<LayoutProps> = ({ title, padded = true, children }) => {
   return (
-    <div className="py-16">
+    <div className={padded ? "py-16" : undefined}>
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
         <title>{title}</title>
@@ -24,6 +24,19 @@ const Layout: React.FC<LayoutProps> = ({ title, children }) => {
   );
 };
 
+export const ErrorLayout: FC<{
+  title?: string;
+  error?: string;
+}> = ({ title, error }) => {
+  return (
+    <Layout title={title || "Error | GrubHub"} padded={false}>
+      <div className="h-screen w-screen flex justify-center items-center bg-white">
+        <p>{error || "An unexpected error occured."}</p>
+      </div>
+    </Layout>
+  );
+};
+
 interface AuthLayoutProps extends LayoutProps {
   authorised?: boolean;
 }
@@ -31,7 +44,7 @@ interface AuthLayoutProps extends LayoutProps {
 export const AuthLayout: FC<AuthLayoutProps> = ({
   authorised = true,
   children,
-  ...rest
+  ...layoutProps
 }) => {
   const { isLoggedIn, isLoading, user } = useAuth();
   const router = useRouter();
@@ -44,7 +57,7 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
     }
   }
 
-  return <Layout {...rest}>{isLoggedIn && children}</Layout>;
+  return <Layout {...layoutProps}>{isLoggedIn && children}</Layout>;
 };
 
 export default Layout;

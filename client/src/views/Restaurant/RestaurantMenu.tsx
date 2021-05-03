@@ -184,7 +184,7 @@ const MenuItem: FC<{ menu: MenuDto; item: MenuItemDto }> = ({ menu, item }) => {
   );
 };
 
-export const Menu: FC<{
+export const RestaurantMenu: FC<{
   restaurant: RestaurantDto;
   setHash: (hash: string) => any;
 }> = ({ restaurant, setHash }) => {
@@ -261,7 +261,7 @@ export const Menu: FC<{
   );
 };
 
-export const MobileMenu: FC<{ restaurant: RestaurantDto }> = ({
+export const RestaurantMenuMobile: FC<{ restaurant: RestaurantDto }> = ({
   restaurant,
 }) => {
   const [openCategories, setOpenCategories] = useState<string[]>([]);
