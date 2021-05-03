@@ -14,7 +14,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
 {
     public class GetRestaurantOrderHistoryAction : Action
     {
-        private const int PER_PAGE = 2;
+        private const int PerPage = 2;
 
         private readonly IDbConnectionFactory dbConnectionFactory;
         private readonly IAuthenticator authenticator;
@@ -30,7 +30,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
         public async Task<IActionResult> GetRestaurantOrderHistory([FromQuery] int? page)
         {
             page = Math.Max(page ?? 1, 1);
-            var offset = (page - 1) * PER_PAGE;
+            var offset = (page - 1) * PerPage;
 
             using var connection = await dbConnectionFactory.OpenConnection();
 
@@ -48,7 +48,11 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                     WHERE
                         r.manager_id = @UserId
                         AND o.status = ANY(@InactiveStatuses)
-                    GROUP BY o.id, r.estimated_delivery_time_in_minutes
+                    GROUP BY
+                        o.id,
+                        o.number,
+                        o.status,
+                        o.placed_at
                     ORDER BY o.placed_at
                     LIMIT @Limit OFFSET @Offset",
                     new
@@ -58,7 +62,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                             .Select(x => x.ToString())
                             .ToArray(),
                         Offset = offset,
-                        Limit = PER_PAGE,
+                        Limit = PerPage,
                     });
 
             var count = await connection.ExecuteScalarAsync<int>(
@@ -75,7 +79,7 @@ namespace Web.Features.Orders.GetRestaurantOrderHistory
                             .ToArray(),
                     });
 
-            var pages = (int)Math.Ceiling((double)count / PER_PAGE);
+            var pages = (int)Math.Ceiling((double)count / PerPage);
 
             return Ok(new GetRestaurantOrderHistoryResponse()
             {

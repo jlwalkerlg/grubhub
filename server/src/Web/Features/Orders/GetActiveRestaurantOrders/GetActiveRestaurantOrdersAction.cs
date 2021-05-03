@@ -51,7 +51,17 @@ namespace Web.Features.Orders.GetActiveRestaurantOrders
                             r.manager_id = @UserId
                             AND o.status = ANY(@ActiveStatuses)
                             AND o.confirmed_at > @ConfirmedAfter
-                        GROUP BY o.id, r.estimated_delivery_time_in_minutes
+                        GROUP BY
+                            o.id,
+                            o.number,
+                            o.status,
+                            o.address_line1,
+                            o.address_line2,
+                            o.city,
+                            o.postcode,
+                            o.placed_at,
+                            r.estimated_delivery_time_in_minutes,
+                            o.confirmed_at
                         ORDER BY o.confirmed_at",
                     new
                     {

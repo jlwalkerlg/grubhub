@@ -47,7 +47,14 @@ namespace Web.Features.Orders.GetOrderHistory
                         INNER JOIN restaurants r on o.restaurant_id = r.id
                     WHERE
                         o.user_id = @UserId
-                    GROUP BY o.id, r.name, r.thumbnail
+                    GROUP BY
+                        o.id,
+                        o.placed_at,
+                        o.service_fee,
+                        o.delivery_fee,
+                        r.name,
+                        r.thumbnail,
+                        o.delivered_at
                     ORDER BY o.delivered_at
                     LIMIT @Limit OFFSET @Offset",
                     new
