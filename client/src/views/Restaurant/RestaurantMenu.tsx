@@ -121,28 +121,28 @@ const MenuItemModal: FC<{
               <PlusIcon className="w-10 h-10" />
             </button>
           </div>
-        </div>
 
-        <div className="p-4 bg-white -shadow-lg">
-          {isLoggedIn ? (
-            <button
-              ref={addToBasketButtonRef}
-              onClick={submit}
-              className={`btn btn-primary w-full ${
-                isLoading ? "disabled" : ""
-              }`}
-            >
-              Add to order £{(menuItemPrice * quantity).toFixed(2)}
-            </button>
-          ) : (
-            <p>
-              Please{" "}
-              <Link href={`/login?redirect_to=${router.asPath}`}>
-                <a className="text-primary">login</a>
-              </Link>{" "}
-              to start an order.
-            </p>
-          )}
+          <div className="mt-8 w-full">
+            {isLoggedIn ? (
+              <button
+                ref={addToBasketButtonRef}
+                onClick={submit}
+                className={`btn text-red-700 w-full ${
+                  isLoading ? "disabled" : ""
+                }`}
+              >
+                Add to order £{(menuItemPrice * quantity).toFixed(2)}
+              </button>
+            ) : (
+              <p>
+                Please{" "}
+                <Link href={`/login?redirect_to=${router.asPath}`}>
+                  <a className="text-primary">login</a>
+                </Link>{" "}
+                to start an order.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

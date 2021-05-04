@@ -116,16 +116,18 @@ const BasketItemModal: FC<{
               <PlusIcon className="w-10 h-10" />
             </button>
           </div>
-        </div>
 
-        <div className="p-4 bg-white -shadow-lg">
-          <button
-            ref={updateBasketItemButtonRef}
-            onClick={submit}
-            className={`btn btn-primary w-full ${isLoading ? "disabled" : ""}`}
-          >
-            Update £{(item.menuItemPrice * quantity).toFixed(2)}
-          </button>
+          <div className="mt-8">
+            <button
+              ref={updateBasketItemButtonRef}
+              onClick={submit}
+              className={`btn text-red-700 w-full ${
+                isLoading ? "disabled" : ""
+              }`}
+            >
+              Update £{(item.menuItemPrice * quantity).toFixed(2)}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -268,20 +270,20 @@ const MobileBasketModal: FC<{
             </p>
           </>
         )}
-      </div>
 
-      {subtotal >= restaurant.minimumDeliverySpend && (
-        <div className="p-4 -shadow-lg absolute bottom-0 left-0 w-full bg-white">
-          <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
-            <a
-              ref={paymentLinkRef}
-              className="btn btn-primary w-full block text-center"
-            >
-              Go to payment
-            </a>
-          </Link>
-        </div>
-      )}
+        {subtotal >= restaurant.minimumDeliverySpend && (
+          <div className="mt-8">
+            <Link href={`/restaurants/${basket.restaurantId}/checkout`}>
+              <a
+                ref={paymentLinkRef}
+                className="btn text-red-700 w-full block text-center"
+              >
+                Go to payment
+              </a>
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
