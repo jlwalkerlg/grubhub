@@ -21,6 +21,7 @@ const Tabs: FC<{
         {tabs.map((tab) => {
           return (
             <button
+              key={tab}
               onClick={() => setTab(tab)}
               className={`flex-1 py-4 border-b-2 border-transparent hover:font-bold hover:border-primary-500 hover:text-base ${
                 currentTab === tab
