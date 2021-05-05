@@ -55,13 +55,9 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     r.thumbnail
                 FROM
                     restaurants r
-                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id
-                    INNER JOIN menus m ON m.restaurant_id = r.id
-                    INNER JOIN menu_categories mc ON mc.menu_id = m.id
-                    INNER JOIN menu_items mi ON mi.menu_category_id = mc.id ";
+                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id ";
 
             sql += GetWhereClause(options, day);
-            sql += " GROUP BY r.id";
 
             if (options?.SortBy == "distance")
             {
@@ -97,10 +93,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             var count = await connection.ExecuteScalarAsync<int>(
                 @"SELECT COUNT(*) FROM restaurants r
-                INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id
-                INNER JOIN menus m ON m.restaurant_id = r.id
-                INNER JOIN menu_categories mc ON mc.menu_id = m.id
-                INNER JOIN menu_items mi ON mi.menu_category_id = mc.id "
+                INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id "
                 + GetWhereClause(options, day),
                 new
                 {
@@ -165,6 +158,8 @@ namespace Web.Features.Restaurants.SearchRestaurants
         private static string GetWhereClause(RestaurantSearchOptions options, string day)
         {
             var sql = "WHERE r.status = @Status AND ba.billing_enabled = TRUE";
+
+            sql += " AND EXISTS (SELECT 1 FROM menus m INNER JOIN menu_categories mc ON mc.menu_id = m.id INNER JOIN menu_items mi ON mi.menu_category_id = mc.id WHERE m.restaurant_id = r.id)";
 
             sql += $" AND {day}_open <= @Now AND ({day}_close IS NULL OR {day}_close > @Now)";
 
