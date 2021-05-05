@@ -55,9 +55,13 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     r.thumbnail
                 FROM
                     restaurants r
-                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id ";
+                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id
+                    INNER JOIN menus m ON m.restaurant_id = r.id
+                    INNER JOIN menu_categories mc ON mc.menu_id = m.id
+                    INNER JOIN menu_items mi ON mi.menu_category_id = mc.id ";
 
             sql += GetWhereClause(options, day);
+            sql += " GROUP BY r.id";
 
             if (options?.SortBy == "distance")
             {
@@ -93,7 +97,10 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             var count = await connection.ExecuteScalarAsync<int>(
                 @"SELECT COUNT(*) FROM restaurants r
-                INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id "
+                INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id
+                INNER JOIN menus m ON m.restaurant_id = r.id
+                INNER JOIN menu_categories mc ON mc.menu_id = m.id
+                INNER JOIN menu_items mi ON mi.menu_category_id = mc.id "
                 + GetWhereClause(options, day),
                 new
                 {
@@ -161,16 +168,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             sql += $" AND {day}_open <= @Now AND ({day}_close IS NULL OR {day}_close > @Now)";
 
-            sql +=
-                " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
-
-            sql += @" AND r.id = ANY(
-                    SELECT
-                        m.restaurant_id FROM menus m
-                        INNER JOIN menu_categories mc ON mc.menu_id = m.id
-                        INNER JOIN menu_items mi ON mi.menu_category_id = mc.id
-                    GROUP BY
-                        m.id, m.restaurant_id)";
+            sql += " AND FLOOR(6371000 * acos(sin(radians(r.latitude)) * sin(radians(@OriginLatitude)) + cos(radians(r.latitude)) * cos(radians(@OriginLatitude)) * cos(radians(@OriginLongitude - r.longitude)))) / 1000 <= r.max_delivery_distance_in_km";
 
             if (options?.Cuisines.Count > 0)
             {
