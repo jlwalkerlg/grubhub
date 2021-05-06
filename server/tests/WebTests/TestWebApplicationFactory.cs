@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -36,11 +37,12 @@ namespace WebTests
                     .AddScheme<AuthenticationSchemeOptions, AuthHandlerFake>(
                         "Test", options => { });
 
+                services.Remove(services.First(x =>
+                    x.ImplementationInstance is DotNetCore.CAP.Internal.IBootstrapper));
+
                 services.AddLogging(logging =>
                 {
-                    logging.AddFilter(
-                        typeof(WebTests.Doubles.AuthHandlerFake).FullName,
-                        LogLevel.Warning);
+                    logging.AddFilter(typeof(AuthHandlerFake).FullName, LogLevel.Warning);
                 });
 
                 services.AddDbContext<TestDbContext>(options =>
@@ -60,7 +62,7 @@ namespace WebTests
             // Only necessary if a version earlier than ASP.NET Core 3.0,
             // or still using the Web Host instead of the Generic Host,
             // otherwise redundant.
-            builder.ConfigureTestServices(services =>
+            builder.ConfigureTestServices(_ =>
             {
             });
         }
