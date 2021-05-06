@@ -21,14 +21,14 @@ namespace Web
         public string StripeOnboardingReturnUrl => $"{ClientUrl}/dashboard/billing";
     }
 
-    public record GeocodingSettings
-    {
-        public string GoogleApiKey { get; init; }
-    }
-
     public record DatabaseSettings
     {
         public string ConnectionString { get; init; }
+    }
+
+    public record GeocodingSettings
+    {
+        public string GoogleApiKey { get; init; }
     }
 
     public record StripeSettings
