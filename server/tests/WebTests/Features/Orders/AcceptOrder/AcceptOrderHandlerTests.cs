@@ -54,7 +54,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             order.Accepted.ShouldBeTrue();
             order.AcceptedAt.ShouldBe(dateTimeProvider.UtcNow);
 
-            var ev = unitOfWork.OutboxSpy.Events.OfType<OrderAcceptedEvent>().Single();
+            var ev = unitOfWork.Events.OfType<OrderAcceptedEvent>().Single();
             ev.OrderId.ShouldBe(order.Id);
             ev.OccuredAt.ShouldBe(dateTimeProvider.UtcNow);
         }
@@ -84,7 +84,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             order.Accepted.ShouldBeTrue();
             order.AcceptedAt.ShouldBe(acceptedAt);
 
-            unitOfWork.OutboxSpy.Events.ShouldBeEmpty();
+            unitOfWork.Events.ShouldBeEmpty();
         }
 
         [Fact]

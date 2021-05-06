@@ -38,7 +38,7 @@ namespace Web.Features.Orders.ConfirmOrder
 
             if (basket != null) await unitOfWork.Baskets.Remove(basket);
 
-            await unitOfWork.Outbox.Add(new OrderConfirmedEvent(order.Id, order.ConfirmedAt!.Value));
+            await unitOfWork.Publish(new OrderConfirmedEvent(order.Id, order.ConfirmedAt!.Value));
 
             await unitOfWork.Commit();
 

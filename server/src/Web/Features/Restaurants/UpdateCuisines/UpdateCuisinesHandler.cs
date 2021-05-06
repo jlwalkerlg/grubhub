@@ -46,7 +46,7 @@ namespace Web.Features.Restaurants.UpdateCuisines
 
             restaurant.SetCuisines(cuisines);
 
-            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Publish(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

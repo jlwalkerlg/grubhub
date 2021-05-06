@@ -50,7 +50,7 @@ namespace Web.Features.Restaurants.UpdateRestaurantDetails
             restaurant.MaxDeliveryDistance = Distance.FromKm(command.MaxDeliveryDistanceInKm);
             restaurant.EstimatedDeliveryTimeInMinutes = command.EstimatedDeliveryTimeInMinutes;
 
-            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Publish(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

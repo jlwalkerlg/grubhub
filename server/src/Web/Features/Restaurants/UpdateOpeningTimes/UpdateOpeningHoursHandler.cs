@@ -47,7 +47,7 @@ namespace Web.Features.Restaurants.UpdateOpeningHours
                 Sunday = OpeningHours.Parse(command.SundayOpen, command.SundayClose),
             };
 
-            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Publish(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

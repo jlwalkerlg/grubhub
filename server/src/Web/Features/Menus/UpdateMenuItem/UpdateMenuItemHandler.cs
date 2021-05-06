@@ -67,7 +67,7 @@ namespace Web.Features.Menus.UpdateMenuItem
 
             item.Price = Money.FromPounds(command.Price);
 
-            await unitOfWork.Outbox.Add(new MenuUpdatedEvent(menu.RestaurantId, dateTimeProvider.UtcNow));
+            await unitOfWork.Publish(new MenuUpdatedEvent(menu.RestaurantId, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

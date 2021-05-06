@@ -19,7 +19,8 @@ namespace Web
         IBasketRepository Baskets { get; }
         IOrderRepository Orders { get; }
         IBillingAccountRepository BillingAccounts { get; }
-        IOutbox Outbox { get; }
+
+        Task Publish(Event @event);
 
         Task Commit();
     }

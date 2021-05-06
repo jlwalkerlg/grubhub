@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Web;
+using Web.Data.EF;
 using Web.Features.Billing;
 using Web.Services.Geocoding;
 using WebTests.Doubles;
@@ -37,8 +38,9 @@ namespace WebTests
                     .AddScheme<AuthenticationSchemeOptions, AuthHandlerFake>(
                         "Test", options => { });
 
-                services.Remove(services.First(x =>
-                    x.ImplementationInstance is DotNetCore.CAP.Internal.IBootstrapper));
+                // TODO
+                // services.Remove(services.First(x =>
+                //     x.ImplementationInstance is DotNetCore.CAP.Internal.IBootstrapper));
 
                 services.AddLogging(logging =>
                 {
@@ -56,6 +58,10 @@ namespace WebTests
                 services.AddSingleton<IBillingService, BillingServiceSpy>();
 
                 services.AddSingleton<IGeocoder, GeocoderStub>();
+
+                services.AddScoped<EFUnitOfWork>();
+                services.AddSingleton<OutboxSpy>();
+                services.AddScoped<IUnitOfWork, EFUnitOfWorkProxy>();
             });
 
             // Also executed after Startup.ConfigureServices.

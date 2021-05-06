@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web;
 using Web.Features.Baskets;
@@ -34,10 +35,14 @@ namespace WebTests.Doubles
         public IBillingAccountRepository BillingAccounts => BillingAccountsRepositorySpy;
         public BillingAccountRepositorySpy BillingAccountsRepositorySpy { get; } = new();
 
-        public IOutbox Outbox => OutboxSpy;
-        public OutboxSpy OutboxSpy { get; } = new();
-
         public bool Commited { get; private set; } = false;
+        public List<Event> Events { get; } = new();
+
+        public Task Publish(Event @event)
+        {
+            Events.Add(@event);
+            return Task.CompletedTask;
+        }
 
         public Task Commit()
         {

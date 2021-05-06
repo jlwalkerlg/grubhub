@@ -123,7 +123,7 @@ namespace WebTests.Features.Orders.DeliverOrder
 
             result.ShouldBeSuccessful();
 
-            var evnt = unitOfWork.OutboxSpy.Events
+            var evnt = unitOfWork.Events
                 .OfType<OrderDeliveredEvent>()
                 .Single();
 
@@ -152,7 +152,7 @@ namespace WebTests.Features.Orders.DeliverOrder
 
             result.ShouldBeSuccessful();
 
-            unitOfWork.OutboxSpy.Events.ShouldBeEmpty();
+            unitOfWork.Events.ShouldBeEmpty();
         }
 
         private static (RestaurantManager manager, Restaurant restaurant, Order order) SetupOrder(bool accept = true)
