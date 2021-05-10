@@ -70,7 +70,8 @@ namespace WebTests.Features.Orders.AcceptOrder
 
             order.AcceptedAt?.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
 
-            var ev = UseTestDbContext(db => db.Events.Single().ToEvent()) as OrderAcceptedEvent;
+            var outbox = factory.Services.GetRequiredService<OutboxSpy>();
+            var ev = outbox.Events.OfType<OrderAcceptedEvent>().Single();
 
             ev.OrderId.Value.ShouldBe(order.Id);
             ev.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));

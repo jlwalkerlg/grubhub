@@ -29,7 +29,7 @@ namespace Web.Features.Restaurants.ConfirmThumbnailUpload
 
             restaurant.Thumbnail = command.Filename;
 
-            await unitOfWork.Outbox.Add(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Publish(new RestaurantUpdatedEvent(restaurant.Id, dateTimeProvider.UtcNow));
             await unitOfWork.Commit();
 
             return Result.Ok();

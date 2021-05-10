@@ -21,6 +21,11 @@ namespace WebTests
             factory = fixture.Factory;
             settings = factory.Services.GetRequiredService<DatabaseSettings>();
 
+            Reset();
+        }
+
+        private void Reset()
+        {
             ResetDatabase();
         }
 

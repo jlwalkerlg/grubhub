@@ -51,10 +51,11 @@ namespace WebTests.Features.Orders.RejectOrder
             order.Status.ShouldBe(OrderStatus.Rejected);
             order.RejectedAt?.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
 
-            var evnt = UseTestDbContext(db => db.Events.Single().ToEvent()) as OrderRejectedEvent;
+            var outbox = factory.Services.GetRequiredService<OutboxSpy>();
+            var ev = outbox.Events.OfType<OrderRejectedEvent>().Single();
 
-            evnt.OrderId.ShouldBe(order.Id);
-            evnt.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            ev.OrderId.ShouldBe(order.Id);
+            ev.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }

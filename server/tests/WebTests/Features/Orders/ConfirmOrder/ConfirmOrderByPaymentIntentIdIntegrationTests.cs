@@ -67,12 +67,11 @@ namespace WebTests.Features.Orders.ConfirmOrder
 
             found.Status.ShouldBe(Web.Domain.Orders.OrderStatus.PaymentConfirmed);
 
-            var ev = UseTestDbContext(db => db.Events.Single());
+            var outbox = factory.Services.GetRequiredService<OutboxSpy>();
+            var ev = outbox.Events.OfType<OrderConfirmedEvent>().Single();
 
-            var ocEv = ev.ToEvent() as OrderConfirmedEvent;
-
-            ocEv.OrderId.Value.ShouldBe(order.Id);
-            ocEv.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            ev.OrderId.Value.ShouldBe(order.Id);
+            ev.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }

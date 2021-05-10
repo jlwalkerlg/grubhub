@@ -46,7 +46,7 @@ namespace Web.Features.Orders.AcceptOrder
 
             if (!result) return result.Error;
 
-            await unitOfWork.Outbox.Add(new OrderAcceptedEvent(order.Id, dateTimeProvider.UtcNow));
+            await unitOfWork.Publish(new OrderAcceptedEvent(order.Id, dateTimeProvider.UtcNow));
 
             await unitOfWork.Commit();
 

@@ -56,7 +56,7 @@ namespace WebTests.Features.Orders.RejectOrder
             order.Rejected.ShouldBeTrue();
             order.RejectedAt.ShouldBe(dateTimeProvider.UtcNow);
 
-            var evnt = unitOfWork.OutboxSpy.Events
+            var evnt = unitOfWork.Events
                 .OfType<OrderRejectedEvent>()
                 .Single();
 
@@ -89,7 +89,7 @@ namespace WebTests.Features.Orders.RejectOrder
             order.Status.ShouldBe(OrderStatus.Rejected);
             order.Rejected.ShouldBeTrue();
 
-            unitOfWork.OutboxSpy.Events.ShouldBeEmpty();
+            unitOfWork.Events.ShouldBeEmpty();
         }
 
         [Fact]

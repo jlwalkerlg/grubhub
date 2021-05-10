@@ -42,7 +42,7 @@ namespace Web.Features.Menus.RemoveMenuCategory
 
             if (result)
             {
-                await unitOfWork.Outbox.Add(new MenuUpdatedEvent(menu.RestaurantId, dateTimeProvider.UtcNow));
+                await unitOfWork.Publish(new MenuUpdatedEvent(menu.RestaurantId, dateTimeProvider.UtcNow));
                 await unitOfWork.Commit();
             }
 

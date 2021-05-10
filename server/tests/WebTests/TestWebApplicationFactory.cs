@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Web;
+using Web.Data.EF;
 using Web.Features.Billing;
 using Web.Services.Geocoding;
 using WebTests.Doubles;
@@ -36,11 +38,13 @@ namespace WebTests
                     .AddScheme<AuthenticationSchemeOptions, AuthHandlerFake>(
                         "Test", options => { });
 
+                // TODO
+                // services.Remove(services.First(x =>
+                //     x.ImplementationInstance is DotNetCore.CAP.Internal.IBootstrapper));
+
                 services.AddLogging(logging =>
                 {
-                    logging.AddFilter(
-                        typeof(WebTests.Doubles.AuthHandlerFake).FullName,
-                        LogLevel.Warning);
+                    logging.AddFilter(typeof(AuthHandlerFake).FullName, LogLevel.Warning);
                 });
 
                 services.AddDbContext<TestDbContext>(options =>
@@ -54,13 +58,17 @@ namespace WebTests
                 services.AddSingleton<IBillingService, BillingServiceSpy>();
 
                 services.AddSingleton<IGeocoder, GeocoderStub>();
+
+                services.AddScoped<EFUnitOfWork>();
+                services.AddSingleton<OutboxSpy>();
+                services.AddScoped<IUnitOfWork, EFUnitOfWorkProxy>();
             });
 
             // Also executed after Startup.ConfigureServices.
             // Only necessary if a version earlier than ASP.NET Core 3.0,
             // or still using the Web Host instead of the Generic Host,
             // otherwise redundant.
-            builder.ConfigureTestServices(services =>
+            builder.ConfigureTestServices(_ =>
             {
             });
         }

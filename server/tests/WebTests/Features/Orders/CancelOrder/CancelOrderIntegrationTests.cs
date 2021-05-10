@@ -50,10 +50,11 @@ namespace WebTests.Features.Orders.CancelOrder
             order.Status.ShouldBe(OrderStatus.Cancelled);
             order.CancelledAt?.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
 
-            var evnt = UseTestDbContext(db => db.Events.Single().ToEvent()) as OrderCancelledEvent;
+            var outbox = factory.Services.GetRequiredService<OutboxSpy>();
+            var ev = outbox.Events.OfType<OrderCancelledEvent>().Single();
 
-            evnt.OrderId.ShouldBe(order.Id);
-            evnt.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
+            ev.OrderId.ShouldBe(order.Id);
+            ev.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
 }
