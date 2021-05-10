@@ -5,8 +5,8 @@ services:
     container_name: grubhub-proxy
     image: steveltn/https-portal:1
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     restart: always
     environment:
       DOMAINS: "api.grubhub.walkerjordan.com -> http://web:5000"
@@ -14,6 +14,57 @@ services:
       WEBSOCKET: "true"
     volumes:
       - https-portal-data:/var/lib/https-portal
+    networks:
+      - grubhub
+
+  es01:
+    container_name: grubhub-es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - grubhub
+
+  kib01:
+    container_name: grubhub-kib01
+    image: docker.elastic.co/kibana/kibana:7.12.1
+    depends_on:
+      - es01
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+    ports:
+      - 5601:5601
+    networks:
+      - grubhub
+
+  seq:
+    container_name: grubhub-seq
+    image: datalust/seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORDHASH=${DOCKER_SEQ_FIRSTRUN_ADMINPASSWORDHASH}
+    volumes:
+      - seq:/data
+    ports:
+      - 8081:80
+      - 5341:5341
+    networks:
+      - grubhub
 
 volumes:
   https-portal-data:
+  es01:
+  seq:

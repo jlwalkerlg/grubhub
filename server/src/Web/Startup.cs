@@ -15,6 +15,7 @@ using Web.Services.Validation;
 using Web.Services.Geocoding;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Serilog;
 using Web.Data.EF;
 using Web.Services;
 using Web.Services.Billing;
@@ -126,6 +127,8 @@ namespace Web
             });
 
             app.UseCors();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

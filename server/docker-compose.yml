@@ -6,13 +6,15 @@ services:
     build: .
     image: jlwalkerlg/grubhub:latest
     ports:
-      - "5000:5000"
+      - 5000:5000
     depends_on:
       - db
       - redis
       - rabbitmq
     environment:
       ASPNETCORE_ENVIRONMENT: ${DOCKER_ASPNETCORE_ENVIRONMENT}
+    networks:
+      - grubhub
 
   db:
     container_name: grubhub-db
@@ -21,31 +23,40 @@ services:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
       - grubhub-db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     environment:
       - POSTGRES_DB=${DOCKER_POSTGRES_DB}
       - POSTGRES_USER=${DOCKER_POSTGRES_USER}
       - POSTGRES_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+    networks:
+      - grubhub
 
   redis:
     container_name: grubhub-redis
     image: redis:6.2.2
     ports:
-      - "6379:6379"
+      - 6379:6379
+    networks:
+      - grubhub
 
   rabbitmq:
     container_name: grubhub-rabbitmq
     image: rabbitmq:3.8.14-management
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 5672:5672
+      - 15672:15672
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: ${DOCKER_RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${DOCKER_RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/
+    networks:
+      - grubhub
 
 volumes:
   grubhub-db:
   rabbitmq-data:
+
+networks:
+  grubhub:
