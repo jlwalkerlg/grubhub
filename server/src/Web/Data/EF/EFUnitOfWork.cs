@@ -57,7 +57,7 @@ namespace Web.Data.EF
         public IOrderRepository Orders => new EFOrderRepository(context);
         public IBillingAccountRepository BillingAccounts => new EFBillingAccountRepository(context);
 
-        private List<Event> events { get; } = new();
+        private readonly List<Event> events = new();
 
         public Task Publish(Event @event)
         {
