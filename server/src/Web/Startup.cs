@@ -103,7 +103,7 @@ namespace Web
 
             services.AddCap(settings);
 
-            services.AddGeocoding();
+            services.AddGeocoding(settings.Geocoding);
 
             services.AddHashing();
 

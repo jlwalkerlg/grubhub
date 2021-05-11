@@ -28,6 +28,7 @@ namespace Web
 
     public record GeocodingSettings
     {
+        public string Driver { get; init; }
         public string GoogleApiKey { get; init; }
     }
 
