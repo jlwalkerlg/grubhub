@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Web.Filters
@@ -8,21 +7,21 @@ namespace Web.Filters
     public class ExceptionFilter : IExceptionFilter
     {
         private readonly ILogger<ExceptionFilter> logger;
-        private readonly IHostEnvironment env;
 
-        public ExceptionFilter(ILogger<ExceptionFilter> logger, IHostEnvironment env)
+        public ExceptionFilter(ILogger<ExceptionFilter> logger)
         {
             this.logger = logger;
-            this.env = env;
         }
 
         public void OnException(ExceptionContext context)
         {
-            logger.LogCritical(context.Exception.ToString());
+            logger.LogError(context.Exception, "Unhandled {Exception}: {Message}",
+                context.Exception.GetType().FullName,
+                context.Exception.Message);
 
-            var details = new ProblemDetails()
+            var details = new ProblemDetails
             {
-                Detail = env.IsProduction() ? "Server error." : context.Exception.ToString(),
+                Detail = "Server error.",
                 Status = 500,
             };
 
