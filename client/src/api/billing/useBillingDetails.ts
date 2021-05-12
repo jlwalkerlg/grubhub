@@ -3,7 +3,7 @@ import api, { ApiError } from "../api";
 
 interface BillingDetails {
   id: string;
-  isBillingEnabled: boolean;
+  enabled: boolean;
 }
 
 export function getBillingDetailsQueryKey(restaurantId: string) {

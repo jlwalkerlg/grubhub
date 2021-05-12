@@ -157,7 +157,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
         private static string GetWhereClause(RestaurantSearchOptions options, string day)
         {
-            var sql = "WHERE r.status = @Status AND ba.billing_enabled = TRUE";
+            var sql = "WHERE r.status = @Status AND ba.enabled = TRUE";
 
             sql += " AND EXISTS (SELECT 1 FROM menus m INNER JOIN menu_categories mc ON mc.menu_id = m.id INNER JOIN menu_items mi ON mi.menu_category_id = mc.id WHERE m.restaurant_id = r.id)";
 

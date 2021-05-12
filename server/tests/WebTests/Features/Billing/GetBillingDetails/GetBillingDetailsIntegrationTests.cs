@@ -42,7 +42,7 @@ namespace WebTests.Features.Billing.GetBillingDetails
             var details = await response.GetData<GetBillingDetailsAction.BillingDetailsModel>();
 
             details.Id.ShouldBe(billingAccount.Id);
-            details.IsBillingEnabled.ShouldBe(billingAccount.IsBillingEnabled);
+            details.Enabled.ShouldBe(billingAccount.Enabled);
         }
 
         [Fact]

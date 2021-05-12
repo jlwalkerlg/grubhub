@@ -82,7 +82,7 @@ namespace WebTests.Features.Restaurants.SearchRestaurants
                 Status = Web.Domain.Restaurants.RestaurantStatus.Approved,
                 BillingAccount = new BillingAccount()
                 {
-                    IsBillingEnabled = false,
+                    Enabled = false,
                 },
             };
             r4.Menu.Categories.Add(new MenuCategory() { Items = { new MenuItem() } });

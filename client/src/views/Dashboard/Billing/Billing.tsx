@@ -12,14 +12,14 @@ const Billing: FC = () => {
 
   const { user } = useAuth();
   const { data: restaurant } = useRestaurant(user.restaurantId);
-  const { data: billingDetails, isLoading, isError } = useBillingDetails(
-    restaurant.id
-  );
-
   const {
-    mutate: setupBilling,
-    isLoading: isSettingUpBilling,
-  } = useSetupBilling();
+    data: billingDetails,
+    isLoading,
+    isError,
+  } = useBillingDetails(restaurant.id);
+
+  const { mutate: setupBilling, isLoading: isSettingUpBilling } =
+    useSetupBilling();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -45,7 +45,7 @@ const Billing: FC = () => {
 
   return (
     <div>
-      {billingDetails?.isBillingEnabled ? (
+      {billingDetails?.enabled ? (
         <div>
           Billing is enabled. Need to{" "}
           <button

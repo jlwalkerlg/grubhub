@@ -10,7 +10,7 @@ namespace WebTests.TestData
         [Column("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        [Column("billing_enabled")]
-        public bool IsBillingEnabled { get; set; } = true;
+        [Column("enabled")]
+        public bool Enabled { get; set; } = true;
     }
 }

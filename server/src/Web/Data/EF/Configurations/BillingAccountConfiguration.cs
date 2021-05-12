@@ -20,7 +20,7 @@ namespace Web.Data.EF.Configurations
                     .ValueGeneratedNever();
 
                 builder.Property(x => x.Enabled)
-                    .HasColumnName("billing_enabled")
+                    .HasColumnName("enabled")
                     .IsRequired();
 
                 builder.HasMany<Restaurant>()

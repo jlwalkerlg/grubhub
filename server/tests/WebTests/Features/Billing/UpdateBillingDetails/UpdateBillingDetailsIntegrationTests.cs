@@ -35,7 +35,7 @@ namespace WebTests.Features.Billing.UpdateBillingDetails
         {
             var billingAccount = new BillingAccount()
             {
-                IsBillingEnabled = false,
+                Enabled = false,
             };
 
             var restaurant = new Restaurant()
@@ -57,7 +57,7 @@ namespace WebTests.Features.Billing.UpdateBillingDetails
 
             var found = UseTestDbContext(db => db.BillingAccounts.Single());
 
-            found.IsBillingEnabled.ShouldBe(true);
+            found.Enabled.ShouldBe(true);
         }
     }
 }

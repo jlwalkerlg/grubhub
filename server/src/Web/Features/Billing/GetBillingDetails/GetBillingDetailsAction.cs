@@ -30,7 +30,7 @@ namespace Web.Features.Billing.GetBillingDetails
             var billingDetails = await connection.QuerySingleOrDefaultAsync<BillingDetailsModel>(
                 @"SELECT
                     ba.id,
-                    ba.billing_enabled AS is_billing_enabled,
+                    ba.enabled,
                     r.manager_id
                 FROM
                     billing_accounts ba
@@ -55,7 +55,7 @@ namespace Web.Features.Billing.GetBillingDetails
         public class BillingDetailsModel
         {
             public string Id { get; init; }
-            public bool IsBillingEnabled { get; init; }
+            public bool Enabled { get; init; }
             [JsonIgnore] public Guid ManagerId { get; init; }
         }
     }
