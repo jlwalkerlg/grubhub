@@ -24,7 +24,6 @@ namespace WebTests.TestData
         public DbSet<Order> Orders { get; private set; }
         public DbSet<OrderItem> OrderItems { get; private set; }
         public DbSet<BillingAccount> BillingAccounts { get; private set; }
-        public DbSet<Event> Events { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

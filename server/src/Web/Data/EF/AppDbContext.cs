@@ -25,7 +25,6 @@ namespace Web.Data.EF
         public DbSet<Basket> Baskets { get; protected set; }
         public DbSet<Order> Orders { get; protected set; }
         public DbSet<BillingAccount> BillingAccounts { get; protected set; }
-        public DbSet<SerialisedEvent> Events { get; protected set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,7 +34,6 @@ namespace Web.Data.EF
             builder.ConfigureMenuAggregate();
             builder.ConfigureOrderAggregate();
             builder.ConfigureRestaurantAggregate();
-            builder.ConfigureEvents();
             builder.ConfigureUserAggregate();
         }
 
