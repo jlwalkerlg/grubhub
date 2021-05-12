@@ -13,6 +13,7 @@ using Web.Domain.Menus;
 using Web.Domain.Billing;
 using Web.Features.Billing;
 using Web.Domain.Baskets;
+using Web.Domain.Orders;
 
 namespace WebTests.Features.Orders.PlaceOrder
 {
@@ -24,6 +25,8 @@ namespace WebTests.Features.Orders.PlaceOrder
         private readonly BillingServiceSpy billingServiceSpy;
         private readonly GeocoderSpy geocoderSpy;
         private readonly PlaceOrderHandler handler;
+
+        private readonly DateTimeOffset now = DateTimeOffset.Now;
 
         public PlaceOrderHandlerTests()
         {
@@ -49,67 +52,7 @@ namespace WebTests.Features.Orders.PlaceOrder
         [Fact]
         public async Task It_Places_The_Order()
         {
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
-
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
-            billingAccount.Enable();
-
-            var menu = new Menu(restaurant.Id);
-            var menuItem = menu
-                .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
-
-            var basket = new Basket(
-                new UserId(Guid.NewGuid()),
-                restaurant.Id);
-
-            basket.AddItem(menuItem.Id, 1);
-
-            var deliveryLocation = new DeliveryLocation(
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            await unitOfWorkSpy.Restaurants.Add(restaurant);
-            await unitOfWorkSpy.Menus.Add(menu);
-            await unitOfWorkSpy.Baskets.Add(basket);
-            await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
-
-            await authenticatorSpy.SignIn(basket.UserId);
-
-            var now = DateTimeOffset.UtcNow;
-            dateTimeProviderStub.UtcNow = now;
-
-            var paymentIntent = new PaymentIntent()
-            {
-                Id = Guid.NewGuid().ToString(),
-                ClientSecret = Guid.NewGuid().ToString(),
-            };
-            billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
-
-            geocoderSpy.LookupCoordinatesResult = Result.Ok(
-                new Coordinates(54, -2)
-            );
+            var (restaurant, basket, billingAccount, paymentIntent) = await SetupRestaurant();
 
             var command = new PlaceOrderCommand()
             {
@@ -148,63 +91,7 @@ namespace WebTests.Features.Orders.PlaceOrder
         [Fact]
         public async Task It_Fails_If_Geocoding_Fails()
         {
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
-
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
-            billingAccount.Enable();
-
-            var menu = new Menu(restaurant.Id);
-            var menuItem = menu
-                .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
-
-            var basket = new Basket(
-                new UserId(Guid.NewGuid()),
-                restaurant.Id);
-
-            basket.AddItem(menuItem.Id, 1);
-
-            var deliveryLocation = new DeliveryLocation(
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            await unitOfWorkSpy.Restaurants.Add(restaurant);
-            await unitOfWorkSpy.Menus.Add(menu);
-            await unitOfWorkSpy.Baskets.Add(basket);
-            await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
-
-            await authenticatorSpy.SignIn(basket.UserId);
-
-            var now = DateTimeOffset.UtcNow;
-            dateTimeProviderStub.UtcNow = now;
-
-            var paymentIntent = new PaymentIntent()
-            {
-                Id = Guid.NewGuid().ToString(),
-                ClientSecret = Guid.NewGuid().ToString(),
-            };
-            billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
+            var (restaurant, _, _, _) = await SetupRestaurant();
 
             geocoderSpy.LookupCoordinatesResult = Error.NotFound("Lookup failed.");
 
@@ -227,60 +114,7 @@ namespace WebTests.Features.Orders.PlaceOrder
         [Fact]
         public async Task It_Fails_If_The_Billing_Account_Is_Not_Found()
         {
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
-
-            var menu = new Menu(restaurant.Id);
-            var menuItem = menu
-                .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
-
-            var basket = new Basket(
-                new UserId(Guid.NewGuid()),
-                restaurant.Id);
-
-            basket.AddItem(menuItem.Id, 1);
-
-            var deliveryLocation = new DeliveryLocation(
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            await unitOfWorkSpy.Restaurants.Add(restaurant);
-            await unitOfWorkSpy.Menus.Add(menu);
-            await unitOfWorkSpy.Baskets.Add(basket);
-
-            await authenticatorSpy.SignIn(basket.UserId);
-
-            var now = DateTimeOffset.UtcNow;
-            dateTimeProviderStub.UtcNow = now;
-
-            var paymentIntent = new PaymentIntent()
-            {
-                Id = Guid.NewGuid().ToString(),
-                ClientSecret = Guid.NewGuid().ToString(),
-            };
-            billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
-
-            geocoderSpy.LookupCoordinatesResult = Result.Ok(
-                new Coordinates(54, -2)
-            );
+            var (restaurant, _, _, _) = await SetupRestaurant(setupBillingAccount: false);
 
             var command = new PlaceOrderCommand()
             {
@@ -301,66 +135,9 @@ namespace WebTests.Features.Orders.PlaceOrder
         [Fact]
         public async Task It_Fails_If_The_Basket_Is_Not_Found()
         {
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
+            var (restaurant, _, _, _) = await SetupRestaurant();
 
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
-
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
-            billingAccount.Enable();
-
-            var menu = new Menu(restaurant.Id);
-            var menuItem = menu
-                .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
-
-            var basket = new Basket(
-                new UserId(Guid.NewGuid()),
-                restaurant.Id);
-
-            basket.AddItem(menuItem.Id, 1);
-
-            var deliveryLocation = new DeliveryLocation(
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            await unitOfWorkSpy.Restaurants.Add(restaurant);
-            await unitOfWorkSpy.Menus.Add(menu);
-            await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
-
-            await authenticatorSpy.SignIn(basket.UserId);
-
-            var now = DateTimeOffset.UtcNow;
-            dateTimeProviderStub.UtcNow = now;
-
-            var paymentIntent = new PaymentIntent()
-            {
-                Id = Guid.NewGuid().ToString(),
-                ClientSecret = Guid.NewGuid().ToString(),
-            };
-            billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
-
-            geocoderSpy.LookupCoordinatesResult = Result.Ok(
-                new Coordinates(54, -2)
-            );
+            unitOfWorkSpy.BasketRepositorySpy.Baskets.Clear();
 
             var command = new PlaceOrderCommand()
             {
@@ -381,62 +158,9 @@ namespace WebTests.Features.Orders.PlaceOrder
         [Fact]
         public async Task It_Fails_If_The_Billing_Service_Fails()
         {
-            var restaurant = new Restaurant(
-                new RestaurantId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
-                "Chow Main",
-                new PhoneNumber("01234567890"),
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            restaurant.OpeningTimes = OpeningTimes.Always;
-            restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
-            restaurant.MaxDeliveryDistance = Distance.FromKm(5);
-
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
-            billingAccount.Enable();
-
-            var menu = new Menu(restaurant.Id);
-            var menuItem = menu
-                .AddCategory(Guid.NewGuid(), "Pizza").Value
-                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
-
-            var basket = new Basket(
-                new UserId(Guid.NewGuid()),
-                restaurant.Id);
-
-            basket.AddItem(menuItem.Id, 1);
-
-            var deliveryLocation = new DeliveryLocation(
-                new Address(
-                    "12 Maine Road",
-                    null,
-                    "Manchester",
-                    new Postcode("MN12 1NM")),
-                new Coordinates(54, -2));
-
-            await unitOfWorkSpy.Restaurants.Add(restaurant);
-            await unitOfWorkSpy.Menus.Add(menu);
-            await unitOfWorkSpy.Baskets.Add(basket);
-            await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
-
-            await authenticatorSpy.SignIn(basket.UserId);
-
-            var now = DateTimeOffset.UtcNow;
-            dateTimeProviderStub.UtcNow = now;
+            var (restaurant, _, _, _) = await SetupRestaurant();
 
             billingServiceSpy.PaymentIntentResult = Error.Internal("Billing service failed.");
-
-            geocoderSpy.LookupCoordinatesResult = Result.Ok(
-                new Coordinates(54, -2)
-            );
 
             var command = new PlaceOrderCommand()
             {
@@ -452,6 +176,74 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             result.ShouldBeAnError();
             result.Error.Type.ShouldBe(ErrorType.Internal);
+        }
+
+        private async Task<(
+            Restaurant restaurant,
+            Basket basket,
+            BillingAccount billingAccount,
+            PaymentIntent paymentIntent)> SetupRestaurant(bool setupBillingAccount = true)
+        {
+            var restaurant = new Restaurant(
+                new RestaurantId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
+                "Chow Main",
+                new PhoneNumber("01234567890"),
+                new Address(
+                    "12 Maine Road",
+                    null,
+                    "Manchester",
+                    new Postcode("MN12 1NM")),
+                new Coordinates(54, -2))
+            {
+                OpeningTimes = OpeningTimes.Always,
+                MinimumDeliverySpend = Money.FromPounds(10.00m),
+                MaxDeliveryDistance = Distance.FromKm(5)
+            };
+
+            var billingAccount = setupBillingAccount
+                ? new BillingAccount(new BillingAccountId(Guid.NewGuid().ToString()))
+                : null;
+
+            if (billingAccount is not null)
+            {
+                billingAccount.Enable();
+                restaurant.AddBillingAccount(billingAccount.Id);
+            }
+
+            var menu = new Menu(restaurant.Id);
+            var menuItem = menu
+                .AddCategory(Guid.NewGuid(), "Pizza").Value
+                .AddItem(Guid.NewGuid(), "Margherita", null, Money.FromPounds(10m)).Value;
+
+            var basket = new Basket(
+                new UserId(Guid.NewGuid()),
+                restaurant.Id);
+
+            basket.AddItem(menuItem.Id, 1);
+
+            var paymentIntent = new PaymentIntent
+            {
+                Id = Guid.NewGuid().ToString(),
+                ClientSecret = Guid.NewGuid().ToString(),
+            };
+
+            await unitOfWorkSpy.Restaurants.Add(restaurant);
+            await unitOfWorkSpy.Menus.Add(menu);
+            await unitOfWorkSpy.Baskets.Add(basket);
+
+            if (billingAccount is not null)
+            {
+                await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
+            }
+
+            await authenticatorSpy.SignIn(basket.UserId);
+
+            dateTimeProviderStub.UtcNow = now;
+            billingServiceSpy.PaymentIntentResult = Result.Ok(paymentIntent);
+            geocoderSpy.LookupCoordinatesResult = Result.Ok(new Coordinates(54, -2));
+
+            return (restaurant, basket, billingAccount, paymentIntent);
         }
     }
 }

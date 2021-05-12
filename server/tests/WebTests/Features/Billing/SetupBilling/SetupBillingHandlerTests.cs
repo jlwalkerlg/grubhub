@@ -49,9 +49,7 @@ namespace WebTests.Features.Billing.SetupBilling
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
+            var billingAccount = new BillingAccount(new BillingAccountId(Guid.NewGuid().ToString()));
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);
@@ -102,13 +100,13 @@ namespace WebTests.Features.Billing.SetupBilling
             result.Value.ShouldBe(billingServiceSpy.OnboardingLink);
 
             var accounts = unitOfWorkSpy.BillingAccountsRepositorySpy.Accounts;
-
             accounts.ShouldHaveSingleItem();
 
             var account = accounts.Single();
-
-            account.RestaurantId.ShouldBe(restaurant.Id);
             account.Enabled.ShouldBe(false);
+            account.Id.Value.ShouldBe(billingServiceSpy.AccountId);
+
+            restaurant.BillingAccountId.ShouldBe(account.Id);
         }
     }
 }

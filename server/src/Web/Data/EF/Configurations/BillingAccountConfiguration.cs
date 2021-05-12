@@ -12,28 +12,23 @@ namespace Web.Data.EF.Configurations
             {
                 builder.ToTable("billing_accounts");
 
-                builder.Property<int>("id")
-                    .HasColumnName("id")
-                    .ValueGeneratedOnAdd();
-                builder.HasKey("id");
-
                 builder.Property(x => x.Id)
                     .HasConversion(
                         x => x.Value,
                         x => new BillingAccountId(x))
-                    .HasColumnName("account_id")
+                    .HasColumnName("id")
                     .ValueGeneratedNever();
-
-                builder.Property(x => x.RestaurantId)
-                    .HasConversion(
-                        x => x.Value,
-                        x => new RestaurantId(x))
-                    .HasColumnName("restaurant_id")
-                    .IsRequired();
 
                 builder.Property(x => x.Enabled)
                     .HasColumnName("billing_enabled")
                     .IsRequired();
+
+                builder.HasMany<Restaurant>()
+                    .WithOne()
+                    .HasForeignKey(x => x.BillingAccountId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                builder.HasKey(x => x.Id);
             });
         }
     }

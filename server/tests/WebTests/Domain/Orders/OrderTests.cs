@@ -14,7 +14,7 @@ namespace WebTests.Domain.Orders
     public class OrderTests
     {
         [Fact]
-        public void Subtotal_Is_Correct()
+        public void Subtotal_Is_Correct_After_Order_Is_Placed()
         {
             var restaurant = new Restaurant(
                 new RestaurantId(Guid.NewGuid()),
@@ -32,11 +32,9 @@ namespace WebTests.Domain.Orders
             restaurant.MinimumDeliverySpend = Money.FromPounds(10.00m);
             restaurant.MaxDeliveryDistance = Distance.FromKm(5);
 
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
+            var billingAccount = new BillingAccount(new BillingAccountId(Guid.NewGuid().ToString()));
             billingAccount.Enable();
+            restaurant.AddBillingAccount(billingAccount.Id);
 
             var menu = new Menu(restaurant.Id);
             var (category, _) = menu.AddCategory(Guid.NewGuid(), "Pizza");

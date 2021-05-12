@@ -45,9 +45,8 @@ namespace WebTests.Features.Billing.GetOnboardingLink
                     new Postcode("MN12 1NM")),
                 new Coordinates(54, -2));
 
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
+            var billingAccount = new BillingAccount(new BillingAccountId(Guid.NewGuid().ToString()));
+            restaurant.AddBillingAccount(billingAccount.Id);
 
             await unitOfWorkSpy.Restaurants.Add(restaurant);
             await unitOfWorkSpy.BillingAccounts.Add(billingAccount);

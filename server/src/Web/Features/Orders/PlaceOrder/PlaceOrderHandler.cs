@@ -33,33 +33,28 @@ namespace Web.Features.Orders.PlaceOrder
             this.geocoder = geocoder;
         }
 
-        public async Task<Result<string>> Handle(
-            PlaceOrderCommand command, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(PlaceOrderCommand command, CancellationToken cancellationToken)
         {
             var basket = await unitOfWork
                 .Baskets
                 .Get(authenticator.UserId, new RestaurantId(command.RestaurantId));
 
-            if (basket == null)
-            {
-                return Error.NotFound("Basket not found.");
-            }
+            if (basket is null) return Error.NotFound("Basket not found.");
 
-            var billingAccount = await unitOfWork
-                .BillingAccounts
-                .GetByRestaurantId(basket.RestaurantId);
+            var restaurant = await unitOfWork.Restaurants.GetById(basket.RestaurantId);
 
-            if (billingAccount == null)
+            if (!restaurant.HasBillingAccount())
             {
                 return Error.NotFound("Restaurant not currently accepting orders.");
             }
 
             var (coordinates, lookupError) = await geocoder.LookupCoordinates(command.Postcode);
 
-            if (lookupError)
-            {
-                return Error.BadRequest("Address not recognised.");
-            }
+            if (lookupError) return Error.BadRequest("Address not recognised.");
+
+            var billingAccount = await unitOfWork
+                .BillingAccounts
+                .GetById(restaurant.BillingAccountId);
 
             var deliveryLocation = new DeliveryLocation(
                 new Address(
@@ -67,12 +62,7 @@ namespace Web.Features.Orders.PlaceOrder
                     command.AddressLine2,
                     command.City,
                     new Postcode(command.Postcode)),
-                coordinates
-            );
-
-            var restaurant = await unitOfWork
-                .Restaurants
-                .GetById(basket.RestaurantId);
+                coordinates);
 
             var menu = await unitOfWork
                 .Menus
@@ -88,18 +78,11 @@ namespace Web.Features.Orders.PlaceOrder
                 dateTimeProvider.UtcNow,
                 dateTimeProvider.BritishTimeZone);
 
-            if (placeOrderError)
-            {
-                return placeOrderError;
-            }
+            if (placeOrderError) return placeOrderError;
 
-            var (paymentIntent, paymentIntentError) = await billingService
-                .GeneratePaymentIntent(order, billingAccount);
+            var (paymentIntent, paymentIntentError) = await billingService.GeneratePaymentIntent(order, billingAccount);
 
-            if (paymentIntentError)
-            {
-                return Error.Internal("Failed to generate payment intent.");
-            }
+            if (paymentIntentError) return Error.Internal("Failed to generate payment intent.");
 
             order.PaymentIntentId = paymentIntent.Id;
             order.PaymentIntentClientSecret = paymentIntent.ClientSecret;

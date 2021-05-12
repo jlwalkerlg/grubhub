@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -26,13 +25,6 @@ namespace Web.Data.EF.Repositories
             return await context.BillingAccounts
                 .OrderBy(x => x.Id)
                 .SingleOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<BillingAccount> GetByRestaurantId(Guid restaurantId)
-        {
-            return await context.BillingAccounts
-                .OrderBy(x => x.RestaurantId)
-                .SingleOrDefaultAsync(x => x.RestaurantId == restaurantId);
         }
     }
 }

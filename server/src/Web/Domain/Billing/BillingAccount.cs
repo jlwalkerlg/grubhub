@@ -1,21 +1,15 @@
 using System;
-using Web.Domain.Restaurants;
 
 namespace Web.Domain.Billing
 {
     public class BillingAccount : Entity<BillingAccount>
     {
-        public BillingAccount(BillingAccountId id, RestaurantId restaurantId)
+        public BillingAccount(BillingAccountId id)
         {
-            Id = id ??
-                throw new ArgumentNullException(nameof(id));
-
-            RestaurantId = restaurantId ??
-                throw new ArgumentNullException(nameof(restaurantId));
+            Id = id ?? throw new ArgumentNullException(nameof(id));
         }
 
         public BillingAccountId Id { get; }
-        public RestaurantId RestaurantId { get; }
         public bool Enabled { get; private set; } = false;
 
         public void Enable()

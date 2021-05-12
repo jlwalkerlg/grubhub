@@ -27,26 +27,20 @@ namespace Web.Features.Billing.SetupBilling
                 .Restaurants
                 .GetById(new RestaurantId(command.RestaurantId));
 
-            if (restaurant.ManagerId != authenticator.UserId)
-            {
-                return Error.Unauthorised();
-            }
+            if (restaurant.ManagerId != authenticator.UserId) return Error.Unauthorised();
 
-            var billingAccount = await unitOfWork
-                .BillingAccounts
-                .GetByRestaurantId(restaurant.Id);
+            var billingAccount = restaurant.HasBillingAccount()
+                ? await unitOfWork.BillingAccounts.GetById(restaurant.BillingAccountId)
+                : null;
 
-            if (billingAccount == null)
+            if (billingAccount is null)
             {
                 var billingAccountId = await billingService.CreateAccount(restaurant);
 
-                billingAccount = new BillingAccount(
-                    new BillingAccountId(billingAccountId),
-                    restaurant.Id
-                );
+                billingAccount = new BillingAccount(new BillingAccountId(billingAccountId));
+                restaurant.AddBillingAccount(billingAccount.Id);
 
                 await unitOfWork.BillingAccounts.Add(billingAccount);
-
                 await unitOfWork.Commit();
             }
 

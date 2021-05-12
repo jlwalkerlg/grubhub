@@ -174,6 +174,7 @@ namespace Web.Domain.Restaurants
 
         public string Thumbnail { get; set; }
         public string Banner { get; set; }
+        public BillingAccountId BillingAccountId { get; private set; }
 
         public void SetCuisines(params Cuisine[] cuisines)
         {
@@ -247,6 +248,16 @@ namespace Web.Domain.Restaurants
                 time);
 
             return Result.Ok(order);
+        }
+
+        public void AddBillingAccount(BillingAccountId billingAccountId)
+        {
+            BillingAccountId = billingAccountId ?? throw new ArgumentNullException(nameof(billingAccountId));
+        }
+
+        public bool HasBillingAccount()
+        {
+            return BillingAccountId is not null;
         }
 
         protected override bool IdentityEquals(Restaurant other)

@@ -55,7 +55,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
                     r.thumbnail
                 FROM
                     restaurants r
-                    INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id ";
+                    INNER JOIN billing_accounts ba ON r.billing_account_id = ba.id ";
 
             sql += GetWhereClause(options, day);
 
@@ -93,7 +93,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
 
             var count = await connection.ExecuteScalarAsync<int>(
                 @"SELECT COUNT(*) FROM restaurants r
-                INNER JOIN billing_accounts ba ON ba.restaurant_id = r.id "
+                INNER JOIN billing_accounts ba ON r.billing_account_id = ba.id "
                 + GetWhereClause(options, day),
                 new
                 {
