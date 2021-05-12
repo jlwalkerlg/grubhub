@@ -7,7 +7,6 @@ using Web.Services.Events;
 
 namespace Web.Features.Orders.RejectOrder
 {
-    [CapSubscribe(nameof(RefundPaymentOrderRejectedListener))]
     public class RefundPaymentOrderRejectedListener : IEventListener<OrderCancelledEvent>
     {
         private readonly IUnitOfWork uow;
@@ -18,7 +17,7 @@ namespace Web.Features.Orders.RejectOrder
             this.uow = uow;
         }
 
-        [CapSubscribe(nameof(OrderCancelledEvent), isPartial: true)]
+        [CapSubscribe(nameof(OrderCancelledEvent), Group = nameof(RefundPaymentOrderRejectedListener))]
         public async Task Handle(OrderCancelledEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));

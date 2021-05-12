@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using DotNetCore.CAP;
 using Microsoft.Extensions.DependencyInjection;
 using Savorboard.CAP.InMemoryMessageQueue;
 
@@ -9,13 +9,14 @@ namespace Web.Services.Events
     {
         public static void AddCap(this IServiceCollection services, Settings settings)
         {
-            var listeners = typeof(Startup).Assembly.GetTypes()
-                .Where(x => !x.IsAbstract && !x.IsInterface && x.GetInterfaces().Any(i =>
-                    i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventListener<>)));
+            var subscribers = typeof(Startup).Assembly.GetTypes()
+                .Where(x => !x.IsAbstract
+                            && !x.IsInterface
+                            && x.GetInterfaces().Any(i => i == typeof(ICapSubscribe)));
 
-            foreach (var listener in listeners)
+            foreach (var subscriber in subscribers)
             {
-                services.AddTransient(listener);
+                services.AddScoped(subscriber);
             }
 
             services.AddCap(x =>

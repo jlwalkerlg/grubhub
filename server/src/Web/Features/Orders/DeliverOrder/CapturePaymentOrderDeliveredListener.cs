@@ -5,7 +5,6 @@ using Web.Services.Events;
 
 namespace Web.Features.Orders.DeliverOrder
 {
-    [CapSubscribe(nameof(CapturePaymentOrderDeliveredListener))]
     public class CapturePaymentOrderDeliveredListener : IEventListener<OrderDeliveredEvent>
     {
         private readonly IUnitOfWork uow;
@@ -16,7 +15,7 @@ namespace Web.Features.Orders.DeliverOrder
             this.uow = uow;
         }
 
-        [CapSubscribe(nameof(OrderDeliveredEvent), isPartial: true)]
+        [CapSubscribe(nameof(OrderDeliveredEvent), Group = nameof(CapturePaymentOrderDeliveredListener))]
         public async Task Handle(OrderDeliveredEvent @event)
         {
             var order = await uow.Orders.GetById(@event.OrderId);

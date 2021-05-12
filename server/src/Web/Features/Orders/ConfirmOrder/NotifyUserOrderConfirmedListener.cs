@@ -6,7 +6,6 @@ using Web.Services.Events;
 
 namespace Web.Features.Orders.ConfirmOrder
 {
-    [CapSubscribe(nameof(NotifyUserOrderConfirmedListener))]
     public class NotifyUserOrderConfirmedListener : IEventListener<OrderConfirmedEvent>
     {
         private readonly IUnitOfWork unitOfWork;
@@ -18,7 +17,7 @@ namespace Web.Features.Orders.ConfirmOrder
             this.hubContext = hubContext;
         }
 
-        [CapSubscribe(nameof(OrderConfirmedEvent), isPartial: true)]
+        [CapSubscribe(nameof(OrderConfirmedEvent), Group = nameof(NotifyUserOrderConfirmedListener))]
         public async Task Handle(OrderConfirmedEvent @event)
         {
             var order = await unitOfWork.Orders.GetById(@event.OrderId);
