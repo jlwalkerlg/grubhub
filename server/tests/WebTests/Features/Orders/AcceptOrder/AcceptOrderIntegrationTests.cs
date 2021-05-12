@@ -73,7 +73,7 @@ namespace WebTests.Features.Orders.AcceptOrder
             var outbox = factory.Services.GetRequiredService<OutboxSpy>();
             var ev = outbox.Events.OfType<OrderAcceptedEvent>().Single();
 
-            ev.OrderId.Value.ShouldBe(order.Id);
+            ev.OrderId.ShouldBe(order.Id);
             ev.OccuredAt.ShouldBe(now, TimeSpan.FromSeconds(0.000001));
         }
     }
