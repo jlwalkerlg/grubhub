@@ -42,7 +42,6 @@ namespace WebTests.Features.Billing.GetBillingDetails
             var details = await response.GetData<GetBillingDetailsAction.BillingDetailsModel>();
 
             details.Id.ShouldBe(billingAccount.Id);
-            details.RestaurantId.ShouldBe(restaurant.Id);
             details.IsBillingEnabled.ShouldBe(billingAccount.IsBillingEnabled);
         }
 

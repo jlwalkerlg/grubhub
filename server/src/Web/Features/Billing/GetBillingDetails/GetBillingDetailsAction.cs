@@ -29,15 +29,14 @@ namespace Web.Features.Billing.GetBillingDetails
 
             var billingDetails = await connection.QuerySingleOrDefaultAsync<BillingDetailsModel>(
                 @"SELECT
-                    ba.account_id as id,
-                    ba.restaurant_id,
+                    ba.id,
                     ba.billing_enabled AS is_billing_enabled,
                     r.manager_id
                 FROM
                     billing_accounts ba
-                    INNER JOIN restaurants r ON r.id = ba.restaurant_id
+                    INNER JOIN restaurants r ON r.billing_account_id = ba.id
                 WHERE
-                    ba.restaurant_id = @RestaurantId",
+                    r.id = @RestaurantId",
                 new { RestaurantId = restaurantId });
 
             if (billingDetails is null)
@@ -56,7 +55,6 @@ namespace Web.Features.Billing.GetBillingDetails
         public class BillingDetailsModel
         {
             public string Id { get; init; }
-            public Guid RestaurantId { get; init; }
             public bool IsBillingEnabled { get; init; }
             [JsonIgnore] public Guid ManagerId { get; init; }
         }

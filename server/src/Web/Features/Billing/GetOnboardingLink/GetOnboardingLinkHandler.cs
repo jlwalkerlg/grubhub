@@ -25,13 +25,9 @@ namespace Web.Features.Billing.GetOnboardingLink
             var restaurant = await unitOfWork.Restaurants
                 .GetById(new RestaurantId(query.RestaurantId));
 
-            if (restaurant.ManagerId != authenticator.UserId)
-            {
-                return Error.Unauthorised();
-            }
+            if (restaurant.ManagerId != authenticator.UserId) return Error.Unauthorised();
 
-            var billingAccount = await unitOfWork.BillingAccounts
-                .GetByRestaurantId(restaurant.Id);
+            var billingAccount = await unitOfWork.BillingAccounts.GetById(restaurant.BillingAccountId);
 
             var link = await billingService.GenerateOnboardingLink(
                 billingAccount.Id,

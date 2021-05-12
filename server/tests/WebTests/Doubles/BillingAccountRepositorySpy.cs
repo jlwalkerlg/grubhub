@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,12 +20,6 @@ namespace WebTests.Doubles
         {
             return Task.FromResult(
                 Accounts.SingleOrDefault(x => x.Id.Value == id));
-        }
-
-        public Task<BillingAccount> GetByRestaurantId(Guid restaurantId)
-        {
-            return Task.FromResult(
-                Accounts.SingleOrDefault(x => x.RestaurantId.Value == restaurantId));
         }
     }
 }

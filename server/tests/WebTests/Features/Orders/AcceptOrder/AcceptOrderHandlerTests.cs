@@ -173,11 +173,10 @@ namespace WebTests.Features.Orders.AcceptOrder
             restaurant.OpeningTimes = OpeningTimes.Always;
             restaurant.MaxDeliveryDistance = Distance.FromKm(10);
 
-            var billingAccount = new BillingAccount(
-                new BillingAccountId(Guid.NewGuid().ToString()),
-                restaurant.Id);
-
+            var billingAccount = new BillingAccount(new BillingAccountId(Guid.NewGuid().ToString()));
             billingAccount.Enable();
+
+            restaurant.AddBillingAccount(billingAccount.Id);
 
             var menu = new Menu(restaurant.Id);
             var (category, _) = menu.AddCategory(Guid.NewGuid(), "Pizza");

@@ -11,6 +11,7 @@ namespace WebTests.TestData
     public record Restaurant
     {
         private User manager;
+        private BillingAccount billingAccount;
 
         public Restaurant()
         {
@@ -24,10 +25,7 @@ namespace WebTests.TestData
                 RestaurantId = Id,
             };
 
-            BillingAccount = new BillingAccount()
-            {
-                RestaurantId = Id,
-            };
+            BillingAccount = new BillingAccount();
         }
 
         [Key]
@@ -142,6 +140,18 @@ namespace WebTests.TestData
 
         public Menu Menu { get; set; }
 
-        public BillingAccount BillingAccount { get; set; }
+        [Column("billing_account_id")]
+        public string BillingAccountId { get; private set; }
+
+        [ForeignKey(nameof(BillingAccountId))]
+        public BillingAccount BillingAccount
+        {
+            get => billingAccount;
+            set
+            {
+                billingAccount = value;
+                BillingAccountId = value?.Id;
+            }
+        }
     }
 }

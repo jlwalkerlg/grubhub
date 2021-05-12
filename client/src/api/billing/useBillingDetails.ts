@@ -3,7 +3,6 @@ import api, { ApiError } from "../api";
 
 interface BillingDetails {
   id: string;
-  restaurantId: string;
   isBillingEnabled: boolean;
 }
 

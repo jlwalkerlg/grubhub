@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Web.Domain;
+using Web.Domain.Billing;
 using Web.Domain.Restaurants;
 using Web.Domain.Users;
 
@@ -144,6 +145,12 @@ namespace Web.Data.EF.Configurations
 
                 builder.Property(x => x.Banner)
                     .HasColumnName("banner");
+
+                builder.Property(x => x.BillingAccountId)
+                    .HasConversion(
+                        x => x.Value,
+                        x => string.IsNullOrWhiteSpace(x) ? null : new BillingAccountId(x))
+                    .HasColumnName("billing_account_id");
             });
         }
     }
