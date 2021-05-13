@@ -18,7 +18,7 @@ namespace Web.Features.Orders.CancelOrder
             this.hubContext = hubContext;
         }
 
-        [CapSubscribe(nameof(OrderCancelledEvent), Group = nameof(NotifyUserOrderCancelledListener))]
+        [Subscribe(nameof(OrderCancelledEvent), typeof(NotifyUserOrderCancelledListener))]
         public async Task Handle(OrderCancelledEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));

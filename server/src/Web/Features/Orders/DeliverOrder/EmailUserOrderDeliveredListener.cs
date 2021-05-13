@@ -18,7 +18,7 @@ namespace Web.Features.Orders.DeliverOrder
             this.settings = settings;
         }
 
-        [CapSubscribe(nameof(OrderDeliveredEvent), Group = nameof(EmailUserOrderDeliveredListener))]
+        [Subscribe(nameof(OrderDeliveredEvent), typeof(EmailUserOrderDeliveredListener))]
         public async Task Handle(OrderDeliveredEvent @event)
         {
             var order = await unitOfWork.Orders.GetById(@event.OrderId);

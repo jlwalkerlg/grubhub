@@ -17,7 +17,7 @@ namespace Web.Features.Orders.AcceptOrder
             this.hub = hub;
         }
 
-        [CapSubscribe(nameof(OrderAcceptedEvent), Group = nameof(NotifyRestaurantOrderAcceptedListener))]
+        [Subscribe(nameof(OrderAcceptedEvent), typeof(NotifyRestaurantOrderAcceptedListener))]
         public async Task Handle(OrderAcceptedEvent @event)
         {
             var order = await uow.Orders.GetById(@event.OrderId);

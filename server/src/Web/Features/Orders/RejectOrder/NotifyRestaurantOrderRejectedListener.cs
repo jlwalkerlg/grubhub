@@ -18,7 +18,7 @@ namespace Web.Features.Orders.RejectOrder
             this.hubContext = hubContext;
         }
 
-        [CapSubscribe(nameof(OrderRejectedEvent), Group = nameof(NotifyRestaurantOrderRejectedListener))]
+        [Subscribe(nameof(OrderRejectedEvent), typeof(NotifyRestaurantOrderRejectedListener))]
         public async Task Handle(OrderRejectedEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));

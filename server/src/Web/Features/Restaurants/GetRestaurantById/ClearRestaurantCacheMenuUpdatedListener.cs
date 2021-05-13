@@ -15,7 +15,7 @@ namespace Web.Features.Restaurants.GetRestaurantById
             this.cache = cache;
         }
 
-        [CapSubscribe(nameof(MenuUpdatedEvent), Group = nameof(ClearRestaurantCacheMenuUpdatedListener))]
+        [Subscribe(nameof(MenuUpdatedEvent), typeof(ClearRestaurantCacheMenuUpdatedListener))]
         public async Task Handle(MenuUpdatedEvent @event)
         {
             await cache.RemoveAsync($"restaurant:{@event.RestaurantId}");

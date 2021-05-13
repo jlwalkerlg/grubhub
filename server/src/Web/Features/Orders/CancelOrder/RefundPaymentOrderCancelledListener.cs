@@ -16,7 +16,7 @@ namespace Web.Features.Orders.CancelOrder
             this.uow = uow;
         }
 
-        [CapSubscribe(nameof(OrderCancelledEvent), Group = nameof(RefundPaymentOrderCancelledListener))]
+        [Subscribe(nameof(OrderCancelledEvent), typeof(RefundPaymentOrderCancelledListener))]
         public async Task Handle(OrderCancelledEvent @event)
         {
             var order = await uow.Orders.GetById(new OrderId(@event.OrderId));

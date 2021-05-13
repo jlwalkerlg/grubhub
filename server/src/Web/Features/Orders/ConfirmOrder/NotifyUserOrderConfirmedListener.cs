@@ -17,7 +17,7 @@ namespace Web.Features.Orders.ConfirmOrder
             this.hubContext = hubContext;
         }
 
-        [CapSubscribe(nameof(OrderConfirmedEvent), Group = nameof(NotifyUserOrderConfirmedListener))]
+        [Subscribe(nameof(OrderConfirmedEvent), typeof(NotifyUserOrderConfirmedListener))]
         public async Task Handle(OrderConfirmedEvent @event)
         {
             var order = await unitOfWork.Orders.GetById(@event.OrderId);
