@@ -15,6 +15,7 @@ namespace Web.Features.Cuisines.GetCuisines
         }
 
         [HttpGet("/cuisines")]
+        [ResponseCache(Duration = 3600)]
         public async Task<IActionResult> Execute()
         {
             using var connection = await dbConnectionFactory.OpenConnection();
