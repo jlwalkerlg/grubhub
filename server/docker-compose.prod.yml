@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   https-portal:
-    container_name: grubhub-proxy
+    container_name: https-portal
     image: steveltn/https-portal:1
     ports:
       - 80:80
@@ -13,9 +13,9 @@ services:
       STAGE: ${DOCKER_HTTPS_PORTAL_STAGE}
       WEBSOCKET: "true"
     volumes:
-      - https-portal-data:/var/lib/https-portal
+      - https-portal:/var/lib/https-portal
     networks:
       - grubhub
 
 volumes:
-  https-portal-data:
+  https-portal:

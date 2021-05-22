@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    container_name: grubhub-web
+    container_name: web
     build: .
     image: jlwalkerlg/grubhub:latest
     ports:
@@ -17,11 +17,11 @@ services:
       - grubhub
 
   db:
-    container_name: grubhub-db
+    container_name: db
     image: postgres:12
     volumes:
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
-      - grubhub-db:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - db:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
@@ -32,7 +32,7 @@ services:
       - grubhub
 
   redis:
-    container_name: grubhub-redis
+    container_name: redis
     image: redis:6.2.2
     ports:
       - 6379:6379
@@ -40,7 +40,7 @@ services:
       - grubhub
 
   rabbitmq:
-    container_name: grubhub-rabbitmq
+    container_name: rabbitmq
     image: rabbitmq:3.8.14-management
     ports:
       - 5672:5672
@@ -50,12 +50,12 @@ services:
       RABBITMQ_DEFAULT_USER: ${DOCKER_RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${DOCKER_RABBITMQ_DEFAULT_PASS}
     volumes:
-      - rabbitmq-data:/var/lib/rabbitmq/
+      - rabbitmq:/var/lib/rabbitmq/
     networks:
       - grubhub
 
   es01:
-    container_name: grubhub-es01
+    container_name: es01
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
     environment:
       - discovery.type=single-node
@@ -67,7 +67,7 @@ services:
       - grubhub
 
   kib01:
-    container_name: grubhub-kib01
+    container_name: kib01
     image: docker.elastic.co/kibana/kibana:7.12.1
     depends_on:
       - es01
@@ -79,7 +79,7 @@ services:
       - grubhub
 
   seq:
-    container_name: grubhub-seq
+    container_name: seq
     image: datalust/seq
     restart: unless-stopped
     environment:
@@ -94,8 +94,8 @@ services:
       - grubhub
 
 volumes:
-  grubhub-db:
-  rabbitmq-data:
+  db:
+  rabbitmq:
   es01:
   seq:
 
