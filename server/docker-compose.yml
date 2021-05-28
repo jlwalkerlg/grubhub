@@ -9,7 +9,6 @@ services:
       - 5000:5000
     depends_on:
       - redis
-      - rabbitmq
     environment:
       ASPNETCORE_ENVIRONMENT: ${DOCKER_ASPNETCORE_ENVIRONMENT}
     networks:
@@ -22,24 +21,6 @@ services:
       - 6379:6379
     networks:
       - grubhub
-
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3.8.14-management
-    ports:
-      - 5672:5672
-      - 15672:15672
-    restart: always
-    environment:
-      RABBITMQ_DEFAULT_USER: ${DOCKER_RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${DOCKER_RABBITMQ_DEFAULT_PASS}
-    volumes:
-      - rabbitmq:/var/lib/rabbitmq/
-    networks:
-      - grubhub
-
-volumes:
-  rabbitmq:
 
 networks:
   grubhub:
