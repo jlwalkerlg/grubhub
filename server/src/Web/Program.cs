@@ -1,8 +1,13 @@
 using System;
+using Amazon;
+using Amazon.CloudWatchLogs;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.AwsCloudWatch;
 
 namespace Web
 {
@@ -42,6 +47,25 @@ namespace Web
                         .ReadFrom.Services(services)
                         .Enrich.FromLogContext()
                         .WriteTo.Console();
+
+                    if (context.HostingEnvironment.IsProduction())
+                    {
+                        var awsSettings = services.GetRequiredService<AwsSettings>();
+
+                        configuration
+                            .WriteTo.AmazonCloudWatch(
+                                logGroup: "grubhub",
+                                logStreamPrefix: "web",
+                                restrictedToMinimumLevel: LogEventLevel.Warning,
+                                createLogGroup: true,
+                                logGroupRetentionPolicy: LogGroupRetentionPolicy.OneWeek,
+                                appendUniqueInstanceGuid: false,
+                                appendHostName: false,
+                                cloudWatchClient: new AmazonCloudWatchLogsClient(
+                                    awsSettings.AccessKeyId,
+                                    awsSettings.SecretAccessKey,
+                                    RegionEndpoint.GetBySystemName(awsSettings.Region)));
+                    }
                 })
                 .ConfigureWebHostDefaults(builder =>
                 {
