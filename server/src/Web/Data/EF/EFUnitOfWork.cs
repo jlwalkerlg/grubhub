@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,31 +16,8 @@ namespace Web.Data.EF
 {
     public class EFUnitOfWork : IUnitOfWork
     {
-        private static readonly Dictionary<Type, IList<Type>> EventToListenersMap = new();
-
         private readonly AppDbContext context;
         private readonly ICapPublisher publisher;
-
-        static EFUnitOfWork()
-        {
-            foreach (var type in typeof(Startup).Assembly.GetTypes())
-            {
-                foreach (var iface in type.GetInterfaces())
-                {
-                    if (!iface.IsGenericType) continue;
-                    if (iface.GetGenericTypeDefinition() != typeof(IEventListener<>)) continue;
-
-                    var eventType = iface.GetGenericArguments().Single();
-
-                    if (!EventToListenersMap.ContainsKey(eventType))
-                    {
-                        EventToListenersMap.Add(eventType, new List<Type>());
-                    }
-
-                    EventToListenersMap[eventType].Add(type);
-                }
-            }
-        }
 
         public EFUnitOfWork(AppDbContext context, ICapPublisher publisher)
         {
@@ -74,11 +50,6 @@ namespace Web.Data.EF
                 foreach (var @event in events)
                 {
                     await publisher.PublishAsync(@event.GetType().Name, @event);
-
-                    foreach (var listener in EventToListenersMap[@event.GetType()])
-                    {
-                        await publisher.PublishAsync(listener.Name + "." + @event.GetType().Name, @event);
-                    }
                 }
 
                 await context.SaveChangesAsync();

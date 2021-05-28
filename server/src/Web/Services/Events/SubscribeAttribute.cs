@@ -7,12 +7,7 @@ namespace Web.Services.Events
     {
         public SubscribeAttribute(string eventName, Type listenerType) : base(eventName)
         {
-            Group = listenerType.FullName;
-        }
-
-        public SubscribeAttribute(Type eventType, Type listenerType) : base(eventType.Name)
-        {
-            Group = listenerType.FullName;
+            Group = listenerType.Name;
         }
     }
 }

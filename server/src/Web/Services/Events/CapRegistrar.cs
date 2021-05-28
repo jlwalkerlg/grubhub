@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using Amazon;
+using Amazon.Runtime;
 using DotNetCore.CAP;
 using Microsoft.Extensions.DependencyInjection;
 using Savorboard.CAP.InMemoryMessageQueue;
@@ -33,14 +35,12 @@ namespace Web.Services.Events
                     x.UseInMemoryStorage();
                 }
 
-                if (settings.Cap.Transport.Driver == "RabbitMq")
+                if (settings.Cap.Transport.Driver == "AmazonSQS")
                 {
-                    x.UseRabbitMQ(options =>
+                    x.UseAmazonSQS(options =>
                     {
-                        options.HostName = settings.Cap.Transport.RabbitMq.HostName;
-                        options.UserName = settings.Cap.Transport.RabbitMq.UserName;
-                        options.Password = settings.Cap.Transport.RabbitMq.Password;
-                        options.Port = settings.Cap.Transport.RabbitMq.Port;
+                        options.Region = RegionEndpoint.GetBySystemName(settings.Aws.Region);
+                        options.Credentials = new BasicAWSCredentials(settings.Aws.AccessKeyId, settings.Aws.SecretAccessKey);
                     });
                 }
                 else
