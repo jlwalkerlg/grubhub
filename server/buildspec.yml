@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 5.0.6
+
+  pre_build:
+    commands:
+      - echo Restore started on `date`
+      - dotnet restore src/Web/Web.csproj
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - dotnet build -c Release src/Web/Web.csproj
+
+  post_build:
+    commands:
+      - echo Publish started on `date`
+      - dotnet publish -c Release -r linux-x64 --self-contained false src/Web/Web.csproj
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: ./bin/Release/net5.0/linux-x64/publish/
+  discard-paths: no
