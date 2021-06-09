@@ -1,4 +1,3 @@
-import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
@@ -10,6 +9,7 @@ import CreditCardIcon from "~/components/Icons/CreditCardIcon";
 import CutleryIcon from "~/components/Icons/CutleryIcon";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
 import MenuIcon from "~/components/Icons/MenuIcon";
+import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import ThumbsUpIcon from "~/components/Icons/ThumbsUpIcon";
 import Layout from "~/components/Layout/Layout";
 import useClickAwayListener from "~/services/useClickAwayListener";
@@ -50,11 +50,15 @@ const CuisineFilterList: FC = () => {
   };
 
   if (isLoading) {
-    return <p>Loading cuisines...</p>;
+    return (
+      <div className="flex items-center justify-center mt-4">
+        <SpinnerIcon className="h-6 w-6 animate-spin" />
+      </div>
+    );
   }
 
   if (isError) {
-    return <p>Error loading cuisines.</p>;
+    return <p className="mt-2 px-2 text-sm">Cuisines failed to load.</p>;
   }
 
   return (
@@ -296,7 +300,7 @@ const MobileSortMenu: FC<{
   );
 };
 
-const RestaurantsSearch: React.FC = () => {
+const RestaurantsPage: FC = () => {
   const router = useRouter();
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
@@ -403,19 +407,25 @@ const RestaurantsSearch: React.FC = () => {
   );
 };
 
-const Restaurants: NextPage = () => {
+const RestaurantsPageContainer: FC = () => {
   const router = useRouter();
 
   if (!router.isReady) {
-    return null;
+    return (
+      <Layout title="Restaurants | Grub Hub">
+        <div className="flex items-center justify-center mt-8">
+          <SpinnerIcon className="h-6 w-6 animate-spin" />
+        </div>
+      </Layout>
+    );
   }
 
-  if (router.query.postcode === undefined) {
+  if (!router.query.postcode) {
     router.push("/");
     return null;
   }
 
-  return <RestaurantsSearch />;
+  return <RestaurantsPage />;
 };
 
-export default Restaurants;
+export default RestaurantsPageContainer;

@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
+import api from "~/api/api";
 import useSearchRestaurants from "~/api/restaurants/useSearchRestaurants";
 import CashIcon from "~/components/Icons/CashIcon";
 import ClockIcon from "~/components/Icons/ClockIcon";
 import LocationMarkerIcon from "~/components/Icons/LocationMarkerIcon";
+import SpinnerIcon from "~/components/Icons/SpinnerIcon";
 import usePostcodeLookup from "~/services/geolocation/usePostcodeLookup";
 import useDate from "~/services/useDate";
 import { haversine } from "~/services/utils";
@@ -19,7 +21,7 @@ const RestaurantSearchResults: FC = () => {
     data,
     isLoading: isLoadingRestaurants,
     isFetching: isFetchingRestaurants,
-    isError: isSearchError,
+    error: searchRestaurantsError,
     fetchNextPage,
     hasNextPage,
   } = useSearchRestaurants({ ...router.query, perPage: 15, postcode });
@@ -27,20 +29,28 @@ const RestaurantSearchResults: FC = () => {
   const {
     data: coords,
     isLoading: isLoadingCoords,
-    isError: isPostcodeLookupError,
+    error: postcodeLookupError,
   } = usePostcodeLookup(postcode);
 
   const isLoading = isLoadingRestaurants || isLoadingCoords;
-  const isError = isSearchError || isPostcodeLookupError;
+  const error = searchRestaurantsError || postcodeLookupError;
 
   const { dayOfWeek } = useDate();
 
   if (isLoading) {
-    return <p>Loading restaurants...</p>;
+    return (
+      <div className="flex items-center justify-center mt-8">
+        <SpinnerIcon className="w-6 h-6 animate-spin" />
+      </div>
+    );
   }
 
-  if (isError) {
-    return <p>Restaurants are not loading at this time.</p>;
+  if (error) {
+    return api.isApiError(error) ? (
+      <p>Restaurants failed to load: {error.message}</p>
+    ) : (
+      <p>Restaurants failed to load.</p>
+    );
   }
 
   const restaurants = data?.pages.map((x) => x.restaurants).flat() ?? [];
