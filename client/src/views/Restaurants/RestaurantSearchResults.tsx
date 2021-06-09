@@ -44,12 +44,12 @@ const RestaurantSearchResults: FC = () => {
   }
 
   const restaurants = data?.pages.map((x) => x.restaurants).flat() ?? [];
+  const count = data?.pages[0]?.count || 0;
 
   return (
     <div>
       <h1 className="font-bold text-lg">
-        {restaurants.length} restaurant
-        {restaurants.length > 1 && "s"} delivering to{" "}
+        {count} {count === 1 ? "restaurant" : "restaurants"} delivering to{" "}
         <span className="whitespace-nowrap">{postcode}</span>
       </h1>
 
