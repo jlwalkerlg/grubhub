@@ -2,6 +2,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Web.Data;
+using Web.Filters;
 
 namespace Web.Features.Cuisines.GetCuisines
 {
@@ -15,7 +16,7 @@ namespace Web.Features.Cuisines.GetCuisines
         }
 
         [HttpGet("/cuisines")]
-        [ResponseCache(Duration = 3600)]
+        [CacheControl(Duration = 3600)]
         public async Task<IActionResult> Execute()
         {
             using var connection = await dbConnectionFactory.OpenConnection();

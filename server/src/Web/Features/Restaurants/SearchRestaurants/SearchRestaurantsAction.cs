@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Filters;
 
 namespace Web.Features.Restaurants.SearchRestaurants
 {
@@ -15,7 +16,7 @@ namespace Web.Features.Restaurants.SearchRestaurants
         }
 
         [HttpGet("/restaurants")]
-        [ResponseCache(Duration = 60)]
+        [CacheControl(Duration = 60)]
         public async Task<IActionResult> Execute(
             [FromQuery] string postcode,
             [FromQuery(Name = "sort_by")] string sortBy,
