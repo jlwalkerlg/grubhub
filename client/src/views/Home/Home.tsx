@@ -15,42 +15,42 @@ import styles from "./Home.module.css";
 const cities = [
   {
     name: "Manchester",
-    postcode: "M24WU",
+    postcode: "M2 4WU",
     img: {
       src: "http://d3bvhdd3xj1ghi.cloudfront.net/indian.jpg",
     },
   },
   {
     name: "Birmingham",
-    postcode: "B47ET",
+    postcode: "B4 7ET",
     img: {
       src: "http://d3bvhdd3xj1ghi.cloudfront.net/mexican.jpg",
     },
   },
   {
     name: "London",
-    postcode: "SW1A2DX",
+    postcode: "SW1A 2DX",
     img: {
       src: "http://d3bvhdd3xj1ghi.cloudfront.net/ramen.jpg",
     },
   },
   {
     name: "Leeds",
-    postcode: "LS13AA",
+    postcode: "LS1 3AA",
     img: {
       src: "http://d3bvhdd3xj1ghi.cloudfront.net/burger.jpg",
     },
   },
   {
     name: "Cardiff",
-    postcode: "CF101GL",
+    postcode: "CF10 1GL",
     img: {
       src: "http://d3bvhdd3xj1ghi.cloudfront.net/noodles.jpg",
     },
   },
   {
     name: "Glasgow",
-    postcode: "G12AQ",
+    postcode: "G1 2AQ",
     img: {
       src: "http://d3bvhdd3xj1ghi.cloudfront.net/pizza.jpg",
     },
