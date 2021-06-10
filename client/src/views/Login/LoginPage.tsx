@@ -87,14 +87,6 @@ const Login: FC = () => {
           )}
         </div>
 
-        <div className="mt-2">
-          <div className="text-right">
-            <Link href="/forgot-password">
-              <a className="text-sm text-blue-700">Forgot Password?</a>
-            </Link>
-          </div>
-        </div>
-
         <div className="mt-4">
           <button
             type="submit"
