@@ -336,6 +336,10 @@ const ChangePasswordForm: FC = () => {
 };
 
 const AccountPage: FC = () => {
+  const { user } = useAuth();
+  const isDemoUser =
+    user.email === "demo@customer.com" || user.email === "demo@manager.com";
+
   return (
     <div className="mt-4 bg-gray-50 rounded py-8 px-24 max-w-2xl mx-auto">
       <h1 className="font-semibold text-4xl text-gray-700">Account details</h1>
@@ -352,10 +356,14 @@ const AccountPage: FC = () => {
         <DeliveryAddressForm />
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold text-gray-700">Change password</h2>
-        <ChangePasswordForm />
-      </div>
+      {!isDemoUser && (
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold text-gray-700">
+            Change password
+          </h2>
+          <ChangePasswordForm />
+        </div>
+      )}
     </div>
   );
 };
