@@ -9,6 +9,8 @@ import { DashboardLayout } from "../DashboardLayout";
 
 const UpdateManagerDetailsForm = () => {
   const { user } = useAuth();
+  const isDemoUser =
+    user.email === "demo@manager.com" || user.email === "demo@customer.com";
 
   const form = useForm({
     defaultValues: {
@@ -27,7 +29,10 @@ const UpdateManagerDetailsForm = () => {
   const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
   const onSubmit = form.handleSubmit(async (data) => {
-    await updateUserDetails(data);
+    await updateUserDetails({
+      ...data,
+      email: isDemoUser ? "demo@manager.com" : data.email,
+    });
   });
 
   return (
@@ -87,10 +92,14 @@ const UpdateManagerDetailsForm = () => {
           Email <span className="text-primary">*</span>
         </label>
         <input
+          disabled={isDemoUser}
           ref={form.register({
             validate: rules.email,
           })}
-          className="input"
+          className={`input ${
+            isDemoUser ? "cursor-not-allowed text-gray-500" : ""
+          }`}
+          title={isDemoUser ? "Demo users can't update their email." : ""}
           type="text"
           name="email"
           id="email"
