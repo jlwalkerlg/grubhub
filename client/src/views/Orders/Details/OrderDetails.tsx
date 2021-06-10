@@ -482,10 +482,11 @@ const OrderDetailsPage: FC = () => {
 
   const { isLoggedIn, isLoading: isLoadingAuth, user } = useAuth();
 
-  const { data: order, isLoading: isLoadingOrder, isError } = useOrder(
-    orderId,
-    { enabled: router.isReady && isLoggedIn }
-  );
+  const {
+    data: order,
+    isLoading: isLoadingOrder,
+    isError,
+  } = useOrder(orderId, { enabled: router.isReady && isLoggedIn });
 
   const isLoading = !router.isReady || isLoadingOrder || isLoadingAuth;
 
@@ -511,7 +512,7 @@ const OrderDetailsPage: FC = () => {
   }
 
   return (
-    <AuthLayout title="Your Order" authorised={order.userId === user.id}>
+    <AuthLayout title="Your Order" authorised={order?.userId === user?.id}>
       <OrderDetails order={order} />
     </AuthLayout>
   );
