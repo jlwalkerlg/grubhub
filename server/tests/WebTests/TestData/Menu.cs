@@ -31,9 +31,6 @@ namespace WebTests.TestData
         [Column("menu_id")]
         public int MenuId { get; set; }
 
-        [Column("is_deleted")]
-        public bool IsDeleted { get; set; } = false;
-
         public List<MenuItem> Items { get; set; } = new();
     }
 
@@ -52,9 +49,6 @@ namespace WebTests.TestData
 
         [Column("price")]
         public decimal Price { get; set; } = 9.99m;
-
-        [Column("is_deleted")]
-        public bool IsDeleted { get; set; } = false;
 
         [Column("menu_category_id")]
         public Guid MenuCategoryId { get; set; }

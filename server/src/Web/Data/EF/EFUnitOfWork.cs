@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetCore.CAP;
+using Microsoft.EntityFrameworkCore.Storage;
 using Web.Data.EF.Repositories;
 using Web.Features.Baskets;
 using Web.Features.Billing;
@@ -18,10 +19,12 @@ namespace Web.Data.EF
     {
         private readonly AppDbContext context;
         private readonly ICapPublisher publisher;
+        private readonly CapSettings capSettings;
 
-        public EFUnitOfWork(AppDbContext context, ICapPublisher publisher)
+        public EFUnitOfWork(AppDbContext context, ICapPublisher publisher, CapSettings capSettings)
         {
             this.publisher = publisher;
+            this.capSettings = capSettings;
             this.context = context;
         }
 
@@ -43,22 +46,17 @@ namespace Web.Data.EF
 
         public async Task Commit()
         {
-            if (events.Any())
-            {
-                await using var transaction = context.Database.BeginTransaction(publisher, autoCommit: false);
+            await using var transaction = events.Any() && capSettings.Storage.Driver != "InMemory"
+                ? context.Database.BeginTransaction(publisher, autoCommit: false)
+                : null;
 
-                foreach (var @event in events)
-                {
-                    await publisher.PublishAsync(@event.GetType().Name, @event);
-                }
-
-                await context.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-            else
+            foreach (var @event in events)
             {
-                await context.SaveChangesAsync();
+                await publisher.PublishAsync(@event.GetType().Name, @event);
             }
+
+            await context.SaveChangesAsync();
+            await (transaction?.CommitAsync() ?? Task.CompletedTask);
         }
     }
 }

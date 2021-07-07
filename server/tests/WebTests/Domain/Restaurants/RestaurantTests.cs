@@ -48,7 +48,6 @@ namespace WebTests.Domain.Restaurants
             order.Address.ShouldBe(deliveryLocation.Address);
             order.PlacedAt.ShouldBe(now);
             order.Items.ShouldHaveSingleItem();
-            order.Items[0].MenuItemId.ShouldBe(menuItem.Id);
             order.Items[0].Name.ShouldBe(menuItem.Name);
             order.Items[0].Price.ShouldBe(menuItem.Price);
             order.Items[0].Quantity.ShouldBe(basket.Items[0].Quantity);

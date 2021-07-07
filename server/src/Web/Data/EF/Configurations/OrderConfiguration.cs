@@ -136,14 +136,6 @@ namespace Web.Data.EF.Configurations
                             x => new OrderId(x))
                         .IsRequired();
 
-                    builder.HasOne<MenuItem>()
-                        .WithMany()
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasForeignKey(x => x.MenuItemId);
-
-                    builder.Property(x => x.MenuItemId)
-                        .HasColumnName("menu_item_id");
-
                     builder.Property(x => x.Name)
                         .IsRequired()
                         .HasColumnName("name");

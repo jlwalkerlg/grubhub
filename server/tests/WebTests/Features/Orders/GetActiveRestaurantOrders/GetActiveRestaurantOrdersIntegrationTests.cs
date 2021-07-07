@@ -39,7 +39,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
                 {
                     new OrderItem()
                     {
-                        MenuItem = menuItem,
+                        Name = menuItem.Name,
+                        Price = menuItem.Price,
                         Quantity = 3,
                     }
                 }
@@ -55,7 +56,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
                 {
                     new OrderItem()
                     {
-                        MenuItem = menuItem,
+                        Name = menuItem.Name,
+                        Price = menuItem.Price,
                         Quantity = 4,
                     }
                 }
@@ -71,7 +73,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
                 {
                     new OrderItem()
                     {
-                        MenuItem = menuItem,
+                        Name = menuItem.Name,
+                        Price = menuItem.Price,
                         Quantity = 1,
                     }
                 }
@@ -87,7 +90,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
                 {
                     new OrderItem()
                     {
-                        MenuItem = menuItem,
+                        Name = menuItem.Name,
+                        Price = menuItem.Price,
                         Quantity = 2,
                     }
                 }
@@ -104,7 +108,8 @@ namespace WebTests.Features.Orders.GetActiveRestaurantOrders
                 {
                     new OrderItem()
                     {
-                        MenuItem = menuItem,
+                        Name = menuItem.Name,
+                        Price = menuItem.Price,
                         Quantity = 2,
                     }
                 }

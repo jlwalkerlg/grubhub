@@ -32,11 +32,7 @@ namespace WebTests.Features.Menus.RemoveMenuItem
 
             var items = UseTestDbContext(db => db.MenuItems.ToArray());
 
-            items.ShouldHaveSingleItem();
-
-            var found = items.Single();
-
-            found.IsDeleted.ShouldBeTrue();
+            items.ShouldBeEmpty();
         }
     }
 }

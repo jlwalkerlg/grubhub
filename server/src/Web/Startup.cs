@@ -47,6 +47,7 @@ namespace Web
             services.AddSingleton(settings.Mail);
             services.AddSingleton(settings.Aws);
             services.AddSingleton(settings.Cache);
+            services.AddSingleton(settings.Cap);
 
             services.AddCors(options =>
             {

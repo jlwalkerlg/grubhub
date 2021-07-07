@@ -6,7 +6,7 @@ namespace Web.Domain.Menus
 {
     public class MenuCategory : Entity<MenuCategory>
     {
-        public string name;
+        private string name;
         private readonly List<MenuItem> items = new();
 
         internal MenuCategory(Guid id, string name)

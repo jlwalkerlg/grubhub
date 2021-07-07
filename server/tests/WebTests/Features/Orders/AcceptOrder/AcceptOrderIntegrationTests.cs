@@ -33,6 +33,8 @@ namespace WebTests.Features.Orders.AcceptOrder
                 },
             });
 
+            var menuItem = restaurant.Menu.Categories.First().Items.First();
+
             var order = new Order()
             {
                 Status = OrderStatus.PaymentConfirmed,
@@ -42,9 +44,8 @@ namespace WebTests.Features.Orders.AcceptOrder
                 {
                     new OrderItem()
                     {
-                        MenuItem = restaurant.Menu
-                            .Categories.First()
-                            .Items.First(),
+                        Name = menuItem.Name,
+                        Price = menuItem.Price,
                     },
                 },
             };

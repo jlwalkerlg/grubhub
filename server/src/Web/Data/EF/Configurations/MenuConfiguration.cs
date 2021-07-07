@@ -55,11 +55,6 @@ namespace Web.Data.EF.Configurations
 
                 builder.Property<int>("menu_id")
                     .IsRequired();
-
-                builder.Property<bool>("isDeleted")
-                    .IsRequired()
-                    .HasDefaultValue(false)
-                    .HasColumnName("is_deleted");
             });
 
             modelBuilder.Entity<MenuItem>(builder =>
@@ -88,11 +83,6 @@ namespace Web.Data.EF.Configurations
 
                 builder.Property<Guid>("menu_category_id")
                     .IsRequired();
-
-                builder.Property<bool>("isDeleted")
-                    .IsRequired()
-                    .HasDefaultValue(false)
-                    .HasColumnName("is_deleted");
             });
         }
     }

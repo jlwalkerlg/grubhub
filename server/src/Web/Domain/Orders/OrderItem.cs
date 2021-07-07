@@ -1,4 +1,3 @@
-using System;
 using Web.Domain.Menus;
 
 namespace Web.Domain.Orders
@@ -7,7 +6,6 @@ namespace Web.Domain.Orders
     {
         internal OrderItem(MenuItem menuItem, int quantity)
         {
-            MenuItemId = menuItem.Id;
             Name = menuItem.Name;
             Price = menuItem.Price;
             Quantity = quantity;
@@ -15,7 +13,6 @@ namespace Web.Domain.Orders
 
         private OrderItem() { } // EF Core
 
-        public Guid MenuItemId { get; }
         public string Name { get; }
         public Money Price { get; }
         public int Quantity { get; }

@@ -24,10 +24,8 @@ namespace Web.Data.EF.Repositories
         public async Task<Menu> GetByRestaurantId(Guid id)
         {
             return await context.Menus
-                .Include(x => x.Categories.Where(c =>
-                    !Microsoft.EntityFrameworkCore.EF.Property<bool>(c, "isDeleted")))
-                .ThenInclude(x => x.Items.Where(i =>
-                    !Microsoft.EntityFrameworkCore.EF.Property<bool>(i, "isDeleted")))
+                .Include(x => x.Categories)
+                .ThenInclude(x => x.Items)
                 .OrderBy(x => x.RestaurantId)
                 .SingleOrDefaultAsync(x => x.RestaurantId == id);
         }

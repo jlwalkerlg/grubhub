@@ -102,7 +102,6 @@ namespace WebTests.Features.Orders.PlaceOrder
 
             var orderItem = UseTestDbContext(db => db.OrderItems.Single());
 
-            orderItem.MenuItemId.ShouldBe(basketItem.MenuItemId);
             orderItem.Name.ShouldBe(menuItem.Name);
             orderItem.Price.ShouldBe(menuItem.Price);
             orderItem.Quantity.ShouldBe(basketItem.Quantity);

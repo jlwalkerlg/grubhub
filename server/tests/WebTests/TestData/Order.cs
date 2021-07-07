@@ -108,29 +108,12 @@ namespace WebTests.TestData
     [Table("order_items")]
     public record OrderItem
     {
-        private MenuItem menuItem;
-
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
         [Column("order_id")]
         public string OrderId { get; set; }
-
-        [Column("menu_item_id")]
-        public Guid MenuItemId { get; set; }
-
-        [ForeignKey(nameof(MenuItemId))]
-        public MenuItem MenuItem
-        {
-            get => menuItem;
-            set
-            {
-                menuItem = value;
-                Name = menuItem.Name;
-                Price = menuItem.Price;
-            }
-        }
 
         [Column("name")]
         public string Name { get; set; }

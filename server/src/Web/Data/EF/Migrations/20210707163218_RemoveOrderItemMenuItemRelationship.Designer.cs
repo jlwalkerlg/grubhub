@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Web.Data.EF;
@@ -9,9 +10,10 @@ using Web.Data.EF;
 namespace Web.Data.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210707163218_RemoveOrderItemMenuItemRelationship")]
+    partial class RemoveOrderItemMenuItemRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,6 +149,12 @@ namespace Web.Data.EF.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<bool>("isDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
+
                     b.Property<int>("menu_id")
                         .HasColumnType("integer");
 
@@ -176,6 +184,12 @@ namespace Web.Data.EF.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("integer")
                         .HasColumnName("price");
+
+                    b.Property<bool>("isDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
 
                     b.Property<Guid>("menu_category_id")
                         .HasColumnType("uuid");

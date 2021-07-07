@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 using Web.Data.EF.Configurations;
 using Web.Domain.Baskets;
 using Web.Domain.Billing;
@@ -35,45 +33,6 @@ namespace Web.Data.EF
             builder.ConfigureOrderAggregate();
             builder.ConfigureRestaurantAggregate();
             builder.ConfigureUserAggregate();
-        }
-
-        public override int SaveChanges()
-        {
-            DoPreCommitActions().Wait();
-            return base.SaveChanges();
-        }
-
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            await DoPreCommitActions();
-            return await base.SaveChangesAsync(cancellationToken);
-        }
-
-        private Task DoPreCommitActions()
-        {
-            DoSoftDeletes();
-            return Task.CompletedTask;
-        }
-
-        private void DoSoftDeletes()
-        {
-            foreach (var entry in ChangeTracker.Entries<MenuCategory>())
-            {
-                if (entry.State is EntityState.Deleted)
-                {
-                    entry.State = EntityState.Modified;
-                    entry.CurrentValues["isDeleted"] = true;
-                }
-            }
-
-            foreach (var entry in ChangeTracker.Entries<MenuItem>())
-            {
-                if (entry.State is EntityState.Deleted)
-                {
-                    entry.State = EntityState.Modified;
-                    entry.CurrentValues["isDeleted"] = true;
-                }
-            }
         }
     }
 }
