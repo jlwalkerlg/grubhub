@@ -33,9 +33,21 @@ export class ApiError extends Error {
 
   public constructor(error: AxiosError<any>) {
     const problem = error.response?.data as ProblemDetails;
-    super(problem?.detail ?? error.message);
+    const status = error.response?.status ?? 500;
+
+    let message = error.message;
+
+    if (problem?.detail) {
+      message = problem.detail;
+    } else if (status === 401) {
+      message = "Unauthenticated";
+    } else if (status === 403) {
+      message = "Unauthorized";
+    }
+
+    super(message);
     this.problem = problem;
-    this.status = error.response?.status ?? 500;
+    this.status = status;
   }
 
   get isValidationError() {
@@ -49,6 +61,9 @@ class Api {
     baseURL: API_BASE_URL,
     xsrfCookieName: "XSRF-TOKEN",
     xsrfHeaderName: "X-XSRF-TOKEN",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+    },
   });
 
   public async get<T = null>(url: string, config?: AxiosRequestConfig) {
