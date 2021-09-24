@@ -10,6 +10,7 @@
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="DotNetCore.CAP" Version="5.0.0" />
     <PackageReference Include="DotNetCore.CAP.AmazonSQS" Version="5.0.0" />
+    <PackageReference Include="DotNetCore.CAP.AzureServiceBus" Version="5.0.0" />
     <PackageReference Include="DotNetCore.CAP.Dashboard" Version="5.0.0" />
     <PackageReference Include="DotNetCore.CAP.InMemoryStorage" Version="5.0.0" />
     <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="5.0.0" />

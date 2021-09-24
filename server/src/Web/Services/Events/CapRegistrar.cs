@@ -23,7 +23,7 @@ namespace Web.Services.Events
 
             services.AddCap(x =>
             {
-                if (settings.Cap.Storage.Driver == "PostgreSql")
+                if (settings.Cap.Storage.Driver == CapSettings.StorageSettings.StorageDriver.PostgreSql)
                 {
                     x.UsePostgreSql(options =>
                     {
@@ -35,12 +35,19 @@ namespace Web.Services.Events
                     x.UseInMemoryStorage();
                 }
 
-                if (settings.Cap.Transport.Driver == "AmazonSQS")
+                if (settings.Cap.Transport.Driver == CapSettings.TransportSettings.TransportDriver.AmazonSQS)
                 {
                     x.UseAmazonSQS(options =>
                     {
                         options.Region = RegionEndpoint.GetBySystemName(settings.Aws.Region);
                         options.Credentials = new BasicAWSCredentials(settings.Aws.AccessKeyId, settings.Aws.SecretAccessKey);
+                    });
+                }
+                else if (settings.Cap.Transport.Driver == CapSettings.TransportSettings.TransportDriver.AzureServiceBus)
+                {
+                    x.UseAzureServiceBus(options =>
+                    {
+                        options.ConnectionString = settings.Azure.ServiceBus.ConnectionString;
                     });
                 }
                 else

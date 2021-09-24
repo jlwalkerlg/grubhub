@@ -46,7 +46,7 @@ namespace Web.Data.EF
 
         public async Task Commit()
         {
-            await using var transaction = events.Any() && capSettings.Storage.Driver != "InMemory"
+            await using var transaction = events.Any() && capSettings.Storage.Driver != CapSettings.StorageSettings.StorageDriver.InMemory
                 ? context.Database.BeginTransaction(publisher, autoCommit: false)
                 : null;
 

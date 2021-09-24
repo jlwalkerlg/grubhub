@@ -6,7 +6,7 @@ namespace Web.Services.Cache
     {
         public static void AddDistributedCache(this IServiceCollection services, CacheSettings settings)
         {
-            if (settings.Driver == "Redis")
+            if (settings.Driver == CacheSettings.CacheDriver.Redis)
             {
                 services.AddStackExchangeRedisCache(options =>
                 {

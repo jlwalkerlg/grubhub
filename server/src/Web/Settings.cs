@@ -8,6 +8,7 @@ namespace Web
         public StripeSettings Stripe { get; init; }
         public MailSettings Mail { get; init; }
         public AwsSettings Aws { get; init; }
+        public AzureSettings Azure { get; init; }
         public CacheSettings Cache { get; init; }
         public CapSettings Cap { get; init; }
     }
@@ -57,10 +58,26 @@ namespace Web
         public string Bucket { get; init; }
     }
 
+    public record AzureSettings
+    {
+        public ServiceBusSettings ServiceBus { get; init; }
+
+        public record ServiceBusSettings
+        {
+            public string ConnectionString { get; init; }
+        }
+    }
+
     public record CacheSettings
     {
-        public string Driver { get; init; }
+        public CacheDriver Driver { get; init; }
         public RedisSettings Redis { get; init; }
+
+        public enum CacheDriver
+        {
+            InMemory,
+            Redis,
+        }
 
         public record RedisSettings
         {
@@ -76,12 +93,25 @@ namespace Web
 
         public record TransportSettings
         {
-            public string Driver { get; init; }
+            public TransportDriver Driver { get; init; }
+
+            public enum TransportDriver
+            {
+                InMemory,
+                AmazonSQS,
+                AzureServiceBus,
+            }
         }
 
         public record StorageSettings
         {
-            public string Driver { get; init; }
+            public StorageDriver Driver { get; init; }
+
+            public enum StorageDriver
+            {
+                InMemory,
+                PostgreSql,
+            }
         }
     }
 }
