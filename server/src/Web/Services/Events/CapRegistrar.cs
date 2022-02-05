@@ -11,7 +11,7 @@ namespace Web.Services.Events
     {
         public static void AddCap(this IServiceCollection services, Settings settings)
         {
-            var subscribers = typeof(Startup).Assembly.GetTypes()
+            var subscribers = typeof(CapRegistrar).Assembly.GetTypes()
                 .Where(x => !x.IsAbstract
                             && !x.IsInterface
                             && x.GetInterfaces().Any(i => i == typeof(ICapSubscribe)));
