@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Web.Domain;
@@ -10,10 +11,12 @@ namespace Web.Services.Geocoding
     public class GoogleGeocoder : IGeocoder
     {
         private readonly string key;
+        private readonly HttpClient httpClient;
 
-        public GoogleGeocoder(GeocodingSettings settings)
+        public GoogleGeocoder(GeocodingSettings settings, HttpClient httpClient)
         {
             key = settings.GoogleApiKey;
+            this.httpClient = httpClient;
         }
 
         public async Task<Result<Coordinates>> LookupCoordinates(string postcode)
@@ -48,12 +51,9 @@ namespace Web.Services.Geocoding
 
         private async Task<string> GetResponseAsJson(string url)
         {
-            var request = WebRequest.Create(url);
-            request.Method = "GET";
+            var response = await httpClient.GetAsync(url);
 
-            var response = await request.GetResponseAsync();
-
-            using (var stream = response.GetResponseStream())
+            await using (var stream = await response.Content.ReadAsStreamAsync())
             {
                 var reader = new StreamReader(stream);
                 return reader.ReadToEnd();

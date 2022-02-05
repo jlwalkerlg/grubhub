@@ -1,22 +1,29 @@
-using Microsoft.Extensions.Configuration;
 using Shouldly;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Web;
 using Web.Services.Geocoding;
 using Xunit;
+using System.Net.Http;
+using System;
 
 namespace WebTests.Services.Geocoding
 {
-    public class GoogleGeocoderTests : IClassFixture<TestWebApplicationFactory>
+    public class GoogleGeocoderTests : IClassFixture<TestWebApplicationFactory>, IDisposable
     {
         private readonly GoogleGeocoder geocoder;
+        private readonly HttpClient httpClient = new();
 
         public GoogleGeocoderTests(TestWebApplicationFactory factory)
         {
             var settings = factory.Services.GetRequiredService<GeocodingSettings>();
 
-            geocoder = new GoogleGeocoder(settings);
+            geocoder = new GoogleGeocoder(settings, httpClient);
+        }
+
+        public void Dispose()
+        {
+            httpClient.Dispose();
         }
 
         [Fact]
