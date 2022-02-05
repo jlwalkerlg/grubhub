@@ -113,7 +113,7 @@ namespace Web.Data.EF.Configurations
                         y.Property(z => z.Open).HasColumnName("sunday_open");
                         y.Property(z => z.Close).HasColumnName("sunday_close");
                     });
-                });
+                }).Navigation(x => x.OpeningTimes).IsRequired();
 
                 builder.Property(x => x.DeliveryFee)
                     .HasConversion(
