@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:14.1
+    container_name: grubhub-db
+    volumes:
+      - grubhub-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Jordan123
+
+volumes:
+  grubhub-db:

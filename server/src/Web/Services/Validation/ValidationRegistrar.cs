@@ -7,7 +7,7 @@ namespace Web.Services.Validation
         public static void AddValidators(this ContainerBuilder builder)
         {
             builder
-                .RegisterAssemblyTypes(typeof(Startup).Assembly)
+                .RegisterAssemblyTypes(typeof(ValidationRegistrar).Assembly)
                 .AsClosedTypesOf(typeof(IValidator<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();

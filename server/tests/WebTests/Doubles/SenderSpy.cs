@@ -22,5 +22,15 @@ namespace WebTests.Doubles
             Requests.Add(request);
             return Task.FromResult(Response);
         }
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IAsyncEnumerable<object> CreateStream(object request, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

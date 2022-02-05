@@ -9,7 +9,7 @@ namespace Web.Services
     {
         public static void AddMediatR(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(Startup).Assembly);
+            services.AddMediatR(typeof(Registrar).Assembly);
 
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),

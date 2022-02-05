@@ -13,6 +13,7 @@ namespace WebTests.Doubles
     public class FailMiddlewareStub<TRequest, TResponse>
         : FailMiddlewareStub,
         IPipelineBehavior<TRequest, TResponse>
+        where TRequest : MediatR.IRequest<TResponse>
         where TResponse : Result, new()
     {
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)

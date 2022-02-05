@@ -8,6 +8,7 @@ namespace Web.Services.Validation
 {
     public class ValidationMiddleware<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : MediatR.IRequest<TResponse>
         where TResponse : Result, new()
     {
         private readonly IEnumerable<IValidator<TRequest>> validators;

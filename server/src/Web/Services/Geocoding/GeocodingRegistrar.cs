@@ -8,7 +8,7 @@ namespace Web.Services.Geocoding
         {
             if (settings.Driver == "Google")
             {
-                services.AddSingleton<IGeocoder, GoogleGeocoder>();
+                services.AddHttpClient<IGeocoder, GoogleGeocoder>();
             }
             else
             {
