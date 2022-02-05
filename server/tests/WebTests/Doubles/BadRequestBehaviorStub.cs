@@ -7,6 +7,7 @@ namespace WebTests.Doubles
 {
     public class BadRequestBehaviorStub<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : MediatR.IRequest<TResponse>
         where TResponse : Result, new()
     {
         public Task<TResponse> Handle(
