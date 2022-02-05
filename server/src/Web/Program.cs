@@ -74,6 +74,8 @@ try
         }
     });
 
+    appBuilder.Services.AddHealthChecks();
+
     var settings = appBuilder.Configuration.Get<Settings>();
 
     appBuilder.Services.AddSingleton(settings.App);
@@ -181,6 +183,7 @@ try
 
     app.MapControllers();
     app.MapHub<OrderHub>("/hubs/orders");
+    app.MapHealthChecks("/");
 
     await app.RunAsync();
 
