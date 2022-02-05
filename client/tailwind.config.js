@@ -1,6 +1,7 @@
 const defaults = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
 
-const red = defaults.colors.red;
+const red = colors.red;
 
 const green = {
   100: "#dbf5db",
@@ -15,8 +16,12 @@ const green = {
 };
 
 module.exports = {
-  purge: ["./src/views/**/*.tsx", "./src/components/**/*.tsx"],
+  content: ["./src/views/**/*.tsx", "./src/components/**/*.tsx"],
   theme: {
+    // colors: {
+    //   ...colors,
+    //   current: "currentColor",
+    // },
     container: {
       center: true,
       padding: defaults.spacing["4"],
@@ -26,6 +31,7 @@ module.exports = {
         100: "100%",
       },
       colors: {
+        current: "currentColor",
         primary: {
           ...red,
           DEFAULT: red["700"],
@@ -35,12 +41,6 @@ module.exports = {
         secondary: green,
         green: green,
       },
-    },
-  },
-  variants: {
-    extend: {
-      fontWeight: ["hover"],
-      fontSize: ["hover"],
     },
   },
   plugins: [],
