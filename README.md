@@ -1,6 +1,6 @@
 ## Getting started
 
-- Static assets stored in S3.
+- Static assets (photos) stored in S3 eu-west-1.
 
 ## DDD concepts
 - Value objects
