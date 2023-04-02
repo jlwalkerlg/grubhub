@@ -1,3 +1,7 @@
+## Getting started
+
+- Static assets stored in S3.
+
 ## DDD concepts
 - Value objects
 - Aggregates
