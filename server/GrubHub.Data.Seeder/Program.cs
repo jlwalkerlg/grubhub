@@ -44,6 +44,8 @@ using var scope = host.Services.CreateScope();
 
 await using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+await db.Database.MigrateAsync();
+
 var demoCustomer = await db.Users.FirstOrDefaultAsync(u => u.Email == new Email("demo@customer.com"));
 if (demoCustomer is null)
 {
